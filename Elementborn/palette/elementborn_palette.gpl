@@ -1,0 +1,36 @@
+GIMP Palette
+Name: Elementborn
+Columns: 6
+#
+110 165  75	Plains
+132 150 112	Capital City
+130 120 110	Mountains
+ 72  62  62	Volcano
+210 190 130	Desert
+ 70 130  70	Forest Temple
+ 90 110  80	Swamp
+110 120  85	Marsh
+225 210 160	Beach
+100 160  90	Island
+180 190 205	Cloud Temple
+190 180 150	Seabed
+ 51 115 217	Sky Top
+184 219 242	Sky Horizon
+115 128 122	Sky Ground
+255 245 209	Sun
+255 255 255	Cloud / Foam
+ 77 179 189	Water Shallow
+ 15  71 115	Water Deep
+128 140 179	Shadow Tint
+220  90  45	Fire
+ 60 150 200	Water
+150 110  70	Earth
+200 225 240	Air
+150 220 235	Ice
+240 215  90	Lightning
+140  95  55	Wood
+160 168 178	Metal
+150 150 150	Stone
+ 18  18  22	Outline
+222 178 140	Skin
+ 90 100 120	Cloth
