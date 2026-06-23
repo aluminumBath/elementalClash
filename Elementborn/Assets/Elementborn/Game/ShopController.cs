@@ -105,6 +105,7 @@ namespace Elementborn.Game
                 {
                     var res = Shop.Buy(inv.Items, inv.Wallet, itemId);
                     GameHud.Instance?.Toast(res.Message);
+                    if (res.Success) AudioController.Instance?.Coin(); else AudioController.Instance?.Back();
                     Populate();
                 });
             }
@@ -119,6 +120,7 @@ namespace Elementborn.Game
                 {
                     var res = Shop.Sell(inv.Items, inv.Wallet, itemId);
                     GameHud.Instance?.Toast(res.Message);
+                    if (res.Success) AudioController.Instance?.Coin(); else AudioController.Instance?.Back();
                     Populate();
                 });
             }

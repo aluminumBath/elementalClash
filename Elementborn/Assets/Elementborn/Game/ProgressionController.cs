@@ -73,6 +73,7 @@ namespace Elementborn.Game
             int reward = 20 * Progression.Level;
             PlayerInventory.Instance?.AddCurrency(Currency.Silver, reward);
             GameHud.Instance?.Toast("Level up! Level " + Progression.Level + "  (+" + reward + " Silver)");
+            AudioController.Instance?.LevelUp();
             ApplyBonus();
         }
 

@@ -9,7 +9,8 @@ namespace Elementborn.Game
     {
         UiClick, UiConfirm, UiBack,
         FireExplosion, FireBurn, WaterSplash, RockBreak, WindWhoosh,
-        IceCrack, ZapLightning, MetalClang, HitSoft, WhooshShort
+        IceCrack, ZapLightning, MetalClang, HitSoft, WhooshShort,
+        LevelUp, Coin, Pickup
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ namespace Elementborn.Game
             { SfxKind.WindWhoosh, "wind_whoosh" }, { SfxKind.IceCrack, "ice_crack" },
             { SfxKind.ZapLightning, "zap_lightning" }, { SfxKind.MetalClang, "metal_clang" },
             { SfxKind.HitSoft, "hit_soft" }, { SfxKind.WhooshShort, "whoosh_short" },
+            { SfxKind.LevelUp, "level_up" }, { SfxKind.Coin, "coin" }, { SfxKind.Pickup, "pickup" },
         };
 
         private readonly Dictionary<SfxKind, AudioClip> _clips = new Dictionary<SfxKind, AudioClip>();
@@ -108,6 +110,9 @@ namespace Elementborn.Game
         public void Click() => Play(SfxKind.UiClick);
         public void Confirm() => Play(SfxKind.UiConfirm);
         public void Back() => Play(SfxKind.UiBack);
+        public void LevelUp() => Play(SfxKind.LevelUp);
+        public void Coin() => Play(SfxKind.Coin);
+        public void Pickup() => Play(SfxKind.Pickup, 0.8f);
 
         // ---- ambient bed -----------------------------------------------------------------
         public void Ambient(SfxKind kind, float volume = 1f)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Synthesize Elementborn's placeholder sound effects with numpy.
 
-Regenerates the 13 royalty-free placeholder clips referenced by docs/AUDIO.md, using simple synthesis —
+Regenerates the 16 royalty-free placeholder clips referenced by docs/AUDIO.md, using simple synthesis —
 filtered noise, sweeps, and inharmonic partials. They're deliberately rough stand-ins until real sound design.
 
 Usage:
@@ -98,6 +98,23 @@ def gen():
     s["ui_click"] = (tone(1200, 0.04) + 0.3 * bandnoise(0.04, 1500, 6000)) * expdecay(0.04, 0.012)
     s["ui_confirm"] = sweep(660, 990, 0.16) * expdecay(0.16, 0.12)
     s["ui_back"] = sweep(880, 520, 0.16) * expdecay(0.16, 0.12)
+    # Reward / progression juice
+    notes = [523, 659, 784, 1047]  # C major arpeggio, rising
+    lu = np.zeros(int(SR * 0.55))
+    for i, fr in enumerate(notes):
+        seg = tone(fr, 0.2) * expdecay(0.2, 0.16)
+        st = int(SR * 0.1 * i)
+        lu[st:st + seg.size] += seg[:lu.size - st]
+    s["level_up"] = lu + 0.2 * partials(1047, [1, 2, 3], 0.55, 0.22)
+    coin = np.zeros(int(SR * 0.2))
+    ca = tone(988, 0.06) * expdecay(0.06, 0.04)
+    coin[:ca.size] += ca
+    cb = tone(1319, 0.11) * expdecay(0.11, 0.07)
+    cs = int(SR * 0.05)
+    coin[cs:cs + cb.size] += cb[:coin.size - cs]
+    s["coin"] = coin
+    s["pickup"] = (tone(740, 0.07) + 0.3 * tone(1110, 0.07)) * expdecay(0.07, 0.05) \
+        + 0.2 * bandnoise(0.07, 1500, 5000) * expdecay(0.07, 0.02)
     return s
 
 

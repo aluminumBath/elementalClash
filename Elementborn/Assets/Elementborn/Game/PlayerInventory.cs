@@ -57,6 +57,7 @@ namespace Elementborn.Game
         {
             Items.Add(itemId, count);
             QuestEvents.RaiseItemCollected(itemId, count);
+            AudioController.Instance?.Pickup();
         }
 
         // --- lures (the per-creature taming items) ---

@@ -12,7 +12,7 @@ the game, meant to be replaced with real foley/music later.
 - Volumes come from **`SettingsStore.Current`**: `masterVolume` → `AudioListener.volume`, `sfxVolume` scales
   one-shots, `musicVolume` scales the ambient bed. The settings menu (Esc) changes them live.
 
-## The placeholder clips (13)
+## The placeholder clips (16)
 | File (`Resources/Audio/…`) | `SfxKind` | Used for |
 |---|---|---|
 | `fire_explosion.wav` | `FireExplosion` | Fire projectile / blast; fire impacts |
@@ -28,6 +28,9 @@ the game, meant to be replaced with real foley/music later.
 | `ui_click.wav` | `UiClick` | Every themed button (auto) |
 | `ui_confirm.wav` | `UiConfirm` | Open menu / confirm |
 | `ui_back.wav` | `UiBack` | Close menu / cancel |
+| `level_up.wav` | `LevelUp` | Rising arpeggio on level-up |
+| `coin.wav` | `Coin` | Reward / buy / sell |
+| `pickup.wav` | `Pickup` | Loot / item gained |
 
 ## Mapping (where sounds fire)
 - **Abilities** — `AbilityVfxBinder` calls `AudioController.PlayAbility(outcome, origin)` for every resolved
@@ -38,6 +41,8 @@ the game, meant to be replaced with real foley/music later.
 - **Element → sound**: Fire→`FireExplosion`, Water→`WaterSplash`, Earth→`RockBreak`, Air→`WindWhoosh`,
   else→`HitSoft`.
 - **UI** — buttons built by `UiTheme.Button` play `UiClick` automatically; the menus play confirm/back.
+- **Progression & economy** — level-up plays `LevelUp`; quest turn-in and shop buy/sell play `Coin` (a failed
+  buy/sell or feeding plays `UiBack`); loot drops play `Pickup`; feeding a sidekick plays `UiConfirm`.
 
 ## Replacing the placeholders
 1. Drop a `.wav`/`.ogg` with the **same filename** into `Assets/Elementborn/Resources/Audio/`.

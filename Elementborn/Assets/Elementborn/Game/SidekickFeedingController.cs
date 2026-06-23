@@ -40,11 +40,13 @@ namespace Elementborn.Game
                 var def = ItemCatalog.Get(foodId);
                 GameHud.Instance?.Toast("You need " + (def != null ? def.Name : "the right food") +
                                         " to feed " + WillowSidekicks.For(sidekick).Name + ".");
+                AudioController.Instance?.Back();
                 return;
             }
             _tracker.Feed(sidekick, Time.timeAsDouble);
             if (_tracker.AllFedWithin(windowDays * 86400.0)) _hintUnlocked = true;
             GameHud.Instance?.Toast("You fed " + WillowSidekicks.For(sidekick).Name + ".");
+            AudioController.Instance?.Confirm();
             Debug.Log($"[Willow] You fed {WillowSidekicks.For(sidekick).Name}. ({_tracker.FedCount}/{WillowSidekicks.All.Length})");
         }
     }
