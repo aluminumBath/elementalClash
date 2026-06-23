@@ -1,0 +1,45 @@
+name: Docs
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'docs/**', 'README.md', '.github/workflows/docs.yml' ]
+  workflow_dispatch:
+
+# One-time repo setup: Settings -> Pages -> Source = "GitHub Actions".
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble docs site
+        run: |
+          mkdir -p _site
+          cp README.md _site/index.md
+          cp -r docs/* _site/
+          # Minimal Jekyll config so GitHub Pages renders the Markdown as HTML.
+          printf 'title: Elementborn\ntheme: jekyll-theme-cayman\n' > _site/_config.yml
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./_site
+          destination: ./_site_build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site_build
+      - id: deploy
+        uses: actions/deploy-pages@v4

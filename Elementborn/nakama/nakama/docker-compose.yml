@@ -1,0 +1,53 @@
+# Local Nakama dev server for Elementborn.
+# Usage:  cd nakama && docker compose up
+# Console: http://127.0.0.1:7351   (default login: admin / password)
+# Client connects to 127.0.0.1:7350 with server key "defaultkey".
+#
+# This is a development setup. Change passwords and the server key before exposing it anywhere.
+
+version: "3"
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:latest-v23.1
+    command: start-single-node --insecure --store=attrs=ssd,path=/var/lib/cockroach/
+    restart: unless-stopped
+    volumes:
+      - data:/var/lib/cockroach
+    expose:
+      - "8080"
+      - "26257"
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+
+  nakama:
+    image: heroiclabs/nakama:latest
+    entrypoint:
+      - "/bin/sh"
+      - "-ecx"
+      - >
+        /nakama/nakama migrate up --database.address root@cockroachdb:26257 &&
+        exec /nakama/nakama --name nakama1
+        --database.address root@cockroachdb:26257
+        --logger.level DEBUG
+        --session.token_expiry_sec 7200
+        --socket.server_key defaultkey
+        --runtime.js_entrypoint "build/index.js"
+    restart: unless-stopped
+    links:
+      - "cockroachdb:db"
+    depends_on:
+      - cockroachdb
+    volumes:
+      - ./:/nakama/data
+    expose:
+      - "7349"
+      - "7350"
+      - "7351"
+    ports:
+      - "7349:7349"
+      - "7350:7350"
+      - "7351:7351"
+
+volumes:
+  data:

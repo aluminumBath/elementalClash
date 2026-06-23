@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "none",
+    "lib": ["es2017"],
+    "outFile": "build/index.js",
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules"],
+    "types": ["nakama-runtime"],
+    "forceConsistentCasingInFileNames": true,
+    "strict": false
+  },
+  "files": ["src/main.ts"]
+}

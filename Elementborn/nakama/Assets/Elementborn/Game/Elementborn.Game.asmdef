@@ -1,0 +1,20 @@
+{
+    "name": "Elementborn.Game",
+    "rootNamespace": "Elementborn.Game",
+    "references": [
+        "Elementborn.Core",
+        "Unity.InputSystem",
+        "Unity.XR.Management",
+        "UnityEngine.UI",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
