@@ -17,9 +17,15 @@ namespace Elementborn.Game
 
         private FastTravelNetwork _network;
         private readonly LocationSharing _sharing = new LocationSharing();
-        // No live friend-position feed yet (that would come from the Nakama presence layer). An empty set keeps
-        // VisibleFriends correct — consent-gated, with nothing to show — until that feed exists.
+        // Friend positions refreshed each poll from the registered presence source (Nakama online; a dev simulator
+        // offline). With no source the set stays empty, so VisibleFriends stays correct — consent-gated, nothing to
+        // show. Self is always located directly and never needs the feed.
         private readonly Dictionary<string, Vector3> _friendPositions = new Dictionary<string, Vector3>();
+        private readonly PresenceRegistry _presence = new PresenceRegistry();
+        private static IFriendPresence _provider;
+        private const float PresenceTtl = 6f;     // a friend silent longer than this drops off the map
+        private const float PollInterval = 0.5f;  // how often we publish/pull presence
+        private float _pollTimer;
 
         /// <summary>The local player's opt-in to broadcast their own location to friends. Off by default (privacy).</summary>
         public bool ShareMyLocation { get; set; }
@@ -34,6 +40,38 @@ namespace Elementborn.Game
         }
 
         private void OnDestroy() { if (Instance == this) Instance = null; }
+
+        /// <summary>Register the live presence source — the networked build's Nakama feed, or a dev simulator. Pass
+        /// the same instance to <see cref="ClearPresence"/> on teardown so a destroyed source can't linger.</summary>
+        public static void SetPresence(IFriendPresence provider) => _provider = provider;
+        public static void ClearPresence(IFriendPresence provider) { if (_provider == provider) _provider = null; }
+
+        private void Update()
+        {
+            _pollTimer -= Time.deltaTime;
+            if (_pollTimer > 0f) return;
+            _pollTimer = PollInterval;
+
+            if (_provider == null)
+            {
+                if (_friendPositions.Count > 0) _friendPositions.Clear(); // source gone -> don't leave stale markers
+                return;
+            }
+
+            float now = Time.time;
+            var rig = RigTeleporter.Rig;
+            _provider.PublishSelf(LocalId, rig != null ? rig.position : Vector3.zero, ShareMyLocation, now);
+            _provider.Poll(_presence, now);
+
+            _friendPositions.Clear();
+            var fresh = _presence.Fresh(now, PresenceTtl);
+            foreach (var fid in FriendIds)
+            {
+                bool present = fresh.TryGetValue(fid, out var pos); // present == broadcasting == sharing with us
+                _sharing.SetSharing(fid, present);
+                if (present) _friendPositions[fid] = pos;
+            }
+        }
 
         public string LocalId => SocialHub.Instance != null ? SocialHub.Instance.CurrentUser.Id : "local";
 
@@ -54,7 +92,9 @@ namespace Elementborn.Game
                 {
                     Vector3 pos = r.World;
                     pos.y = TerrainHeight.Sample(pos) + 1f; // settle on the ground at the destination
-                    return RigTeleporter.WarpTo(pos);
+                    bool ok = RigTeleporter.WarpTo(pos);
+                    if (ok) AudioController.Instance?.Play(SfxKind.WhooshShort); // fast-travel whoosh
+                    return ok;
                 }
             return false;
         }

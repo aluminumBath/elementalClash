@@ -16,8 +16,13 @@ All notable changes to Elementborn are recorded here. The format follows
   `MapViewerController` (key **M**, also opened from a rift) drawing the overworld backdrop with tap-to-fast-travel,
   `LeylineRiftObject`/`LeylineRiftSpawner` (discover-on-approach crystals via the `InteractionArbiter`), and a
   shared `RigTeleporter` (the safe respawn-style warp). The overworld key-art is installed at
-  `Resources/ElementbornUI/worldmap`. Remaining: a live friend-position feed (Nakama presence) — the consent-gated
-  path and local opt-in are wired, but positions aren't pushed yet.
+  `Resources/ElementbornUI/worldmap`. The friend-position feed is now wired too: a pure `PresenceRegistry` (Core,
+  TTL'd, tested), an `IFriendPresence` producer seam, `MapState` polling with a consent-gated refresh, and friend
+  markers on both the viewer and the minimap — exercised offline by a `SimulatedFriendPresence` demo (orbits a
+  seeded ally). The online producer is implemented too: `NakamaFriendPresence` (behind `ELEMENTBORN_NAKAMA`)
+  broadcasts position as the player's Nakama status via the pure, tested `PresenceCodec` and follows friends to
+  receive theirs, registered by `NakamaSocialInstaller` after connect — verified against a live server, like the
+  rest of the Nakama layer.
 - **The Grimoire** — a discovery-driven tome with three sections that fill in as the player uncovers them:
   **Bestiary** (every creature, composed from `CreatureCatalog`/`CreatureHints`), **Attacks** (each element ×
   the moveset), and **Bloodlines** (a new `Bloodlines` catalog: the four base lines, the sub-art lines, the
@@ -125,6 +130,12 @@ All notable changes to Elementborn are recorded here. The format follows
   self-wires, so no manual references are needed; visuals are procedural placeholders pending an art pass.
 
 ### Changed
+- **Audio pass completed**: the controller, the 17 synthesized clips (regenerable via `make_sfx.py`), the
+  settings-driven volumes, and every trigger in `docs/AUDIO.md` are wired — and the systems added since (the map)
+  now sound too: attuning a leyline rift plays `UiConfirm`, a fast-travel warp plays `WhooshShort`.
+- **Doctor: new `imports` invariant** (`tools/check-imports.sh`) — fails CI if any `using` directive references a
+  namespace that doesn't exist (Elementborn namespaces must be declared; others must be a known external root).
+  Catches a class of break that previously only surfaced in a Unity compile. The tree currently passes clean.
 - **Package upgrades** (Unity 6000.5): Input System 1.11.2 → 1.19.0, XR Interaction Toolkit 3.0.7 → 3.5.1,
   XR Management 4.5.0 → 4.5.4, OpenXR 1.13.0 → 1.17.1.
 - IP guard hardened: `ip-guard.sh` and the doctor's standing grep now catch the bare verb "bend"/"bends",

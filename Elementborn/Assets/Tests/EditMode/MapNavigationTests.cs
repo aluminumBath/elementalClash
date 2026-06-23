@@ -157,5 +157,64 @@ namespace Elementborn.Tests.EditMode
             Assert.AreEqual(0.5f, n.x, 0.001f);
             Assert.AreEqual(0.5f, n.y, 0.001f);
         }
+
+        // ---- presence registry (the live friend-position feed) ----
+        [Test]
+        public void PresenceReturnsFreshPositionsAndExpiresStaleOnes()
+        {
+            var reg = new PresenceRegistry();
+            reg.Report("a", new Vector3(1f, 0f, 2f), 100f);
+            Assert.IsTrue(reg.TryGet("a", 102f, 5f, out var p));
+            Assert.AreEqual(new Vector3(1f, 0f, 2f), p);
+            Assert.IsFalse(reg.TryGet("a", 110f, 5f, out _)); // silent past the window -> gone
+        }
+
+        [Test]
+        public void PresenceDropRemovesAndStalePrunesFromFresh()
+        {
+            var reg = new PresenceRegistry();
+            reg.Report("a", Vector3.zero, 0f);
+            reg.Report("b", Vector3.one, 0f);
+            reg.Drop("a");
+            var fresh = reg.Fresh(1f, 5f);
+            Assert.IsFalse(fresh.ContainsKey("a"));
+            Assert.IsTrue(fresh.ContainsKey("b"));
+            Assert.AreEqual(0, reg.Fresh(100f, 5f).Count); // b now stale and pruned
+        }
+
+        [Test]
+        public void FreshPresenceFeedsVisibleFriendsThroughTheConsentGate()
+        {
+            // The two pure pieces compose as MapState uses them: a fresh, consenting friend shows; a fresh
+            // non-consenting one does not.
+            var reg = new PresenceRegistry();
+            reg.Report("f1", new Vector3(5f, 0f, 5f), 10f);
+            reg.Report("f2", new Vector3(9f, 0f, 9f), 10f);
+            var sharing = new LocationSharing();
+            sharing.SetSharing("f1", true); // f2 left off
+            var positions = reg.Fresh(10f, 5f);
+            var markers = Locator.VisibleFriends(new List<string> { "f1", "f2" }, sharing, positions);
+            Assert.AreEqual(1, markers.Count);
+            Assert.AreEqual("f1", markers[0].Id);
+        }
+
+        [Test]
+        public void PresenceCodecRoundTrips()
+        {
+            var p = new Vector3(12.34f, -5f, 67.8f);
+            Assert.IsTrue(PresenceCodec.TryDecode(PresenceCodec.Encode(p), out var back));
+            Assert.AreEqual(p.x, back.x, 0.01f);
+            Assert.AreEqual(p.y, back.y, 0.01f);
+            Assert.AreEqual(p.z, back.z, 0.01f);
+        }
+
+        [Test]
+        public void PresenceCodecRejectsMalformedOrEmpty()
+        {
+            Assert.IsFalse(PresenceCodec.TryDecode("", out _));
+            Assert.IsFalse(PresenceCodec.TryDecode(null, out _));
+            Assert.IsFalse(PresenceCodec.TryDecode("1,2", out _));   // too few components
+            Assert.IsFalse(PresenceCodec.TryDecode("a,b,c", out _)); // not numbers
+        }
     }
 }

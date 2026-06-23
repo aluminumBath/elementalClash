@@ -34,7 +34,10 @@ namespace Elementborn.Game
             float d = Vector3.Distance(playerPosition, transform.position);
 
             if (d <= discoverRange && MapState.Instance != null && MapState.Instance.Discover(riftId))
+            {
                 GameHud.Instance?.Toast("Leyline attuned — " + riftName);
+                AudioController.Instance?.Confirm();
+            }
 
             if (d > interactRange) return false;
             interaction = new Interaction(d, 0, "Leyline map", () => MapViewerController.Instance?.Open());

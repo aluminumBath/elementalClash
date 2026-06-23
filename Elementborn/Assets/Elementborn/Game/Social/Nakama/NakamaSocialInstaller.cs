@@ -1,6 +1,7 @@
 #if ELEMENTBORN_NAKAMA
 using UnityEngine;
 using Elementborn.Core.Social;
+using Elementborn.Game;
 
 namespace Elementborn.Game.Social.NakamaNet
 {
@@ -18,6 +19,7 @@ namespace Elementborn.Game.Social.NakamaNet
         [SerializeField] private string serverKey = "defaultkey";
 
         private NakamaConnection _connection;
+        private NakamaFriendPresence _presence;
 
         private void Awake()
         {
@@ -35,6 +37,9 @@ namespace Elementborn.Game.Social.NakamaNet
             var hub = SocialHub.Instance;
             if (hub != null)
                 hub.SetIdentity(_connection.UserId, _connection.Username ?? "Player", UserRole.Player, hub.CurrentSessionId);
+
+            _presence = new NakamaFriendPresence(_connection);
+            MapState.SetPresence(_presence); // the map's live friend-position feed (status presence)
 
             var invites = FindObjectOfType<InviteController>();
             if (invites != null) invites.JoinSession += OnJoinSession;
@@ -54,6 +59,7 @@ namespace Elementborn.Game.Social.NakamaNet
 
         private async void OnDestroy()
         {
+            MapState.ClearPresence(_presence);
             if (_connection != null) await _connection.CloseAsync();
         }
     }

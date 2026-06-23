@@ -44,10 +44,26 @@ The runtime layer is in place, reading the canonical `WorldMap` (bounds ±250; s
 4. **Persistence** — `MapState.CaptureInto`/`RestoreFrom` save discovered rifts + the local sharing opt-in via
    `SaveData.discoveredRifts` / `shareLocation`, folded into `PlayerInventory`.
 
+### Friend positions (the live feed)
+
+The receive side is built and runs offline. A Core `PresenceRegistry` holds other players' positions with a
+freshness window (a friend silent past the window drops off the map on their own). `MapState` owns one, and each
+poll (~0.5 s) drives a registered `IFriendPresence` producer — publishing the local position when the player has
+opted in, and pumping friends' positions into the registry — then rebuilds the **consent-gated** friend set
+(`Locator.VisibleFriends`, so only friends who are both broadcasting and known appear). Friends are drawn on the
+map viewer and the minimap (green). With no producer registered the set stays empty, exactly as before.
+
+A `SimulatedFriendPresence` component (sandbox demo, added by the bootstrap) seeds one ally and orbits it so the
+markers + consent path are visible without a server. Online, **`NakamaFriendPresence`** (behind the
+`ELEMENTBORN_NAKAMA` define) is the real producer: it broadcasts the local position as the player's Nakama status —
+packed by the pure, tested `PresenceCodec` — only while sharing, follows the current friends to receive theirs, and
+caches what arrives, mirroring the existing Nakama adapters. `NakamaSocialInstaller` registers it after connect via
+`MapState.SetPresence(...)`.
+
 ### Remaining
-- **Live friend positions** — the consent-gated path is wired (`Locator.VisibleFriends`, the local opt-in toggle),
-  but there's no position feed yet; `MapState` passes an empty set, so friend markers stay correct-but-empty until
-  the Nakama presence layer pushes positions. **Locate-self is fully live.**
+- **Live verification** — `NakamaFriendPresence` follows the project's live-server Nakama workflow; the offline
+  gates don't compile the `#if` branch, so exercise it against a running Nakama with two clients. The dev simulator
+  stands in offline, and `PresenceCodec` is unit-tested.
 - **VR opener** — like the other overlays, **M** is keyboard-only (the rift's Interact gives a partial VR path once
   Interact is bound). Tracked in `VR_INPUT_MAP.md`.
 

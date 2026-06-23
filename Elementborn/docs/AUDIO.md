@@ -44,6 +44,8 @@ the game, meant to be replaced with real foley/music later.
 - **UI** — buttons built by `UiTheme.Button` play `UiClick` automatically; the menus play confirm/back.
 - **Progression & economy** — level-up plays `LevelUp`; quest turn-in and shop buy/sell play `Coin` (a failed
   buy/sell or feeding plays `UiBack`); loot drops play `Pickup`; feeding a sidekick plays `UiConfirm`.
+- **Map & travel** — attuning a leyline rift plays `UiConfirm` (alongside the toast); a leyline fast-travel warp
+  plays `WhooshShort`.
 
 ## Replacing the placeholders
 1. Drop a `.wav`/`.ogg` with the **same filename** into `Assets/Elementborn/Resources/Audio/`.

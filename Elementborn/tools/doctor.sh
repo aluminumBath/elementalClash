@@ -20,6 +20,13 @@ fi
 # 2. Committed franchise-term guard.
 if sh tools/ip-guard.sh 2>/dev/null | grep -q "clean"; then ok "ip-guard.sh (franchise terms)"; else bad "ip-guard.sh reported issues"; fi
 
+# 2b. Imports: every `using` resolves to a declared namespace or a known external root.
+if sh tools/check-imports.sh >/tmp/eb_imports.log 2>&1; then
+    ok "imports (using directives resolve)"
+else
+    bad "invalid using directives:"; sed 's/^/      /' /tmp/eb_imports.log
+fi
+
 # 3. Standing IP grep (the lighter, hand-run check).
 if [ -z "$(grep -rni 'bending\|bender\|\bbend\b\|\bbends\b\|\bavatar\b\|BendingVR' Assets docs README.md nakama 2>/dev/null | grep -v 'humanoid rig')" ]; then
     ok "standing IP grep"

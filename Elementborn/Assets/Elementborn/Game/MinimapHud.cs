@@ -17,10 +17,12 @@ namespace Elementborn.Game
 
         private RectTransform _plot;
         private readonly List<Image> _pool = new List<Image>();
+        private readonly List<Image> _friendPool = new List<Image>();
 
         private static readonly Color Frame   = new Color(0.06f, 0.07f, 0.10f, 0.78f);
         private static readonly Color RiftDot  = new Color(0.45f, 0.85f, 1f, 1f);
         private static readonly Color SelfDot  = new Color(0.95f, 0.85f, 0.30f, 1f);
+        private static readonly Color FriendDot = new Color(0.55f, 0.95f, 0.55f, 1f);
 
         private void Awake() => Build();
 
@@ -80,6 +82,18 @@ namespace Elementborn.Game
                 dot.gameObject.SetActive(true);
             }
             for (int i = used; i < _pool.Count; i++) _pool[i].gameObject.SetActive(false);
+
+            int usedF = 0;
+            foreach (var f in state.FriendMarkers())
+            {
+                if (!Minimap.WithinRange(c, range, f.World)) continue;
+                float u = (f.World.x - c.x) / range;
+                float v = (f.World.z - c.z) / range;
+                var dot = FriendFromPool(usedF++);
+                dot.rectTransform.anchoredPosition = new Vector2(u * half, v * half);
+                dot.gameObject.SetActive(true);
+            }
+            for (int i = usedF; i < _friendPool.Count; i++) _friendPool[i].gameObject.SetActive(false);
         }
 
         private Image FromPool(int i)
@@ -91,6 +105,17 @@ namespace Elementborn.Game
                 _pool.Add(d);
             }
             return _pool[i];
+        }
+
+        private Image FriendFromPool(int i)
+        {
+            while (_friendPool.Count <= i)
+            {
+                var d = Dot("Friend", FriendDot, 11f);
+                d.rectTransform.SetParent(_plot, false);
+                _friendPool.Add(d);
+            }
+            return _friendPool[i];
         }
     }
 }

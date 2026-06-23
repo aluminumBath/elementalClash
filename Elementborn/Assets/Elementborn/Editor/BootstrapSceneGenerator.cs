@@ -136,6 +136,12 @@ namespace Elementborn.EditorTools
             var rifts = new GameObject("Leyline Rifts");
             Add(rifts, "LeylineRiftSpawner");
 
+            // Demo friend presence (sandbox only): seeds one ally and reports it orbiting the player so the map's
+            // friend markers are visible without a server or a second client. Remove the object for a real build —
+            // the networked build registers a Nakama presence source instead. See docs/MAP.md.
+            var demoFriend = new GameObject("Demo Friend (presence sim)");
+            Add(demoFriend, "SimulatedFriendPresence");
+
             var music = new GameObject("Music");
             Add(music, "MusicController");        // looping ambient bed
 
