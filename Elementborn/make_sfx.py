@@ -69,6 +69,7 @@ def finish(sig):
 
 def gen():
     s = {}
+    np.random.seed(7)  # reproducible synthesis
     # Elemental
     s["fire_explosion"] = bandnoise(0.6, 30, 500) * expdecay(0.6, 0.16) \
         + 0.6 * bandnoise(0.6, 200, 3500) * expdecay(0.6, 0.05)

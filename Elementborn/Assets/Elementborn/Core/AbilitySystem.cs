@@ -89,6 +89,9 @@ namespace Elementborn.Core
             };
         }
 
+        private AbilityOutcome ResolveWeapon(ChannelingIntent intent) =>
+            Weapons.Resolve(new WeaponInstance(_loadout.Weapon, WeaponMaterial.Metal), intent);
+
         private AbilityOutcome ResolveFire(ChannelingIntent intent)
         {
             bool hasLava = _loadout.HasSubArt(SubArt.Magmacraft);

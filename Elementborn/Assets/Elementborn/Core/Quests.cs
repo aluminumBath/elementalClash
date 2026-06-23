@@ -106,6 +106,14 @@ namespace Elementborn.Core
             return list;
         }
 
+        private IReadOnlyList<QuestState> Filter(string npcId, QuestStatus status)
+        {
+            var list = new List<QuestState>();
+            foreach (var s in _states.Values)
+                if (s.Definition.GiverNpcId == npcId && s.Status == status) list.Add(s);
+            return list;
+        }
+
         public bool Start(string id)
         {
             var s = Get(id);
