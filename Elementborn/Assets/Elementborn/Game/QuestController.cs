@@ -66,6 +66,7 @@ namespace Elementborn.Game
             if (reward.Amount > 0) msg += "  +" + reward.Amount + " " + reward.Currency;
             if (!string.IsNullOrEmpty(reward.Note)) msg += "  " + reward.Note;
             GameHud.Instance?.Toast(msg);
+            QuestEvents.RaiseQuestCompleted(questId);
             return true;
         }
 

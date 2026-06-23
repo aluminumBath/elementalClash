@@ -102,7 +102,9 @@ namespace Elementborn.EditorTools
             Add(quests, "QuestController");
             Add(quests, "DialogueController");   // NPC conversations: accept / turn in quests
             Add(quests, "QuestLogController");   // press L for the quest log
-            Add(quests, "InventoryController");  // press I for the inventory
+            Add(quests, "InventoryController");   // press I for the inventory
+            Add(quests, "ProgressionController"); // XP / levels from combat + quests
+            Add(quests, "CharacterScreenController"); // press C for level / XP
 
             BuildDemoContent();
 
@@ -165,6 +167,7 @@ namespace Elementborn.EditorTools
 
             Add(root, "PlayerInteractor");        // adds an InteractionArbiter to the rig automatically
             Add(root, "PlantControlController");
+            Add(root, "Damageable");              // the player can take damage; level bonus raises its max health
 
             SavePrefab(root, path);
         }
@@ -201,6 +204,7 @@ namespace Elementborn.EditorTools
 
             Add(root, "PlayerInteractor");
             Add(root, "PlantControlController");
+            Add(root, "Damageable");
 
             SavePrefab(root, path);
             Debug.LogWarning("[Bootstrap] VR rig is a starting point: enable an XR plugin (Project Settings > " +

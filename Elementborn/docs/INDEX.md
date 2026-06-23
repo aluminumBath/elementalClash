@@ -50,6 +50,7 @@ Start here. The docs in reading order:
     quests, and how to add more.
 29. **`ITEMS.md`** — items, the inventory, the shop (buy/sell), sidekick feeding, and collect-item quests.
 30. **`SELF_HOSTING.md`** — running your own server (Nakama) and shipping a client that connects to it.
+31. **`PROGRESSION.md`** — XP, levels, the max-health bonus, and how leveling persists.
 
 ## By task
 

@@ -188,6 +188,7 @@ namespace Elementborn.Game
             }
             foreach (var e in Items.Entries()) { d.itemIds.Add(e.Key); d.itemCounts.Add(e.Value); }
             QuestController.Instance?.CaptureInto(d);
+            ProgressionController.Instance?.CaptureInto(d);
             return d;
         }
 
@@ -244,6 +245,7 @@ namespace Elementborn.Game
             int itemCount = Mathf.Min(d.itemIds.Count, d.itemCounts.Count);
             for (int i = 0; i < itemCount; i++) Items.Add(d.itemIds[i], d.itemCounts[i]);
             QuestController.Instance?.RestoreFrom(d);
+            ProgressionController.Instance?.RestoreFrom(d);
 
             WalletChanged?.Invoke();
             OwnedChanged?.Invoke();

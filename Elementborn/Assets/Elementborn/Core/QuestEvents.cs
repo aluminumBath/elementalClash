@@ -15,11 +15,13 @@ namespace Elementborn.Core
         public static event Action<string, int> CurrencyGained;
         public static event Action<string, int> ItemCollected;
         public static event Action<string> TalkedToNpc;
+        public static event Action<string> QuestCompleted;
 
         public static void RaiseCreatureDefeated(string creatureKind) => CreatureDefeated?.Invoke(creatureKind);
         public static void RaiseCreatureTamed(string creatureKind) => CreatureTamed?.Invoke(creatureKind);
         public static void RaiseCurrencyGained(string currency, int amount) => CurrencyGained?.Invoke(currency, amount);
         public static void RaiseItemCollected(string itemId, int amount) => ItemCollected?.Invoke(itemId, amount);
         public static void RaiseTalkedToNpc(string npcId) => TalkedToNpc?.Invoke(npcId);
+        public static void RaiseQuestCompleted(string questId) => QuestCompleted?.Invoke(questId);
     }
 }

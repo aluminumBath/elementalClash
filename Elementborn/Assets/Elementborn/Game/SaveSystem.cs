@@ -43,6 +43,9 @@ namespace Elementborn.Game
         public List<string> questIds = new List<string>();
         public List<int> questStatuses = new List<int>();
         public List<string> questProgress = new List<string>();   // one CSV of objective counts per quest
+
+        public int level = 1;
+        public int xp;
     }
 
     /// <summary>
