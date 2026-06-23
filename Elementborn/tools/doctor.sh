@@ -56,6 +56,14 @@ else
     bad "manifest is missing com.unity.modules.vr / .xr (XR packages will fail to resolve)"
 fi
 
+# 5c. Every component the bootstrap generator spawns by name resolves to a real class.
+gen="Assets/Elementborn/Editor/BootstrapSceneGenerator.cs"
+genmiss=0
+for t in $(grep -oE 'Add\([a-zA-Z_.]+, "[A-Za-z]+"\)' "$gen" 2>/dev/null | grep -oE '"[A-Za-z]+"' | tr -d '"' | sort -u); do
+    grep -rqE "class $t\b" Assets/Elementborn --include=*.cs || { genmiss=$((genmiss + 1)); echo "      unresolved component: $t"; }
+done
+if [ "$genmiss" -eq 0 ]; then ok "bootstrap generator component types all resolve to classes"; else bad "$genmiss bootstrap component type(s) don't resolve"; fi
+
 # 6. The Element enum stays exactly {Fire, Water, Earth, Air}.
 MEMBERS=$(awk '/enum Element/{f=1;next} f&&/}/{f=0} f{ sub(/\/\/.*/,""); print }' Assets/Elementborn/Core/Elements.cs \
     | grep -oE '\b[A-Z][A-Za-z]+\b' | sort -u | tr '\n' ' ')

@@ -50,7 +50,8 @@ Start here. The docs in reading order:
     quests, and how to add more.
 29. **`ITEMS.md`** — items, the inventory, the shop (buy/sell), sidekick feeding, and collect-item quests.
 30. **`SELF_HOSTING.md`** — running your own server (Nakama) and shipping a client that connects to it.
-31. **`PROGRESSION.md`** — XP, levels, the max-health bonus, and how leveling persists.
+31. **`PROGRESSION.md`** — XP, levels, perks, the max-health bonus, and how leveling persists.
+32. **`WORLD.md`** — the data-driven world: generation, terrain, and procedural population via the spawner.
 
 ## By task
 

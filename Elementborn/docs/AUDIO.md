@@ -12,7 +12,7 @@ the game, meant to be replaced with real foley/music later.
 - Volumes come from **`SettingsStore.Current`**: `masterVolume` → `AudioListener.volume`, `sfxVolume` scales
   one-shots, `musicVolume` scales the ambient bed. The settings menu (Esc) changes them live.
 
-## The placeholder clips (16)
+## The placeholder clips (16 SFX + 1 music loop)
 | File (`Resources/Audio/…`) | `SfxKind` | Used for |
 |---|---|---|
 | `fire_explosion.wav` | `FireExplosion` | Fire projectile / blast; fire impacts |
@@ -31,6 +31,7 @@ the game, meant to be replaced with real foley/music later.
 | `level_up.wav` | `LevelUp` | Rising arpeggio on level-up |
 | `coin.wav` | `Coin` | Reward / buy / sell |
 | `pickup.wav` | `Pickup` | Loot / item gained |
+| `music_calm.wav` | `MusicCalm` | Looping ambient bed (seamless) |
 
 ## Mapping (where sounds fire)
 - **Abilities** — `AbilityVfxBinder` calls `AudioController.PlayAbility(outcome, origin)` for every resolved
@@ -52,6 +53,13 @@ the game, meant to be replaced with real foley/music later.
    `Resources/Audio/`.
 
 ## Ambient / music
+## Music
+
+A calm, seamlessly-looping pad (`music_calm`) plays on the ambient channel via `MusicController` (the bootstrap
+scene adds one). It's synthesized so the waveform is continuous at the loop point (no click), and it follows the
+**music volume** setting. Swap in a real track by dropping a `music_calm.wav`/`.ogg` of any length with the same
+name — for long music, set its import type to **Streaming**.
+
 `AudioController.Ambient(SfxKind.FireBurn)` (or any clip) loops on the ambient channel at `musicVolume`; call
 `StopAmbient()` to stop. Nothing starts ambient by default — wire it where it makes sense (e.g., a volcano
 biome, or a music track you add).

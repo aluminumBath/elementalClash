@@ -10,7 +10,7 @@ namespace Elementborn.Game
         UiClick, UiConfirm, UiBack,
         FireExplosion, FireBurn, WaterSplash, RockBreak, WindWhoosh,
         IceCrack, ZapLightning, MetalClang, HitSoft, WhooshShort,
-        LevelUp, Coin, Pickup
+        LevelUp, Coin, Pickup, MusicCalm
     }
 
     /// <summary>
@@ -34,6 +34,7 @@ namespace Elementborn.Game
             { SfxKind.ZapLightning, "zap_lightning" }, { SfxKind.MetalClang, "metal_clang" },
             { SfxKind.HitSoft, "hit_soft" }, { SfxKind.WhooshShort, "whoosh_short" },
             { SfxKind.LevelUp, "level_up" }, { SfxKind.Coin, "coin" }, { SfxKind.Pickup, "pickup" },
+            { SfxKind.MusicCalm, "music_calm" },
         };
 
         private readonly Dictionary<SfxKind, AudioClip> _clips = new Dictionary<SfxKind, AudioClip>();

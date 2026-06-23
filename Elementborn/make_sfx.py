@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Synthesize Elementborn's placeholder sound effects with numpy.
 
-Regenerates the 16 royalty-free placeholder clips referenced by docs/AUDIO.md, using simple synthesis —
+Regenerates the 16 placeholder SFX (plus a looping ambient music bed) referenced by docs/AUDIO.md, using simple synthesis —
 filtered noise, sweeps, and inharmonic partials. They're deliberately rough stand-ins until real sound design.
 
 Usage:
@@ -67,6 +67,14 @@ def finish(sig):
     return (sig * 32767).astype(np.int16)
 
 
+def finish_loop(sig):
+    """Normalize to int16 with no boundary fades, so the clip loops seamlessly."""
+    sig = np.asarray(sig, dtype=np.float64)
+    peak = np.max(np.abs(sig)) or 1.0
+    sig = 0.5 * sig / peak
+    return (sig * 32767).astype(np.int16)
+
+
 def gen():
     s = {}
     np.random.seed(7)  # reproducible synthesis
@@ -118,6 +126,23 @@ def gen():
     return s
 
 
+def gen_music():
+    """A calm, seamlessly-looping ambient pad. Frequencies snap to whole cycles over the loop length so the
+    waveform is continuous at the loop point (no click)."""
+    dur = 8.0
+    t = _t(dur)
+
+    def pad(freq):
+        k = round(freq * dur)          # whole cycles over the loop
+        return np.sin(2 * np.pi * (k / dur) * t)
+
+    chord = (0.6 * pad(110) + 0.4 * pad(165) + 0.35 * pad(220)
+             + 0.25 * pad(330) + 0.15 * pad(440))
+    swell = 0.6 + 0.4 * np.sin(2 * np.pi * (1 / dur) * t)            # one slow cycle
+    shimmer = 0.1 * pad(660) * (0.5 + 0.5 * np.sin(2 * np.pi * (2 / dur) * t))
+    return {"music_calm": chord * swell + shimmer}
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for name, sig in gen().items():
@@ -127,7 +152,14 @@ def main():
             w.setsampwidth(2)
             w.setframerate(SR)
             w.writeframes(finish(sig).tobytes())
-    print(f"Wrote {len(gen())} SFX to {OUT}")
+    for name, sig in gen_music().items():
+        path = os.path.join(OUT, name + ".wav")
+        with wave.open(path, "w") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(SR)
+            w.writeframes(finish_loop(sig).tobytes())
+    print(f"Wrote {len(gen())} SFX + {len(gen_music())} music to {OUT}")
 
 
 if __name__ == "__main__":

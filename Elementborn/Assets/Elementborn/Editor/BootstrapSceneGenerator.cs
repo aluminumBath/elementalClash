@@ -30,6 +30,9 @@ namespace Elementborn.EditorTools
         private const string FpPrefab = PrefabDir + "/PlayerRig_FirstPerson.prefab";
         private const string TpPrefab = PrefabDir + "/PlayerRig_ThirdPerson.prefab";
         private const string VrPrefab = PrefabDir + "/PlayerRig_VR.prefab";
+        private const string CreaturePrefab = PrefabDir + "/WildCreature.prefab";
+        private const string EnemyPrefab = PrefabDir + "/Enemy.prefab";
+        private const string CivilianPrefab = PrefabDir + "/Civilian.prefab";
 
         // ---- menu items -------------------------------------------------------------------------------------
 
@@ -108,6 +111,19 @@ namespace Elementborn.EditorTools
             Add(quests, "ProgressionHud");        // always-on level / XP bar
 
             BuildDemoContent();
+
+            // World population: the flow's EnterWorld calls spawnPlacer.Place(World), scattering creatures,
+            // enemies, and town civilians across the generated regions (snapped to the mesh terrain).
+            BuildWorldPrefabs();
+            var worldPop = new GameObject("World Population");
+            var placer = Add(worldPop, "WorldSpawnPlacer");
+            Wire(placer, "creaturePrefab", AssetDatabase.LoadAssetAtPath<GameObject>(CreaturePrefab));
+            Wire(placer, "enemyPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefab));
+            Wire(placer, "civilianPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(CivilianPrefab));
+            Wire(flow, "spawnPlacer", placer);
+
+            var music = new GameObject("Music");
+            Add(music, "MusicController");        // looping ambient bed
 
             EnsureDir(SceneDir);
             EditorSceneManager.SaveScene(scene, ScenePath);
@@ -263,6 +279,44 @@ namespace Elementborn.EditorTools
             var mat = MaterialGenerator.Load(materialPath);
             var r = go.GetComponent<MeshRenderer>();
             if (mat != null && r != null) r.sharedMaterial = mat;
+        }
+
+        private static void BuildWorldPrefabs()
+        {
+            EnsureDir(PrefabDir);
+            MaterialGenerator.EnsureMaterials();
+
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(CreaturePrefab) == null)
+            {
+                var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                go.name = "WildCreature";
+                Add(go, "CreatureController");   // adds Damageable
+                Add(go, "Tameable");
+                Add(go, "FactionMember");
+                Paint(go, MaterialGenerator.Foliage);
+                SavePrefab(go, CreaturePrefab);
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefab) == null)
+            {
+                var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                go.name = "Enemy";
+                Object.DestroyImmediate(go.GetComponent<Collider>()); // CharacterController (added below) is the collider
+                Add(go, "EnemyController");      // adds Damageable + FactionMember + CharacterController
+                Paint(go, MaterialGenerator.Fire);
+                SavePrefab(go, EnemyPrefab);
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(CivilianPrefab) == null)
+            {
+                var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                go.name = "Civilian";
+                Add(go, "FactionMember");
+                Paint(go, MaterialGenerator.Air);
+                SavePrefab(go, CivilianPrefab);
+            }
+
+            AssetDatabase.SaveAssets();
         }
 
         private static void SavePrefab(GameObject root, string path)
