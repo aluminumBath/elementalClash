@@ -42,6 +42,10 @@ namespace Elementborn.Core
         public static ChannelerLoadout WeaponUser(WeaponType weapon) =>
             new ChannelerLoadout(null, null, weapon);
 
+        /// <summary>Rebuild a loadout from stored state (used by save/load). Mirrors the private ctor's rules.</summary>
+        public static ChannelerLoadout FromState(IEnumerable<Element> elements, IEnumerable<SubArt> subArts, WeaponType weapon) =>
+            new ChannelerLoadout(elements, subArts, weapon);
+
         public bool HasElement(Element element) => Elements.Contains(element);
         public bool HasSubArt(SubArt subArt) => SubArts.Contains(subArt);
     }

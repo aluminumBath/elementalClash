@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Elementborn.Core",
-        "Elementborn.Game"
+        "Elementborn.Game",
+        "Unity.InputSystem"
     ],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],

@@ -28,6 +28,15 @@ namespace Elementborn.Core
             Recalculate();
         }
 
+        /// <summary>Remove every active effect (a cure, e.g. the healing pomegranate).</summary>
+        public void Clear()
+        {
+            if (_active.Count == 0) return;
+            _active.Clear();
+            _remaining.Clear();
+            Recalculate();
+        }
+
         public void Tick(float deltaTime)
         {
             bool changed = false;

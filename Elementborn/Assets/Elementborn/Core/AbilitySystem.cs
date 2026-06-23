@@ -51,6 +51,21 @@ namespace Elementborn.Core
         public const float AirDashSpeed = 12f;
         public const float AirGlideSpeed = 20f;
 
+        // Heavy (committed power attacks) + Sweep (wide crowd-control arcs) — the extra VR gesture moves.
+        public const float HeavyChargeBonus = 30f;
+        public const float HeavySpeedMul = 0.7f;
+        public const float HeavyKnockback = 10f;
+        public const float FireHeavyDamage = 34f;
+        public const float WaterHeavyDamage = 30f;
+        public const float EarthHeavyDamage = 40f;
+        public const float AirHeavyDamage = 8f;
+        public const float SweepChargeBonus = 18f;
+        public const float SweepKnockback = 7f;
+        public const float FireSweepDamage = 16f;
+        public const float WaterSweepDamage = 8f;
+        public const float EarthSweepDamage = 18f;
+        public const float AirSweepDamage = 6f;
+
         private readonly ChannelerLoadout _loadout;
 
         public AbilitySystem(ChannelerLoadout loadout)
@@ -103,6 +118,26 @@ namespace Elementborn.Core
                 case IntentType.Defend:
                     return new AbilityOutcome(OutcomeKind.Barrier, Element.Fire, AbilityVariant.Standard,
                         intent.Direction, 0f, 0f, StatusEffect.None);
+                case IntentType.Heavy: // overhead meteor lob
+                {
+                    float damage = FireHeavyDamage + HeavyChargeBonus * intent.Charge;
+                    var variant = AbilityVariant.Standard;
+                    var status = StatusEffect.None;
+                    if (hasLava)
+                    {
+                        damage *= LavaDamageMultiplier;
+                        variant = AbilityVariant.Magmacraft;
+                        status = new StatusEffect(StatusKind.Burn, 6f, 3f);
+                    }
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Fire, variant,
+                        intent.Direction, damage, FireProjectileSpeed * HeavySpeedMul, status, HeavyKnockback);
+                }
+                case IntentType.Sweep: // horizontal fire arc
+                {
+                    float damage = FireSweepDamage + SweepChargeBonus * intent.Charge;
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Fire, AbilityVariant.Standard,
+                        intent.Direction, damage, FireProjectileSpeed, StatusEffect.None, SweepKnockback);
+                }
                 default:
                     return AbilityOutcome.Empty;
             }
@@ -136,6 +171,19 @@ namespace Elementborn.Core
                 case IntentType.Defend:
                     return new AbilityOutcome(OutcomeKind.Barrier, Element.Water, AbilityVariant.Ice,
                         intent.Direction, 0f, 0f, StatusEffect.None);
+                case IntentType.Heavy: // rising ice geyser, slows
+                {
+                    float damage = WaterHeavyDamage + HeavyChargeBonus * intent.Charge;
+                    var status = new StatusEffect(StatusKind.Slow, IceSlowMagnitude, IceSlowDuration);
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Water, AbilityVariant.Ice,
+                        intent.Direction, damage, IceSpeed * HeavySpeedMul, status, HeavyKnockback);
+                }
+                case IntentType.Sweep: // water shove, low damage, big push
+                {
+                    float damage = WaterSweepDamage + SweepChargeBonus * intent.Charge;
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Water, AbilityVariant.Standard,
+                        intent.Direction, damage, WaterProjectileSpeed, StatusEffect.None, SweepKnockback);
+                }
                 default:
                     return AbilityOutcome.Empty;
             }
@@ -167,6 +215,20 @@ namespace Elementborn.Core
                 case IntentType.Defend:
                     return new AbilityOutcome(OutcomeKind.Barrier, Element.Earth, AbilityVariant.Standard,
                         intent.Direction, 0f, 0f, StatusEffect.None);
+                case IntentType.Heavy: // driving ground slam (metal shard if sub-art)
+                {
+                    float damage = EarthHeavyDamage + HeavyChargeBonus * intent.Charge;
+                    var variant = AbilityVariant.Standard;
+                    if (hasMetal) { damage *= MetalDamageMultiplier; variant = AbilityVariant.Oreshaping; }
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Earth, variant,
+                        intent.Direction, damage, EarthProjectileSpeed * HeavySpeedMul, StatusEffect.None, HeavyKnockback);
+                }
+                case IntentType.Sweep: // rock wall sweep
+                {
+                    float damage = EarthSweepDamage + SweepChargeBonus * intent.Charge;
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Earth, AbilityVariant.Standard,
+                        intent.Direction, damage, EarthProjectileSpeed, StatusEffect.None, SweepKnockback);
+                }
                 default:
                     return AbilityOutcome.Empty;
             }
@@ -199,6 +261,18 @@ namespace Elementborn.Core
                 case IntentType.Defend:
                     return new AbilityOutcome(OutcomeKind.Barrier, Element.Air, AbilityVariant.Standard,
                         intent.Direction, 0f, 0f, StatusEffect.None);
+                case IntentType.Heavy: // updraft launch: low damage, big knock-up
+                {
+                    float damage = AirHeavyDamage + HeavyChargeBonus * intent.Charge;
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Air, AbilityVariant.Standard,
+                        intent.Direction, damage, AirProjectileSpeed, StatusEffect.None, HeavyKnockback);
+                }
+                case IntentType.Sweep: // downburst gust sweep
+                {
+                    float damage = AirSweepDamage + SweepChargeBonus * intent.Charge;
+                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Air, AbilityVariant.Standard,
+                        intent.Direction, damage, AirProjectileSpeed, StatusEffect.None, SweepKnockback);
+                }
                 default:
                     return AbilityOutcome.Empty;
             }

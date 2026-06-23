@@ -62,10 +62,18 @@ You don't need the whole world wired to confirm the project works:
 
 ## Default controls (flat)
 WASD move · mouse look · click to cast · **E** interact · **F** element-travel · **M** summon mount ·
-**C** summon companions · **F5** save · **F9** load. Bindings live in the input providers — rebind there or
-via an `InputActionAsset`.
+**C** summon companions · **Esc** settings · **F5** save · **F9** load · **F8** save slots.
+
+**Gamepad** works alongside keyboard/mouse: left stick move, right stick look, **RT/LT** cast, **A** dash,
+**LB** defend, **X** interact, **Y** travel, **d-pad up/down** mount/companions, **Start** settings,
+**Select** slots. Every button is **rebindable** in the controls menu (**F10** or **Settings → Controls…**),
+and a read-only **Controls** legend with live glyphs opens with **F1**; changes persist. Full reference:
+**`INPUT.md`**.
 
 ## Where to go next
 - **Make it look right:** `ART_GUIDE.md` + `PALETTE.md` + `UI_SPRITES.md`.
+- **Sound:** `AUDIO.md` (placeholder SFX + how to replace them).
+- **Third-person & consoles:** `PORTING.md` (assign `thirdPersonRigPrefab`, set `preferredFlatMode =
+  ThirdPerson`, and point `FlatInputProvider.aimCamera` at the rig camera).
 - **Ship it:** `DEPLOYMENT.md` §5–§8.
 - **The remaining roadmap:** `WHATS_LEFT.md`.

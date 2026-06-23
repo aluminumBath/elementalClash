@@ -17,6 +17,11 @@ namespace Elementborn.Game
         public Element? PlayerElement { get; set; }
         public bool PlayerIsConfluence { get; set; }
 
+        /// <summary>The chosen character, kept so it can be persisted and rebuilt on load.</summary>
+        public ChannelerLoadout Loadout { get; set; }
+        public RevealTier RevealTier { get; set; }
+        public bool CharacterCreated { get; set; }
+
         public bool HasHouse { get; private set; }
         public Vector3 HouseLocation { get; private set; }
 
@@ -57,6 +62,15 @@ namespace Elementborn.Game
         // --- ownership ---
         public bool Owns(CreatureKind kind) => _owned.Contains(kind);
         public IEnumerable<CreatureKind> Owned => _owned;
+
+        /// <summary>Revoke ownership of a creature (e.g. Kiana confiscating a mistreated one) — it must be tamed
+        /// again from scratch. Returns true if it was owned.</summary>
+        public bool RemoveOwned(CreatureKind kind)
+        {
+            if (!_owned.Remove(kind)) return false;
+            OwnedChanged?.Invoke();
+            return true;
+        }
 
         /// <summary>Whether the player's element lets them use this creature.</summary>
         public bool CanUse(CreatureInfo info)
@@ -152,10 +166,18 @@ namespace Elementborn.Game
                 houseZ = HouseLocation.z,
                 playerElement = PlayerElement.HasValue ? PlayerElement.Value.ToString() : "",
                 isConfluence = PlayerIsConfluence,
+                created = CharacterCreated,
+                revealTier = (int)RevealTier,
+                loadoutWeapon = Loadout != null ? Loadout.Weapon.ToString() : "",
             };
             foreach (var kv in _lures) { d.lureKinds.Add(kv.Key.ToString()); d.lureCounts.Add(kv.Value); }
             foreach (var k in _owned) d.ownedKinds.Add(k.ToString());
             foreach (var v in _ownedVehicles) d.ownedVehicles.Add(v.ToString());
+            if (Loadout != null)
+            {
+                foreach (var el in Loadout.Elements) d.loadoutElements.Add(el.ToString());
+                foreach (var sa in Loadout.SubArts) d.loadoutSubArts.Add(sa.ToString());
+            }
             return d;
         }
 
@@ -192,6 +214,21 @@ namespace Elementborn.Game
             PlayerElement = !string.IsNullOrEmpty(d.playerElement) && System.Enum.TryParse(d.playerElement, out Element e)
                 ? (Element?)e : null;
             PlayerIsConfluence = d.isConfluence;
+
+            CharacterCreated = d.created;
+            RevealTier = (RevealTier)Mathf.Clamp(d.revealTier, 0, 3);
+
+            var els = new List<Element>();
+            foreach (var name in d.loadoutElements)
+                if (System.Enum.TryParse(name, out Element el)) els.Add(el);
+            var subs = new List<SubArt>();
+            foreach (var name in d.loadoutSubArts)
+                if (System.Enum.TryParse(name, out SubArt sa)) subs.Add(sa);
+            WeaponType weapon = WeaponType.None;
+            if (!string.IsNullOrEmpty(d.loadoutWeapon)) System.Enum.TryParse(d.loadoutWeapon, out weapon);
+            Loadout = (els.Count > 0 || weapon != WeaponType.None)
+                ? ChannelerLoadout.FromState(els, subs, weapon)
+                : null;
 
             WalletChanged?.Invoke();
             OwnedChanged?.Invoke();

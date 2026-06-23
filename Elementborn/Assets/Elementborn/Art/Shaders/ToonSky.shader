@@ -1,4 +1,4 @@
-// Elementborn/ToonSky — a procedural toon skybox for the Wind Waker look.
+// Elementborn/ToonSky — a procedural toon skybox for a bright cel-shaded toon look.
 // Vertical top/horizon/ground gradient, a soft sun disc, and drifting toon cloud bands.
 // Assign to RenderSettings.skybox (SceneStyleController does this). URP / Unity 6.
 Shader "Elementborn/ToonSky"

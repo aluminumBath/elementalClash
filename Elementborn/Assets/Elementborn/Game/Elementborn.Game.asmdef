@@ -5,7 +5,8 @@
         "Elementborn.Core",
         "Unity.InputSystem",
         "Unity.XR.Management",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

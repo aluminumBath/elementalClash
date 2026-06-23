@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Package & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # License-free gates (the Unity test job lives in tests.yml).
+      - name: IP / trademark guard
+        run: sh tools/ip-guard.sh
+      - name: Structural validation
+        run: sh tools/validate.sh
+
+      - name: Package scaffold
+        run: |
+          VERSION=$(tr -d ' \n' < VERSION)
+          ZIP="$RUNNER_TEMP/Elementborn-$VERSION.zip"
+          zip -rq "$ZIP" . -x '*.git*' '*/Library/*' '*/Temp/*' '*.DS_Store'
+          echo "ASSET=$ZIP" >> "$GITHUB_ENV"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Elementborn ${{ env.VERSION }}
+          files: ${{ env.ASSET }}
+          generate_release_notes: true

@@ -42,7 +42,8 @@ namespace Elementborn.Game
 
         private void Update()
         {
-            _current = Mathf.MoveTowards(_current, _target, responsiveness * Time.deltaTime);
+            float target = SettingsStore.Current.comfortVignette ? _target : 0f;
+            _current = Mathf.MoveTowards(_current, target, responsiveness * Time.deltaTime);
             if (_material != null) _material.SetFloat(IntensityId, _current);
         }
 

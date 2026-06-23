@@ -68,8 +68,7 @@ namespace Elementborn.Game
         {
             if (travelAction != null && travelAction.action != null && travelAction.action.enabled)
                 return travelAction.action.WasPressedThisFrame();
-            var k = Keyboard.current;
-            return k != null && k.fKey.wasPressedThisFrame;
+            return InputBindings.ElementTravel.WasPressedThisFrame();
         }
 
         private GameObject BuildFloe(Vector3 at)

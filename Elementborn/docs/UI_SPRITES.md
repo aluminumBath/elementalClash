@@ -115,6 +115,11 @@ humanist sans or a soft rounded face suits the Wind-Waker tone; include a bold w
 - 9-slice: Sprite Editor → set Border L/R/T/B to the listed inset → on the `Image`, Type = Sliced, Fill
   Center on. Pixels-Per-Unit 100 is fine; keep it consistent across the set.
 
+
+> **A generated starter set of these sprites already ships** in `Assets/Elementborn/Art/UI/` and
+> `Assets/Elementborn/Art/Particles/` — see `docs/GENERATED_ART.md` for the file→slot map and 9-slice
+> borders. Restyle or replace them freely.
+
 ## Suggested sprite list (one tidy set)
 
 `hud_bar`, `hud_prompt`, `hud_toast`, `hud_chip`, `gem_diamond`, `gem_sapphire`, `gem_emerald`, `gem_ruby`,

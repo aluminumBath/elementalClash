@@ -15,6 +15,9 @@ namespace Elementborn.Game
     public sealed class CreatureController : MonoBehaviour
     {
         [SerializeField] private CreatureKind kind = CreatureKind.Horse;
+
+        /// <summary>This creature's kind (so its mix-attack controller, etc., can look up its data).</summary>
+        public CreatureKind Kind => kind;
         [SerializeField] private float visionRange = 22f;
         [SerializeField] private float wanderRadius = 8f;
         [SerializeField] private float repathInterval = 3f;

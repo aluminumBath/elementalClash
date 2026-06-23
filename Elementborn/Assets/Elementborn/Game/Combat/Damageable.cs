@@ -20,6 +20,8 @@ namespace Elementborn.Game
         private DamageImmunity _immunity = DamageImmunity.None;
         private float _shieldEndTime;
         private float _shieldReduction;
+        private float _damageReduction; // persistent (e.g. faction defense perk); negative = takes more
+        private Element _lastSource = Element.Fire;
 
         public Health Health { get; private set; }
         public StatusController Status { get; private set; }
@@ -51,8 +53,16 @@ namespace Elementborn.Game
             if (_immunity.Blocks(damage)) return;
             if (Time.time < _shieldEndTime && _shieldReduction > 0f)
                 damage = new DamageInfo(damage.Amount * (1f - _shieldReduction), damage.Source, damage.Variant);
+            if (_damageReduction != 0f)
+                damage = new DamageInfo(Mathf.Max(0f, damage.Amount * (1f - _damageReduction)), damage.Source, damage.Variant);
+            _lastSource = damage.Source;
+            if (damage.Amount >= 1f) AudioController.Instance?.PlayImpact(damage.Source, transform.position);
             Health.Apply(damage);
         }
+
+        /// <summary>A standing incoming-damage modifier (faction defense perk). Positive cuts damage, negative
+        /// amplifies it; clamped to a sane band.</summary>
+        public void SetDamageReduction(float reduction01) => _damageReduction = Mathf.Clamp(reduction01, -0.9f, 0.95f);
 
         /// <summary>Briefly reduce incoming direct damage — the Defend / barrier ability.</summary>
         public void Shield(float seconds, float reduction01)
@@ -66,15 +76,24 @@ namespace Elementborn.Game
         public void ApplyStatus(StatusEffect status) => Status.Add(status);
         public void ApplyKnockback(Vector3 impulse) => Knockback.Add(impulse);
 
-        /// <summary>Rebuilds Health at a new maximum (full). Used to apply enemy archetype stats.</summary>
+        /// <summary>Sets the maximum <em>in place</em> — preserves the Health object so existing Died/Damaged
+        /// subscribers (respawn, scoring, weapon reactions) stay valid. Refills to full, matching prior behaviour.</summary>
         public void SetMaxHealth(float max)
         {
-            Health = new Health(max);
-            Health.Died += HandleDeath;
+            if (Health == null)
+            {
+                Health = new Health(max);
+                Health.Died += HandleDeath;
+            }
+            else
+            {
+                Health.SetMax(max);
+            }
         }
 
         private void HandleDeath()
         {
+            AudioController.Instance?.PlayImpact(_lastSource, transform.position);
             if (destroyOnDeath) Destroy(gameObject);
         }
     }

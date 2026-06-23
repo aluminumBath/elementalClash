@@ -1,43 +1,42 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Elementborn.Core;
 
 namespace Elementborn.Game
 {
     /// <summary>
-    /// One interact button that does the contextual thing nearby: mount/dismount a vehicle or creature,
-    /// attempt to tame a weakened creature, or claim a house plot. Each frame it finds the nearest thing
-    /// in reach and shows a prompt on the <see cref="GameHud"/> ("[E] Ride", "[E] Tame Horse", "Weaken it
-    /// first", …); pressing the button acts on it and toasts the result. Put this on the player rig; reads
-    /// the E key by default, or assign an action for a VR controller button.
+    /// The world-object interactable: mount/dismount a vehicle or creature, tame a weakened creature, claim a
+    /// house plot, or open a merchant — whichever is nearest in reach. It no longer reads input or sets the prompt
+    /// itself; it offers its best world action to the <see cref="InteractionArbiter"/> (which it adds to the rig
+    /// automatically), so it can't clash with NPCs, sidekicks, or plant control. Put this on the player rig.
     /// </summary>
-    public sealed class PlayerInteractor : MonoBehaviour
+    public sealed class PlayerInteractor : MonoBehaviour, IInteractable
     {
         [SerializeField] private float reach = 3f;
-        [SerializeField] private InputActionReference interactAction;
 
         private MountController _riding;
 
-        private void Update()
+        private void Awake()
         {
-            bool pressed = InteractPressed();
+            if (GetComponent<InteractionArbiter>() == null) gameObject.AddComponent<InteractionArbiter>();
+        }
+
+        private void OnEnable() { InputBindings.Enable(); InteractionArbiter.Register(this); }
+        private void OnDisable() => InteractionArbiter.Unregister(this);
+
+        public bool TryGetInteraction(Vector3 playerPosition, out Interaction interaction)
+        {
+            interaction = Interaction.None;
 
             if (_riding != null)
             {
-                GameHud.Instance?.SetPrompt("[E] Dismount");
-                if (pressed)
-                {
-                    _riding.Dismount();
-                    _riding = null;
-                    GameHud.Instance?.SetPrompt("");
-                }
-                return;
+                interaction = new Interaction(0f, 10, "Dismount", () => { _riding.Dismount(); _riding = null; });
+                return true;
             }
 
             float best = reach * reach;
             System.Action act = null;
-            string prompt = null;
-            Vector3 p = transform.position;
+            string verb = null;
+            Vector3 p = playerPosition;
 
             foreach (var col in Physics.OverlapSphere(p, reach))
             {
@@ -47,13 +46,7 @@ namespace Elementborn.Game
                 if (mount != null && !mount.IsRidden)
                 {
                     float d = (mount.transform.position - p).sqrMagnitude;
-                    if (d < best)
-                    {
-                        best = d;
-                        var m = mount;
-                        prompt = "[E] Ride";
-                        act = () => { m.Mount(gameObject); _riding = m; GameHud.Instance?.SetPrompt(""); };
-                    }
+                    if (d < best) { best = d; var m = mount; verb = "Ride"; act = () => { m.Mount(gameObject); _riding = m; }; }
                 }
 
                 var tameable = col.GetComponentInParent<Tameable>();
@@ -64,9 +57,7 @@ namespace Elementborn.Game
                     {
                         best = d;
                         var t = tameable;
-                        prompt = t.CanTame(out string reason)
-                            ? $"[E] Tame {CreatureCatalog.For(t.Kind).Name}"
-                            : reason;
+                        verb = t.CanTame(out _) ? $"Tame {CreatureCatalog.For(t.Kind).Name}" : "Tame";
                         act = () => { var o = t.TryTame(); GameHud.Instance?.Toast(o.Reason); };
                     }
                 }
@@ -75,39 +66,20 @@ namespace Elementborn.Game
                 if (plot != null && !plot.Owned)
                 {
                     float d = (plot.transform.position - p).sqrMagnitude;
-                    if (d < best)
-                    {
-                        best = d;
-                        var h = plot;
-                        prompt = "[E] Claim home";
-                        act = () => { bool ok = h.TryClaim(); GameHud.Instance?.Toast(ok ? "Home claimed" : "Couldn't claim it"); };
-                    }
+                    if (d < best) { best = d; var h = plot; verb = "Claim home"; act = () => { bool ok = h.TryClaim(); GameHud.Instance?.Toast(ok ? "Home claimed" : "Couldn't claim it"); }; }
                 }
 
                 var merchant = col.GetComponentInParent<Merchant>();
                 if (merchant != null)
                 {
                     float d = (merchant.transform.position - p).sqrMagnitude;
-                    if (d < best)
-                    {
-                        best = d;
-                        var mc = merchant;
-                        prompt = "[E] Shop";
-                        act = () => mc.Open();
-                    }
+                    if (d < best) { best = d; var mc = merchant; verb = "Shop"; act = () => mc.Open(); }
                 }
             }
 
-            GameHud.Instance?.SetPrompt(prompt ?? "");
-            if (pressed && act != null) act();
-        }
-
-        private bool InteractPressed()
-        {
-            if (interactAction != null && interactAction.action != null && interactAction.action.enabled)
-                return interactAction.action.WasPressedThisFrame();
-            var k = Keyboard.current;
-            return k != null && k.eKey.wasPressedThisFrame;
+            if (act == null || verb == null) return false;
+            interaction = new Interaction(Mathf.Sqrt(best), 5, verb, act);
+            return true;
         }
     }
 }

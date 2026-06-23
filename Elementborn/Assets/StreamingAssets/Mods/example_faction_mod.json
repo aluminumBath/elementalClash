@@ -1,0 +1,30 @@
+{
+  "factions": [
+    {
+      "id": "Emberwrights",
+      "name": "The Emberwrights",
+      "creed": "Fire is craft, not wrath — forge the world, never burn it.",
+      "strength": "Hard-hitting artisan-warriors.",
+      "weakness": "Few, and slow to trust outsiders.",
+      "offenseMultiplier": 1.18,
+      "defenseMultiplier": 1.0,
+      "onConfluence": "Accepts",
+      "onMixedGifts": "Reveres"
+    }
+  ],
+  "enemies": [
+    {
+      "id": "AshHound",
+      "name": "Ash Hound",
+      "behavior": "Runner",
+      "element": "Fire",
+      "maxHealth": 38,
+      "moveSpeed": 6.0,
+      "damage": 11,
+      "attackRange": 1.8,
+      "attackCooldown": 0.9,
+      "scoreValue": 150,
+      "ranged": false
+    }
+  ]
+}

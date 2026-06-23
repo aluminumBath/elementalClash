@@ -116,8 +116,7 @@ namespace Elementborn.Game
         {
             if (summonAction != null && summonAction.action != null && summonAction.action.enabled)
                 return summonAction.action.WasPressedThisFrame();
-            var k = Keyboard.current;
-            return k != null && k.mKey.wasPressedThisFrame;
+            return InputBindings.Mount.WasPressedThisFrame();
         }
     }
 }

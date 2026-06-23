@@ -31,10 +31,7 @@ namespace Elementborn.Game
         private CharacterCreationController _controller;
         private Canvas _canvas;
         private GameObject _pathPanel, _elementPanel, _weaponPanel, _revealPanel;
-        private Text _revealText;
-
-        private static readonly Color PanelColor = new Color(0.08f, 0.09f, 0.12f, 0.92f);
-        private static readonly Color ButtonColor = new Color(0.25f, 0.6f, 0.95f, 1f);
+        private UiLabel _revealText;
 
         private void Awake()
         {
@@ -149,14 +146,14 @@ namespace Elementborn.Game
         // --- ui helpers -------------------------------------------------------------
         private GameObject CreatePanel(string panelName, string title)
         {
-            var panel = new GameObject(panelName, typeof(RectTransform), typeof(Image));
-            panel.transform.SetParent(_canvas.transform, false);
-            var rt = (RectTransform)panel.transform;
+            var img = UiTheme.Panel(_canvas.transform, UiTheme.PanelColor);
+            var panel = img.gameObject;
+            panel.name = panelName;
+            var rt = img.rectTransform;
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.one;
             rt.offsetMin = Vector2.zero;
             rt.offsetMax = Vector2.zero;
-            panel.GetComponent<Image>().color = PanelColor;
             if (!string.IsNullOrEmpty(title))
                 CreateText(panel, title, 54, new Vector2(0f, 230f), new Vector2(800f, 120f));
             return panel;
@@ -164,31 +161,19 @@ namespace Elementborn.Game
 
         private Button CreateButton(GameObject parent, string label, float y, Action onClick)
         {
-            var go = new GameObject($"Btn_{label}", typeof(RectTransform), typeof(Image), typeof(Button));
-            go.transform.SetParent(parent.transform, false);
-            var rt = (RectTransform)go.transform;
-            rt.sizeDelta = new Vector2(360f, 64f);
+            var btn = UiTheme.Button(parent.transform, label, onClick, 360, 64);
+            var rt = (RectTransform)btn.transform;
             rt.anchoredPosition = new Vector2(0f, y);
-            go.GetComponent<Image>().color = ButtonColor;
-            go.GetComponent<Button>().onClick.AddListener(() => onClick());
-            CreateText(go, label, 28, Vector2.zero, new Vector2(360f, 64f));
-            return go.GetComponent<Button>();
+            return btn;
         }
 
-        private Text CreateText(GameObject parent, string content, int size, Vector2 pos, Vector2 dim)
+        private UiLabel CreateText(GameObject parent, string content, int size, Vector2 pos, Vector2 dim)
         {
-            var go = new GameObject("Text", typeof(RectTransform), typeof(Text));
-            go.transform.SetParent(parent.transform, false);
-            var rt = (RectTransform)go.transform;
+            var lbl = UiTheme.Label(parent.transform, content, size, Color.white, TextAnchor.MiddleCenter);
+            var rt = lbl.Rect;
             rt.sizeDelta = dim;
             rt.anchoredPosition = pos;
-            var text = go.GetComponent<Text>();
-            text.text = content;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.fontSize = size;
-            text.color = Color.white;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            return text;
+            return lbl;
         }
 
         private void ShowOnly(GameObject panel)

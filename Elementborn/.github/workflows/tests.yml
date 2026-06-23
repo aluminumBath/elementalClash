@@ -7,6 +7,16 @@ on:
     branches: [ main ]
 
 jobs:
+  guard:
+    name: IP guard + structural validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: IP / trademark guard
+        run: sh tools/ip-guard.sh
+      - name: Structural validation
+        run: sh tools/validate.sh
+
   test:
     name: EditMode + PlayMode
     runs-on: ubuntu-latest

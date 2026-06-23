@@ -16,7 +16,9 @@ namespace Elementborn.Core
         Magmacraft,   // Fire
         SanguineGrip, // Water
         Oreshaping,   // Earth
-        Flight        // Air
+        Flight,       // Air
+        Verdancy,     // Plant control (Water + Earth)
+        Steamcraft    // Steam + healing (Water + Fire)
     }
 
     /// <summary>Maps base elements to their advanced sub-art, mirroring the source lore.</summary>

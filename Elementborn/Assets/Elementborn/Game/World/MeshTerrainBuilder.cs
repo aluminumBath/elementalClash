@@ -30,6 +30,8 @@ namespace Elementborn.Game
         [SerializeField] private int generationSeed = 12345;
         [Tooltip("Cells per chunk edge. Smaller = more, lighter chunks (better culling).")]
         [SerializeField] private int chunkCells = 16;
+        [Tooltip("Blend biome colours across vertices to soften seams (off = crisp per-quad colour).")]
+        [SerializeField] private bool blendBiomeColors = true;
 
         [Header("Toon look")]
         [SerializeField] private Color outlineColor = Color.black;
@@ -84,7 +86,7 @@ namespace Elementborn.Game
             Model = TerrainGenerator.Generate(world, new SystemRandomSource(generationSeed), cfg);
 
             EnsureMaterial();
-            var datas = MeshTerrainGenerator.Build(Model, terrainSize, heightScale, chunkCells);
+            var datas = MeshTerrainGenerator.Build(Model, terrainSize, heightScale, chunkCells, blendBiomeColors);
 
             for (int i = 0; i < datas.Count; i++)
             {

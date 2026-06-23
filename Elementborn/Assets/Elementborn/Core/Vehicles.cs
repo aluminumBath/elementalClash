@@ -57,9 +57,19 @@ namespace Elementborn.Core
                 case CreatureKind.AirDragonfly:
                 case CreatureKind.AirJellyfish:
                 case CreatureKind.Phoenix:
+                case CreatureKind.Roc:
+                case CreatureKind.Thunderbird:
+                case CreatureKind.Ridgewing:
+                case CreatureKind.Glidewisp:
+                case CreatureKind.Skytyrant:
                     return LocomotionType.Flying;
                 case CreatureKind.Mermaid:
                 case CreatureKind.WaterCat:
+                case CreatureKind.Eel:
+                case CreatureKind.Goldkoi:
+                case CreatureKind.Skimfin:
+                case CreatureKind.Gillcloak:
+                case CreatureKind.Tidewarden:
                     return LocomotionType.Water;
                 default:
                     return LocomotionType.Ground;

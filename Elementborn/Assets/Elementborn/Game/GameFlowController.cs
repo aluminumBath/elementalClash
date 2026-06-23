@@ -50,8 +50,45 @@ namespace Elementborn.Game
             if (player == null) player = FindObjectOfType<PlayerCombatController>();
             if (weaponHolder == null) weaponHolder = FindObjectOfType<WeaponHolder>();
             if (rigMovement == null) rigMovement = FindObjectOfType<FirstPersonRig>();
+            if (rigMovement == null) rigMovement = FindObjectOfType<ThirdPersonRig>();
             EnsureEventSystem();
+            AudioController.EnsureInstance();
+            SettingsController.EnsureInstance();
+            RebindController.EnsureInstance();
+            ControlsLegendController.EnsureInstance();
+            InputBindings.Enable();
+            ControlGlyphs.EnsureMonitor();
+            ModLoader.LoadAll();
+
+            // If a finished character was saved, rebuild it and jump straight to the map.
+            var save = SaveSystem.Load();
+            if (save != null && save.created && PlayerInventory.Instance != null)
+            {
+                PlayerInventory.Instance.LoadFrom(save);
+                ApplyLoadedCharacter();
+                EnterMap();
+                return;
+            }
+
             EnterCreation();
+        }
+
+        /// <summary>Applies a loaded character (loadout + faction element) to the live player rig.</summary>
+        private void ApplyLoadedCharacter()
+        {
+            var inv = PlayerInventory.Instance;
+            if (inv == null) return;
+            if (player != null && inv.Loadout != null) player.SetLoadout(inv.Loadout);
+            if (player != null)
+            {
+                var fm = player.GetComponent<FactionMember>();
+                if (fm == null) fm = player.gameObject.AddComponent<FactionMember>();
+                fm.Configure(Faction.Player,
+                    inv.Loadout != null && inv.Loadout.IsChanneler ? inv.PlayerElement : (Element?)null);
+            }
+            Result = inv.Loadout != null
+                ? new CharacterCreationResult(inv.Loadout, inv.RevealTier, inv.PlayerElement ?? default)
+                : (CharacterCreationResult?)null;
         }
 
         // ---- stages ------------------------------------------------------------------------
@@ -82,6 +119,9 @@ namespace Elementborn.Game
                     PlayerInventory.Instance.PlayerElement =
                         r.Loadout != null && r.Loadout.IsChanneler ? r.ChosenElement : (Element?)null;
                     PlayerInventory.Instance.PlayerIsConfluence = r.Loadout != null && r.Loadout.IsConfluence;
+                    PlayerInventory.Instance.Loadout = r.Loadout;
+                    PlayerInventory.Instance.RevealTier = r.Tier;
+                    PlayerInventory.Instance.CharacterCreated = true;
                 }
             });
             _creationGo.AddComponent<CharacterCreationUI>().OnComplete.AddListener(EnterMap);

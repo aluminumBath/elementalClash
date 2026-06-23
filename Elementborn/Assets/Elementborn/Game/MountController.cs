@@ -159,6 +159,8 @@ namespace Elementborn.Game
                     if (k.dKey.isPressed) turn += 1f;
                     if (k.aKey.isPressed) turn -= 1f;
                 }
+                var pad = Gamepad.current;
+                if (pad != null) { Vector2 s = pad.leftStick.ReadValue(); forward += s.y; turn += s.x; }
             }
 
             if (verticalAction != null && verticalAction.action != null && verticalAction.action.enabled)
@@ -173,6 +175,8 @@ namespace Elementborn.Game
                     if (k.spaceKey.isPressed) vertical += 1f;
                     if (k.leftCtrlKey.isPressed) vertical -= 1f;
                 }
+                var pad = Gamepad.current;
+                if (pad != null) vertical += pad.rightTrigger.ReadValue() - pad.leftTrigger.ReadValue();
             }
         }
 

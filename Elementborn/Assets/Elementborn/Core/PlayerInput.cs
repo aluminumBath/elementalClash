@@ -9,7 +9,10 @@ namespace Elementborn.Core
         PrimaryCast,   // fire blast, water whip, earth hurl, air push...
         SecondaryCast, // charged / sub-art variant
         Defend,        // shield / earth wall
-        Dash
+        Dash,
+        Heavy,         // committed power attack (overhead slam / drive)
+        Sweep,         // wide horizontal crowd-control arc
+        Signature      // a hidden, element-specific signature move (special gesture)
     }
 
     /// <summary>

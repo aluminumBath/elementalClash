@@ -22,6 +22,19 @@ namespace Elementborn.Game
         [SerializeField] private float visionRange = 30f;
         [SerializeField] private float retargetInterval = 0.5f;
         [SerializeField] private float gravity = -9.81f;
+        [Tooltip("Windup before an attack lands, so it can be dodged. 0 = instant (default, world enemies).")]
+        [SerializeField] private float telegraphTime = 0f;
+
+        /// <summary>Raised when a telegraphed attack begins its windup (hook for VFX/audio).</summary>
+        public event System.Action AttackTelegraphed;
+        /// <summary>Raised when a telegraphed attack connects.</summary>
+        public event System.Action AttackLanded;
+        /// <summary>Raised when the target escaped the attack's range during the windup.</summary>
+        public event System.Action AttackDodged;
+
+        /// <summary>Give this enemy a dodgeable windup (used by the arena). 0 restores instant attacks.</summary>
+        public void SetTelegraph(float seconds) => telegraphTime = Mathf.Max(0f, seconds);
+        public bool IsWindingUp => _winding;
 
         private EnemyStats _stats;
         private Damageable _self;
@@ -31,6 +44,8 @@ namespace Elementborn.Game
         private bool _autoTarget;
         private float _retargetTimer;
         private float _attackTimer;
+        private bool _winding;
+        private float _windTimer;
         private float _verticalVelocity;
         private bool _scored;
 
@@ -48,6 +63,27 @@ namespace Elementborn.Game
             Configure(newKind);
             var fm = _faction != null ? _faction : GetComponent<FactionMember>();
             fm?.Configure(faction, element);
+        }
+
+        /// <summary>Configure from a registry id — built-in ("Grunt") or modded — so data-driven and modded
+        /// enemies spawn through the same door. Falls back to a Grunt if the id is unknown.</summary>
+        public void ConfigureById(string id, Faction faction, Element? element)
+        {
+            var def = EnemyRegistry.Get(id);
+            if (def == null) { Configure(EnemyKind.Grunt, faction, element); return; }
+            kind = def.BaseKind;
+            _stats = def.Stats;
+            if (_self != null) _self.SetMaxHealth(_stats.MaxHealth);
+            var fm = _faction != null ? _faction : GetComponent<FactionMember>();
+            fm?.Configure(faction, element ?? def.Element);
+        }
+
+        /// <summary>Force a specific target (the arena points every enemy at the player).</summary>
+        public void SetTarget(Transform t)
+        {
+            target = t;
+            _autoTarget = t == null;
+            _targetDamageable = t != null ? t.GetComponentInParent<IDamageable>() : null;
         }
 
         private void Awake()
@@ -107,21 +143,38 @@ namespace Elementborn.Game
                 Vector3 dir = distance > 0.001f ? toTarget / distance : transform.forward;
                 transform.forward = dir;
 
-                float preferred = _stats.IsRanged ? _stats.AttackRange * 0.8f : _stats.AttackRange;
-
-                if (distance > preferred)
-                    horizontal = dir * (_stats.MoveSpeed * _self.SpeedMultiplier);
-                else if (_stats.IsRanged && distance < preferred * 0.5f)
-                    horizontal = -dir * (_stats.MoveSpeed * 0.6f * _self.SpeedMultiplier); // kite back
-
-                if (distance <= _stats.AttackRange)
+                if (_winding)
                 {
-                    _attackTimer -= Time.deltaTime;
-                    if (_attackTimer <= 0f)
+                    // Committed to a telegraphed attack: hold position, then strike (or whiff if dodged).
+                    _windTimer -= Time.deltaTime;
+                    if (_windTimer <= 0f) ResolveTelegraphedStrike(distance);
+                }
+                else
+                {
+                    float preferred = _stats.IsRanged ? _stats.AttackRange * 0.8f : _stats.AttackRange;
+
+                    if (distance > preferred)
+                        horizontal = dir * (_stats.MoveSpeed * _self.SpeedMultiplier);
+                    else if (_stats.IsRanged && distance < preferred * 0.5f)
+                        horizontal = -dir * (_stats.MoveSpeed * 0.6f * _self.SpeedMultiplier); // kite back
+
+                    if (distance <= _stats.AttackRange)
                     {
-                        _targetDamageable?.Apply(new DamageInfo(_stats.Damage, Element.Earth));
-                        if (target != null) FactionMember.RegisterHit(target.gameObject, gameObject);
-                        _attackTimer = _stats.AttackCooldown;
+                        _attackTimer -= Time.deltaTime;
+                        if (_attackTimer <= 0f)
+                        {
+                            if (telegraphTime > 0f)
+                            {
+                                _winding = true;
+                                _windTimer = telegraphTime;
+                                AttackTelegraphed?.Invoke();
+                            }
+                            else
+                            {
+                                Strike();
+                                _attackTimer = _stats.AttackCooldown;
+                            }
+                        }
                     }
                 }
             }
@@ -135,6 +188,30 @@ namespace Elementborn.Game
             Vector3 motion = horizontal;
             motion.y = _verticalVelocity;
             _cc.Move(motion * Time.deltaTime);
+        }
+
+        private void ResolveTelegraphedStrike(float distance)
+        {
+            _winding = false;
+            _attackTimer = _stats.AttackCooldown;
+
+            // A little grace beyond exact range so a near-miss still reads as a fair hit.
+            if (distance <= _stats.AttackRange * 1.15f)
+            {
+                Strike();
+                AttackLanded?.Invoke();
+            }
+            else
+            {
+                AttackDodged?.Invoke();
+                ScoreController.Instance?.RegisterDodge();
+            }
+        }
+
+        private void Strike()
+        {
+            _targetDamageable?.Apply(new DamageInfo(_stats.Damage, Element.Earth));
+            if (target != null) FactionMember.RegisterHit(target.gameObject, gameObject);
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Elementborn.Game
 {
-    /// <summary>Flat, JsonUtility-friendly snapshot of the player's progression.</summary>
+    /// <summary>Flat, JsonUtility-friendly snapshot of the player's progression and chosen character.</summary>
     [Serializable]
     public class SaveData
     {
@@ -27,36 +27,61 @@ namespace Elementborn.Game
 
         public string playerElement = "";
         public bool isConfluence;
+
+        // Character (so a saved run can skip creation and rebuild the exact loadout).
+        public bool created;
+        public int revealTier;
+        public List<string> loadoutElements = new List<string>();
+        public List<string> loadoutSubArts = new List<string>();
+        public string loadoutWeapon = "";
+
+        public long savedUnixSeconds;
     }
 
     /// <summary>
-    /// Reads and writes a <see cref="SaveData"/> as JSON in the platform's persistent data folder. Used by
-    /// <see cref="SaveController"/>; the actual progression lives on <see cref="PlayerInventory"/>.
+    /// Reads and writes <see cref="SaveData"/> as JSON in the platform's persistent data folder, with support
+    /// for multiple save slots. <see cref="CurrentSlot"/> selects which file the parameterless calls use; slot 0
+    /// keeps the original filename so existing saves still load. Used by <see cref="SaveController"/> and
+    /// <see cref="SaveSlotController"/>; the live progression lives on <see cref="PlayerInventory"/>.
     /// </summary>
     public static class SaveSystem
     {
-        private const string FileName = "elementborn_save.json";
-        private static string FilePath => System.IO.Path.Combine(Application.persistentDataPath, FileName);
+        public const int SlotCount = 3;
 
-        public static bool Exists => File.Exists(FilePath);
+        /// <summary>The slot the parameterless Save/Load/Exists/Delete operate on.</summary>
+        public static int CurrentSlot { get; set; } = 0;
 
-        public static void Save(SaveData data)
+        private static string PathFor(int slot) => slot <= 0
+            ? Path.Combine(Application.persistentDataPath, "elementborn_save.json")
+            : Path.Combine(Application.persistentDataPath, $"elementborn_save_{slot}.json");
+
+        // ---- current-slot convenience (back-compatible API) -------------------------------
+        public static bool Exists => ExistsSlot(CurrentSlot);
+        public static void Save(SaveData data) => SaveSlot(CurrentSlot, data);
+        public static SaveData Load() => LoadSlot(CurrentSlot);
+        public static void Delete() => DeleteSlot(CurrentSlot);
+
+        // ---- explicit slot operations -----------------------------------------------------
+        public static bool ExistsSlot(int slot) => File.Exists(PathFor(slot));
+
+        public static void SaveSlot(int slot, SaveData data)
         {
             if (data == null) return;
-            try { File.WriteAllText(FilePath, JsonUtility.ToJson(data, true)); }
+            data.savedUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            try { File.WriteAllText(PathFor(slot), JsonUtility.ToJson(data, true)); }
             catch (Exception e) { Debug.LogWarning($"[Elementborn] Save failed: {e.Message}"); }
         }
 
-        public static SaveData Load()
+        public static SaveData LoadSlot(int slot)
         {
-            try { if (File.Exists(FilePath)) return JsonUtility.FromJson<SaveData>(File.ReadAllText(FilePath)); }
+            try { if (File.Exists(PathFor(slot))) return JsonUtility.FromJson<SaveData>(File.ReadAllText(PathFor(slot))); }
             catch (Exception e) { Debug.LogWarning($"[Elementborn] Load failed: {e.Message}"); }
             return null;
         }
 
-        public static void Delete()
+        public static void DeleteSlot(int slot)
         {
-            try { if (File.Exists(FilePath)) File.Delete(FilePath); }
+            try { if (File.Exists(PathFor(slot))) File.Delete(PathFor(slot)); }
             catch (Exception e) { Debug.LogWarning($"[Elementborn] Delete failed: {e.Message}"); }
         }
     }

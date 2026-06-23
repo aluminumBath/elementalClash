@@ -1,4 +1,4 @@
-// Elementborn/ToonWater — a stylised toon water surface for the Wind Waker look.
+// Elementborn/ToonWater — a stylised toon water surface for a bright cel-shaded toon look.
 // Deep/shallow gradient, banded (cel) lighting, moving foam lines, gentle vertex waves,
 // and a fresnel sparkle. Opaque, lit by the main directional light. URP / Unity 6.
 Shader "Elementborn/ToonWater"

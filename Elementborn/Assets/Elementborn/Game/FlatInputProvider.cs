@@ -6,13 +6,12 @@ using Elementborn.Core;
 namespace Elementborn.Game
 {
     /// <summary>
-    /// Flat, first-person input via mouse and keyboard:
-    ///   LMB  (hold to charge, release) = primary cast
-    ///   RMB  (hold to charge, release) = secondary cast (lightning for fire, ice for water)
-    ///   F                              = defend
-    ///   Space                          = dash
-    /// Movement and look live in <see cref="FirstPersonRig"/>; this only emits combat intents.
-    /// Aim comes from the camera's forward, so a future third-person rig only changes that reference.
+    /// Flat combat input. Reads the rebindable <see cref="InputBindings"/> actions (keyboard/mouse and
+    /// gamepad): PrimaryCast/SecondaryCast are hold-to-charge, release-to-cast; Defend and Dash are taps.
+    /// Holding the rebindable <b>power modifier</b> (Left Shift / Right Bumper) turns those casts into the
+    /// advanced moves — Primary→Heavy, Secondary→Sweep, Defend→Signature (see <see cref="Core.ExtendedCast"/>).
+    /// Movement and look live in <see cref="FirstPersonRig"/>/<see cref="ThirdPersonRig"/>; this only emits
+    /// combat intents. Aim comes from the camera's forward, so the third-person rig just points it elsewhere.
     /// </summary>
     public sealed class FlatInputProvider : MonoBehaviour, IPlayerInputProvider
     {
@@ -26,39 +25,23 @@ namespace Elementborn.Game
 
         private void Reset() => aimCamera = Camera.main;
 
+        private void OnEnable() { InputBindings.Enable(); ControlGlyphs.EnsureMonitor(); }
+
         private void Update()
         {
-            var mouse = Mouse.current;
-            var keyboard = Keyboard.current;
-            if (mouse == null) return;
-
             Vector3 aim = aimCamera ? aimCamera.transform.forward : transform.forward;
+            bool mod = InputBindings.ExtendedCast.IsPressed(); // hold to throw Heavy / Sweep / Signature
 
-            // Primary (LMB)
-            if (mouse.leftButton.isPressed)
-            {
-                _primaryHeld += Time.deltaTime;
-            }
-            else if (mouse.leftButton.wasReleasedThisFrame)
-            {
-                Emit(IntentType.PrimaryCast, aim, _primaryHeld);
-                _primaryHeld = 0f;
-            }
+            var primary = InputBindings.PrimaryCast;
+            if (primary.IsPressed()) _primaryHeld += Time.deltaTime;
+            else if (primary.WasReleasedThisFrame()) { Emit(ExtendedCast.Remap(IntentType.PrimaryCast, mod), aim, _primaryHeld); _primaryHeld = 0f; }
 
-            // Secondary (RMB)
-            if (mouse.rightButton.isPressed)
-            {
-                _secondaryHeld += Time.deltaTime;
-            }
-            else if (mouse.rightButton.wasReleasedThisFrame)
-            {
-                Emit(IntentType.SecondaryCast, aim, _secondaryHeld);
-                _secondaryHeld = 0f;
-            }
+            var secondary = InputBindings.SecondaryCast;
+            if (secondary.IsPressed()) _secondaryHeld += Time.deltaTime;
+            else if (secondary.WasReleasedThisFrame()) { Emit(ExtendedCast.Remap(IntentType.SecondaryCast, mod), aim, _secondaryHeld); _secondaryHeld = 0f; }
 
-            if (keyboard == null) return;
-            if (keyboard.fKey.wasPressedThisFrame) Emit(IntentType.Defend, aim, 0f);
-            if (keyboard.spaceKey.wasPressedThisFrame) Emit(IntentType.Dash, aim, 0f);
+            if (InputBindings.Defend.WasPressedThisFrame()) Emit(ExtendedCast.Remap(IntentType.Defend, mod), aim, 0f);
+            if (InputBindings.Dash.WasPressedThisFrame()) Emit(IntentType.Dash, aim, 0f);
         }
 
         private void Emit(IntentType type, Vector3 aim, float heldSeconds)

@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Elementborn.Game
 {
@@ -20,7 +19,7 @@ namespace Elementborn.Game
         private Vector3 _spawnPos;
         private Quaternion _spawnRot;
         private GameObject _overlayRoot;
-        private Text _overlay;
+        private UiLabel _overlay;
         private bool _respawning;
 
         private void Start()
@@ -94,34 +93,19 @@ namespace Elementborn.Game
 
         private void BuildOverlay()
         {
-            _overlayRoot = new GameObject("DeathOverlay", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-            _overlayRoot.transform.SetParent(transform, false);
-            var canvas = _overlayRoot.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 100;
-            var scaler = _overlayRoot.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1280, 800);
+            var canvas = UiTheme.Canvas("DeathOverlay", sortOrder: 100);
+            canvas.transform.SetParent(transform, false);
+            _overlayRoot = canvas.gameObject;
 
-            var dim = new GameObject("Dim", typeof(RectTransform), typeof(Image));
-            dim.transform.SetParent(_overlayRoot.transform, false);
-            var drt = dim.GetComponent<RectTransform>();
+            var dim = UiTheme.Panel(canvas.transform, new Color(0.40f, 0.05f, 0.05f, 0.55f), "overlay_dim");
+            var drt = dim.rectTransform;
             drt.anchorMin = Vector2.zero; drt.anchorMax = Vector2.one; drt.offsetMin = Vector2.zero; drt.offsetMax = Vector2.zero;
-            dim.GetComponent<Image>().color = new Color(0.40f, 0.05f, 0.05f, 0.55f);
 
-            var txt = new GameObject("Text", typeof(RectTransform), typeof(Text));
-            txt.transform.SetParent(_overlayRoot.transform, false);
-            var trt = txt.GetComponent<RectTransform>();
+            _overlay = UiTheme.Label(canvas.transform, "You fell.", 40, Color.white, TextAnchor.MiddleCenter);
+            var trt = _overlay.Rect;
             trt.anchorMin = trt.anchorMax = new Vector2(0.5f, 0.5f);
             trt.pivot = new Vector2(0.5f, 0.5f);
             trt.sizeDelta = new Vector2(700, 200);
-
-            _overlay = txt.GetComponent<Text>();
-            _overlay.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            _overlay.fontSize = 40;
-            _overlay.alignment = TextAnchor.MiddleCenter;
-            _overlay.color = Color.white;
-            _overlay.text = "You fell.";
         }
     }
 }

@@ -115,7 +115,7 @@ namespace Elementborn.Core
     /// <summary>Plain hit-point container. No MonoBehaviour, so it unit-tests directly.</summary>
     public sealed class Health
     {
-        public float Max { get; }
+        public float Max { get; private set; }
         public float Current { get; private set; }
         public bool IsDead => Current <= 0f;
 
@@ -141,5 +141,14 @@ namespace Elementborn.Core
 
         /// <summary>Restore to full (used on respawn).</summary>
         public void Revive() => Current = Max;
+
+        /// <summary>Change the maximum <em>in place</em> — keeps this Health object (and every Damaged/Died
+        /// subscriber) intact, unlike constructing a new one. Refills to full by default; pass refill:false to
+        /// keep the current value (clamped to the new max).</summary>
+        public void SetMax(float newMax, bool refill = true)
+        {
+            Max = Mathf.Max(1f, newMax);
+            Current = refill ? Max : Mathf.Min(Current, Max);
+        }
     }
 }

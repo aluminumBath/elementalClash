@@ -1,0 +1,150 @@
+using System.Collections.Generic;
+using UnityEngine;
+using Elementborn.Core;
+
+namespace Elementborn.Game
+{
+    /// <summary>The basic sound palette. Names map to WAVs under Resources/Audio/.</summary>
+    public enum SfxKind
+    {
+        UiClick, UiConfirm, UiBack,
+        FireExplosion, FireBurn, WaterSplash, RockBreak, WindWhoosh,
+        IceCrack, ZapLightning, MetalClang, HitSoft, WhooshShort
+    }
+
+    /// <summary>
+    /// Lightweight audio for the sample: a small pool of <see cref="AudioSource"/>s for one-shot SFX plus one
+    /// looping ambient channel. Clips are loaded by name from <c>Resources/Audio/</c>; any that are missing are
+    /// simply skipped, so the game stays silent-but-fine until audio is added. Volumes come from
+    /// <see cref="SettingsStore"/>. Call <see cref="EnsureInstance"/> once (the flow controller does), then use
+    /// <see cref="Play"/>/<see cref="PlayAt"/> or the gameplay helpers. Element abilities and impacts are mapped
+    /// to clips here, and UI buttons made via <see cref="UiTheme"/> click automatically.
+    /// </summary>
+    public sealed class AudioController : MonoBehaviour
+    {
+        public static AudioController Instance { get; private set; }
+
+        private static readonly Dictionary<SfxKind, string> ClipNames = new Dictionary<SfxKind, string>
+        {
+            { SfxKind.UiClick, "ui_click" }, { SfxKind.UiConfirm, "ui_confirm" }, { SfxKind.UiBack, "ui_back" },
+            { SfxKind.FireExplosion, "fire_explosion" }, { SfxKind.FireBurn, "fire_burn" },
+            { SfxKind.WaterSplash, "water_splash" }, { SfxKind.RockBreak, "rock_break" },
+            { SfxKind.WindWhoosh, "wind_whoosh" }, { SfxKind.IceCrack, "ice_crack" },
+            { SfxKind.ZapLightning, "zap_lightning" }, { SfxKind.MetalClang, "metal_clang" },
+            { SfxKind.HitSoft, "hit_soft" }, { SfxKind.WhooshShort, "whoosh_short" },
+        };
+
+        private readonly Dictionary<SfxKind, AudioClip> _clips = new Dictionary<SfxKind, AudioClip>();
+        private AudioSource[] _pool;
+        private int _next;
+        private AudioSource _ambient;
+
+        public static AudioController EnsureInstance()
+        {
+            if (Instance != null) return Instance;
+            var go = new GameObject("AudioController");
+            DontDestroyOnLoad(go);
+            return go.AddComponent<AudioController>();
+        }
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+            Instance = this;
+
+            foreach (var kv in ClipNames)
+            {
+                var clip = Resources.Load<AudioClip>("Audio/" + kv.Value);
+                if (clip != null) _clips[kv.Key] = clip;
+            }
+
+            _pool = new AudioSource[8];
+            for (int i = 0; i < _pool.Length; i++) _pool[i] = NewSource(false);
+            _ambient = NewSource(true);
+
+            ApplyVolumes();
+            SettingsStore.Changed += ApplyVolumes;
+        }
+
+        private void OnDestroy()
+        {
+            SettingsStore.Changed -= ApplyVolumes;
+            if (Instance == this) Instance = null;
+        }
+
+        private AudioSource NewSource(bool loop)
+        {
+            var s = gameObject.AddComponent<AudioSource>();
+            s.playOnAwake = false;
+            s.loop = loop;
+            s.spatialBlend = 0f; // 2D by default; PlayAt uses a 3D one-shot
+            return s;
+        }
+
+        public void ApplyVolumes()
+        {
+            var s = SettingsStore.Current;
+            AudioListener.volume = s.masterVolume;
+            if (_ambient != null) _ambient.volume = s.musicVolume;
+        }
+
+        // ---- one-shots -------------------------------------------------------------------
+        public void Play(SfxKind kind, float volume = 1f)
+        {
+            if (_pool == null || !_clips.TryGetValue(kind, out var clip) || clip == null) return;
+            var src = _pool[_next];
+            _next = (_next + 1) % _pool.Length;
+            src.spatialBlend = 0f;
+            src.PlayOneShot(clip, Mathf.Clamp01(volume) * SettingsStore.Current.sfxVolume);
+        }
+
+        public void PlayAt(SfxKind kind, Vector3 position, float volume = 1f)
+        {
+            if (!_clips.TryGetValue(kind, out var clip) || clip == null) return;
+            float v = Mathf.Clamp01(volume) * SettingsStore.Current.sfxVolume * Mathf.Max(0.0001f, AudioListener.volume);
+            AudioSource.PlayClipAtPoint(clip, position, v);
+        }
+
+        public void Click() => Play(SfxKind.UiClick);
+        public void Confirm() => Play(SfxKind.UiConfirm);
+        public void Back() => Play(SfxKind.UiBack);
+
+        // ---- ambient bed -----------------------------------------------------------------
+        public void Ambient(SfxKind kind, float volume = 1f)
+        {
+            if (_ambient == null) return;
+            if (!_clips.TryGetValue(kind, out var clip) || clip == null) { _ambient.Stop(); return; }
+            if (_ambient.clip == clip && _ambient.isPlaying) return;
+            _ambient.clip = clip;
+            _ambient.volume = SettingsStore.Current.musicVolume * Mathf.Clamp01(volume);
+            _ambient.Play();
+        }
+
+        public void StopAmbient() { if (_ambient != null) _ambient.Stop(); }
+
+        // ---- gameplay mapping ------------------------------------------------------------
+        public void PlayAbility(AbilityOutcome outcome, Vector3 position) => PlayAt(SfxForAbility(outcome), position);
+        public void PlayImpact(Element source, Vector3 position) => PlayAt(SfxForElement(source), position, 0.8f);
+
+        public static SfxKind SfxForElement(Element e)
+        {
+            switch (e)
+            {
+                case Element.Fire:  return SfxKind.FireExplosion;
+                case Element.Water: return SfxKind.WaterSplash;
+                case Element.Earth: return SfxKind.RockBreak;
+                case Element.Air:   return SfxKind.WindWhoosh;
+                default:            return SfxKind.HitSoft;
+            }
+        }
+
+        public static SfxKind SfxForAbility(AbilityOutcome o)
+        {
+            if (o.Variant == AbilityVariant.Ice) return SfxKind.IceCrack;
+            if (o.Variant == AbilityVariant.Lightning) return SfxKind.ZapLightning;
+            if (o.Kind == OutcomeKind.Barrier) return SfxKind.MetalClang;
+            if (o.Kind == OutcomeKind.Movement) return SfxKind.WhooshShort;
+            return SfxForElement(o.Element);
+        }
+    }
+}

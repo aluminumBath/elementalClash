@@ -35,6 +35,8 @@ namespace Elementborn.Game
 
         private void HandleOutcome(AbilityOutcome outcome, Vector3 origin)
         {
+            AudioController.Instance?.PlayAbility(outcome, origin);
+
             // Projectiles are spawned here; barrier and movement effects are owned by
             // BarrierResponder and DashResponder respectively (gameplay plus their own visuals).
             if (outcome.Kind == OutcomeKind.Projectile)

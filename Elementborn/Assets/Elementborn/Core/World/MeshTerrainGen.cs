@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Elementborn.Core
 {
-    /// <summary>Per-biome flat colours for the vertex-coloured low-poly terrain (Wind Waker palette).</summary>
+    /// <summary>Per-biome flat colours for the vertex-coloured low-poly terrain (bright cel-shaded toon palette).</summary>
     public static class TerrainColors
     {
         public static Color32 Seabed => new Color32(190, 180, 150, 255); // wet sand under the water plane
@@ -50,7 +50,7 @@ namespace Elementborn.Core
     /// </summary>
     public static class MeshTerrainGenerator
     {
-        public static List<MeshChunkData> Build(TerrainModel model, float worldSize, float heightScale, int chunkCells)
+        public static List<MeshChunkData> Build(TerrainModel model, float worldSize, float heightScale, int chunkCells, bool blend = true)
         {
             var chunks = new List<MeshChunkData>();
             if (model == null) return chunks;
@@ -66,14 +66,14 @@ namespace Elementborn.Core
                 {
                     int x1 = Mathf.Min(cx + chunkCells, cells);
                     int z1 = Mathf.Min(cz + chunkCells, cells);
-                    chunks.Add(BuildChunk(model, cx, cz, x1, z1, step, heightScale));
+                    chunks.Add(BuildChunk(model, cx, cz, x1, z1, step, heightScale, blend));
                 }
 
             return chunks;
         }
 
         private static MeshChunkData BuildChunk(TerrainModel model, int x0, int z0, int x1, int z1,
-            float step, float heightScale)
+            float step, float heightScale, bool blend)
         {
             int quads = (x1 - x0) * (z1 - z0);
             int n = quads * 6; // two triangles, three unique vertices each (flat shading)
@@ -90,10 +90,22 @@ namespace Elementborn.Core
                     Vector3 p10 = Corner(model, x + 1, z, step, heightScale);
                     Vector3 p01 = Corner(model, x, z + 1, step, heightScale);
                     Vector3 p11 = Corner(model, x + 1, z + 1, step, heightScale);
-                    Color32 col = CellColor(model, x, z);
 
-                    AddTriangle(verts, norms, cols, tris, ref vi, p00, p01, p11, col);
-                    AddTriangle(verts, norms, cols, tris, ref vi, p00, p11, p10, col);
+                    Color32 c00, c10, c01, c11;
+                    if (blend)
+                    {
+                        c00 = VertexColor(model, x, z);
+                        c10 = VertexColor(model, x + 1, z);
+                        c01 = VertexColor(model, x, z + 1);
+                        c11 = VertexColor(model, x + 1, z + 1);
+                    }
+                    else
+                    {
+                        c00 = c10 = c01 = c11 = CellColor(model, x, z);
+                    }
+
+                    AddTriangle(verts, norms, cols, tris, ref vi, p00, p01, p11, c00, c01, c11);
+                    AddTriangle(verts, norms, cols, tris, ref vi, p00, p11, p10, c00, c11, c10);
                 }
 
             return new MeshChunkData(verts, norms, cols, tris);
@@ -109,16 +121,40 @@ namespace Elementborn.Core
         private static Color32 CellColor(TerrainModel model, int x, int z) =>
             model.HeightAt(x, z) < model.SeaLevel ? TerrainColors.Seabed : TerrainColors.ForBiome(model.BiomeAt(x, z));
 
-        // Emits one triangle with its own three vertices and a flat normal; flips winding so it faces up.
+        // Average of the (up to four) cell colours meeting at grid corner (x,z); softens biome/shoreline seams.
+        private static Color32 VertexColor(TerrainModel model, int x, int z)
+        {
+            int lastCell = model.Resolution - 2; // cells are sampled at their lower-left vertex, 0..Resolution-2
+            if (lastCell < 0) return CellColor(model, 0, 0);
+
+            int r = 0, g = 0, b = 0, count = 0;
+            for (int dz = -1; dz <= 0; dz++)
+                for (int dx = -1; dx <= 0; dx++)
+                {
+                    int cx = Mathf.Clamp(x + dx, 0, lastCell);
+                    int cz = Mathf.Clamp(z + dz, 0, lastCell);
+                    Color32 c = CellColor(model, cx, cz);
+                    r += c.r; g += c.g; b += c.b; count++;
+                }
+            return new Color32((byte)(r / count), (byte)(g / count), (byte)(b / count), 255);
+        }
+
+        // Emits one triangle with its own three vertices, a flat normal, and per-vertex colours; flips
+        // winding (and the matching colours) so the face points up.
         private static void AddTriangle(Vector3[] verts, Vector3[] norms, Color32[] cols, int[] tris,
-            ref int vi, Vector3 a, Vector3 b, Vector3 c, Color32 col)
+            ref int vi, Vector3 a, Vector3 b, Vector3 c, Color32 ca, Color32 cb, Color32 cc)
         {
             Vector3 nrm = Vector3.Cross(b - a, c - a).normalized;
-            if (nrm.y < 0f) { var tmp = b; b = c; c = tmp; nrm = -nrm; }
+            if (nrm.y < 0f)
+            {
+                var tmp = b; b = c; c = tmp;
+                var tc = cb; cb = cc; cc = tc;
+                nrm = -nrm;
+            }
 
             verts[vi] = a; verts[vi + 1] = b; verts[vi + 2] = c;
             norms[vi] = norms[vi + 1] = norms[vi + 2] = nrm;
-            cols[vi] = cols[vi + 1] = cols[vi + 2] = col;
+            cols[vi] = ca; cols[vi + 1] = cb; cols[vi + 2] = cc;
             tris[vi] = vi; tris[vi + 1] = vi + 1; tris[vi + 2] = vi + 2;
             vi += 3;
         }

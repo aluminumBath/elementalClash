@@ -229,9 +229,57 @@ For **signed** Android in CI, also pass the keystore via secrets (`ANDROID_KEYST
 
 ---
 
+## 11b. IP / trademark guard
+
+`tools/ip-guard.sh` scans all code and docs for trademarked terms from the genres that inspired the game and
+**fails the build if any appear**. Run it locally or in CI:
+
+```sh
+sh tools/ip-guard.sh   # exits 0 = clean, 1 = a flagged term was found
+```
+
+It only lists terms that must *never* appear, so it deliberately does **not** flag: the real controller
+hardware names in `ControlGlyphs.cs` (needed to draw the correct button glyphs — nominative use), the 3D tool
+"Blender" or the terrain "blend" verb (unrelated words), or Unity's Mecanim humanoid-rig type (a technical API
+term — lines mentioning "humanoid rig"/"mecanim" are excluded). Wiring it into the GameCI workflow as a gate is
+a one-line follow-up. This is best-effort hygiene, **not legal advice**.
+
+---
+
 ## 12. Release flow (summary)
 1. Bump version (and `bundleVersionCode` for Android).
-2. Run tests (CI does this automatically).
+2. Run tests (CI does this automatically), then `sh tools/ip-guard.sh`.
 3. Build per target (§5–7); sign Android (§8).
 4. Smoke-test on a real device.
 5. Distribute: sideload (dev), Meta Horizon Store (Quest), or your channel of choice (PCVR/flat).
+
+## 13. Update / release pipeline
+
+The repo ships a repeatable pipeline so cutting a version and publishing docs is a couple of commands.
+
+**Version & changelog.** The root `VERSION` file is the single source of truth (mirrored into
+`Elementborn.Core.AppVersion.Version` so the game can show its build). `CHANGELOG.md` follows
+[Keep a Changelog](https://keepachangelog.com/): add notes under `## [Unreleased]` as you work.
+
+**Cut a release.**
+```sh
+sh tools/bump-version.sh minor   # or major | patch
+# -> updates VERSION + AppVersion.cs, rolls [Unreleased] into a dated version section
+git commit -am "Release $(cat VERSION)"
+git tag "v$(cat VERSION)"
+git push --follow-tags
+```
+Pushing the `v*` tag triggers **`.github/workflows/release.yml`**, which runs the IP guard and
+`tools/validate.sh`, packages a clean `Elementborn-<version>.zip` (excluding `.git`, `Library`, `Temp`), and
+publishes a **GitHub Release** with that zip attached and auto-generated notes. The job needs no Unity license.
+
+**CI gates (license-free).** `.github/workflows/tests.yml` has a `guard` job that runs `tools/ip-guard.sh`
+(no trademarked terms) and `tools/validate.sh` (brace/paren/bracket balance with the two documented
+whitelists, the burn-tick guard, and a test-count report) on every push and PR — so regressions are caught
+even when the Unity test job is skipped for lack of a license.
+
+**Publish docs.** `.github/workflows/docs.yml` renders `README.md` + everything in `docs/` to **GitHub Pages**
+on each push to `main`. One-time setup: repo **Settings → Pages → Source = "GitHub Actions"**. It uses the
+built-in Jekyll Cayman theme; swap the theme or move to MkDocs in `docs.yml` if you want richer docs.
+
+**Local checks.** Run the same gates before pushing: `sh tools/validate.sh && sh tools/ip-guard.sh`.

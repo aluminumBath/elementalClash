@@ -1,5 +1,7 @@
 # Elementborn — Low-Poly Art & Texture Guide
 
+> **Materials shortcut:** you don't have to make the cel-shaded materials by hand — **Elementborn ▸ Materials ▸ Build Cel-Shaded Materials** generates them from the toon shaders into `Assets/Elementborn/Materials` (see `BOOTSTRAP.md`). The notes below cover the 3D art itself, which still needs a DCC tool.
+
 **Pipeline: Blender + flat vertex colors + the `Elementborn/ToonLit` cel shader.**
 
 This guide replaces every code-built placeholder in the project with hand-made low-poly art.
@@ -102,6 +104,11 @@ A ready-made **starter palette** of all these (32 colors, matching `TerrainColor
 9. Drop it into the prefab slot the controller references (§10) and test in Play mode.
 
 ---
+
+
+> **Placeholder models available.** Medium-poly stand-ins for crate, barrel, rock, tree, bush, fence,
+> house, pedestal, sword, and hammer ship in `Assets/Elementborn/Art/Models/` (OBJ for Unity, PLY with
+> vertex colors for Blender) — see `docs/MODELS.md`. They're faceted placeholders to refine or replace.
 
 ## 2. Environment
 

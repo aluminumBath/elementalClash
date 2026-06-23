@@ -16,6 +16,8 @@ character roll, and a cel-shaded look.
 > | water sub-art (blood) | **Sanguine Grip** |
 > | earth sub-art (metal) | **Oreshaping** |
 > | air sub-art | **Flight** |
+> | two-element specialty (plant) | **Verdancy** (water + earth) |
+> | two-element specialty (steam & healing) | **Steamcraft** (water + fire) |
 
 ## What this is (and isn't)
 The **code** spine: platform-agnostic logic, input providers, presentation hooks, tests, CI, and a
@@ -121,7 +123,7 @@ Structures come straight from the POIs the world already produces — no separat
   POI's position on the terrain (capped via `maxStructures`); each structure's parts are then merged
   per material by **`MeshCombiner`**, so a town is a handful of draw calls instead of dozens.
 
-## Visual style (Wind Waker-leaning)
+## Visual style (cel-shaded toon look)
 Cel-shaded throughout, set up from code:
 - **`Elementborn/ToonLit`** — banded lighting + inverted-hull outline on everything.
 - **`Elementborn/ToonSky`** — a procedural skybox: top/horizon/ground gradient, a soft sun disc, and
@@ -263,6 +265,26 @@ production. Targets Unity 6 URP; macros may need tweaks on older URP.
   the player's element — to a JSON file in the platform's persistent data folder. Loads on start, saves on
   quit, with manual F5 (save) / F9 (load) keys. `PlayerInventory.ToSave()/LoadFrom()` do the mapping.
 
+## Audio, settings & save slots
+- **`AudioController`** (Game, singleton) plays a small set of **synthesized placeholder SFX** from
+  `Resources/Audio/` — metal clang, rock break, wind, water splash, fire burn/explosion, ice, lightning,
+  impacts, and UI clicks — mapped to abilities (`AbilityVfxBinder`), impacts/deaths (`Damageable`), and
+  buttons. Missing clips are skipped. Details + the element/ability map: `docs/AUDIO.md`.
+- **`SettingsController`** (Esc) is a code-built menu for volumes, mouse sensitivity, FOV, invert-Y, and the
+  comfort vignette; choices persist (`SettingsStore`) and apply live to audio, the rigs, and the vignette.
+- **`SaveSystem` is slot-aware** (3 slots, back-compatible) with a **`SaveSlotController`** picker (F8) to
+  switch/load/delete, and a saved character now lets the flow **skip creation** and rebuild the exact loadout.
+- **`UiTheme`** centralizes the UI look — TextMeshPro labels (with a legacy-Text fallback), optional 9-slice
+  sprites from `Resources/ElementbornUI/`, and styled panels/buttons/sliders/toggles.
+
+## Third-person & consoles
+- **`ThirdPersonRig`** adds an orbit-camera flat mode alongside first-person and VR; `GameBootstrap` gained a
+  `ThirdPerson` boot mode and a `preferredFlatMode`. Combat is unchanged — point `FlatInputProvider.aimCamera`
+  at the rig camera. Wiring: `docs/PORTING.md`.
+- **Xbox / PlayStation:** the code is portable (input abstraction, URP, JSON saves); the gated parts (licensed
+  SDKs, dev kits, certification) can't live in the repo. A gamepad input scheme can be added on request, and
+  consoles would ship the flat/third-person build (not VR). Full breakdown: `docs/PORTING.md`.
+
 ## Weather & day/night
 - **`WeatherProfiles` / `WeatherEffects`** (Core, pure + tested) decide which weather a biome can throw
   (blizzards in the mountains, sandstorms and heat hazes in the desert, rain and hurricanes on the coast,
@@ -287,21 +309,50 @@ signing, performance, and CI — lives in **`docs/DEPLOYMENT.md`**.
 - **Palette:** `palette/` holds a ready-made 32-color starter palette matching `TerrainColors` and the
   shaders — a Blender import script (native palette), a labeled PNG swatch, and a `.gpl`; see `docs/PALETTE.md`.
 - **Art:** `docs/ART_GUIDE.md` is a full object-by-object guide to replacing every code-built
+  placeholder with hand-made low-poly art using Blender + flat vertex colors. The `Elementborn/ToonLit`
+  shader has a **Use Vertex Colors** toggle (off by default) for that art.
 - **UI art:** `docs/UI_SPRITES.md` gives exact sprite sizes, anchors, 9-slice borders, and colors for
   every code-built screen (HUD, score, death overlay, creation, shop, map), so 2D art drops straight in.
- is a full object-by-object guide to replacing every code-built
-  placeholder with hand-made low-poly art using Blender + flat vertex colors. The `Elementborn/ToonLit`
-  shader now has a **Use Vertex Colors** toggle (off by default) for that art.
+
+## More systems (at a glance)
+Each of these has a full doc; this is the one-line map.
+- **VR motion combat & stance** — a gesture recognizer, per-element fighting styles, and a hold-to-charge
+  guard/combo stance layer (Water's ice-flow). `docs/VR_COMBAT.md`.
+- **Arena mode** — escalating waves of telegraphed, dodgeable enemies with combo scoring and stamina pacing,
+  plus a Heavy/Sweep per-element kit. `docs/ARENA.md`.
+- **Underwater layer** — a submerged state with breathing/drowning, per-element rules, freeze-trap and
+  air-bubble interactions, and comfort-vignetted swim locomotion. `docs/UNDERWATER.md`.
+- **Hidden signature moves** — four secret moves (Water spin-dash, Earth rock-armor, Air tornado, Fire breath)
+  unlocked by special gestures. `docs/HIDDEN_MOVES.md`.
+- **Joinable factions** — four orders (Symbiasts, Separatists, Cleicists, Synodists) with offense/defense
+  perks and stances on the Confluence and mixed gifts; joining scales your combat via `FactionMembership`.
+  `docs/FACTIONS.md`.
+- **Exotic creatures & mix attacks** — an apex set of original creatures, several of which fire **two-element
+  mix attacks** (e.g. an ember-storm of fire + air); folded into the bestiary and `Wildlife.Pick`.
+  `docs/CREATURES.md`.
+- **Interactive flora** — snaptraps, tripping/climbable vines, hypnotic spores, the Gleamlily that fruits a
+  curing **Heartfruit**, a poisonous look-alike, and Willow gates; plant control is the **Verdancy** specialty
+  (steam-healers via **Steamcraft**). `docs/PLANTS.md`.
+- **Guide NPCs** — Willow (creature finder), Kiana (creature keeper, who blood-channels and evicts a creature
+  from anyone she catches mistreating one), and Parfa (locator). Feed each of Willow's five companions within a
+  couple of days for a **hidden-ability hint**; trick Parfa's two frogs into agreeing for a **diamond**.
+  `docs/NPCS.md`.
+- **Evolution mode** — start with one element, take a second, and the pair unlocks a specialty (plant, blood,
+  steam & healing, metal, lava, or flight). `docs/EVOLUTION.md`.
+- **Data-driven modding** — content registries plus a JSON mod format let factions and enemies be added or
+  overridden from `StreamingAssets/Mods` without recompiling. `docs/MODDING.md`.
 
 ## Remaining work
 1. **Hand-made art** — geometry, buildings, sky/water, lighting, and per-structure mesh-combining come
    from code; what remains is low-poly models + textures and a per-platform `QualityTierController`.
 2. **World scale** — streaming / LOD for large worlds.
-3. **The scaffold is feature-complete.** Every gameplay system is in — factions, element enemies,
-   civilians, economy/taming, mounts, element travel, the bestiary, companions, weather + day/night, the
-   HUD, interaction prompts, saving, and the shop + vehicle ownership — and `docs/ART_GUIDE.md` now covers
-   turning the code-built placeholders into finished low-poly art. What remains is the art itself plus the
-   one-time scene/prefab wiring in `docs/DEPLOYMENT.md`.
+3. **The scaffold is feature-complete.** Every gameplay system is in — VR motion combat + stance, the arena
+   and underwater layers, joinable factions, hidden signature moves, the bestiary with exotic apex creatures
+   and two-element mix attacks, interactive plants, the three guide NPCs and Willow's sidekick menagerie, the
+   evolution mode, data-driven modding, economy/taming/mounts, element travel, weather + day/night, the HUD,
+   interaction prompts, saving, and the shop + vehicle ownership — plus `tools/ip-guard.sh` and full docs. What
+   remains can only happen outside this repo: hand-made art, the one-time Editor scene/prefab wiring
+   (`docs/DEPLOYMENT.md`), and the device/platform work catalogued in **`docs/LIMITATIONS.md`**.
 
 ## Setup
 Open in Unity 6 (URP). Let Package Manager resolve `Packages/manifest.json`, then create the VR rig

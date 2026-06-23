@@ -1,20 +1,20 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Elementborn.Core;
 
 namespace Elementborn.Game
 {
     /// <summary>
     /// Holds the run's <see cref="ScoreSystem"/> and shows a small HUD (score + combo). Enemies award
-    /// score through <see cref="Instance"/> on death. Drop on any object; it builds its own HUD canvas.
+    /// score through <see cref="Instance"/> on death. Drop on any object; it builds its own HUD canvas
+    /// via <see cref="UiTheme"/>.
     /// </summary>
     public sealed class ScoreController : MonoBehaviour
     {
         public static ScoreController Instance { get; private set; }
         public ScoreSystem Score { get; } = new ScoreSystem();
 
-        private Text _scoreText;
-        private Text _comboText;
+        private UiLabel _scoreText;
+        private UiLabel _comboText;
 
         private void Awake()
         {
@@ -41,39 +41,29 @@ namespace Elementborn.Game
         public int AddKill(int points) => Score.AddKill(points);
         public void ResetCombo() => Score.ResetCombo();
 
+        /// <summary>A clean dodge of a telegraphed attack: small points, and it keeps the combo alive.</summary>
+        public const int DodgePoints = 30;
+        public int RegisterDodge() => Score.AddKill(DodgePoints);
+
         private void BuildHud()
         {
-            var canvasGo = new GameObject("ScoreHud", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-            canvasGo.transform.SetParent(transform, false);
-            canvasGo.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            var scaler = canvasGo.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1280, 800);
+            var canvas = UiTheme.Canvas("ScoreHud", sortOrder: 10);
+            canvas.transform.SetParent(transform, false);
 
-            _scoreText = Label(canvasGo.transform, "Score 0", 28, new Vector2(-24, -20));
-            _comboText = Label(canvasGo.transform, "", 22, new Vector2(-24, -58));
-            _comboText.color = new Color(1f, 0.85f, 0.4f);
+            _scoreText = Place(UiTheme.Label(canvas.transform, "Score 0", 28, Color.white, TextAnchor.UpperRight),
+                new Vector2(-24, -20));
+            _comboText = Place(UiTheme.Label(canvas.transform, "", 22, new Color(1f, 0.85f, 0.4f), TextAnchor.UpperRight),
+                new Vector2(-24, -58));
         }
 
-        private static Text Label(Transform parent, string content, int size, Vector2 pos)
+        private static UiLabel Place(UiLabel lbl, Vector2 pos)
         {
-            var go = new GameObject("Label", typeof(RectTransform), typeof(Text));
-            go.transform.SetParent(parent, false);
-            var rt = go.GetComponent<RectTransform>();
+            var rt = lbl.Rect;
             rt.anchorMin = rt.anchorMax = new Vector2(1, 1);
             rt.pivot = new Vector2(1, 1);
             rt.sizeDelta = new Vector2(360, 40);
             rt.anchoredPosition = pos;
-
-            var t = go.GetComponent<Text>();
-            t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            t.fontSize = size;
-            t.alignment = TextAnchor.UpperRight;
-            t.color = Color.white;
-            t.text = content;
-            t.horizontalOverflow = HorizontalWrapMode.Overflow;
-            t.verticalOverflow = VerticalWrapMode.Overflow;
-            return t;
+            return lbl;
         }
     }
 }

@@ -1,4 +1,4 @@
-// Elementborn/ToonLit — a URP cel/toon shader for the Wind Waker look.
+// Elementborn/ToonLit — a URP cel/toon shader for a bright cel-shaded toon look.
 // Banded diffuse + shadow tint + optional rim, plus a geometry-based (inverted-hull)
 // outline. The outline is deliberately geometry-based, not a post-process edge effect,
 // because post effects are expensive in VR and several break in stereo rendering.

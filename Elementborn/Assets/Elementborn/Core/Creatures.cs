@@ -6,7 +6,11 @@ namespace Elementborn.Core
         // Bestiary / mounts
         FireDragon, WaterDragon, Mermaid, EarthMole, EarthCat, AirDragonfly, AirJellyfish, Horse,
         // Rare combat companions
-        Spider, WaterCat, IceCat, Phoenix, ElectricSquirrel, Dog
+        Spider, WaterCat, IceCat, Phoenix, ElectricSquirrel, Dog,
+        // Wildlife by habitat
+        Eel, Crab, Monkey, Crocodile, Snake, Roc, Thunderbird, Rhino, Tiger,
+        // Exotic apex creatures — rare, hard to tame, in tough locations (original designs)
+        Ridgewing, Glidewisp, Skytyrant, Goldkoi, Direstalker, Skimfin, Gillcloak, Tidewarden
     }
 
     /// <summary>Static data for a creature: theme, who may own it, and how it's acquired.</summary>
@@ -73,6 +77,44 @@ namespace Elementborn.Core
                     return new CreatureInfo("Storm Squirrel", Core.Element.Fire, Core.Element.Fire, false, true, false, 0, 0.25f);
                 case CreatureKind.Dog:
                     return new CreatureInfo("Earth Hound", Core.Element.Earth, Core.Element.Earth, false, true, false, 0, 0.30f);
+
+                // Wildlife — roams its habitat, peaceful until provoked. Tame-only; the big ones can be ridden.
+                case CreatureKind.Eel:
+                    return new CreatureInfo("River Eel", Core.Element.Water, null, false, false, false, 0, 0.40f);
+                case CreatureKind.Crab:
+                    return new CreatureInfo("Shore Crab", null, null, false, false, false, 0, 0.55f);
+                case CreatureKind.Monkey:
+                    return new CreatureInfo("Forest Monkey", null, null, false, false, false, 0, 0.55f);
+                case CreatureKind.Crocodile:
+                    return new CreatureInfo("Marsh Crocodile", null, null, false, false, false, 0, 0.20f);
+                case CreatureKind.Snake:
+                    return new CreatureInfo("Swamp Snake", null, null, false, false, false, 0, 0.35f);
+                case CreatureKind.Roc:
+                    return new CreatureInfo("Roc", Core.Element.Air, null, true, false, false, 0, 0.15f);
+                case CreatureKind.Thunderbird:
+                    return new CreatureInfo("Thunderbird", Core.Element.Fire, null, true, false, false, 0, 0.15f);
+                case CreatureKind.Rhino:
+                    return new CreatureInfo("Plains Rhino", Core.Element.Earth, null, true, false, false, 0, 0.25f);
+                case CreatureKind.Tiger:
+                    return new CreatureInfo("Jungle Tiger", null, null, false, false, false, 0, 0.20f);
+
+                // Exotic apex creatures — tameable but rare and stubborn (very low tame chance), found in tough spots.
+                case CreatureKind.Ridgewing:   // cliff-soaring flying mount
+                    return new CreatureInfo("Ridgewing", Core.Element.Air, null, true, false, false, 0, 0.12f);
+                case CreatureKind.Glidewisp:   // small forest flyer
+                    return new CreatureInfo("Glidewisp", Core.Element.Air, null, true, false, false, 0, 0.14f);
+                case CreatureKind.Skytyrant:   // immense apex flyer
+                    return new CreatureInfo("Skytyrant", Core.Element.Air, null, true, false, false, 0, 0.05f);
+                case CreatureKind.Goldkoi:     // gold-green aquatic glider
+                    return new CreatureInfo("Goldkoi", Core.Element.Water, null, true, false, false, 0, 0.12f);
+                case CreatureKind.Direstalker: // land apex predator
+                    return new CreatureInfo("Direstalker", Core.Element.Earth, null, true, false, false, 0, 0.07f);
+                case CreatureKind.Skimfin:     // fast aquatic skimmer mount
+                    return new CreatureInfo("Skimfin", Core.Element.Water, null, true, false, false, 0, 0.13f);
+                case CreatureKind.Gillcloak:   // mantled aquatic creature
+                    return new CreatureInfo("Gillcloak", Core.Element.Water, null, true, false, false, 0, 0.11f);
+                case CreatureKind.Tidewarden:  // colossal sentient sea creature
+                    return new CreatureInfo("Tidewarden", Core.Element.Water, null, true, false, false, 0, 0.06f);
 
                 default:
                     return new CreatureInfo("Unknown", null, null, false, false, false, 0, 0.5f);
