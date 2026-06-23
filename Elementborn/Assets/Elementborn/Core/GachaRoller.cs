@@ -7,7 +7,7 @@ namespace Elementborn.Core
     /// </summary>
     public static class GachaRoller
     {
-        /// <summary>Rolls a loadout for a player who chose to bend <paramref name="chosenElement"/>.</summary>
+        /// <summary>Rolls a loadout for a player who chose to channel <paramref name="chosenElement"/>.</summary>
         public static ChannelerLoadout RollForChanneler(Element chosenElement, IRandomSource random, GachaConfig config)
         {
             if (random == null) throw new System.ArgumentNullException(nameof(random));

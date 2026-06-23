@@ -5,7 +5,7 @@ namespace Elementborn.Game
 {
     /// <summary>
     /// Bridges input -> logic -> presentation. Resolves each intent through the element
-    /// <see cref="AbilitySystem"/> if the player bends, or through <see cref="Weapons"/> using the
+    /// <see cref="AbilitySystem"/> if the player channels, or through <see cref="Weapons"/> using the
     /// equipped <see cref="WeaponHolder"/> if they don't, then raises the outcome for visuals.
     /// </summary>
     public sealed class PlayerCombatController : MonoBehaviour

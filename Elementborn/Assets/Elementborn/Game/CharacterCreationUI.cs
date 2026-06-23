@@ -87,7 +87,7 @@ namespace Elementborn.Game
         private void BuildPanels()
         {
             _pathPanel = CreatePanel("PathPanel", "Choose Your Path");
-            CreateButton(_pathPanel, "Bend an Element", 60f, () => ShowOnly(_elementPanel));
+            CreateButton(_pathPanel, "Channel an Element", 60f, () => ShowOnly(_elementPanel));
             CreateButton(_pathPanel, "Wield a Weapon", -20f, () => ShowOnly(_weaponPanel));
 
             _elementPanel = CreatePanel("ElementPanel", "Choose Your Element");

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using UnityEngine;
 using Elementborn.Core;
 
 namespace Elementborn.Tests.EditMode

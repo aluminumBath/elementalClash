@@ -17,7 +17,7 @@ set -eu
 cd "$(dirname "$0")/.."
 
 # Terms that must NEVER appear in the project.
-PATTERN="bending|bender|\bavatar\b|bendingvr|korra|\baang\b|katara|sokka|\btoph\b|zuko|\biroh\b|azula|tenzin|\bamon\b|sozin|equalist|probend|pro-bend|fire nation|water tribe|earth kingdom|air nomad|republic city|white lotus|chi.?block|avatar state|lion turtle|pandora|na'vi|ikran|thanator|leonopteryx|tulkun|\beywa\b|unobtanium|toruk|hometree|direhorse|wind ?waker|hyrule|ganondorf|pikachu|pokeball|pokemon"
+PATTERN="bending|bender|\bbends?\b|\bavatar\b|bendingvr|korra|\baang\b|katara|sokka|\btoph\b|zuko|\biroh\b|azula|tenzin|\bamon\b|sozin|equalist|probend|pro-bend|fire nation|water tribe|earth kingdom|air nomad|republic city|white lotus|chi.?block|avatar state|lion turtle|pandora|na'vi|ikran|thanator|leonopteryx|tulkun|\beywa\b|unobtanium|toruk|hometree|direhorse|wind ?waker|hyrule|ganondorf|pikachu|pokeball|pokemon"
 
 HITS=$(grep -rniE "$PATTERN" Assets docs README.md 2>/dev/null | grep -viE "humanoid rig|mecanim" || true)
 

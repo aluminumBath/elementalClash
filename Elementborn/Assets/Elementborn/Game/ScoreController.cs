@@ -13,6 +13,14 @@ namespace Elementborn.Game
         public static ScoreController Instance { get; private set; }
         public ScoreSystem Score { get; } = new ScoreSystem();
 
+        /// <summary>Returns the live instance, creating a bare one if the scene has none.</summary>
+        public static ScoreController EnsureInstance()
+        {
+            if (Instance == null)
+                Instance = new GameObject("ScoreController").AddComponent<ScoreController>();
+            return Instance;
+        }
+
         private UiLabel _scoreText;
         private UiLabel _comboText;
 

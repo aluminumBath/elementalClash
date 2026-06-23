@@ -150,7 +150,7 @@ namespace Elementborn.Game
             var bg = sgo.AddComponent<Image>(); bg.color = TrackColor;
 
             var slider = sgo.AddComponent<Slider>();
-            slider.direction = Slider.Direction.LeftToRight;
+            slider.direction = UnityEngine.UI.Slider.Direction.LeftToRight;
             slider.minValue = min; slider.maxValue = max; slider.value = value;
 
             var fillGo = new GameObject("Fill", typeof(RectTransform));

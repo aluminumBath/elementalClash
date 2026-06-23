@@ -46,7 +46,7 @@ namespace Elementborn.Game
 
         private void Talk()
         {
-            if (_info == null) _info = NpcCatalog.For(id);
+            if (string.IsNullOrEmpty(_info.Name)) _info = NpcCatalog.For(id);
             QuestEvents.RaiseTalkedToNpc(id.ToString());
             string line = $"{_info.Greeting} {ServiceLine()}";
             Spoke?.Invoke(line);

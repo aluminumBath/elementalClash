@@ -85,7 +85,7 @@ namespace Elementborn.Game
             if (pad != null) input += pad.leftStick.ReadValue();
 
             var left = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-            if (left.isValid && left.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 axis))
+            if (left.isValid && left.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 axis))
                 input += axis;
 
             return Vector2.ClampMagnitude(input, 1f);
@@ -101,7 +101,7 @@ namespace Elementborn.Game
                 if (kb.qKey.isPressed) v -= 1f;
             }
             var right = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-            if (right.isValid && right.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 axis))
+            if (right.isValid && right.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 axis))
                 v += axis.y;
 
             return Mathf.Clamp(v, -1f, 1f);

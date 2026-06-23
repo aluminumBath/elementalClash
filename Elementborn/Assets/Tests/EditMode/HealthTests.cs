@@ -16,7 +16,7 @@ namespace Elementborn.Tests.EditMode
             Assert.AreEqual(100f, hp.Max);
             Assert.AreEqual(100f, hp.Current);  // refills to full by default
 
-            hp.Apply(new DamageInfo(100f, null));
+            hp.Apply(new DamageInfo(100f, Element.Earth));
             Assert.IsTrue(hp.IsDead);
             Assert.AreEqual(1, deaths);         // the pre-existing Died handler still fired
         }
@@ -25,7 +25,7 @@ namespace Elementborn.Tests.EditMode
         public void SetMaxWithoutRefillClampsCurrent()
         {
             var hp = new Health(100f);
-            hp.Apply(new DamageInfo(40f, null)); // Current = 60
+            hp.Apply(new DamageInfo(40f, Element.Earth)); // Current = 60
             hp.SetMax(50f, refill: false);       // clamp down
             Assert.AreEqual(50f, hp.Max);
             Assert.AreEqual(50f, hp.Current);    // 60 clamped to new max of 50

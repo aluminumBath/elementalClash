@@ -13,7 +13,7 @@ namespace Elementborn.Game
     {
         [SerializeField] private Faction faction = Faction.Bandit;
         [SerializeField] private bool hasElement = false;
-        [SerializeField] private Element element = Element.Fire;
+        [SerializeField] private Element element = Elementborn.Core.Element.Fire;
         [Tooltip("Seconds this member stays angry at someone who attacked it.")]
         [SerializeField] private float grudgeDuration = 12f;
 

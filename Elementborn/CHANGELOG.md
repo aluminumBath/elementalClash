@@ -6,6 +6,31 @@ All notable changes to Elementborn are recorded here. The format follows
 
 ## [Unreleased]
 
+### Added
+- **In-App Purchasing** (`com.unity.purchasing` 5.1.1 — the version Unity ships for 6000.5) added to the package
+  manifest so real-money purchasing is available for future monetization. Not yet wired into any game system; the
+  economy still runs entirely on soft currency (Silver) + gacha. IAP v5 is a breaking API change from v4, so any
+  previously-imported 4.15.x sample scripts must be removed (or re-imported for v5).
+
+### Fixed
+- Compile errors surfaced on import (Unity 6000.5.0f1):
+  - `ScoreController` now exposes `EnsureInstance()` (mirrors `StaminaController`) — fixes `ArenaController`.
+  - `IceTrap` imports `Elementborn.Core`, resolving `StatusEffect` / `StatusKind`.
+  - `FactionMember`'s element field initializer is namespace-qualified so it binds to the enum, not the
+    same-named `Element` property.
+  - `GuideNpcController` uses a struct-safe sentinel (`string.IsNullOrEmpty(_info.Name)`) instead of comparing
+    the `GuideNpcInfo` value type to null.
+  - `SwimLocomotion` qualifies the XR `CommonUsages`, resolving the InputSystem/XR ambiguity.
+  - `UiTheme` fully-qualifies `UnityEngine.UI.Slider` so the type isn't shadowed by the `Slider(...)` factory.
+  - `UnderwaterTests` adds `using UnityEngine;` for `Vector3`.
+  - `HealthTests` passes a concrete `Element` (neutral `Earth`) to `DamageInfo` instead of `null` — the
+    element parameter is a non-nullable enum.
+
+### Changed
+- IP guard hardened: `ip-guard.sh` and the doctor's standing grep now catch the bare verb "bend"/"bends",
+  closing the gap that let Channel-convention stragglers slip past. Fixed three: a player-facing
+  "Bend an Element" button (→ "Channel an Element") and two doc comments.
+
 ## [0.2.0] - 2026-06-23
 
 ### Added
