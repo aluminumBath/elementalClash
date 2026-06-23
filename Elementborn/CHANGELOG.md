@@ -11,6 +11,18 @@ All notable changes to Elementborn are recorded here. The format follows
   manifest so real-money purchasing is available for future monetization. Not yet wired into any game system; the
   economy still runs entirely on soft currency (Silver) + gacha. IAP v5 is a breaking API change from v4, so any
   previously-imported 4.15.x sample scripts must be removed (or re-imported for v5).
+- **Ability ladder** (`AbilityUnlocks`, Core): the combat kit unlocks with player level — Primary + Defend from
+  the start, Sweep at 2, Heavy at 4, and the Secondary/Signature casts at 6. The combat controller gates each
+  intent (a locked intent no-ops with a toast); Channelers and weapon users share one intent-keyed table, so the
+  ladder applies to both kits on the same levels. A level-up announces new unlocks. Gating is skipped where no
+  `ProgressionController` is present (e.g. the Arena). All numbers live in one table; unit-tested
+  (`AbilityUnlocksTests`, +1 → 56 EditMode test files).
+- **Per-element Sweep arc**: Sweep is now a wide, multi-target arc (`OutcomeKind.Sweep`) instead of a single
+  projectile — every enemy in a 120° / 3.5 m fan in front is hit at once. Each element carries a distinct rider:
+  Fire burns, Water shoves + slows, Earth shoves + briefly staggers (control), Air is pure max-knockback
+  displacement. The cone math is the pure `SweepArc`; `SweepController` (added to both rigs in the bootstrap) is
+  the presentation shell that overlaps, filters to the cone, dedupes, and hits everyone caught. Unit-tested
+  (`SweepArcTests`, `SweepMovesetTests`, +2 → 58 EditMode test files). Documented in `VR_COMBAT.md`.
 
 ### Fixed
 - Compile errors surfaced on import (Unity 6000.5.0f1):
@@ -25,8 +37,13 @@ All notable changes to Elementborn are recorded here. The format follows
   - `UnderwaterTests` adds `using UnityEngine;` for `Vector3`.
   - `HealthTests` passes a concrete `Element` (neutral `Earth`) to `DamageInfo` instead of `null` — the
     element parameter is a non-nullable enum.
+- `QuestController.Start(string)` → `StartQuest`: on a MonoBehaviour, `Start` is a reserved Unity lifecycle name
+  and can't take parameters (Unity logged "Start() can not take parameters"). Caller in `DialogueController`
+  updated; the pure `QuestLog.Start` is unaffected.
 
 ### Changed
+- **Package upgrades** (Unity 6000.5): Input System 1.11.2 → 1.19.0, XR Interaction Toolkit 3.0.7 → 3.5.1,
+  XR Management 4.5.0 → 4.5.4, OpenXR 1.13.0 → 1.17.1.
 - IP guard hardened: `ip-guard.sh` and the doctor's standing grep now catch the bare verb "bend"/"bends",
   closing the gap that let Channel-convention stragglers slip past. Fixed three: a player-facing
   "Bend an Element" button (→ "Channel an Element") and two doc comments.

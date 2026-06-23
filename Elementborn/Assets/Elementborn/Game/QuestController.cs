@@ -53,7 +53,7 @@ namespace Elementborn.Game
         private void OnItem(string itemId, int amount) => Log.Record(ObjectiveKind.CollectItem, itemId, amount);
         private void OnTalked(string npcId) => Log.Record(ObjectiveKind.TalkToNpc, npcId);
 
-        public bool Start(string questId) => Log != null && Log.Start(questId);
+        public bool StartQuest(string questId) => Log != null && Log.Start(questId);
 
         /// <summary>Turns in a ready quest and grants its reward. Returns false if it wasn't ready.</summary>
         public bool TurnIn(string questId)

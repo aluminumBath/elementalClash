@@ -9,7 +9,8 @@ namespace Elementborn.Core
         Melee,
         Barrier,
         Movement,
-        Control // Sanguine Grip on a raycast target
+        Control, // Sanguine Grip on a raycast target
+        Sweep    // wide, multi-target arc in front of the caster
     }
 
     /// <summary>

@@ -76,7 +76,13 @@ namespace Elementborn.Game
             Perks.Grant(levels);
             int reward = Mathf.RoundToInt(20 * Progression.Level * Perks.RewardMultiplier);
             PlayerInventory.Instance?.AddCurrency(Currency.Silver, reward);
-            GameHud.Instance?.Toast("Level up! Level " + Progression.Level + "  (+" + reward + " Silver, +" + levels + " perk pt)");
+
+            string msg = "Level up! Level " + Progression.Level + "  (+" + reward + " Silver, +" + levels + " perk pt)";
+            var unlocked = AbilityUnlocks.NewlyUnlocked(Progression.Level - levels, Progression.Level);
+            if (unlocked.Count > 0)
+                msg += "  Unlocked: " + string.Join(", ", unlocked.ConvertAll(AbilityUnlocks.DisplayName));
+            GameHud.Instance?.Toast(msg);
+
             AudioController.Instance?.LevelUp();
             ApplyBonus();
         }

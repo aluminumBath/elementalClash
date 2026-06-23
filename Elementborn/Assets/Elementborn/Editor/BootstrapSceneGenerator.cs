@@ -181,6 +181,7 @@ namespace Elementborn.EditorTools
             Wire(combat, "castOrigin", camGo.transform);
             var weapon = Add(root, "WeaponHolder");
             if (weapon != null) Wire(combat, "weaponHolder", weapon);
+            Add(root, "SweepController");          // wide multi-target arc for Sweep outcomes
 
             Add(root, "PlayerInteractor");        // adds an InteractionArbiter to the rig automatically
             Add(root, "PlantControlController");
@@ -218,6 +219,7 @@ namespace Elementborn.EditorTools
             var combat = Add(root, "PlayerCombatController");
             if (input != null) Wire(combat, "inputProviderBehaviour", input);
             Wire(combat, "castOrigin", head.transform);
+            Add(root, "SweepController");          // wide multi-target arc for Sweep outcomes
 
             Add(root, "PlayerInteractor");
             Add(root, "PlantControlController");

@@ -65,6 +65,15 @@ namespace Elementborn.Core
         public const float WaterSweepDamage = 8f;
         public const float EarthSweepDamage = 18f;
         public const float AirSweepDamage = 6f;
+        // Sweep is now a wide multi-target arc (OutcomeKind.Sweep); each element carries a distinct rider.
+        public const float FireSweepKnockback = 3f;   // Fire: light shove, leaves a burn
+        public const float WaterSweepKnockback = 8f;  // Water: hard shove, wets footing (slow)
+        public const float EarthSweepKnockback = 7f;  // Earth: shove + brief stagger (control)
+        public const float AirSweepKnockback = 12f;   // Air: pure displacement, biggest knockback
+        public const float SweepBurnDps = 4f;
+        public const float SweepBurnDuration = 2f;
+        public const float SweepWetSlowDuration = 1.5f;
+        public const float EarthSweepStaggerDuration = 0.5f;
 
         private readonly ChannelerLoadout _loadout;
 
@@ -135,11 +144,12 @@ namespace Elementborn.Core
                     return new AbilityOutcome(OutcomeKind.Projectile, Element.Fire, variant,
                         intent.Direction, damage, FireProjectileSpeed * HeavySpeedMul, status, HeavyKnockback);
                 }
-                case IntentType.Sweep: // horizontal fire arc
+                case IntentType.Sweep: // fan of flame — moderate, leaves a short burn
                 {
                     float damage = FireSweepDamage + SweepChargeBonus * intent.Charge;
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Fire, AbilityVariant.Standard,
-                        intent.Direction, damage, FireProjectileSpeed, StatusEffect.None, SweepKnockback);
+                    var status = new StatusEffect(StatusKind.Burn, SweepBurnDps, SweepBurnDuration);
+                    return new AbilityOutcome(OutcomeKind.Sweep, Element.Fire, AbilityVariant.Standard,
+                        intent.Direction, damage, 0f, status, FireSweepKnockback);
                 }
                 default:
                     return AbilityOutcome.Empty;
@@ -181,11 +191,12 @@ namespace Elementborn.Core
                     return new AbilityOutcome(OutcomeKind.Projectile, Element.Water, AbilityVariant.Ice,
                         intent.Direction, damage, IceSpeed * HeavySpeedMul, status, HeavyKnockback);
                 }
-                case IntentType.Sweep: // water shove, low damage, big push
+                case IntentType.Sweep: // wide wave — shoves hard and wets footing (slow)
                 {
                     float damage = WaterSweepDamage + SweepChargeBonus * intent.Charge;
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Water, AbilityVariant.Standard,
-                        intent.Direction, damage, WaterProjectileSpeed, StatusEffect.None, SweepKnockback);
+                    var status = new StatusEffect(StatusKind.Slow, IceSlowMagnitude, SweepWetSlowDuration);
+                    return new AbilityOutcome(OutcomeKind.Sweep, Element.Water, AbilityVariant.Standard,
+                        intent.Direction, damage, 0f, status, WaterSweepKnockback);
                 }
                 default:
                     return AbilityOutcome.Empty;
@@ -226,11 +237,12 @@ namespace Elementborn.Core
                     return new AbilityOutcome(OutcomeKind.Projectile, Element.Earth, variant,
                         intent.Direction, damage, EarthProjectileSpeed * HeavySpeedMul, StatusEffect.None, HeavyKnockback);
                 }
-                case IntentType.Sweep: // rock wall sweep
+                case IntentType.Sweep: // low rock wall — shoves and briefly staggers (control)
                 {
                     float damage = EarthSweepDamage + SweepChargeBonus * intent.Charge;
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Earth, AbilityVariant.Standard,
-                        intent.Direction, damage, EarthProjectileSpeed, StatusEffect.None, SweepKnockback);
+                    var status = new StatusEffect(StatusKind.Control, 1f, EarthSweepStaggerDuration);
+                    return new AbilityOutcome(OutcomeKind.Sweep, Element.Earth, AbilityVariant.Standard,
+                        intent.Direction, damage, 0f, status, EarthSweepKnockback);
                 }
                 default:
                     return AbilityOutcome.Empty;
@@ -270,11 +282,11 @@ namespace Elementborn.Core
                     return new AbilityOutcome(OutcomeKind.Projectile, Element.Air, AbilityVariant.Standard,
                         intent.Direction, damage, AirProjectileSpeed, StatusEffect.None, HeavyKnockback);
                 }
-                case IntentType.Sweep: // downburst gust sweep
+                case IntentType.Sweep: // downburst gust — low damage, biggest knockback, pure displacement
                 {
                     float damage = AirSweepDamage + SweepChargeBonus * intent.Charge;
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Air, AbilityVariant.Standard,
-                        intent.Direction, damage, AirProjectileSpeed, StatusEffect.None, SweepKnockback);
+                    return new AbilityOutcome(OutcomeKind.Sweep, Element.Air, AbilityVariant.Standard,
+                        intent.Direction, damage, 0f, StatusEffect.None, AirSweepKnockback);
                 }
                 default:
                     return AbilityOutcome.Empty;

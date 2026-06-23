@@ -68,6 +68,28 @@ signature stances (e.g., an earth "form-and-hurl," an air "sustained gust").
    `windowSeconds` on-device.
 4. The XR rig, controllers, and locomotion are unchanged — this only changes how casts are triggered.
 
+## The Sweep arc
+
+Sweep is the kit's crowd-control move, and unlike the single-target casts it resolves as a **wide, multi-target
+arc** (`OutcomeKind.Sweep`): every enemy within `SweepArc.Range` (3.5 m) and inside a 120° fan in front of the
+caster is hit at once. The cone test is the pure `SweepArc.Covers`, judged on the horizontal plane (height is
+ignored) and unit-tested without a scene; `SweepController` is the thin presentation shell that overlaps,
+filters to the cone, dedupes, and hits everyone caught.
+
+Each element gives Sweep a distinct rider, so it reads differently per style instead of being one shape with
+four damage numbers:
+
+| Element | Sweep character |
+| ------- | --------------- |
+| **Fire** | a fan of flame — moderate damage, leaves a short **burn** |
+| **Water** | a wide wave — hard **shove** (knockback) plus **slow** (wet footing) |
+| **Earth** | a low rock wall — **shove** plus a brief **stagger** (control) |
+| **Air** | a downburst gust — low damage, the **biggest knockback**, pure displacement |
+
+The numbers live in `AbilitySystem` (the `*SweepDamage` / `*SweepKnockback` constants and the rider statuses);
+the arc shape lives in `SweepArc`. Both are one-line tweaks. Unit-tested in `SweepArcTests` and
+`SweepMovesetTests`.
+
 ## Comfort & safety
 
 Casts are rate-limited by `castCooldown` so combat isn't constant flailing, and big motions aren't *required*

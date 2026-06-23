@@ -24,6 +24,27 @@ Everything you do feeds a simple level curve, and leveling makes you tougher.
 - **`CharacterScreenController`** (Game) — a toggled overlay (key **C**) showing level, XP toward next, the
   health bonus, your element, and the **perks** with their ranks and a spend button per perk. Refreshes live.
 
+## Ability ladder
+
+Your combat kit opens up as you level. Each input intent has a required level — `AbilityUnlocks` in Core, the
+sibling of `StaminaCost`. The combat controller checks it before firing; a locked intent no-ops with a toast
+("Sweep unlocks at Lv 2"). Because Channelers and weapon users both dispatch through the same intents, one table
+gates both kits on the same levels.
+
+Default ladder:
+
+| Level | Unlocks |
+| ----- | ------- |
+| 1 | Primary cast + Defend (Dash is never gated) |
+| 2 | Sweep — a wide horizontal crowd-control arc |
+| 4 | Heavy — a committed power attack |
+| 6 | Secondary (the charged sub-art, e.g. Fire → Lightning) and the hidden Signature move |
+
+A level-up announces anything newly unlocked in the same toast, and handles multi-level jumps. When no
+`ProgressionController` is present in a scene (e.g. a standalone Arena), gating is disabled and the full kit is
+available, so combat-test scenes aren't crippled. All the numbers live in `AbilityUnlocks.Ladder`, so tuning the
+pace is a one-line change. Unit-tested in `AbilityUnlocksTests`.
+
 ## Persistence
 
 Level and within-level XP save and load through the same path as quests and items (`SaveData` →
@@ -33,5 +54,6 @@ you're level 4 on return, max-health bonus and all.
 ## Tuning / extending
 
 XP per defeat and per quest are serialized on `ProgressionController`. The bonus is currently max health only;
-creature XP scales with difficulty and perks add ranked upgrades; the natural extensions are more perk effects
-(damage, move speed, regen — which need hooks into those systems) and ability unlocks at level thresholds.
+creature XP scales with difficulty, perks add ranked upgrades, and the kit unlocks across levels (see the
+Ability ladder above). The natural remaining extensions are more perk effects (damage, move speed, regen —
+which need hooks into those systems).

@@ -89,7 +89,7 @@ namespace Elementborn.Game
                     foreach (var o in s.Definition.Objectives)
                         OverlayUi.Body(_content, "•  " + o.Description, 16, new Color(0.70f, 0.72f, 0.78f, 1f));
                     UiTheme.Button(_content, "Accept",
-                        () => { if (QuestController.Instance != null) QuestController.Instance.Start(id); Rebuild(); }, 220, 48);
+                        () => { if (QuestController.Instance != null) QuestController.Instance.StartQuest(id); Rebuild(); }, 220, 48);
                 }
 
                 foreach (var s in log.ActiveFrom(_npcId))

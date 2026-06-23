@@ -55,6 +55,16 @@ namespace Elementborn.Game
             // Grabbed (octopus), frozen (ice trap), or stunned (lightning): can't act.
             if (_body != null && (_body.IsStunned || _body.IsControlled)) return;
 
+            // Ability ladder: some intents unlock with player level. No progression in the scene -> no gating
+            // (standalone scenes like the Arena keep the full kit).
+            var progression = ProgressionController.Instance;
+            if (progression != null && !AbilityUnlocks.IsUnlocked(intent.Type, progression.Progression.Level))
+            {
+                GameHud.Instance?.Toast(AbilityUnlocks.DisplayName(intent.Type)
+                    + " unlocks at Lv " + AbilityUnlocks.RequiredLevel(intent.Type));
+                return;
+            }
+
             // Hidden signature move (special gesture) — applied directly, outside the normal kit.
             if (intent.Type == IntentType.Signature)
             {
