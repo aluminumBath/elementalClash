@@ -186,6 +186,8 @@ namespace Elementborn.Game
                 foreach (var el in Loadout.Elements) d.loadoutElements.Add(el.ToString());
                 foreach (var sa in Loadout.SubArts) d.loadoutSubArts.Add(sa.ToString());
             }
+            foreach (var e in Items.Entries()) { d.itemIds.Add(e.Key); d.itemCounts.Add(e.Value); }
+            QuestController.Instance?.CaptureInto(d);
             return d;
         }
 
@@ -237,6 +239,11 @@ namespace Elementborn.Game
             Loadout = (els.Count > 0 || weapon != WeaponType.None)
                 ? ChannelerLoadout.FromState(els, subs, weapon)
                 : null;
+
+            Items.Clear();
+            int itemCount = Mathf.Min(d.itemIds.Count, d.itemCounts.Count);
+            for (int i = 0; i < itemCount; i++) Items.Add(d.itemIds[i], d.itemCounts[i]);
+            QuestController.Instance?.RestoreFrom(d);
 
             WalletChanged?.Invoke();
             OwnedChanged?.Invoke();

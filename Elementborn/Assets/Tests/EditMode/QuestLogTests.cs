@@ -89,6 +89,23 @@ namespace Elementborn.Tests.EditMode
         }
 
         [Test]
+        public void RestoreRoundTripsStatusAndProgress()
+        {
+            var log = new QuestLog(new[] { Defeat("q", 3) });
+            log.Start("q");
+            log.Record(ObjectiveKind.DefeatCreature, "Wolf", 2);
+
+            var status = log.Get("q").Status;
+            var progress = (int[])log.Get("q").Progress.Clone();
+
+            var loaded = new QuestLog(new[] { Defeat("q", 3) });
+            loaded.Restore("q", status, progress);
+            Assert.AreEqual(status, loaded.Get("q").Status);
+            Assert.AreEqual(2, loaded.Get("q").Progress[0]);
+            loaded.Restore("unknown", QuestStatus.Active, new[] { 1 }); // no-op, no throw
+        }
+
+        [Test]
         public void CollectItemObjectiveTracksItemIds()
         {
             var def = new QuestDefinition("q", "T", "s", "Npc",

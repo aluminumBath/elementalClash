@@ -44,5 +44,4 @@ Add a `QuestDefinition` to `QuestCatalog` with a `GiverNpcId`, objectives, and a
 
 ## What's next for the loop
 
-Objectives cover defeat / tame / currency / talk / collect-item. Natural extensions: reach-region objectives, prerequisite chains (quest B unlocks after A), and persisting
-quest state into the save system.
+Objectives cover defeat / tame / currency / talk / collect-item. Natural extensions: reach-region objectives, prerequisite chains (quest B unlocks after A). Quest status and progress now persist through the save system.

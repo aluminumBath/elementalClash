@@ -36,6 +36,13 @@ namespace Elementborn.Game
         public string loadoutWeapon = "";
 
         public long savedUnixSeconds;
+
+        public List<string> itemIds = new List<string>();
+        public List<int> itemCounts = new List<int>();
+
+        public List<string> questIds = new List<string>();
+        public List<int> questStatuses = new List<int>();
+        public List<string> questProgress = new List<string>();   // one CSV of objective counts per quest
     }
 
     /// <summary>

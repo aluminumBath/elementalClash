@@ -34,5 +34,5 @@ any "sells everything" merchant and usable as a `CollectItem` quest target. To m
 ## What's next
 
 The bag is uncapped (no weight/slot limit yet), consumables aren't consumable from the inventory screen yet
-(only foods, via feeding), and item counts — like quest state — aren't persisted into saves. Those are the
-natural follow-ups.
+(only foods, via feeding). Item counts now persist through the save system (alongside quest progress). A
+weight/slot cap and using consumables from the inventory screen are the natural follow-ups.

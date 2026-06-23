@@ -7,7 +7,7 @@ namespace Elementborn.Game
     /// Glues <see cref="SaveSystem"/> to <see cref="PlayerInventory"/>: loads on start, saves on quit, and
     /// offers manual save (F5) / load (F9) keys with a HUD toast. Put it on a persistent object alongside
     /// the inventory. Note: the character-creation flow still runs on load; this restores the wallet,
-    /// lures, owned creatures, and house — the meaningful progression.
+    /// lures, owned creatures, house, items, and quest progress — the meaningful progression.
     /// </summary>
     public sealed class SaveController : MonoBehaviour
     {

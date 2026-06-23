@@ -68,5 +68,41 @@ namespace Elementborn.Game
             GameHud.Instance?.Toast(msg);
             return true;
         }
+
+        /// <summary>Writes quest status + progress into a save.</summary>
+        public void CaptureInto(SaveData data)
+        {
+            if (Log == null || data == null) return;
+            data.questIds.Clear(); data.questStatuses.Clear(); data.questProgress.Clear();
+            foreach (var s in Log.All())
+            {
+                data.questIds.Add(s.Definition.Id);
+                data.questStatuses.Add((int)s.Status);
+                data.questProgress.Add(string.Join(",", s.Progress));
+            }
+        }
+
+        /// <summary>Restores quest status + progress from a save.</summary>
+        public void RestoreFrom(SaveData data)
+        {
+            if (Log == null || data == null) return;
+            int n = data.questIds.Count;
+            for (int i = 0; i < n; i++)
+            {
+                int statusInt = i < data.questStatuses.Count ? data.questStatuses[i] : 0;
+                string csv = i < data.questProgress.Count ? data.questProgress[i] : "";
+                Log.Restore(data.questIds[i], (QuestStatus)statusInt, ParseCsv(csv));
+            }
+            Changed?.Invoke();
+        }
+
+        private static int[] ParseCsv(string csv)
+        {
+            if (string.IsNullOrEmpty(csv)) return new int[0];
+            var parts = csv.Split(',');
+            var result = new int[parts.Length];
+            for (int i = 0; i < parts.Length; i++) int.TryParse(parts[i], out result[i]);
+            return result;
+        }
     }
 }

@@ -146,5 +146,15 @@ namespace Elementborn.Core
             Changed?.Invoke();
             return s.Definition.Reward;
         }
+
+        /// <summary>Restores a quest's status and objective progress from a save (ignores unknown ids).</summary>
+        public void Restore(string id, QuestStatus status, int[] progress)
+        {
+            var s = Get(id);
+            if (s == null) return;
+            s.Status = status;
+            if (progress != null)
+                for (int i = 0; i < progress.Length && i < s.Progress.Length; i++) s.Progress[i] = progress[i];
+        }
     }
 }
