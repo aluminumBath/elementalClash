@@ -32,14 +32,28 @@ Discovery is driven by doing the thing the first time:
 - Attacks: `RecordCast(element, intent)` → Known.
 - Bloodlines: `RecordBloodlineSeen` → Glimpsed, `RecordBloodlineStudied` → Mastered.
 
-## Still to wire (the UI + hooks)
+## The UI + hooks (built)
 
-The Core is complete and tested. What the in-world pass adds:
+`GrimoireController` (added by the bootstrap scene, default key **G**) is the in-world tome. It owns the live
+`GrimoireProgress`, builds a maroon-and-gold book panel (echoing the reference art) with three tabs, and lists each
+section's entries via `GrimoireCatalog.ForSection` redacted through the player's tiers, with a discovered/total
+count per tab. Undiscovered entries read `???`; revealed ones show their name, a tier tag, and the layered lines.
 
-1. **Discovery hooks** — call the `Record…` methods from the real events: a creature entering view (sighting),
-   the defeat path, the taming success, `PlayerCombatController` on a first cast of each element/intent, and an
-   encounter with a bloodline bearer.
-2. **The book UI** — a `GrimoireController` overlay (tabbed Bestiary / Attacks / Bloodlines) that lists each
-   section's entries via `GrimoireCatalog.ForSection` redacted through the player's `GrimoireProgress`, with a
-   discovered/total count per tab. (Note: it needs a VR opener too — see `VR_INPUT_MAP.md`.)
-3. **Persistence** — fold `GrimoireProgress.ToSave`/`LoadFrom` into the save file alongside quests and items.
+Discovery is wired to real gameplay through the `QuestEvents` bus (so the grimoire stays decoupled, like quests):
+
+| Reveal | Source |
+| ------ | ------ |
+| Bestiary → **Glimpsed** | `CreatureController` raises `CreatureSighted` once the player first comes within its vision range |
+| Bestiary → **Known** | the existing `CreatureDefeated` event (creature death) |
+| Bestiary → **Mastered** | the existing `CreatureTamed` event (taming success) |
+| Attacks → **Known** | `PlayerCombatController` raises `AbilityCast(element, intent)` on each resolved channeler cast (incl. the signature gesture) |
+| Bloodlines → **Glimpsed** | casting an element glimpses its base line (`Bloodlines.ForElement`); on opening the book, the player's own carried lines + sub-arts + Confluence are glimpsed (`Bloodlines.TryForSubArt`) |
+
+**Persistence** — `GrimoireController.CaptureInto`/`RestoreFrom` mirror `GrimoireProgress.ToSave`/`LoadFrom` into
+`SaveData.grimoireKeys` / `grimoireTiers`, folded into `PlayerInventory.ToSave`/`LoadFrom` next to quests and items.
+
+### Not yet wired
+- **Bloodlines → Mastered** (`RecordBloodlineStudied`) is reserved for *meeting a line's notable bearer* (e.g. Ash
+  → Dragonthorn). The Core call exists; the bearer→line NPC mapping is the remaining hook.
+- **VR opener** — like the other overlays (J/L/I/C), the book opens on a keyboard key only. A shared world-space
+  VR menu that opens all overlays is tracked in `VR_INPUT_MAP.md`.

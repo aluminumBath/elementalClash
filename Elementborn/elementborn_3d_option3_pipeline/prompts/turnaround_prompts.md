@@ -1,0 +1,194 @@
+# Turnaround Prompts for True 3D Conversion
+
+## Willow
+
+Source PNG: `source_pngs/hero_assets/npcs__willow.png`
+
+Create a model-sheet turnaround for Willow, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Starter quest giver for A Wild Start.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Kiana
+
+Source PNG: `source_pngs/hero_assets/npcs__kiana.png`
+
+Create a model-sheet turnaround for Kiana, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Starter quest giver for A Gentle Hand / target for Word to Kiana.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Parfa
+
+Source PNG: `source_pngs/hero_assets/npcs__parfa.png`
+
+Create a model-sheet turnaround for Parfa, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Starter quest giver for Word to Kiana.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Weaponsmith
+
+Source PNG: `source_pngs/hero_assets/npcs__weaponsmith.png`
+
+Create a model-sheet turnaround for Weaponsmith, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Capitol smith who imbues weapons and forges wands.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Merchant
+
+Source PNG: `source_pngs/hero_assets/npcs__merchant.png`
+
+Create a model-sheet turnaround for Merchant, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Demo plaza merchant NPC.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Fire Channeler
+
+Source PNG: `source_pngs/hero_assets/channelers__fire_channeler.png`
+
+Create a model-sheet turnaround for Fire Channeler, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Fire user; burns and thaws ice underwater.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Water Channeler
+
+Source PNG: `source_pngs/hero_assets/channelers__water_channeler.png`
+
+Create a model-sheet turnaround for Water Channeler, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Water user; breathes water and uses ice offense.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Earth Channeler
+
+Source PNG: `source_pngs/hero_assets/channelers__earth_channeler.png`
+
+Create a model-sheet turnaround for Earth Channeler, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Earth user; stagger/stone theme.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Air Channeler
+
+Source PNG: `source_pngs/hero_assets/channelers__air_channeler.png`
+
+Create a model-sheet turnaround for Air Channeler, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Air user; bubble support underwater.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Verdancy Channeler
+
+Source PNG: `source_pngs/hero_assets/channelers__verdancy_channeler.png`
+
+Create a model-sheet turnaround for Verdancy Channeler, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Water+Earth plant user specialty.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Steamcraft Healer
+
+Source PNG: `source_pngs/hero_assets/channelers__steamcraft_healer.png`
+
+Create a model-sheet turnaround for Steamcraft Healer, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show neutral A-pose turnaround, arms slightly away from body, feet visible, no weapon blocking the torso. Preserve identity: Water+Fire healer/steam specialty.. medieval fantasy robes, tunic, sash, cloak, boots, belts and pouches; non-channeler NPCs must wear casual robes or medieval civilian attire, not armor. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: humanoid rig candidate; generate front, left side, right side, and back views at matching scale
+
+## Octopus Enemy
+
+Source PNG: `source_pngs/hero_assets/creatures__octopus_enemy.png`
+
+Create a model-sheet turnaround for Octopus Enemy, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show creature turnaround, full body visible, clear legs/tentacles/fins/tail anatomy, neutral pose plus one personality expression. Preserve identity: Grab/interrupt/drown underwater enemy.. original creature anatomy, clean readable silhouette, no copied franchise species. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: creature rig candidate; front, side, back and three-quarter view recommended
+
+## Water-Dragon / Serpent Boss
+
+Source PNG: `source_pngs/hero_assets/creatures__water_dragon_serpent_boss.png`
+
+Create a model-sheet turnaround for Water-Dragon / Serpent Boss, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show creature turnaround, full body visible, clear legs/tentacles/fins/tail anatomy, neutral pose plus one personality expression. Preserve identity: Ice and water serpent boss guarding a reward.. original creature anatomy, clean readable silhouette, no copied franchise species. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: creature rig candidate; front, side, back and three-quarter view recommended
+
+## Small Fish
+
+Source PNG: `source_pngs/hero_assets/creatures__small_fish.png`
+
+Create a model-sheet turnaround for Small Fish, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show creature turnaround, full body visible, clear legs/tentacles/fins/tail anatomy, neutral pose plus one personality expression. Preserve identity: Underwater fish decoration.. original creature anatomy, clean readable silhouette, no copied franchise species. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: creature rig candidate; front, side, back and three-quarter view recommended
+
+## Coral Decoration
+
+Source PNG: `source_pngs/hero_assets/creatures__coral_decoration.png`
+
+Create a model-sheet turnaround for Coral Decoration, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show creature turnaround, full body visible, clear legs/tentacles/fins/tail anatomy, neutral pose plus one personality expression. Preserve identity: Organic coral decoration.. original creature anatomy, clean readable silhouette, no copied franchise species. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: creature rig candidate; front, side, back and three-quarter view recommended
+
+## Maw Snaptrap
+
+Source PNG: `source_pngs/hero_assets/plants__maw_snaptrap.png`
+
+Create a model-sheet turnaround for Maw Snaptrap, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show interactive plant/setpiece turnaround, roots/base visible, gameplay parts clear. Preserve identity: Rooted carnivore plant that grabs and bites.. organic fantasy plant construction, readable moving parts, strong silhouette. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: environment/creature hybrid; side/back views needed if walkable or interactive
+
+## Willow Gate
+
+Source PNG: `source_pngs/hero_assets/plants__willow_gate.png`
+
+Create a model-sheet turnaround for Willow Gate, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show interactive plant/setpiece turnaround, roots/base visible, gameplay parts clear. Preserve identity: Weeping willow passage gate for plant users.. organic fantasy plant construction, readable moving parts, strong silhouette. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: environment/creature hybrid; side/back views needed if walkable or interactive
+
+## Fire Elemental Stone
+
+Source PNG: `source_pngs/hero_assets/items__fire_elemental_stone.png`
+
+Create a model-sheet turnaround for Fire Elemental Stone, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show orthographic object turnaround, front side back top if useful, centered, no cast shadow. Preserve identity: Single-element Fire stone.. inventory object with clean geometry and material zones. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: static prop; front/side/back or one high-quality image is usually enough
+
+## Water Elemental Stone
+
+Source PNG: `source_pngs/hero_assets/items__water_elemental_stone.png`
+
+Create a model-sheet turnaround for Water Elemental Stone, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show orthographic object turnaround, front side back top if useful, centered, no cast shadow. Preserve identity: Single-element Water stone.. inventory object with clean geometry and material zones. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: static prop; front/side/back or one high-quality image is usually enough
+
+## Earth Elemental Stone
+
+Source PNG: `source_pngs/hero_assets/items__earth_elemental_stone.png`
+
+Create a model-sheet turnaround for Earth Elemental Stone, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show orthographic object turnaround, front side back top if useful, centered, no cast shadow. Preserve identity: Single-element Earth stone.. inventory object with clean geometry and material zones. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: static prop; front/side/back or one high-quality image is usually enough
+
+## Air Elemental Stone
+
+Source PNG: `source_pngs/hero_assets/items__air_elemental_stone.png`
+
+Create a model-sheet turnaround for Air Elemental Stone, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show orthographic object turnaround, front side back top if useful, centered, no cast shadow. Preserve identity: Single-element Air stone.. inventory object with clean geometry and material zones. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: static prop; front/side/back or one high-quality image is usually enough
+
+## Fused Fire+Water Stone
+
+Source PNG: `source_pngs/hero_assets/items__fused_fire_water_stone.png`
+
+Create a model-sheet turnaround for Fused Fire+Water Stone, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show orthographic object turnaround, front side back top if useful, centered, no cast shadow. Preserve identity: Irreversible two-element fused stone.. inventory object with clean geometry and material zones. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: static prop; front/side/back or one high-quality image is usually enough
+
+## Elemental Wand
+
+Source PNG: `source_pngs/hero_assets/items__elemental_wand.png`
+
+Create a model-sheet turnaround for Elemental Wand, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show orthographic object turnaround, front side back top if useful, centered, no cast shadow. Preserve identity: Wand forged from an elemental stone.. inventory object with clean geometry and material zones. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: static prop; front/side/back or one high-quality image is usually enough
+
+## Imbued Weapon
+
+Source PNG: `source_pngs/hero_assets/items__imbued_weapon.png`
+
+Create a model-sheet turnaround for Imbued Weapon, an original Elementborn game asset. Use clean cel-shaded oceanic fantasy adventure art, bold ink linework, polished painterly forms, saturated but controlled colors, hard cel-shaded shadows, and transparent background. Show orthographic object turnaround, front side back top if useful, centered, no cast shadow. Preserve identity: Weapon upgraded with a stone.. inventory object with clean geometry and material zones. Keep the design consistent across views: same proportions, same clothing, same colors, same face and hair. No direct references to existing franchises, no logos, no copied costumes or symbols.
+
+Rig note: static prop; front/side/back or one high-quality image is usually enough
+

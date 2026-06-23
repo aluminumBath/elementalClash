@@ -69,8 +69,11 @@ namespace Elementborn.Game
             if (intent.Type == IntentType.Signature)
             {
                 if (_hidden != null && _loadout.IsChanneler)
+                {
                     _hidden.Perform(_loadout.Elements[0], intent.Direction,
                         castOrigin ? castOrigin.position : transform.position);
+                    QuestEvents.RaiseAbilityCast(_loadout.Elements[0].ToString(), IntentType.Signature.ToString());
+                }
                 return;
             }
 
@@ -123,6 +126,9 @@ namespace Elementborn.Game
             Vector3 origin = castOrigin ? castOrigin.position : transform.position;
             // VFX binder, melee, dash, and Sanguine Grip controllers all listen to this.
             OutcomeReady?.Invoke(outcome, origin);
+
+            if (_loadout.IsChanneler) // grimoire: reveal the Attacks entry for this element × intent
+                QuestEvents.RaiseAbilityCast(outcome.Element.ToString(), intent.Type.ToString());
         }
 
         public void SetLoadout(ChannelerLoadout loadout)

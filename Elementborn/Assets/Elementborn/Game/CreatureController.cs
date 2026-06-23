@@ -41,6 +41,7 @@ namespace Elementborn.Game
         private float _repathTimer;
         private float _retargetTimer;
         private float _attackTimer;
+        private bool _sighted; // grimoire: glimpse this kind the first time the player gets close
 
         public void Configure(CreatureKind newKind)
         {
@@ -94,6 +95,20 @@ namespace Elementborn.Game
                 _target = hostile != null ? hostile.transform : null;
                 _targetDamageable = hostile != null ? hostile.GetComponentInParent<IDamageable>() : null;
                 _retargetTimer = retargetInterval;
+
+                if (!_sighted)
+                {
+                    var pi = PlayerInventory.Instance;
+                    if (pi != null)
+                    {
+                        Vector3 d = pi.transform.position - transform.position; d.y = 0f;
+                        if (d.sqrMagnitude <= visionRange * visionRange)
+                        {
+                            _sighted = true;
+                            QuestEvents.RaiseCreatureSighted(kind.ToString());
+                        }
+                    }
+                }
             }
 
             Vector3 pos = transform.position;

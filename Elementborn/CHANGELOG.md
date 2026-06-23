@@ -17,8 +17,14 @@ All notable changes to Elementborn are recorded here. The format follows
   the moveset), and **Bloodlines** (a new `Bloodlines` catalog: the four base lines, the sub-art lines, the
   Confluence, and the rare **Dragonthorn** line — Ash's). Each entry reveals in tiers (`DiscoveryTier`:
   Unknown → Glimpsed → Known → Mastered) via `Grimoire.Redact`; the player's `GrimoireProgress` is savable and
-  never downgrades, with first-time discovery events (sight/defeat/tame, first cast, meet-a-bloodline). Core
-  engine + catalogs are complete and unit-tested; the book UI and in-gameplay hooks are staged in `GRIMOIRE.md`.
+  never downgrades. Core engine + catalogs are complete and unit-tested. **Now wired in-world**: a
+  `GrimoireController` overlay (default key **G**, maroon-and-gold tome, three tabs with discovered/total counts,
+  redacted entries), discovery hooks via the `QuestEvents` bus (a new `CreatureSighted` proximity event →
+  Glimpsed, `CreatureDefeated` → Known, `CreatureTamed` → Mastered; a new `AbilityCast` event from
+  `PlayerCombatController` → the matching Attacks entry + a glimpse of that element's base bloodline; carried
+  lines/sub-arts/Confluence glimpsed on open), and save persistence folded into `PlayerInventory` (`SaveData`
+  `grimoireKeys`/`grimoireTiers`). Remaining: bloodline **Mastered** via meeting a notable bearer; a shared VR
+  opener (see `GRIMOIRE.md` / `VR_INPUT_MAP.md`).
 - **Owner admin + signature hero (Ash Shadowthorn)**: `SignatureCharacter` (Core) defines the owner's hero — a
   three-element Channeler (Air/Water/Fire with Flight/Sanguine Grip/Magmacraft), a `DragonForm`, teal eyes /
   reddish-brown hair / Texan accent, and three named companions: **Apollo** (kitsune), **Artemis** (shadowhound,

@@ -50,6 +50,10 @@ namespace Elementborn.Game
         public int perkPoints;
         public List<string> perkIds = new List<string>();
         public List<int> perkRanks = new List<int>();
+
+        // Grimoire discovery: parallel lists mirroring GrimoireProgress.ToSave() ("Section:Id" -> tier int).
+        public List<string> grimoireKeys = new List<string>();
+        public List<int> grimoireTiers = new List<int>();
     }
 
     /// <summary>

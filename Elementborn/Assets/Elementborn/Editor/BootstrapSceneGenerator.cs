@@ -110,6 +110,10 @@ namespace Elementborn.EditorTools
             Add(quests, "CharacterScreenController"); // press C for level / XP
             Add(quests, "ProgressionHud");        // always-on level / XP bar
 
+            // Grimoire overlay (press G in play mode): discovery-driven Bestiary / Attacks / Bloodlines tome.
+            var grimoire = new GameObject("Grimoire");
+            Add(grimoire, "GrimoireController");
+
             BuildDemoContent();
 
             // World population: the flow's EnterWorld calls spawnPlacer.Place(World), scattering creatures,

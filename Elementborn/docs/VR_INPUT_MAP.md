@@ -34,12 +34,13 @@ can't trigger them:
 2. **Quest Log** — desktop key **L** (`QuestLogController` reads the keyboard directly). No VR open.
 3. **Inventory** — desktop key **I** (`InventoryController`, keyboard-direct). No VR open.
 4. **Social menu** — desktop key **J** (`SocialMenuController`, keyboard-direct). No VR open.
-5. **Character screen** — `CharacterScreenController`, keyboard-direct. No VR open.
-6. **Settings menu** — the `Menu` action (keyboard/gamepad only, no XR binding). No VR open.
-7. **Save / Load slots** — the `Slots` action (keyboard/gamepad only). No VR open.
-8. **Element travel** — the `ElementTravel` action. No VR binding.
-9. **Mount** (summon / ride) — the `Mount` action. No VR binding.
-10. **Companion** (summon) — the `Companion` action. No VR binding.
+5. **Grimoire** — desktop key **G** (`GrimoireController`, keyboard-direct). No VR open.
+6. **Character screen** — `CharacterScreenController`, keyboard-direct. No VR open.
+7. **Settings menu** — the `Menu` action (keyboard/gamepad only, no XR binding). No VR open.
+8. **Save / Load slots** — the `Slots` action (keyboard/gamepad only). No VR open.
+9. **Element travel** — the `ElementTravel` action. No VR binding.
+10. **Mount** (summon / ride) — the `Mount` action. No VR binding.
+11. **Companion** (summon) — the `Companion` action. No VR binding.
 
 In short: **all combat works in VR; almost none of the menus/overlays or the world-interaction verbs do.**
 
@@ -53,7 +54,7 @@ thumbstick-click and the controller menu buttons are still free for the menu/int
 
 - **Interact**: bind to right **grip** (or trigger) via `VrInputProvider`, feeding the existing
   `InteractionArbiter` — that single binding unlocks NPCs/quests/pickups/mounting.
-- **Overlays (Quest/Inventory/Social/Character/Settings/Slots)**: a single **menu button** (left menu /
+- **Overlays (Quest/Inventory/Social/Grimoire/Character/Settings/Slots)**: a single **menu button** (left menu /
   hamburger) that opens a VR-friendly wrist or world-space hub, rather than one button per panel. The overlays
   already have `Show()/Hide()/Toggle()` — they just need a VR opener that doesn't read `Keyboard.current`.
 - **Element travel / Mount / Companion**: radial or hub entries off the same menu button.

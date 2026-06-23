@@ -117,5 +117,39 @@ namespace Elementborn.Tests.EditMode
             StringAssert.Contains("Ash", Bloodlines.For(BloodlineId.Dragonthorn).Notable);
             Assert.AreEqual(SubArt.SanguineGrip, Bloodlines.For(BloodlineId.Sanguine).SubArt);
         }
+
+        // ---- bloodline mapping (feeds the grimoire's discovery hooks) ----
+        [Test]
+        public void ForElementMapsToBaseLine()
+        {
+            Assert.AreEqual(BloodlineId.Pyre, Bloodlines.ForElement(Element.Fire));
+            Assert.AreEqual(BloodlineId.Tide, Bloodlines.ForElement(Element.Water));
+            Assert.AreEqual(BloodlineId.Stone, Bloodlines.ForElement(Element.Earth));
+            Assert.AreEqual(BloodlineId.Gale, Bloodlines.ForElement(Element.Air));
+        }
+
+        [Test]
+        public void TryForSubArtMapsKnownLinesAndRejectsNone()
+        {
+            Assert.IsTrue(Bloodlines.TryForSubArt(SubArt.Magmacraft, out var magma));
+            Assert.AreEqual(BloodlineId.Magmacraft, magma);
+            Assert.IsTrue(Bloodlines.TryForSubArt(SubArt.SanguineGrip, out var sang));
+            Assert.AreEqual(BloodlineId.Sanguine, sang);
+            Assert.IsTrue(Bloodlines.TryForSubArt(SubArt.Verdancy, out var verd));
+            Assert.AreEqual(BloodlineId.Verdancy, verd);
+            Assert.IsFalse(Bloodlines.TryForSubArt(SubArt.None, out _));
+        }
+
+        [Test]
+        public void CastingAnElementGlimpsesItsBaseBloodline()
+        {
+            // Mirrors GrimoireController.OnCast: a channeler cast reveals the Attacks entry and glimpses the line.
+            var g = new GrimoireProgress();
+            g.RecordCast(Element.Fire, IntentType.PrimaryCast);
+            g.RecordBloodlineSeen(Bloodlines.ForElement(Element.Fire));
+            Assert.AreEqual(DiscoveryTier.Known,
+                g.TierOf(GrimoireSection.Attacks, GrimoireCatalog.AttackId(Element.Fire, IntentType.PrimaryCast)));
+            Assert.AreEqual(DiscoveryTier.Glimpsed, g.TierOf(GrimoireSection.Bloodlines, BloodlineId.Pyre.ToString()));
+        }
     }
 }

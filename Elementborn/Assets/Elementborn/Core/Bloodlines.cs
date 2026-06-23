@@ -35,6 +35,34 @@ namespace Elementborn.Core
     {
         public static IEnumerable<BloodlineId> AllIds => (BloodlineId[])Enum.GetValues(typeof(BloodlineId));
 
+        /// <summary>The base channeling line for an element. Channeling that element implies you carry its blood,
+        /// so the grimoire glimpses this line on a first cast.</summary>
+        public static BloodlineId ForElement(Element element)
+        {
+            switch (element)
+            {
+                case Element.Fire:  return BloodlineId.Pyre;
+                case Element.Water: return BloodlineId.Tide;
+                case Element.Earth: return BloodlineId.Stone;
+                default:            return BloodlineId.Gale; // Element.Air
+            }
+        }
+
+        /// <summary>The lineage behind a sub-art, if any. Returns false for <see cref="SubArt.None"/>.</summary>
+        public static bool TryForSubArt(SubArt subArt, out BloodlineId id)
+        {
+            switch (subArt)
+            {
+                case SubArt.Magmacraft:   id = BloodlineId.Magmacraft;  return true;
+                case SubArt.SanguineGrip: id = BloodlineId.Sanguine;    return true;
+                case SubArt.Oreshaping:   id = BloodlineId.Oreshaping;  return true;
+                case SubArt.Flight:       id = BloodlineId.Flight;      return true;
+                case SubArt.Verdancy:     id = BloodlineId.Verdancy;    return true;
+                case SubArt.Steamcraft:   id = BloodlineId.Steamcraft;  return true;
+                default:                  id = BloodlineId.Pyre;        return false; // SubArt.None
+            }
+        }
+
         public static BloodlineInfo For(BloodlineId id)
         {
             switch (id)
