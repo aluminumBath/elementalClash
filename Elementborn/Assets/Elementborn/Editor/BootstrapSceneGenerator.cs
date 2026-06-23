@@ -181,7 +181,15 @@ namespace Elementborn.EditorTools
             Wire(combat, "castOrigin", camGo.transform);
             var weapon = Add(root, "WeaponHolder");
             if (weapon != null) Wire(combat, "weaponHolder", weapon);
-            Add(root, "SweepController");          // wide multi-target arc for Sweep outcomes
+
+            // Combat presentation: each listens to PlayerCombatController.OutcomeReady and presents one OutcomeKind.
+            Add(root, "AbilityVfxBinder");        // Projectile — procedural visuals + audio + a damaging Projectile
+            Add(root, "MeleeController");         // Melee — single-target weapon swing
+            Add(root, "SweepController");         // Sweep — wide multi-target arc (crowd control)
+            Add(root, "HeavyController");         // Heavy — committed impact zone at range
+            Add(root, "BarrierResponder");        // Barrier — Defend raises a brief damage-reducing shield
+            Add(root, "DashResponder");           // Movement — Dash / Flight glide
+            Add(root, "SanguineGripController");  // Control — Sanguine Grip (water sub-art)
 
             Add(root, "PlayerInteractor");        // adds an InteractionArbiter to the rig automatically
             Add(root, "PlantControlController");
@@ -219,7 +227,15 @@ namespace Elementborn.EditorTools
             var combat = Add(root, "PlayerCombatController");
             if (input != null) Wire(combat, "inputProviderBehaviour", input);
             Wire(combat, "castOrigin", head.transform);
-            Add(root, "SweepController");          // wide multi-target arc for Sweep outcomes
+
+            // Combat presentation: each listens to PlayerCombatController.OutcomeReady and presents one OutcomeKind.
+            Add(root, "AbilityVfxBinder");        // Projectile — procedural visuals + audio + a damaging Projectile
+            Add(root, "MeleeController");         // Melee — single-target weapon swing
+            Add(root, "SweepController");         // Sweep — wide multi-target arc (crowd control)
+            Add(root, "HeavyController");         // Heavy — committed impact zone at range
+            Add(root, "BarrierResponder");        // Barrier — Defend raises a brief damage-reducing shield
+            Add(root, "DashResponder");           // Movement — Dash / Flight glide
+            Add(root, "SanguineGripController");  // Control — Sanguine Grip (water sub-art)
 
             Add(root, "PlayerInteractor");
             Add(root, "PlantControlController");

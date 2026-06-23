@@ -52,6 +52,14 @@ Start here. The docs in reading order:
 30. **`SELF_HOSTING.md`** — running your own server (Nakama) and shipping a client that connects to it.
 31. **`PROGRESSION.md`** — XP, levels, perks, the max-health bonus, and how leveling persists.
 32. **`WORLD.md`** — the data-driven world: generation, terrain, and procedural population via the spawner.
+33. **`VR_INPUT_MAP.md`** — VR vs desktop input audit: what's bound on the controllers/gestures, and the list of
+    desktop actions (Interact, the overlays, mount/companion/travel) that aren't mapped to VR yet.
+34. **`WEAPONS.md`** — elemental stones, fusion, the capitol weaponsmith (imbue a weapon or forge a wand), and
+    wand spell rules — a power path for non-Channelers.
+35. **`GRIMOIRE.md`** — the discovery-driven tome (Bestiary / Attacks / Bloodlines) whose entries reveal in tiers
+    as the player sights, defeats, tames, casts, and meets bloodlines.
+36. **`MAP.md`** — runtime navigation: minimap, map viewer, leyline-rift fast travel, and locating self (always)
+    and consenting friends.
 
 ## By task
 
@@ -78,6 +86,10 @@ Start here. The docs in reading order:
 | Add online social features | `SOCIAL.md` |
 | Take the social layer online (Nakama) | `NETCODE.md` |
 | Set up VR (headset, comfort locomotion) | `VR_SETUP.md` |
+| See which controls aren't mapped to VR yet | `VR_INPUT_MAP.md` |
+| Forge/imbue weapons & wands from stones | `WEAPONS.md` |
+| Understand the discovery grimoire (bestiary/attacks/bloodlines) | `GRIMOIRE.md` |
+| Minimap, fast travel, locate self/friends | `MAP.md` |
 | See how the code is organized | `README.md` (Architecture / Layout) |
 
 ## A note on scope

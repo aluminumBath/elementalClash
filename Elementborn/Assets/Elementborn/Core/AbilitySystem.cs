@@ -141,8 +141,8 @@ namespace Elementborn.Core
                         variant = AbilityVariant.Magmacraft;
                         status = new StatusEffect(StatusKind.Burn, 6f, 3f);
                     }
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Fire, variant,
-                        intent.Direction, damage, FireProjectileSpeed * HeavySpeedMul, status, HeavyKnockback);
+                    return new AbilityOutcome(OutcomeKind.Heavy, Element.Fire, variant,
+                        intent.Direction, damage, 0f, status, HeavyKnockback, intent.Charge);
                 }
                 case IntentType.Sweep: // fan of flame — moderate, leaves a short burn
                 {
@@ -188,8 +188,8 @@ namespace Elementborn.Core
                 {
                     float damage = WaterHeavyDamage + HeavyChargeBonus * intent.Charge;
                     var status = new StatusEffect(StatusKind.Slow, IceSlowMagnitude, IceSlowDuration);
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Water, AbilityVariant.Ice,
-                        intent.Direction, damage, IceSpeed * HeavySpeedMul, status, HeavyKnockback);
+                    return new AbilityOutcome(OutcomeKind.Heavy, Element.Water, AbilityVariant.Ice,
+                        intent.Direction, damage, 0f, status, HeavyKnockback, intent.Charge);
                 }
                 case IntentType.Sweep: // wide wave — shoves hard and wets footing (slow)
                 {
@@ -234,8 +234,8 @@ namespace Elementborn.Core
                     float damage = EarthHeavyDamage + HeavyChargeBonus * intent.Charge;
                     var variant = AbilityVariant.Standard;
                     if (hasMetal) { damage *= MetalDamageMultiplier; variant = AbilityVariant.Oreshaping; }
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Earth, variant,
-                        intent.Direction, damage, EarthProjectileSpeed * HeavySpeedMul, StatusEffect.None, HeavyKnockback);
+                    return new AbilityOutcome(OutcomeKind.Heavy, Element.Earth, variant,
+                        intent.Direction, damage, 0f, StatusEffect.None, HeavyKnockback, intent.Charge);
                 }
                 case IntentType.Sweep: // low rock wall — shoves and briefly staggers (control)
                 {
@@ -279,8 +279,8 @@ namespace Elementborn.Core
                 case IntentType.Heavy: // updraft launch: low damage, big knock-up
                 {
                     float damage = AirHeavyDamage + HeavyChargeBonus * intent.Charge;
-                    return new AbilityOutcome(OutcomeKind.Projectile, Element.Air, AbilityVariant.Standard,
-                        intent.Direction, damage, AirProjectileSpeed, StatusEffect.None, HeavyKnockback);
+                    return new AbilityOutcome(OutcomeKind.Heavy, Element.Air, AbilityVariant.Standard,
+                        intent.Direction, damage, 0f, StatusEffect.None, HeavyKnockback, intent.Charge);
                 }
                 case IntentType.Sweep: // downburst gust — low damage, biggest knockback, pure displacement
                 {

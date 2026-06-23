@@ -112,7 +112,8 @@ namespace Elementborn.Game
 
         private void Buttons()
         {
-            bool recenter = Button(XRNode.RightHand, CommonUsages.primaryButton);
+            // Recenter on right thumbstick-click — NOT the A button (A is Dash in combat; sharing it double-fired).
+            bool recenter = Button(XRNode.RightHand, CommonUsages.primary2DAxisClick);
             if (recenter && !_prevRecenter) Recenter();
             _prevRecenter = recenter;
 

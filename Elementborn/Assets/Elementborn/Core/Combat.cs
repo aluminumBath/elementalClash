@@ -10,7 +10,8 @@ namespace Elementborn.Core
         Barrier,
         Movement,
         Control, // Sanguine Grip on a raycast target
-        Sweep    // wide, multi-target arc in front of the caster
+        Sweep,   // wide, multi-target arc in front of the caster
+        Heavy    // committed impact zone that lands at a point in front of the caster
     }
 
     /// <summary>
@@ -68,8 +69,11 @@ namespace Elementborn.Core
         /// <summary>Impulse applied to the target on hit (air/earth/blood displacement). 0 = none.</summary>
         public float Knockback { get; }
 
+        /// <summary>Cast charge, 0..1 (held duration). Heavy scales its blast by it; most outcomes ignore it.</summary>
+        public float Charge { get; }
+
         public AbilityOutcome(OutcomeKind kind, Element element, AbilityVariant variant,
-            Vector3 direction, float damage, float speed, StatusEffect status, float knockback = 0f)
+            Vector3 direction, float damage, float speed, StatusEffect status, float knockback = 0f, float charge = 0f)
         {
             Kind = kind;
             Element = element;
@@ -79,11 +83,12 @@ namespace Elementborn.Core
             Speed = speed;
             Status = status;
             Knockback = knockback;
+            Charge = charge;
         }
 
         /// <summary>A copy with damage and knockback scaled (used by weather effects on channeling).</summary>
         public AbilityOutcome Scaled(float multiplier) =>
-            new AbilityOutcome(Kind, Element, Variant, Direction, Damage * multiplier, Speed, Status, Knockback * multiplier);
+            new AbilityOutcome(Kind, Element, Variant, Direction, Damage * multiplier, Speed, Status, Knockback * multiplier, Charge);
 
         public bool IsEmpty => Kind == OutcomeKind.None;
 

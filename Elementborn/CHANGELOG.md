@@ -7,6 +7,30 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Map systems (Core)**: `MapNavigation` — **leyline-rift fast travel** (`FastTravelNetwork`: warp only to
+  discovered rifts, nearest-rift, savable), **locate self** always (`Locator.Self`) and **locate friends** only
+  with explicit opt-in (`LocationSharing`, off by default; `Locator.VisibleFriends` is consent-gated), plus
+  **minimap math** (`Minimap.WorldToNormalized` / `WithinRange`) and `MapMarker`s. Pure rules + tests; the
+  minimap HUD, map-viewer overlay, rift world objects, and friend-position sync are staged in `MAP.md`.
+- **The Grimoire** — a discovery-driven tome with three sections that fill in as the player uncovers them:
+  **Bestiary** (every creature, composed from `CreatureCatalog`/`CreatureHints`), **Attacks** (each element ×
+  the moveset), and **Bloodlines** (a new `Bloodlines` catalog: the four base lines, the sub-art lines, the
+  Confluence, and the rare **Dragonthorn** line — Ash's). Each entry reveals in tiers (`DiscoveryTier`:
+  Unknown → Glimpsed → Known → Mastered) via `Grimoire.Redact`; the player's `GrimoireProgress` is savable and
+  never downgrades, with first-time discovery events (sight/defeat/tame, first cast, meet-a-bloodline). Core
+  engine + catalogs are complete and unit-tested; the book UI and in-gameplay hooks are staged in `GRIMOIRE.md`.
+- **Owner admin + signature hero (Ash Shadowthorn)**: `SignatureCharacter` (Core) defines the owner's hero — a
+  three-element Channeler (Air/Water/Fire with Flight/Sanguine Grip/Magmacraft), a `DragonForm`, teal eyes /
+  reddish-brown hair / Texan accent, and three named companions: **Apollo** (kitsune), **Artemis** (shadowhound,
+  shadow-teleport via blink), **Iago** (iridescent phoenix that mirrors the hero's elements and is reborn once).
+  `Social.AdminAccounts` treats any Gmail alias of the owner's address as a global `UserRole.Admin` (dots and
+  +suffixes normalised), and can provision the owner into a `UserDirectory`. Unit-tested.
+- **Weapons / stones / wands (Core stub)**: `Armory` (Core) — elemental **stones** (dropped by defeated
+  Channelers and in each capitol throne room), irreversible **two-at-a-time fusion**, a capitol **weaponsmith**
+  that either **imbues** a weapon (+damage/+durability + an element effect; fused imbues harder) or **forges a
+  wand**, and **wands** that grant elemental spells, block other item slots, and cap at 6 spells (3 per element).
+  Pure rules + tests; in-world wiring (loot drops, throne-room stones, smith NPC, equip enforcement) is staged in
+  `WEAPONS.md`.
 - **In-App Purchasing** (`com.unity.purchasing` 5.1.1 — the version Unity ships for 6000.5) added to the package
   manifest so real-money purchasing is available for future monetization. Not yet wired into any game system; the
   economy still runs entirely on soft currency (Silver) + gacha. IAP v5 is a breaking API change from v4, so any
@@ -23,8 +47,45 @@ All notable changes to Elementborn are recorded here. The format follows
   displacement. The cone math is the pure `SweepArc`; `SweepController` (added to both rigs in the bootstrap) is
   the presentation shell that overlaps, filters to the cone, dedupes, and hits everyone caught. Unit-tested
   (`SweepArcTests`, `SweepMovesetTests`, +2 → 58 EditMode test files). Documented in `VR_COMBAT.md`.
+- **Per-element Heavy impact**: Heavy is now a committed **impact zone at range** (`OutcomeKind.Heavy`) — it
+  lands 3 m in front of the caster and hits everything within a 2 m blast, knocking targets outward. A distinct
+  third shape alongside Sweep (wide/near) and Primary (single travelling shot). Riders preserved per element:
+  Fire meteor (burn on Magmacraft), Water geyser (slow), Earth ground slam (metal on Oreshaping), Air updraft
+  (knock-up). Blast math is the pure `HeavyStrike`; `HeavyController` is the presentation shell. Unit-tested
+  (`HeavyStrikeTests`, `HeavyMovesetTests`, +2 → 60 EditMode test files). Documented in `VR_COMBAT.md`.
+- **Sweep/Heavy VFX + Heavy telegraph + charge scaling**:
+  - **Sweep** now throws a fast forward fan of particles on cast (`AbilityFx.SpawnSweepFan`); still instant.
+  - **Heavy** is now **telegraphed** — it marks a ground ring at a fixed impact point, waits
+    `HeavyStrike.TelegraphSeconds` (0.5 s), then drops the blast, so it's dodgeable (step out of the ring and
+    you're spared). The hit is resolved *after* the wind-up.
+  - **Charge scales Heavy's blast**: holding the cast grows both the damage (already) and the impact radius
+    (`HeavyStrike.RadiusForCharge`), and the telegraph ring grows to match. `AbilityOutcome` now carries an
+    optional `Charge` (source-compatible; preserved through `Scaled`).
+  - New `AbilityPalette` (Core) gives the shared colour language — element primary, sub-art as the
+    secondary/accent — and `AbilityFx` (Game) builds the procedural, self-cleaning fan / ring / impact burst
+    (no prefab assets needed; appearance is a placeholder pending a hand-made VFX pass).
+  - +1 test (`AbilityPaletteTests`) and charge/telegraph cases added to the Heavy tests → 61 EditMode test files.
+    Documented in `VR_COMBAT.md`.
+- **Heavy now arcs in with a filling telegraph ring** (replaces land-after-delay): on cast the strike launches on
+  a parabolic arc (`HeavyStrike.ArcPoint`) toward the fixed impact point while a ground ring fills like a clock
+  over the flight, and the blast resolves on landing — still dodgeable, now legible. `AbilityFx` gained the
+  filling ring (`SpawnTelegraphRing` + `SetRingFill`) and the travelling projectile (`SpawnHeavyTravel`); the arc
+  path is unit-tested (`HeavyStrikeTests`).
+- **`docs/VR_INPUT_MAP.md`** — an audit of VR vs desktop input. All combat + locomotion is bound in VR; the
+  unmapped controls (Interact, the Quest/Inventory/Social/Character/Settings/Slots overlays, Element travel,
+  Mount, Companion) are listed, along with a real binding **conflict** (right **A** drives both Dash and
+  Recenter). Indexed in `INDEX.md`.
+- **Dialogue & action coverage tests** (`DialogueAndActionCoverageTests`): every guide has a full spoken profile
+  (greeting + service line + home/sidekick/appearance + valid element), every `NpcRole` is represented, every
+  creature has a finding hint, and every quest is fully authored (title/summary/giver/objectives/reward). +1 →
+  62 EditMode test files. (Enemy stats/actions were already covered by `EnemyArchetypesTests`.)
+- **Placeholder/bug sweep**: no `TODO`/`FIXME`/`NotImplementedException`/empty-catch/stubbed logic anywhere; the
+  only "placeholders" are intentional procedural meshes/VFX awaiting an art pass.
 
 ### Fixed
+- **VR input conflict**: right controller **A** drove both Dash (combat) and Recenter (locomotion), so a press
+  fired both. Recenter now lives on the **right thumbstick-click** (`primary2DAxisClick`) in `VrComfortLocomotion`,
+  leaving A as Dash-only. `VR_INPUT_MAP.md` updated.
 - Compile errors surfaced on import (Unity 6000.5.0f1):
   - `ScoreController` now exposes `EnsureInstance()` (mirrors `StaminaController`) — fixes `ArenaController`.
   - `IceTrap` imports `Elementborn.Core`, resolving `StatusEffect` / `StatusKind`.
@@ -44,6 +105,12 @@ All notable changes to Elementborn are recorded here. The format follows
   in Unity 6000.5 ("Package [com.unity.modules.vr@1.0.0] cannot be found"). The project's VR uses `UnityEngine.XR`
   (XRNode / InputDevices / CommonUsages) from `com.unity.modules.xr`, not legacy VR, so nothing depends on it. The
   doctor's XR-module invariant now requires only `com.unity.modules.xr`.
+- **Combat presentation wiring**: the generated player rigs were missing every `OutcomeReady` listener except
+  the one just added for Sweep, so most casts resolved but presented nothing. The bootstrap now adds the full
+  set to both the flat and VR rigs — `AbilityVfxBinder` (Projectile: procedural visuals + audio + a damaging
+  projectile), `MeleeController` (Melee), `SweepController` (Sweep), `HeavyController` (Heavy),
+  `BarrierResponder` (Defend shield), `DashResponder` (Dash/Flight), `SanguineGripController` (Control). Each
+  self-wires, so no manual references are needed; visuals are procedural placeholders pending an art pass.
 
 ### Changed
 - **Package upgrades** (Unity 6000.5): Input System 1.11.2 → 1.19.0, XR Interaction Toolkit 3.0.7 → 3.5.1,

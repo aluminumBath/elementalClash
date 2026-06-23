@@ -87,8 +87,44 @@ four damage numbers:
 | **Air** | a downburst gust — low damage, the **biggest knockback**, pure displacement |
 
 The numbers live in `AbilitySystem` (the `*SweepDamage` / `*SweepKnockback` constants and the rider statuses);
-the arc shape lives in `SweepArc`. Both are one-line tweaks. Unit-tested in `SweepArcTests` and
-`SweepMovesetTests`.
+the arc shape lives in `SweepArc`. Both are one-line tweaks. On cast it throws a fast forward fan of particles
+(`AbilityFx.SpawnSweepFan`), element-coloured. Unit-tested in `SweepArcTests` and `SweepMovesetTests`.
+
+## The Heavy impact
+
+Heavy is the committed power move, and it's **telegraphed by travel**: on cast it fixes an impact point
+`HeavyStrike.ImpactDistance` (3 m) ahead and launches the strike on an **arc** toward it (`HeavyStrike.ArcPoint`);
+a **ground ring fills** like a clock over the ~0.5 s flight (`HeavyStrike.TelegraphSeconds`), and the blast lands
+on arrival — everything still inside the radius is hit and knocked outward. The flight makes it dodgeable (step
+out before it lands and you're spared), which is what makes it read as *heavy*: a focused, high-damage zoning
+strike, where Sweep is wide-and-near-and-instant and Primary is a single straight shot. **Charge scales the
+blast** — holding the cast grows both the damage and the impact radius (`RadiusForCharge`), and the ring grows to
+match. The blast + arc math are the pure `HeavyStrike`; `HeavyController` flies the arc, fills the ring, and
+resolves the strike on landing; `AbilityFx` builds the travelling projectile, the filling ring, and the burst.
+
+Per element: **Fire** drops a meteor (a burn with Magmacraft equipped), **Water** erupts an ice geyser that
+slows, **Earth** drives a ground slam (a metal shard with Oreshaping), and **Air** is an updraft launch — low
+damage, a strong knock-up. Numbers live in `AbilitySystem` (`*HeavyDamage`, `HeavyKnockback`); the blast shape
+lives in `HeavyStrike`. Unit-tested in `HeavyStrikeTests` and `HeavyMovesetTests`.
+
+## Combat presentation wiring
+
+Casting resolves a pure `AbilityOutcome`, then `PlayerCombatController` raises `OutcomeReady`; a set of small
+listeners each presents one `OutcomeKind`, and the bootstrap now adds all of them to both rigs:
+
+| Listener | OutcomeKind | What it does |
+| -------- | ----------- | ------------ |
+| `AbilityVfxBinder` | Projectile | spawns a damaging projectile (procedural visuals if no prefab) + audio |
+| `MeleeController` | Melee | single-target weapon swing |
+| `SweepController` | Sweep | wide multi-target arc |
+| `HeavyController` | Heavy | impact zone at range |
+| `BarrierResponder` | Barrier | Defend raises a brief damage-reducing shield |
+| `DashResponder` | Movement | Dash / Flight glide |
+| `SanguineGripController` | Control | Sanguine Grip (water sub-art) |
+
+Each self-wires (it finds `PlayerCombatController` and its origin/target via `GetComponent`), so they work with
+no manual references. Projectile and impact visuals are procedural placeholders; assigning prefabs on
+`AbilityVfxBinder` (or dedicated Sweep/Heavy VFX) is the natural art pass.
 
 ## Comfort & safety
 

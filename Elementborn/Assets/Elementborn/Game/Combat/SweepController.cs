@@ -38,6 +38,8 @@ namespace Elementborn.Game
             Vector3 center = origin ? origin.position : originPos;
             Vector3 dir = outcome.Direction.sqrMagnitude > 0.0001f ? outcome.Direction.normalized : transform.forward;
 
+            AbilityFx.SpawnSweepFan(center, dir, outcome.Element, outcome.Variant); // fast forward fan
+
             _seen.Clear();
             foreach (var col in Physics.OverlapSphere(center, SweepArc.Range))
             {
