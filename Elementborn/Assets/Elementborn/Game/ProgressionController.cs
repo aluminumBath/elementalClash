@@ -14,6 +14,7 @@ namespace Elementborn.Game
         public static ProgressionController Instance { get; private set; }
 
         public Progression Progression { get; } = new Progression();
+        public PerkState Perks { get; } = new PerkState();
         public event System.Action Changed;
 
         [SerializeField] private int xpPerDefeat = 25;
@@ -29,6 +30,7 @@ namespace Elementborn.Game
             DontDestroyOnLoad(gameObject);
             Progression.Changed += RaiseChanged;
             Progression.LeveledUp += OnLeveledUp;
+            Perks.Changed += RaiseChanged;
         }
 
         private void Start()
@@ -57,24 +59,34 @@ namespace Elementborn.Game
 
         private void OnDefeated(string kind)
         {
-            int xp = xpPerDefeat;
+            int baseXp = xpPerDefeat;
             if (System.Enum.TryParse(kind, out CreatureKind ck))
             {
                 var stats = CreatureCombat.For(ck);
-                xp = Experience.ForCreature(stats.MaxHealth, stats.Damage);
+                baseXp = Experience.ForCreature(stats.MaxHealth, stats.Damage);
             }
-            Progression.AddXp(xp);
+            Progression.AddXp(Mathf.RoundToInt(baseXp * Perks.XpMultiplier));
         }
 
-        private void OnQuestCompleted(string questId) => Progression.AddXp(xpPerQuest);
+        private void OnQuestCompleted(string questId) =>
+            Progression.AddXp(Mathf.RoundToInt(xpPerQuest * Perks.XpMultiplier));
 
         private void OnLeveledUp(int levels)
         {
-            int reward = 20 * Progression.Level;
+            Perks.Grant(levels);
+            int reward = Mathf.RoundToInt(20 * Progression.Level * Perks.RewardMultiplier);
             PlayerInventory.Instance?.AddCurrency(Currency.Silver, reward);
-            GameHud.Instance?.Toast("Level up! Level " + Progression.Level + "  (+" + reward + " Silver)");
+            GameHud.Instance?.Toast("Level up! Level " + Progression.Level + "  (+" + reward + " Silver, +" + levels + " perk pt)");
             AudioController.Instance?.LevelUp();
             ApplyBonus();
+        }
+
+        /// <summary>Spends a perk point to rank a perk up. Returns false if it can't be ranked.</summary>
+        public bool SpendPerk(PerkId id)
+        {
+            bool ok = Perks.Rank(id);
+            if (ok) ApplyBonus();
+            return ok;
         }
 
         private void EnsureBody()
@@ -89,7 +101,7 @@ namespace Elementborn.Game
             EnsureBody();
             if (_playerBody == null || _playerBody.Health == null) return;
             if (_baseMaxHealth < 0f) _baseMaxHealth = _playerBody.Health.Max; // first-seen base
-            _playerBody.SetMaxHealth(_baseMaxHealth + Progression.BonusMaxHealth);
+            _playerBody.SetMaxHealth(_baseMaxHealth + Progression.BonusMaxHealth + Perks.BonusMaxHealth);
         }
 
         public void CaptureInto(SaveData data)
@@ -97,12 +109,25 @@ namespace Elementborn.Game
             if (data == null) return;
             data.level = Progression.Level;
             data.xp = Progression.Xp;
+            data.perkPoints = Perks.AvailablePoints;
+            data.perkIds.Clear(); data.perkRanks.Clear();
+            foreach (PerkId id in System.Enum.GetValues(typeof(PerkId)))
+            {
+                int rank = Perks.RankOf(id);
+                if (rank > 0) { data.perkIds.Add(id.ToString()); data.perkRanks.Add(rank); }
+            }
         }
 
         public void RestoreFrom(SaveData data)
         {
             if (data == null) return;
             Progression.Restore(data.level, data.xp);
+            var ids = new System.Collections.Generic.List<PerkId>();
+            var ranks = new System.Collections.Generic.List<int>();
+            int n = System.Math.Min(data.perkIds.Count, data.perkRanks.Count);
+            for (int i = 0; i < n; i++)
+                if (System.Enum.TryParse(data.perkIds[i], out PerkId pid)) { ids.Add(pid); ranks.Add(data.perkRanks[i]); }
+            Perks.Restore(data.perkPoints, ids, ranks);
             ApplyBonus();
         }
     }

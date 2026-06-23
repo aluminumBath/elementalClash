@@ -46,6 +46,10 @@ namespace Elementborn.Game
 
         public int level = 1;
         public int xp;
+
+        public int perkPoints;
+        public List<string> perkIds = new List<string>();
+        public List<int> perkRanks = new List<int>();
     }
 
     /// <summary>

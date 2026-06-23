@@ -16,8 +16,13 @@ Everything you do feeds a simple level curve, and leveling makes you tougher.
   the new bonus (capturing your base health the first time, so loading a high level applies correctly).
 - **`ProgressionHud`** (Game) — an always-on bottom-left bar showing your level and a fill toward the next level,
   so progression is visible without opening the character screen.
+- **Perks** (`Perks.cs`, Core, pure) — you earn **1 perk point per level** and spend points to rank up perks
+  (each capped). The starting perks: **Toughness** (+20 max health/rank), **Scholar** (+10% XP/rank), and
+  **Fortune** (+15% reward currency/rank). `PerkState` aggregates the effects; `ProgressionController` applies
+  them (health folds into the bonus, XP gains and level-up rewards are multiplied). Unit-tested in
+  `PerkStateTests`.
 - **`CharacterScreenController`** (Game) — a toggled overlay (key **C**) showing level, XP toward next, the
-  health bonus, and your element. Refreshes live.
+  health bonus, your element, and the **perks** with their ranks and a spend button per perk. Refreshes live.
 
 ## Persistence
 
@@ -28,5 +33,5 @@ you're level 4 on return, max-health bonus and all.
 ## Tuning / extending
 
 XP per defeat and per quest are serialized on `ProgressionController`. The bonus is currently max health only;
-creature XP already scales with difficulty; the natural extensions are more per-level stats (damage, stamina)
-and unlocking abilities or perks at thresholds.
+creature XP scales with difficulty and perks add ranked upgrades; the natural extensions are more perk effects
+(damage, move speed, regen — which need hooks into those systems) and ability unlocks at level thresholds.

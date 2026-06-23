@@ -44,6 +44,18 @@ else
     bad "Editor asmdef is not Editor-only"
 fi
 
+# 5b. The package manifest is valid JSON and lists the built-in modules XR depends on.
+if python3 -c "import json;json.load(open('Packages/manifest.json'))" 2>/dev/null; then
+    ok "Packages/manifest.json is valid JSON"
+else
+    bad "Packages/manifest.json is invalid JSON"
+fi
+if grep -q '"com.unity.modules.vr"' Packages/manifest.json && grep -q '"com.unity.modules.xr"' Packages/manifest.json; then
+    ok "manifest lists the XR built-in modules"
+else
+    bad "manifest is missing com.unity.modules.vr / .xr (XR packages will fail to resolve)"
+fi
+
 # 6. The Element enum stays exactly {Fire, Water, Earth, Air}.
 MEMBERS=$(awk '/enum Element/{f=1;next} f&&/}/{f=0} f{ sub(/\/\/.*/,""); print }' Assets/Elementborn/Core/Elements.cs \
     | grep -oE '\b[A-Z][A-Za-z]+\b' | sort -u | tr '\n' ' ')

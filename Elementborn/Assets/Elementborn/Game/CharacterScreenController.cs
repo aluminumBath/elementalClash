@@ -89,6 +89,20 @@ namespace Elementborn.Game
                 OverlayUi.Header(_content, "Element", 22);
                 OverlayUi.Body(_content, element, 20, new Color(0.80f, 0.82f, 0.88f, 1f));
             }
+
+            var perks = pc.Perks;
+            OverlayUi.Header(_content, "Perks   (" + perks.AvailablePoints + " point" + (perks.AvailablePoints == 1 ? "" : "s") + " to spend)", 22);
+            foreach (var def in PerkCatalog.All)
+            {
+                int rank = perks.RankOf(def.Id);
+                OverlayUi.Body(_content, def.Name + "   [" + rank + "/" + def.MaxRank + "]   " + def.Description, 16,
+                    new Color(0.80f, 0.82f, 0.88f, 1f));
+                if (perks.CanRank(def.Id))
+                {
+                    var id = def.Id;
+                    UiTheme.Button(_content, "Spend a point on " + def.Name, () => pc.SpendPerk(id), 380, 44);
+                }
+            }
         }
     }
 }
