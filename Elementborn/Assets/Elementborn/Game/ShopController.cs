@@ -96,6 +96,33 @@ namespace Elementborn.Game
                 });
             }
 
+            foreach (var id in _merchant.Items())
+            {
+                var def = ItemCatalog.Get(id);
+                if (def == null) continue;
+                var itemId = id;
+                AddRow($"Buy {def.Name} — {PriceText(Shop.BuyPrice(itemId))}", () =>
+                {
+                    var res = Shop.Buy(inv.Items, inv.Wallet, itemId);
+                    GameHud.Instance?.Toast(res.Message);
+                    Populate();
+                });
+            }
+
+            foreach (var entry in inv.Items.Entries())
+            {
+                var def = ItemCatalog.Get(entry.Key);
+                if (def == null) continue;
+                var itemId = entry.Key;
+                int held = entry.Value;
+                AddRow($"Sell {def.Name} (x{held}) — {PriceText(Shop.SellPrice(itemId))}", () =>
+                {
+                    var res = Shop.Sell(inv.Items, inv.Wallet, itemId);
+                    GameHud.Instance?.Toast(res.Message);
+                    Populate();
+                });
+            }
+
             if (_list.childCount == 0) AddNote("Nothing here for you right now.");
         }
 

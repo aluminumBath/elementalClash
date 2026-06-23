@@ -14,6 +14,7 @@ namespace Elementborn.Game
         [SerializeField] private string shopName = "Market";
         [SerializeField] private List<CreatureKind> creatureStock = new List<CreatureKind>();
         [SerializeField] private List<VehicleKind> vehicleStock = new List<VehicleKind>();
+        [SerializeField] private List<string> itemStock = new List<string>();
         [SerializeField] private bool sellEverythingIfEmpty = true;
 
         public string ShopName => shopName;
@@ -34,6 +35,14 @@ namespace Elementborn.Game
 
             var all = new List<VehicleKind>();
             foreach (VehicleKind k in System.Enum.GetValues(typeof(VehicleKind))) all.Add(k);
+            return all;
+        }
+
+        public IEnumerable<string> Items()
+        {
+            if (itemStock.Count > 0 || !sellEverythingIfEmpty) return itemStock;
+            var all = new List<string>();
+            foreach (var def in ItemCatalog.All()) all.Add(def.Id);
             return all;
         }
 

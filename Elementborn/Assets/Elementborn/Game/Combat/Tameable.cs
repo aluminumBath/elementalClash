@@ -48,7 +48,11 @@ namespace Elementborn.Game
             if (inv == null) return TameOutcome.Fail("No inventory");
 
             var outcome = inv.TryTame(kind, HealthFraction, _rng);
-            if (outcome.Success) Destroy(gameObject); // it joins you; despawn the wild instance
+            if (outcome.Success)
+            {
+                QuestEvents.RaiseCreatureTamed(kind.ToString());
+                Destroy(gameObject); // it joins you; despawn the wild instance
+            }
             return outcome;
         }
     }

@@ -57,7 +57,22 @@ namespace Elementborn.Game
             _wanderTarget = _home;
         }
 
-        private void Start() => Apply();
+        private void Start()
+        {
+            Apply();
+            if (_self != null && _self.Health != null) _self.Health.Died += OnDefeated;
+        }
+
+        private void OnDefeated()
+        {
+            QuestEvents.RaiseCreatureDefeated(kind.ToString());
+            PlayerInventory.Instance?.AddItem("hide", 1); // simple loot drop
+        }
+
+        private void OnDestroy()
+        {
+            if (_self != null && _self.Health != null) _self.Health.Died -= OnDefeated;
+        }
 
         private void Apply()
         {

@@ -93,6 +93,19 @@ namespace Elementborn.EditorTools
             var flow = Add(boot, "GameFlowController");
             if (mtb != null) Wire(flow, "meshTerrainBuilder", mtb);
 
+            // Social overlay (press J in play mode): notifications / friends / chat / feedback / moderation.
+            var social = new GameObject("Social");
+            Add(social, "SocialMenuController");
+
+            // Quest loop: tracks objectives from gameplay events and grants rewards on turn-in.
+            var quests = new GameObject("Quests");
+            Add(quests, "QuestController");
+            Add(quests, "DialogueController");   // NPC conversations: accept / turn in quests
+            Add(quests, "QuestLogController");   // press L for the quest log
+            Add(quests, "InventoryController");  // press I for the inventory
+
+            BuildDemoContent();
+
             EnsureDir(SceneDir);
             EditorSceneManager.SaveScene(scene, ScenePath);
             Debug.Log("[Bootstrap] Playable scene saved to " + ScenePath + " — press Play to boot it.");
@@ -197,6 +210,55 @@ namespace Elementborn.EditorTools
         }
 
         // ---- helpers ----------------------------------------------------------------------------------------
+
+        private static void BuildDemoContent()
+        {
+            var demo = new GameObject("Demo Content");
+
+            Npc(demo.transform, "Willow", 0, new Vector3(4f, 1f, 4f));
+            Npc(demo.transform, "Kiana", 1, new Vector3(-4f, 1f, 4f));
+            Npc(demo.transform, "Parfa", 2, new Vector3(0f, 1f, 6f));
+
+            var market = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            market.name = "Merchant";
+            market.transform.SetParent(demo.transform, false);
+            market.transform.position = new Vector3(6f, 1f, -2f);
+            Add(market, "Merchant");                // sells everything by default
+            Paint(market, MaterialGenerator.Stone);
+
+            Creature(demo.transform, "Wild Creature A", new Vector3(8f, 1f, 2f));
+            Creature(demo.transform, "Wild Creature B", new Vector3(8f, 1f, -4f));
+        }
+
+        private static void Npc(Transform parent, string who, int idIndex, Vector3 pos)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            go.name = "NPC " + who;
+            go.transform.SetParent(parent, false);
+            go.transform.position = pos;
+            var npc = Add(go, "GuideNpcController");
+            WireEnum(npc, "id", idIndex);            // GuideNpcId: Willow=0, Kiana=1, Parfa=2
+            Paint(go, MaterialGenerator.Character);
+        }
+
+        private static void Creature(Transform parent, string name, Vector3 pos)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            go.transform.position = pos;
+            Add(go, "CreatureController");           // RequireComponent adds Damageable
+            Add(go, "Tameable");
+            Add(go, "FactionMember");
+            Paint(go, MaterialGenerator.Foliage);
+        }
+
+        private static void Paint(GameObject go, string materialPath)
+        {
+            var mat = MaterialGenerator.Load(materialPath);
+            var r = go.GetComponent<MeshRenderer>();
+            if (mat != null && r != null) r.sharedMaterial = mat;
+        }
 
         private static void SavePrefab(GameObject root, string path)
         {

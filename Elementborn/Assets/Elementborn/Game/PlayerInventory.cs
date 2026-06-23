@@ -14,6 +14,7 @@ namespace Elementborn.Game
         public static PlayerInventory Instance { get; private set; }
 
         public Wallet Wallet { get; } = new Wallet();
+        public Inventory Items { get; } = new Inventory();
         public Element? PlayerElement { get; set; }
         public bool PlayerIsConfluence { get; set; }
 
@@ -49,6 +50,13 @@ namespace Elementborn.Game
         {
             Wallet.Add(c, count);
             WalletChanged?.Invoke();
+            QuestEvents.RaiseCurrencyGained(c.ToString(), count);
+        }
+
+        public void AddItem(string itemId, int count = 1)
+        {
+            Items.Add(itemId, count);
+            QuestEvents.RaiseItemCollected(itemId, count);
         }
 
         // --- lures (the per-creature taming items) ---

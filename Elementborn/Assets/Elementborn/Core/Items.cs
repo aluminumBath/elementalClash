@@ -1,0 +1,177 @@
+using System;
+using System.Collections.Generic;
+
+namespace Elementborn.Core
+{
+    public enum ItemCategory { Food, Material, Consumable, Tool, Treasure }
+
+    public sealed class ItemDef
+    {
+        public string Id { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public ItemCategory Category { get; }
+        public int Value { get; }   // base price in silver-equivalent
+
+        public ItemDef(string id, string name, string description, ItemCategory category, int value)
+        {
+            Id = id; Name = name; Description = description; Category = category;
+            Value = value < 1 ? 1 : value;
+        }
+    }
+
+    /// <summary>The authored item set, by string id (so mods can extend it later). Foods line up with Willow's
+    /// sidekick foods so feeding can consume the matching item.</summary>
+    public static class ItemCatalog
+    {
+        private static readonly Dictionary<string, ItemDef> ById = Build();
+
+        public static IReadOnlyList<ItemDef> All()
+        {
+            var list = new List<ItemDef>(ById.Values);
+            return list;
+        }
+
+        public static ItemDef Get(string id) => id != null && ById.TryGetValue(id, out var d) ? d : null;
+        public static bool Exists(string id) => id != null && ById.ContainsKey(id);
+
+        /// <summary>The food item a given sidekick eats.</summary>
+        public static string FoodFor(WillowSidekick sidekick)
+        {
+            switch (sidekick)
+            {
+                case WillowSidekick.Parrot: return "sunflower_seeds";
+                case WillowSidekick.Blobfish: return "deep_jelly";
+                case WillowSidekick.Mushroom: return "compost_truffle";
+                case WillowSidekick.Chameleon: return "iridescent_beetle";
+                default: return "ore_marrow_bone"; // Gunnar
+            }
+        }
+
+        private static Dictionary<string, ItemDef> Build()
+        {
+            var d = new Dictionary<string, ItemDef>();
+            void Add(ItemDef def) => d[def.Id] = def;
+
+            // Foods (match the sidekick menagerie).
+            Add(new ItemDef("ore_marrow_bone", "Ore-marrow Bone", "Gunnar gnaws these for hours.", ItemCategory.Food, 8));
+            Add(new ItemDef("sunflower_seeds", "Midnight Sunflower Seeds", "The Parrot's midnight snack.", ItemCategory.Food, 4));
+            Add(new ItemDef("deep_jelly", "Briny Deep-jelly", "The Blobfish slurps it down.", ItemCategory.Food, 6));
+            Add(new ItemDef("compost_truffle", "Loamy Compost Truffle", "A treat for the Mushroom.", ItemCategory.Food, 6));
+            Add(new ItemDef("iridescent_beetle", "Iridescent Beetle", "The Chameleon's favourite catch.", ItemCategory.Food, 5));
+
+            // Materials.
+            Add(new ItemDef("hide", "Hide", "Tanned creature hide.", ItemCategory.Material, 10));
+            Add(new ItemDef("ember_shard", "Ember Shard", "Warm to the touch even in the dark.", ItemCategory.Material, 18));
+            Add(new ItemDef("river_pearl", "River Pearl", "A pale glimmer from the shallows.", ItemCategory.Material, 25));
+
+            // Consumables.
+            Add(new ItemDef("healing_tonic", "Healing Tonic", "Restores vigour in a pinch.", ItemCategory.Consumable, 15));
+            Add(new ItemDef("stamina_draught", "Stamina Draught", "A bottled second wind.", ItemCategory.Consumable, 12));
+
+            // Treasure (sell-only fodder).
+            Add(new ItemDef("old_relic", "Old Relic", "Worth something to the right buyer.", ItemCategory.Treasure, 40));
+
+            return d;
+        }
+    }
+
+    /// <summary>A pure item bag: counts by item id, with add/remove and change notification. No Unity types.</summary>
+    public sealed class Inventory
+    {
+        private readonly Dictionary<string, int> _counts = new Dictionary<string, int>();
+        public event Action Changed;
+
+        public int Count(string id) => id != null && _counts.TryGetValue(id, out int n) ? n : 0;
+        public bool Has(string id, int n = 1) => Count(id) >= n;
+
+        public int Total
+        {
+            get { int t = 0; foreach (var v in _counts.Values) t += v; return t; }
+        }
+
+        public void Add(string id, int n = 1)
+        {
+            if (id == null || n <= 0) return;
+            _counts[id] = Count(id) + n;
+            Changed?.Invoke();
+        }
+
+        public bool Remove(string id, int n = 1)
+        {
+            if (id == null || n <= 0 || Count(id) < n) return false;
+            int left = Count(id) - n;
+            if (left <= 0) _counts.Remove(id);
+            else _counts[id] = left;
+            Changed?.Invoke();
+            return true;
+        }
+
+        public IReadOnlyList<KeyValuePair<string, int>> Entries()
+        {
+            var list = new List<KeyValuePair<string, int>>();
+            foreach (var kv in _counts) if (kv.Value > 0) list.Add(kv);
+            return list;
+        }
+
+        public void Clear()
+        {
+            if (_counts.Count == 0) return;
+            _counts.Clear();
+            Changed?.Invoke();
+        }
+    }
+
+    public sealed class ShopResult
+    {
+        public bool Success { get; }
+        public string Message { get; }
+        private ShopResult(bool ok, string msg) { Success = ok; Message = msg; }
+        public static ShopResult Ok(string m) => new ShopResult(true, m);
+        public static ShopResult Fail(string m) => new ShopResult(false, m);
+    }
+
+    /// <summary>Pure shop transactions over an <see cref="Inventory"/> and a <see cref="Wallet"/>. Prices come from
+    /// the catalog; buy-back is at <see cref="SellFraction"/>. Nothing changes on a failed transaction.</summary>
+    public static class Shop
+    {
+        public const float SellFraction = 0.5f;
+
+        public static int BuyPrice(string itemId)
+        {
+            var def = ItemCatalog.Get(itemId);
+            return def != null ? def.Value : 0;
+        }
+
+        public static int SellPrice(string itemId)
+        {
+            var def = ItemCatalog.Get(itemId);
+            return def != null ? Math.Max(1, (int)(def.Value * SellFraction)) : 0;
+        }
+
+        public static ShopResult Buy(Inventory inventory, Wallet wallet, string itemId, int count = 1)
+        {
+            if (inventory == null || wallet == null) return ShopResult.Fail("Nothing to trade with");
+            var def = ItemCatalog.Get(itemId);
+            if (def == null) return ShopResult.Fail("No such item");
+            if (count <= 0) return ShopResult.Fail("Nothing to buy");
+            long cost = (long)def.Value * count;
+            if (!wallet.CanAfford(cost)) return ShopResult.Fail("Not enough silver");
+            if (!wallet.Spend(cost)) return ShopResult.Fail("Payment failed");
+            inventory.Add(itemId, count);
+            return ShopResult.Ok("Bought " + count + "x " + def.Name);
+        }
+
+        public static ShopResult Sell(Inventory inventory, Wallet wallet, string itemId, int count = 1)
+        {
+            if (inventory == null || wallet == null) return ShopResult.Fail("Nothing to trade with");
+            var def = ItemCatalog.Get(itemId);
+            if (def == null) return ShopResult.Fail("No such item");
+            if (count <= 0) return ShopResult.Fail("Nothing to sell");
+            if (!inventory.Remove(itemId, count)) return ShopResult.Fail("You don't have that");
+            long payout = (long)SellPrice(itemId) * count;
+            wallet.Add(Currency.Silver, (int)payout);
+            return ShopResult.Ok("Sold " + count + "x " + def.Name);
+        }
+    }
+}

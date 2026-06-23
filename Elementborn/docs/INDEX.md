@@ -40,6 +40,16 @@ Start here. The docs in reading order:
 23. **`EVOLUTION.md`** — the evolution game mode: start one element, take a second, unlock a specialty.
 24. **`SOCIAL.md`** — the online social layer (accounts/roles, notifications, feedback, friends, messaging,
     moderation): the backend choice (Nakama), the backend-agnostic seams, and the local-first build.
+25. **`BOOTSTRAP.md`** — the one-click Editor generator for a playable scene + rig prefabs (and the cel-shaded
+    materials), and what to finish by hand.
+26. **`NETCODE.md`** — taking the social layer online with Nakama: the backend seam, the client adapters behind a
+    define, the server module, and a local server.
+27. **`VR_SETUP.md`** — getting into the headset: the XR plug-in, the rig structure, comfort locomotion, and the
+    device-bound tuning that needs hardware.
+28. **`QUESTS.md`** — the NPC → dialogue → quest → reward loop: the quest engine, the event bus, the starter
+    quests, and how to add more.
+29. **`ITEMS.md`** — items, the inventory, the shop (buy/sell), sidekick feeding, and collect-item quests.
+30. **`SELF_HOSTING.md`** — running your own server (Nakama) and shipping a client that connects to it.
 
 ## By task
 
