@@ -40,6 +40,10 @@ All notable changes to Elementborn are recorded here. The format follows
 - `QuestController.Start(string)` → `StartQuest`: on a MonoBehaviour, `Start` is a reserved Unity lifecycle name
   and can't take parameters (Unity logged "Start() can not take parameters"). Caller in `DialogueController`
   updated; the pure `QuestLog.Start` is unaffected.
+- Removed `com.unity.modules.vr` from the manifest: the legacy built-in VR module is deprecated and unavailable
+  in Unity 6000.5 ("Package [com.unity.modules.vr@1.0.0] cannot be found"). The project's VR uses `UnityEngine.XR`
+  (XRNode / InputDevices / CommonUsages) from `com.unity.modules.xr`, not legacy VR, so nothing depends on it. The
+  doctor's XR-module invariant now requires only `com.unity.modules.xr`.
 
 ### Changed
 - **Package upgrades** (Unity 6000.5): Input System 1.11.2 → 1.19.0, XR Interaction Toolkit 3.0.7 → 3.5.1,

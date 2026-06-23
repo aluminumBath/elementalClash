@@ -44,16 +44,18 @@ else
     bad "Editor asmdef is not Editor-only"
 fi
 
-# 5b. The package manifest is valid JSON and lists the built-in modules XR depends on.
+# 5b. The package manifest is valid JSON and lists the built-in XR module the project's XR code depends on.
+# (Legacy com.unity.modules.vr is deprecated and unavailable in Unity 6000.5; the project uses UnityEngine.XR
+#  — XRNode / InputDevices / CommonUsages — which come from com.unity.modules.xr, not the legacy VR module.)
 if python3 -c "import json;json.load(open('Packages/manifest.json'))" 2>/dev/null; then
     ok "Packages/manifest.json is valid JSON"
 else
     bad "Packages/manifest.json is invalid JSON"
 fi
-if grep -q '"com.unity.modules.vr"' Packages/manifest.json && grep -q '"com.unity.modules.xr"' Packages/manifest.json; then
-    ok "manifest lists the XR built-in modules"
+if grep -q '"com.unity.modules.xr"' Packages/manifest.json; then
+    ok "manifest lists the XR built-in module (com.unity.modules.xr)"
 else
-    bad "manifest is missing com.unity.modules.vr / .xr (XR packages will fail to resolve)"
+    bad "manifest is missing com.unity.modules.xr (UnityEngine.XR input will fail to resolve)"
 fi
 
 # 5c. Every component the bootstrap generator spawns by name resolves to a real class.
