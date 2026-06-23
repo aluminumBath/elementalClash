@@ -192,6 +192,7 @@ namespace Elementborn.Game
             ProgressionController.Instance?.CaptureInto(d);
             GrimoireController.Instance?.CaptureInto(d);
             MapState.Instance?.CaptureInto(d);
+            CheckpointState.Instance?.CaptureInto(d);
             return d;
         }
 
@@ -251,6 +252,7 @@ namespace Elementborn.Game
             ProgressionController.Instance?.RestoreFrom(d);
             GrimoireController.Instance?.RestoreFrom(d);
             MapState.Instance?.RestoreFrom(d);
+            CheckpointState.Instance?.RestoreFrom(d);
 
             WalletChanged?.Invoke();
             OwnedChanged?.Invoke();

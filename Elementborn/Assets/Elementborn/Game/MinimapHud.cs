@@ -18,11 +18,13 @@ namespace Elementborn.Game
         private RectTransform _plot;
         private readonly List<Image> _pool = new List<Image>();
         private readonly List<Image> _friendPool = new List<Image>();
+        private readonly List<Image> _checkpointPool = new List<Image>();
 
         private static readonly Color Frame   = new Color(0.06f, 0.07f, 0.10f, 0.78f);
         private static readonly Color RiftDot  = new Color(0.45f, 0.85f, 1f, 1f);
         private static readonly Color SelfDot  = new Color(0.95f, 0.85f, 0.30f, 1f);
         private static readonly Color FriendDot = new Color(0.55f, 0.95f, 0.55f, 1f);
+        private static readonly Color CheckpointDot = new Color(1f, 0.62f, 0.22f, 1f);
 
         private void Awake() => Build();
 
@@ -94,6 +96,20 @@ namespace Elementborn.Game
                 dot.gameObject.SetActive(true);
             }
             for (int i = usedF; i < _friendPool.Count; i++) _friendPool[i].gameObject.SetActive(false);
+
+            int usedC = 0;
+            var cps = CheckpointState.Instance;
+            if (cps != null)
+                foreach (var m in cps.Markers())
+                {
+                    if (!Minimap.WithinRange(c, range, m.World)) continue;
+                    float u = (m.World.x - c.x) / range;
+                    float v = (m.World.z - c.z) / range;
+                    var dot = CheckpointFromPool(usedC++);
+                    dot.rectTransform.anchoredPosition = new Vector2(u * half, v * half);
+                    dot.gameObject.SetActive(true);
+                }
+            for (int i = usedC; i < _checkpointPool.Count; i++) _checkpointPool[i].gameObject.SetActive(false);
         }
 
         private Image FromPool(int i)
@@ -116,6 +132,17 @@ namespace Elementborn.Game
                 _friendPool.Add(d);
             }
             return _friendPool[i];
+        }
+
+        private Image CheckpointFromPool(int i)
+        {
+            while (_checkpointPool.Count <= i)
+            {
+                var d = Dot("Checkpoint", CheckpointDot, 9f);
+                d.rectTransform.SetParent(_plot, false);
+                _checkpointPool.Add(d);
+            }
+            return _checkpointPool[i];
         }
     }
 }

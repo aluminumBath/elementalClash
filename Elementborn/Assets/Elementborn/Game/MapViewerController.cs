@@ -25,6 +25,8 @@ namespace Elementborn.Game
         private static readonly Color RiftDim   = new Color(0.45f, 0.85f, 1f, 0.30f);
         private static readonly Color SelfDot   = new Color(0.95f, 0.85f, 0.30f, 1f);
         private static readonly Color FriendDot = new Color(0.55f, 0.95f, 0.55f, 1f);
+        private static readonly Color CheckpointDot    = new Color(1f, 0.62f, 0.22f, 0.70f); // amber shrine
+        private static readonly Color CheckpointActive = new Color(1f, 0.74f, 0.36f, 1f);    // the active respawn
 
         private Canvas _canvas;
         private RectTransform _map;
@@ -60,6 +62,7 @@ namespace Elementborn.Game
         private void Build()
         {
             _canvas = UiTheme.Canvas("MapViewerCanvas", 57);
+            _canvas.gameObject.AddComponent<VrCanvasAdapter>();
 
             var root = new GameObject("Root", typeof(RectTransform), typeof(Image));
             root.transform.SetParent(_canvas.transform, false);
@@ -121,6 +124,16 @@ namespace Elementborn.Game
                 if (state.Network.IsDiscovered(rift.Id)) AddRiftButton(rift, n);
                 else AddDot(n, RiftDim, 12f, null);
             }
+
+            var cps = CheckpointState.Instance;
+            if (cps != null)
+                foreach (var m in cps.Markers())
+                {
+                    bool active = cps.IsActive(m.Id);
+                    Vector2 cn = Minimap.WorldToNormalized(m.World, WorldMap.BoundsMin, WorldMap.BoundsMax);
+                    AddDot(cn, active ? CheckpointActive : CheckpointDot, active ? 14f : 11f,
+                        active ? m.Label + " (respawn)" : null);
+                }
 
             var rig = RigTeleporter.Rig;
             if (rig != null)

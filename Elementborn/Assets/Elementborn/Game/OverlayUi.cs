@@ -12,6 +12,7 @@ namespace Elementborn.Game
         public static (Canvas canvas, Transform content) Panel(string name, string title, int sortOrder, Vector2 size, System.Action onClose)
         {
             var canvas = UiTheme.Canvas(name, sortOrder);
+            canvas.gameObject.AddComponent<VrCanvasAdapter>(); // world-space in VR; no-op on flat/desktop
 
             var root = new GameObject("Root", typeof(RectTransform));
             root.transform.SetParent(canvas.transform, false);

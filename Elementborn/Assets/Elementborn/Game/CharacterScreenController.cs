@@ -35,6 +35,7 @@ namespace Elementborn.Game
             else if (_open && kb[Key.Escape].wasPressedThisFrame) Hide();
         }
 
+        public void Open() { if (!_open) Show(); }
         private void Toggle() { if (_open) Hide(); else Show(); }
 
         private void Show()

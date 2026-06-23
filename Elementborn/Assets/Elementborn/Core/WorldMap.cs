@@ -37,5 +37,15 @@ namespace Elementborn.Core
             foreach (var r in Rifts) net.Register(r);
             return net;
         }
+
+        /// <summary>The fixed respawn shrines — cardinal waystones ringing the central crystal, set apart from the
+        /// leyline rifts. Activating one makes it the player's respawn anchor.</summary>
+        public static IReadOnlyList<Checkpoint> Checkpoints { get; } = new List<Checkpoint>
+        {
+            new Checkpoint("waystone_n", "North Waystone", new Vector3(   0f, 0f,  75f)),
+            new Checkpoint("waystone_s", "South Waystone", new Vector3(   0f, 0f, -75f)),
+            new Checkpoint("waystone_e", "East Waystone",  new Vector3(  90f, 0f,   0f)),
+            new Checkpoint("waystone_w", "West Waystone",  new Vector3( -90f, 0f,   0f)),
+        };
     }
 }

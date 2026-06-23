@@ -65,9 +65,15 @@ namespace Elementborn.Game
                 yield return null;
             }
 
-            Vector3 home = (PlayerInventory.Instance != null && PlayerInventory.Instance.HasHouse)
-                ? PlayerInventory.Instance.HouseLocation
-                : _spawnPos;
+            // Respawn priority: an activated checkpoint (the player's most recent "respawn here") wins, then a
+            // claimed house, then the scene's spawn point.
+            Vector3 home;
+            if (CheckpointState.Instance != null && CheckpointState.Instance.TryActivePosition(out var cp))
+                home = cp;
+            else if (PlayerInventory.Instance != null && PlayerInventory.Instance.HasHouse)
+                home = PlayerInventory.Instance.HouseLocation;
+            else
+                home = _spawnPos;
             Teleport(home, _spawnRot);
             player.Health.Revive();
             _overlayRoot.SetActive(false);

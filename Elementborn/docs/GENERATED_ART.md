@@ -64,6 +64,13 @@ wire those fields for you on request.) For particles, drop the sprite onto the w
 
 Colors match `palette/` and the toon shaders; gem colors are the five currency hues.
 
+## Regenerating
+
+The UI sprites are reproducible: `python3 make_ui_sprites.py` rewrites this set to the `UI_SPRITES.md` spec
+(sizes, 9-slice borders, palette), the same way `make_sfx.py` and `make_glyphs.py` regenerate the audio and the
+input glyphs. Restyle by editing the script and re-running — the layout is fixed, so nothing else moves. (These
+stay 2D placeholders; the in-editor import + the 3D/VFX work below are separate.)
+
 ## Input glyphs (gamepad / keyboard / mouse)
 `make_glyphs.py` generates 44 flat 64×64 glyphs into `Assets/Elementborn/Art/UI/glyphs/`: Xbox face buttons
 (A/B/X/Y), bumpers/triggers (LB/RB/LT/RT), d-pad, Start/Select, common keycaps (E/F/M/C/Esc/F8/F10/Space), the

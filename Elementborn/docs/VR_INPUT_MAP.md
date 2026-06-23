@@ -23,28 +23,42 @@ binding yet**. This doc is the running checklist.
 Thumbstick walk (face-relative), snap/smooth turn, **Recenter** (right **thumbstick-click**), **Height calibrate
 / seated reset** (left **X**). Desktop uses WASD + mouse-look on the rig (intentionally not rebindable).
 
+## Interaction — mapped in VR
+
+**Interact** is bound to the **right-hand grip**. `VrInteractInput` reads the grip (legacy XR
+`CommonUsages.gripButton`) and signals the shared `InteractionArbiter`, which fires the current best interaction —
+the *same* selection/prompt path the desktop Interact key uses. So talking to NPCs, picking up / activating,
+mounting, taming, and the leyline-rift / checkpoint prompts all work from the headset. This was the highest-impact
+gap. (The on-screen prompt is still a screen-space HUD — visible in flat play; in the headset it needs the
+world-space UI work noted under the menus below.)
+
+## Menu overlays — mapped in VR
+
+A single **`VrOverlayHub`** is the headset entry point to the panels. The **left-hand menu button**
+(`CommonUsages.menuButton`, read like the grip) opens a panel with a button per overlay — **Quests, Inventory,
+Grimoire, Map, Social, Character, Settings** — each opening it through the overlay's public `Open()`, so none of
+them need the keyboard in VR. (Desktop keeps its per-panel keys L/I/G/M/J/C/Esc; the hub is also on **Tab** for
+testing.) The panels switch to **World Space** in the headset via `VrCanvasAdapter` (attached by the overlay
+builders) and are placed in front of the player on open. The one remaining piece is the in-editor XRI raycaster
+(see the gap list) that lets the controller ray click them.
+
 ## ⚠️ Not mapped to VR (the gap list)
 
-These are reachable on desktop but currently have **no controller/gesture binding**, so a headset-only player
-can't trigger them:
+Interact and the menu overlays are now bound (above). What remains are the **summon / travel verbs** and one
+in-editor step:
 
-1. **Interact** — talk to NPCs, pick up / activate, mount via interact, feed a companion. Desktop: the
-   `Interact` action. VR: nothing — `VrInputProvider` only reads A/B, and the "XRI grab" hook is still a
-   "later" note. **Highest-impact gap** (NPCs, quests, pickups, taming all run through Interact).
-2. **Quest Log** — desktop key **L** (`QuestLogController` reads the keyboard directly). No VR open.
-3. **Inventory** — desktop key **I** (`InventoryController`, keyboard-direct). No VR open.
-4. **Social menu** — desktop key **J** (`SocialMenuController`, keyboard-direct). No VR open.
-5. **Grimoire** — desktop key **G** (`GrimoireController`, keyboard-direct). No VR open.
-6. **Map viewer** — desktop key **M** (`MapViewerController`, keyboard-direct). Partial VR path: a leyline rift's
-   Interact opens it (once Interact is VR-bound). The always-on minimap needs no opener.
-7. **Character screen** — `CharacterScreenController`, keyboard-direct. No VR open.
-8. **Settings menu** — the `Menu` action (keyboard/gamepad only, no XR binding). No VR open.
-9. **Save / Load slots** — the `Slots` action (keyboard/gamepad only). No VR open.
-10. **Element travel** — the `ElementTravel` action. No VR binding.
-11. **Mount** (summon / ride) — the `Mount` action. No VR binding.
-12. **Companion** (summon) — the `Companion` action. No VR binding.
+1. **Save / Load slots** — the `Slots` action (keyboard/gamepad only). No VR binding.
+2. **Element travel** — the `ElementTravel` action. No VR binding.
+3. **Mount** (summon / ride) — the `Mount` action. No VR binding.
+4. **Companion** (summon) — the `Companion` action. No VR binding.
+5. **XRI UI raycaster (in-editor)** — overlay canvases go World Space in VR (`VrCanvasAdapter`), but the
+   controller-ray *click* needs an XRI `TrackedDeviceGraphicRaycaster` + `XRUIInputModule` on the rig, added in the
+   editor — the same step `CharacterCreationUI` documents. Until then the panels render in-headset but the ray
+   can't click them.
 
-In short: **all combat works in VR; almost none of the menus/overlays or the world-interaction verbs do.**
+In short: **combat, comfort locomotion, interaction, and the menu overlays now work in VR; the summon/travel verbs
+(Slots / Element travel / Mount / Companion) and the in-editor UI raycaster are what's left.** The summon/travel
+verbs could ride the hub or a radial next.
 
 ## VR binding conflict — resolved
 
@@ -52,14 +66,17 @@ Right **A** previously drove both Dash (combat) and Recenter (locomotion), so a 
 Recenter now lives on the **right thumbstick-click** (`primary2DAxisClick`), leaving A as Dash-only. The left
 thumbstick-click and the controller menu buttons are still free for the menu/interact wiring above.
 
-## Suggested approach when wiring these
+## Suggested approach for the remaining gaps
 
-- **Interact**: bind to right **grip** (or trigger) via `VrInputProvider`, feeding the existing
-  `InteractionArbiter` — that single binding unlocks NPCs/quests/pickups/mounting.
-- **Overlays (Quest/Inventory/Social/Grimoire/Map/Character/Settings/Slots)**: a single **menu button** (left menu /
-  hamburger) that opens a VR-friendly wrist or world-space hub, rather than one button per panel. The overlays
-  already have `Show()/Hide()/Toggle()` — they just need a VR opener that doesn't read `Keyboard.current`.
-- **Element travel / Mount / Companion**: radial or hub entries off the same menu button.
+- **Interact**: ✅ done — `VrInteractInput` reads the right grip and signals `InteractionArbiter`.
+- **Overlays — built (canvas + opener); only the in-editor XRI raycaster remains.** A `VrOverlayHub` (left menu
+  button / Tab) opens a panel that opens each overlay via its public `Open()`, and each overlay canvas switches to
+  **World Space** in VR via `VrCanvasAdapter`, positioned in front of the HMD on open. What's deliberately *not*
+  wired in code is the controller-ray click stack the legacy rig lacks: a `TrackedDeviceGraphicRaycaster` on the
+  canvases, an `XRUIInputModule` on the event system, and **left/right controller objects with poses + an
+  `XRRayInteractor`** on the rig. That's an in-editor XRI step (the same one `CharacterCreationUI` notes), best
+  validated on a headset — so it's not wired blind. Once present, the hub and panels are clickable in-headset.
+- **Element travel / Mount / Companion**: radial or hub entries off that same menu button.
 - The **A-button conflict** is already resolved (Recenter moved to the right thumbstick-click).
 
 (Generated as an audit of `InputBindings`, `VrInputProvider`, `VrGestureProvider`, `VrComfortLocomotion`, and the

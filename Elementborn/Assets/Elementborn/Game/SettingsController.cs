@@ -68,6 +68,7 @@ namespace Elementborn.Game
         private void Build()
         {
             _canvas = UiTheme.Canvas("SettingsCanvas", sortOrder: 200);
+            _canvas.gameObject.AddComponent<VrCanvasAdapter>();
             _canvas.transform.SetParent(transform, false);
 
             _root = new GameObject("SettingsRoot", typeof(RectTransform));

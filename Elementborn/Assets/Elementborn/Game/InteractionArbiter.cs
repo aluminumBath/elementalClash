@@ -45,6 +45,11 @@ namespace Elementborn.Game
 
         public static void Unregister(IInteractable interactable) => Registered.Remove(interactable);
 
+        // A non-keyboard interact source (e.g. a VR grip) can request that the current best interaction fire this
+        // frame, routing through the same selection/prompt logic the desktop Interact key uses.
+        private static bool _signal;
+        public static void SignalInteract() => _signal = true;
+
         [SerializeField] private Transform player;
 
         private readonly List<Interaction> _offers = new List<Interaction>();
@@ -65,10 +70,12 @@ namespace Elementborn.Game
             }
 
             var best = PickBest(_offers);
+            bool fire = InputBindings.Interact.WasPressedThisFrame() || _signal;
+            _signal = false; // consumed every frame, whether or not an interaction is offered
             if (best.IsValid)
             {
                 GameHud.Instance?.SetPrompt(InputBindings.Interact, best.Verb);
-                if (InputBindings.Interact.WasPressedThisFrame()) best.Act();
+                if (fire) best.Act();
             }
             else
             {

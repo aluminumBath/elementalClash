@@ -58,6 +58,10 @@ namespace Elementborn.Game
         // Map: discovered leyline rifts (ids) + the local player's location-sharing opt-in.
         public List<string> discoveredRifts = new List<string>();
         public bool shareLocation;
+
+        // Checkpoints: activated shrine ids + the active respawn anchor.
+        public List<string> activatedCheckpoints = new List<string>();
+        public string activeCheckpoint = "";
     }
 
     /// <summary>

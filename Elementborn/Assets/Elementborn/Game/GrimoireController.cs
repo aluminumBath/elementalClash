@@ -127,6 +127,7 @@ namespace Elementborn.Game
         }
 
         // --- show / hide ---
+        public void Open() { if (!_open) Show(); }
         private void Toggle() { if (_open) Hide(); else Show(); }
 
         private void Show()
@@ -149,6 +150,7 @@ namespace Elementborn.Game
         private void Build()
         {
             _canvas = UiTheme.Canvas("GrimoireCanvas", 56);
+            _canvas.gameObject.AddComponent<VrCanvasAdapter>();
 
             var root = new GameObject("Root", typeof(RectTransform), typeof(Image));
             root.transform.SetParent(_canvas.transform, false);

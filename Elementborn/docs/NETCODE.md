@@ -21,6 +21,10 @@ In `Assets/Elementborn/Game/Social/Nakama/`:
   fresh by socket events and an initial fetch.
 - `NakamaSocialInstaller` — points `SocialBackends.Factory` at Nakama, connects, sets the real identity, and
   hooks `InviteController.JoinSession` to `JoinMatchAsync`.
+- `NakamaFriendPresence` — the map's live friend-position feed (`IFriendPresence`): broadcasts the local position
+  as the player's Nakama **status** (packed by the pure, tested `PresenceCodec`) while sharing is on, **follows**
+  the current friends to receive theirs, and feeds `MapState`'s presence registry. The installer registers it
+  after connect via `MapState.SetPresence`.
 
 `SocialBackends.Factory` is the swap point. The default returns a `LocalSocialBackend`; the installer replaces it
 before `SocialHub` builds. (`SocialBackendTests` proves the default is local, the override is honored, and a null
@@ -52,7 +56,10 @@ factory falls back to local.)
    cd nakama && docker compose up
    ```
 
-   The Nakama console is at `http://127.0.0.1:7351` (default `admin` / `password`); the client connects to
+   The **friend feed** uses Nakama's built-in status presence, so this bare server is enough to verify it. (The
+   custom module — feedback / bans / sessions — is TypeScript that compiles to the `build/index.js` the compose
+   file loads, via `npm install && npm run build` in `nakama/`; the friend feed doesn't need it.) The Nakama
+   console is at `http://127.0.0.1:7351` (default `admin` / `password`); the client connects to
    `127.0.0.1:7350` with server key `defaultkey`.
 
 4. **Add the installer.** Put `NakamaSocialInstaller` on a bootstrap object that initializes **before**
@@ -111,3 +118,31 @@ the UI, while the server holds authority.
 
 None of this blocks the offline build: with the define off, the local backend keeps everything working and
 unit-tested.
+
+## Verifying the live friend feed
+
+The friend-position markers (map + minimap) need two connected clients — they can't be exercised offline (the
+`SimulatedFriendPresence` demo stands in for that). To verify:
+
+1. Build/run the server (`cd nakama && docker compose up`). The feed uses Nakama's built-in **status presence**,
+   so it needs **no custom RPC or server-module change** — the server module is only for feedback/bans/sessions.
+2. Define `ELEMENTBORN_NAKAMA`, add the Nakama Unity SDK, and put `NakamaSocialInstaller` on a pre-`SocialHub`
+   object (see Setup).
+3. Run **two clients** against the server (two Editor instances, or a build + the Editor), each authenticating to
+   a distinct device id. Befriend them (the friend system / an accepted invite), then turn **"Friends can see my
+   location" on** for both (the map viewer's toggle → `MapState.ShareMyLocation`).
+4. **Expected:** each client sees the other as a moving **green** dot on the map viewer (**M**) and the minimap,
+   within the ~6 s freshness window. Toggling one client's sharing **off** removes its dot from the other within
+   that window; a disconnect does the same.
+
+**SDK sanity-check.** `NakamaFriendPresence` is the one piece that couldn't be compiled here (it's behind the
+define and uses status APIs not used elsewhere in the codebase). Confirm these against your Nakama Unity SDK
+version, adjusting if signatures differ:
+
+- `ISocket.UpdateStatusAsync(string status)` — set / clear our status payload.
+- `ISocket.FollowUsersAsync(IEnumerable<string> userIds)` → `IStatus` with `.Presences`.
+- `ISocket.ReceivedStatusPresence` → `IStatusPresenceEvent` with `.Joins` / `.Leaves` of `IUserPresence`.
+- `IUserPresence.UserId` and `IUserPresence.Status`.
+
+Everything those feed — the `PresenceRegistry`, the consent gate (`Locator.VisibleFriends`), and the map/minimap
+rendering — is already unit-tested and verified offline.

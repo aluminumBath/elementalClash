@@ -89,6 +89,7 @@ namespace Elementborn.Game.Social
             return existing != null ? existing : gameObject.AddComponent<T>();
         }
 
+        public void Open() { if (!_open) Show(); }
         private void Toggle() { if (_open) Hide(); else Show(); }
         private void Show() { _open = true; if (_canvas != null) _canvas.gameObject.SetActive(true); BuildTab(); }
         private void Hide() { _open = false; if (_canvas != null) _canvas.gameObject.SetActive(false); }
@@ -108,6 +109,7 @@ namespace Elementborn.Game.Social
         private void Build()
         {
             _canvas = UiTheme.Canvas("SocialCanvas", sortOrder: 50);
+            _canvas.gameObject.AddComponent<VrCanvasAdapter>();
 
             var root = new GameObject("SocialRoot", typeof(RectTransform));
             root.transform.SetParent(_canvas.transform, false);

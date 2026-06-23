@@ -67,6 +67,20 @@ caches what arrives, mirroring the existing Nakama adapters. `NakamaSocialInstal
 - **VR opener** — like the other overlays, **M** is keyboard-only (the rift's Interact gives a partial VR path once
   Interact is bound). Tracked in `VR_INPUT_MAP.md`.
 
+## Checkpoints (respawn shrines)
+
+Distinct from the leyline rifts, **checkpoints** are respawn shrines. `WorldMap.Checkpoints` defines the canonical
+set (the cardinal *waystones* ringing the central crystal). `CheckpointSpawner` drops an amber obelisk for each,
+snapped to the terrain, carrying a `CheckpointObject` (`IInteractable`): standing in range offers an Interact —
+**"Set respawn point"** — which activates it through `CheckpointState` (a toast + a `UiConfirm` cue). The active
+checkpoint is the most recently activated one; activating another moves the anchor.
+
+`RespawnController` revives the player at the **active checkpoint if one is set, then a claimed house, then the
+scene spawn** — a checkpoint is the player's most recent explicit "respawn here", so it wins. `CheckpointState`
+persists the activated set + the active anchor via `SaveData.activatedCheckpoints` / `activeCheckpoint` through
+`PlayerInventory`, and exposes `Markers()` (kind `MapMarkerKind.Checkpoint`) so the map viewer and minimap draw all
+shrines in amber, with the active one brightened and labelled. The pure `CheckpointLog` is unit-tested.
+
 ## Note on geography
 
 The playable world is **seed-generated** (see `WORLD.md`), so there's no single fixed layout. The illustrated

@@ -119,6 +119,7 @@ namespace Elementborn.EditorTools
             Add(map, "MapState");
             Add(map, "MinimapHud");
             Add(map, "MapViewerController");
+            Add(map, "CheckpointState"); // respawn shrines: activation + active anchor, drawn on the map
 
             BuildDemoContent();
 
@@ -135,6 +136,11 @@ namespace Elementborn.EditorTools
             // Leyline rifts: spawns a discoverable, fast-travelable rift for each canonical WorldMap node.
             var rifts = new GameObject("Leyline Rifts");
             Add(rifts, "LeylineRiftSpawner");
+
+            // Respawn shrines: a checkpoint obelisk for each canonical WorldMap waystone. Touching one's Interact
+            // sets it as the player's respawn point (see docs/MAP.md).
+            var checkpoints = new GameObject("Checkpoints");
+            Add(checkpoints, "CheckpointSpawner");
 
             // Demo friend presence (sandbox only): seeds one ally and reports it orbiting the player so the map's
             // friend markers are visible without a server or a second client. Remove the object for a real build —
@@ -258,6 +264,8 @@ namespace Elementborn.EditorTools
             Add(root, "SanguineGripController");  // Control — Sanguine Grip (water sub-art)
 
             Add(root, "PlayerInteractor");
+            Add(root, "VrInteractInput");        // VR Interact: right grip -> InteractionArbiter (NPCs, pickups, mount, tame)
+            Add(root, "VrOverlayHub");           // VR menus: left menu button -> hub that opens each overlay
             Add(root, "PlantControlController");
             Add(root, "Damageable");
 

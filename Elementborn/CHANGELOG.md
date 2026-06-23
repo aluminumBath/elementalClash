@@ -7,6 +7,23 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Interact works in VR**: `VrInteractInput` reads the right-hand grip (legacy XR `CommonUsages.gripButton`) and
+  signals the shared `InteractionArbiter`, firing the current best interaction through the same path the desktop
+  Interact key uses — so NPCs, pickups/activation, mounting, taming, and the rift/checkpoint prompts are reachable
+  from the headset. This closes `VR_INPUT_MAP.md`'s highest-impact gap; the remaining VR gap is the menu/overlay UI
+  (screen-space today — needs the world-space + XRI ray-interaction pass documented there).
+- **VR menu overlays**: a `VrOverlayHub` (left-hand menu button in a headset, Tab on desktop) opens a panel that
+  opens each overlay — Quests / Inventory / Grimoire / Map / Social / Character / Settings — through a new public
+  `Open()` on each. Overlay canvases switch to World Space in VR via `VrCanvasAdapter` (gated by a shared
+  `XrState.Active`), placed in front of the player on open. This closes the menu half of the VR gap above; the
+  controller-ray *click* still needs the in-editor XRI `TrackedDeviceGraphicRaycaster` + `XRUIInputModule` the
+  creation UI documents.
+- **Checkpoints (respawn shrines)**: a new `Checkpoint` type + canonical `WorldMap.Checkpoints` (cardinal
+  waystones), a pure unit-tested `CheckpointLog` (activated set + active anchor), and the runtime `CheckpointState`
+  / `CheckpointObject` / `CheckpointSpawner` (amber obelisks with an Interact to set your respawn). `RespawnController`
+  now revives at the active checkpoint → house → spawn. They draw on the map viewer and minimap (finally using
+  `MapMarkerKind.Checkpoint`), persist via `SaveData.activatedCheckpoints`/`activeCheckpoint`, and play a `UiConfirm`
+  on activation. The bootstrap sandbox spawns the shrines.
 - **Map systems (Core)**: `MapNavigation` — **leyline-rift fast travel** (`FastTravelNetwork`: warp only to
   discovered rifts, nearest-rift, savable), **locate self** always (`Locator.Self`) and **locate friends** only
   with explicit opt-in (`LocationSharing`, off by default; `Locator.VisibleFriends` is consent-gated), plus
@@ -130,6 +147,11 @@ All notable changes to Elementborn are recorded here. The format follows
   self-wires, so no manual references are needed; visuals are procedural placeholders pending an art pass.
 
 ### Changed
+- **2D art reproducibility (`make_ui_sprites.py`)**: the flat UI sprite set in `Assets/Elementborn/Art/UI/` now has
+  a generator (parity with `make_sfx.py` / `make_glyphs.py`), regenerating panels, button states, HUD frames, gems,
+  and map bits to the `UI_SPRITES.md` spec so the 2D look is restyleable in code. `UiTheme` already 9-slices these
+  once they're imported as Sprites under `Resources/ElementbornUI/` (a one-time in-editor step). The visual art
+  pass proper — wiring those sprites in-editor, plus 3D meshes and VFX in Blender — stays an editor/Blender task.
 - **Audio pass completed**: the controller, the 17 synthesized clips (regenerable via `make_sfx.py`), the
   settings-driven volumes, and every trigger in `docs/AUDIO.md` are wired — and the systems added since (the map)
   now sound too: attuning a leyline rift plays `UiConfirm`, a fast-travel warp plays `WhooshShort`.
