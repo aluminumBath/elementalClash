@@ -55,12 +55,24 @@ namespace Elementborn.Game
 
         private void RaiseChanged() => Changed?.Invoke();
 
-        private void OnDefeated(string kind) => Progression.AddXp(xpPerDefeat);
+        private void OnDefeated(string kind)
+        {
+            int xp = xpPerDefeat;
+            if (System.Enum.TryParse(kind, out CreatureKind ck))
+            {
+                var stats = CreatureCombat.For(ck);
+                xp = Experience.ForCreature(stats.MaxHealth, stats.Damage);
+            }
+            Progression.AddXp(xp);
+        }
+
         private void OnQuestCompleted(string questId) => Progression.AddXp(xpPerQuest);
 
         private void OnLeveledUp(int levels)
         {
-            GameHud.Instance?.Toast("Level up! You are now level " + Progression.Level + ".");
+            int reward = 20 * Progression.Level;
+            PlayerInventory.Instance?.AddCurrency(Currency.Silver, reward);
+            GameHud.Instance?.Toast("Level up! Level " + Progression.Level + "  (+" + reward + " Silver)");
             ApplyBonus();
         }
 

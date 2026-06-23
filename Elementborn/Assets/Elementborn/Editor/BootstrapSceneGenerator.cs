@@ -105,6 +105,7 @@ namespace Elementborn.EditorTools
             Add(quests, "InventoryController");   // press I for the inventory
             Add(quests, "ProgressionController"); // XP / levels from combat + quests
             Add(quests, "CharacterScreenController"); // press C for level / XP
+            Add(quests, "ProgressionHud");        // always-on level / XP bar
 
             BuildDemoContent();
 

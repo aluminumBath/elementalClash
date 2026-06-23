@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Project Path="Elementborn.Game.csproj" />
+  <Project Path="Elementborn.Core.csproj" />
+  <Project Path="Elementborn.Tests.EditMode.csproj" />
+  <Project Path="Elementborn.Editor.csproj" />
+  <Project Path="Elementborn.Tests.PlayMode.csproj" />
+</Solution>
