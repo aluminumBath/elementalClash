@@ -35,12 +35,14 @@ can't trigger them:
 3. **Inventory** — desktop key **I** (`InventoryController`, keyboard-direct). No VR open.
 4. **Social menu** — desktop key **J** (`SocialMenuController`, keyboard-direct). No VR open.
 5. **Grimoire** — desktop key **G** (`GrimoireController`, keyboard-direct). No VR open.
-6. **Character screen** — `CharacterScreenController`, keyboard-direct. No VR open.
-7. **Settings menu** — the `Menu` action (keyboard/gamepad only, no XR binding). No VR open.
-8. **Save / Load slots** — the `Slots` action (keyboard/gamepad only). No VR open.
-9. **Element travel** — the `ElementTravel` action. No VR binding.
-10. **Mount** (summon / ride) — the `Mount` action. No VR binding.
-11. **Companion** (summon) — the `Companion` action. No VR binding.
+6. **Map viewer** — desktop key **M** (`MapViewerController`, keyboard-direct). Partial VR path: a leyline rift's
+   Interact opens it (once Interact is VR-bound). The always-on minimap needs no opener.
+7. **Character screen** — `CharacterScreenController`, keyboard-direct. No VR open.
+8. **Settings menu** — the `Menu` action (keyboard/gamepad only, no XR binding). No VR open.
+9. **Save / Load slots** — the `Slots` action (keyboard/gamepad only). No VR open.
+10. **Element travel** — the `ElementTravel` action. No VR binding.
+11. **Mount** (summon / ride) — the `Mount` action. No VR binding.
+12. **Companion** (summon) — the `Companion` action. No VR binding.
 
 In short: **all combat works in VR; almost none of the menus/overlays or the world-interaction verbs do.**
 
@@ -54,7 +56,7 @@ thumbstick-click and the controller menu buttons are still free for the menu/int
 
 - **Interact**: bind to right **grip** (or trigger) via `VrInputProvider`, feeding the existing
   `InteractionArbiter` — that single binding unlocks NPCs/quests/pickups/mounting.
-- **Overlays (Quest/Inventory/Social/Grimoire/Character/Settings/Slots)**: a single **menu button** (left menu /
+- **Overlays (Quest/Inventory/Social/Grimoire/Map/Character/Settings/Slots)**: a single **menu button** (left menu /
   hamburger) that opens a VR-friendly wrist or world-space hub, rather than one button per panel. The overlays
   already have `Show()/Hide()/Toggle()` — they just need a VR opener that doesn't read `Keyboard.current`.
 - **Element travel / Mount / Companion**: radial or hub entries off the same menu button.

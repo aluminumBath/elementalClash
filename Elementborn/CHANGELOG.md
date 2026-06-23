@@ -10,8 +10,14 @@ All notable changes to Elementborn are recorded here. The format follows
 - **Map systems (Core)**: `MapNavigation` — **leyline-rift fast travel** (`FastTravelNetwork`: warp only to
   discovered rifts, nearest-rift, savable), **locate self** always (`Locator.Self`) and **locate friends** only
   with explicit opt-in (`LocationSharing`, off by default; `Locator.VisibleFriends` is consent-gated), plus
-  **minimap math** (`Minimap.WorldToNormalized` / `WithinRange`) and `MapMarker`s. Pure rules + tests; the
-  minimap HUD, map-viewer overlay, rift world objects, and friend-position sync are staged in `MAP.md`.
+  **minimap math** (`Minimap.WorldToNormalized` / `WithinRange`) and `MapMarker`s. Pure rules + tests. **Now wired
+  in-world**: `MapState` (runtime owner, seeded from a canonical `WorldMap` of seven rifts; persisted via
+  `SaveData.discoveredRifts`/`shareLocation` through `PlayerInventory`), an always-on `MinimapHud`, a full
+  `MapViewerController` (key **M**, also opened from a rift) drawing the overworld backdrop with tap-to-fast-travel,
+  `LeylineRiftObject`/`LeylineRiftSpawner` (discover-on-approach crystals via the `InteractionArbiter`), and a
+  shared `RigTeleporter` (the safe respawn-style warp). The overworld key-art is installed at
+  `Resources/ElementbornUI/worldmap`. Remaining: a live friend-position feed (Nakama presence) — the consent-gated
+  path and local opt-in are wired, but positions aren't pushed yet.
 - **The Grimoire** — a discovery-driven tome with three sections that fill in as the player uncovers them:
   **Bestiary** (every creature, composed from `CreatureCatalog`/`CreatureHints`), **Attacks** (each element ×
   the moveset), and **Bloodlines** (a new `Bloodlines` catalog: the four base lines, the sub-art lines, the

@@ -54,6 +54,10 @@ namespace Elementborn.Game
         // Grimoire discovery: parallel lists mirroring GrimoireProgress.ToSave() ("Section:Id" -> tier int).
         public List<string> grimoireKeys = new List<string>();
         public List<int> grimoireTiers = new List<int>();
+
+        // Map: discovered leyline rifts (ids) + the local player's location-sharing opt-in.
+        public List<string> discoveredRifts = new List<string>();
+        public bool shareLocation;
     }
 
     /// <summary>

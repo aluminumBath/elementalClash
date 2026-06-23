@@ -122,5 +122,40 @@ namespace Elementborn.Tests.EditMode
             Assert.IsTrue(Minimap.WithinRange(Vector3.zero, 5f, new Vector3(3, 99, 4)));  // dist 5 on XZ, height ignored
             Assert.IsFalse(Minimap.WithinRange(Vector3.zero, 5f, new Vector3(10, 0, 0)));
         }
+
+        // ---- canonical overworld (WorldMap) ----
+        [Test]
+        public void WorldMapRiftsAreUniqueAndIncludeCrystal()
+        {
+            Assert.Greater(WorldMap.Rifts.Count, 0);
+            var ids = new HashSet<string>();
+            foreach (var r in WorldMap.Rifts)
+            {
+                Assert.IsFalse(string.IsNullOrEmpty(r.Id));
+                Assert.IsTrue(ids.Add(r.Id), "duplicate rift id: " + r.Id);
+            }
+            Assert.IsTrue(ids.Contains("crystal"));
+        }
+
+        [Test]
+        public void BuildNetworkRegistersAllAndDiscoversNone()
+        {
+            var net = WorldMap.BuildNetwork();
+            Assert.AreEqual(WorldMap.Rifts.Count, net.All.Count);
+            foreach (var r in WorldMap.Rifts) Assert.IsFalse(net.IsDiscovered(r.Id));
+            Assert.IsFalse(net.CanTravelTo("crystal"));   // can't travel to an undiscovered rift
+            Assert.IsTrue(net.Discover("crystal"));
+            Assert.IsTrue(net.CanTravelTo("crystal"));
+        }
+
+        [Test]
+        public void CrystalNormalizesToMapCentre()
+        {
+            LeylineRift crystal = default;
+            foreach (var r in WorldMap.Rifts) if (r.Id == "crystal") crystal = r;
+            var n = Minimap.WorldToNormalized(crystal.World, WorldMap.BoundsMin, WorldMap.BoundsMax);
+            Assert.AreEqual(0.5f, n.x, 0.001f);
+            Assert.AreEqual(0.5f, n.y, 0.001f);
+        }
     }
 }

@@ -114,6 +114,12 @@ namespace Elementborn.EditorTools
             var grimoire = new GameObject("Grimoire");
             Add(grimoire, "GrimoireController");
 
+            // Map systems: leyline state + always-on minimap + full map viewer (press M, also opened from a rift).
+            var map = new GameObject("Map");
+            Add(map, "MapState");
+            Add(map, "MinimapHud");
+            Add(map, "MapViewerController");
+
             BuildDemoContent();
 
             // World population: the flow's EnterWorld calls spawnPlacer.Place(World), scattering creatures,
@@ -125,6 +131,10 @@ namespace Elementborn.EditorTools
             Wire(placer, "enemyPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefab));
             Wire(placer, "civilianPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(CivilianPrefab));
             Wire(flow, "spawnPlacer", placer);
+
+            // Leyline rifts: spawns a discoverable, fast-travelable rift for each canonical WorldMap node.
+            var rifts = new GameObject("Leyline Rifts");
+            Add(rifts, "LeylineRiftSpawner");
 
             var music = new GameObject("Music");
             Add(music, "MusicController");        // looping ambient bed

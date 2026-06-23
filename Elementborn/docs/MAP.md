@@ -26,22 +26,35 @@ and viewer draw.
 on any sized map/minimap rect), and `Minimap.WithinRange(center, radius, world)` is the minimap's nearby-ring
 filter (height-independent).
 
-## Still to wire (UI + world)
+## The UI + world (built)
 
-The Core is complete and tested. What the in-world pass adds:
+The runtime layer is in place, reading the canonical `WorldMap` (bounds ±250; seven rifts — the central
+**Confluence Crystal** hub, the four elemental capitals, and two crossings) through `MapState`:
 
-1. **Rift world objects** — place `LeylineRift` nodes in the world; a trigger calls `Discover` on first touch and
-   offers the warp interaction (via `InteractionArbiter`); travelling moves the rig to the chosen rift.
-2. **Minimap HUD** — a corner map that plots `Locator.Self` + discovered rifts + nearby POIs via
-   `WorldToNormalized`/`WithinRange`, rotating with the player.
-3. **Map viewer overlay** — a full-screen map (tabs/details, checkpoints, the rift network) with tap-to-fast-travel
-   to discovered rifts. (Needs a VR opener — see `VR_INPUT_MAP.md`.)
-4. **Friend positions** — feed live friend positions (from the social/Nakama layer) into `VisibleFriends`, and a
-   settings toggle that drives `LocationSharing` for the local player.
-5. **Persistence** — save `FastTravelNetwork.ToSave()` and the sharing opt-in with the rest of the profile.
+1. **Rift world objects** — `LeylineRiftSpawner` drops a floating cyan crystal for each `WorldMap` rift, snapped to
+   the ground via `TerrainHeight`. Each carries a `LeylineRiftObject` (`IInteractable`): coming within range
+   discovers it (a "Leyline attuned" toast), and standing close offers an **Interact → open the map**, all routed
+   through the shared `InteractionArbiter`.
+2. **Minimap HUD** — `MinimapHud`, an always-on top-right corner map: the player sits centred (north up) and
+   discovered rifts within range plot around them via `WithinRange`, refreshed each frame from `MapState`.
+3. **Map viewer overlay** — `MapViewerController` (default key **M**, also opened from a rift). Draws the overworld
+   backdrop with every rift plotted by world position (discovered → a tappable **fast-travel** button, undiscovered
+   → a faint dot), your own marker, sharing friends, and a "let friends see me" opt-in. Fast travel warps the rig
+   through `RigTeleporter` (the same safe disable-CC/move/re-enable path respawn uses).
+4. **Persistence** — `MapState.CaptureInto`/`RestoreFrom` save discovered rifts + the local sharing opt-in via
+   `SaveData.discoveredRifts` / `shareLocation`, folded into `PlayerInventory`.
+
+### Remaining
+- **Live friend positions** — the consent-gated path is wired (`Locator.VisibleFriends`, the local opt-in toggle),
+  but there's no position feed yet; `MapState` passes an empty set, so friend markers stay correct-but-empty until
+  the Nakama presence layer pushes positions. **Locate-self is fully live.**
+- **VR opener** — like the other overlays, **M** is keyboard-only (the rift's Interact gives a partial VR path once
+  Interact is bound). Tracked in `VR_INPUT_MAP.md`.
 
 ## Note on geography
 
-The playable world is **seed-generated** (see `WORLD.md`), so there's no single fixed layout. An illustrated
-overworld/atlas image (key art) can back the map viewer and define a canonical rift network; if we ever want a
-fixed hand-authored world, that image is the place to start.
+The playable world is **seed-generated** (see `WORLD.md`), so there's no single fixed layout. The illustrated
+overworld key-art now backs the map viewer — installed at `Resources/ElementbornUI/worldmap` and loaded by
+`MapViewerController.LoadBackdrop()` (it accepts a Sprite or a plain Texture and falls back to a flat panel if the
+asset is absent). The rift network stays data-driven in `WorldMap` and is drawn *over* the art by world position,
+so the backdrop is purely cosmetic; swapping the image never moves a rift.
