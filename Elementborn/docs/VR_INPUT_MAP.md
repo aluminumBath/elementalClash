@@ -44,21 +44,21 @@ builders) and are placed in front of the player on open. The one remaining piece
 
 ## ⚠️ Not mapped to VR (the gap list)
 
-Interact and the menu overlays are now bound (above). What remains are the **summon / travel verbs** and one
-in-editor step:
+Interact, the menu overlays, and the summon/travel verbs are now reachable in VR (above + the hub). What remains
+is one in-editor step — and, optionally, dedicated bindings for the verbs:
 
-1. **Save / Load slots** — the `Slots` action (keyboard/gamepad only). No VR binding.
-2. **Element travel** — the `ElementTravel` action. No VR binding.
-3. **Mount** (summon / ride) — the `Mount` action. No VR binding.
-4. **Companion** (summon) — the `Companion` action. No VR binding.
-5. **XRI UI raycaster (in-editor)** — overlay canvases go World Space in VR (`VrCanvasAdapter`), but the
+1. **Save / Load, Element travel, Summon Mount, Summon Companion** — now entries on the `VrOverlayHub` (an
+   **Actions** group), each calling the system's existing public method, so a headset player can trigger them
+   without the keyboard. They still have **no dedicated controller binding/gesture** — a radial or button mapping
+   off the menu would be nicer than a menu entry, but the access gap is closed.
+2. **XRI UI raycaster (in-editor)** — overlay/hub canvases go World Space in VR (`VrCanvasAdapter`), but the
    controller-ray *click* needs an XRI `TrackedDeviceGraphicRaycaster` + `XRUIInputModule` on the rig, added in the
    editor — the same step `CharacterCreationUI` documents. Until then the panels render in-headset but the ray
-   can't click them.
+   can't click them. **This is the one true remaining VR gap.**
 
-In short: **combat, comfort locomotion, interaction, and the menu overlays now work in VR; the summon/travel verbs
-(Slots / Element travel / Mount / Companion) and the in-editor UI raycaster are what's left.** The summon/travel
-verbs could ride the hub or a radial next.
+In short: **combat, comfort locomotion, interaction, the menu overlays, and the summon/travel verbs are all
+reachable in VR now; the one true remaining gap is the in-editor XRI UI raycaster (so the ray can click the
+panels).** Dedicated controller bindings/gestures for the verbs (vs. the menu entries) would be the next polish.
 
 ## VR binding conflict — resolved
 

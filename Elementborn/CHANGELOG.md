@@ -18,6 +18,10 @@ All notable changes to Elementborn are recorded here. The format follows
   `XrState.Active`), placed in front of the player on open. This closes the menu half of the VR gap above; the
   controller-ray *click* still needs the in-editor XRI `TrackedDeviceGraphicRaycaster` + `XRUIInputModule` the
   creation UI documents.
+- **VR hub covers the action verbs**: Save / Load, Element Travel, Summon Mount, and Summon Companion are now
+  entries on `VrOverlayHub` (an "Actions" group), each calling the system's existing public method — so a headset
+  player can reach them without the keyboard. The only remaining VR input gap is the in-editor XRI ray-click
+  raycaster; dedicated controller gestures for the verbs (vs. menu entries) would be later polish.
 - **Checkpoints (respawn shrines)**: a new `Checkpoint` type + canonical `WorldMap.Checkpoints` (cardinal
   waystones), a pure unit-tested `CheckpointLog` (activated set + active anchor), and the runtime `CheckpointState`
   / `CheckpointObject` / `CheckpointSpawner` (amber obelisks with an Interact to set your respawn). `RespawnController`
