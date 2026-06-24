@@ -48,7 +48,7 @@ namespace Elementborn.Game
             {
                 target.Apply(_damage);
                 if (!_status.IsEmpty) target.ApplyStatus(_status);
-                if (_knockback > 0f) target.ApplyKnockback(_direction * _knockback);
+                if (_knockback > 0f) target.ApplyKnockback(KnockbackImpulse.Directional(_direction, _knockback));
                 FactionMember.RegisterHit(other.gameObject, _owner);
             }
 

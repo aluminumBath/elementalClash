@@ -33,6 +33,12 @@ namespace Elementborn.Core
         {
             new Recipe("tough_leather", "Tough Leather", "tough_leather", 1,
                 new CraftIngredient("hide", 3)),
+            new Recipe("iron_helm", "Iron Helm", "iron_helm", 1,
+                new CraftIngredient("hide", 2), new CraftIngredient("ore_marrow_bone", 1)),
+            new Recipe("warding_cloak", "Warding Cloak", "warding_cloak", 1,
+                new CraftIngredient("hide", 2), new CraftIngredient("river_pearl", 1)),
+            new Recipe("sturdy_boots", "Sturdy Boots", "sturdy_boots", 1,
+                new CraftIngredient("tough_leather", 1)),
             new Recipe("healing_tonic", "Healing Tonic", "healing_tonic", 1,
                 new CraftIngredient("river_pearl", 2), new CraftIngredient("sunflower_seeds", 1)),
             new Recipe("stamina_draught", "Stamina Draught", "stamina_draught", 1,

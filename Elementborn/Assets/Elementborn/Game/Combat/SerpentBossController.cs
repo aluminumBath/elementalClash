@@ -54,7 +54,9 @@ namespace Elementborn.Game
         private void Start()
         {
             _self.SetMaxHealth(bossHealth);
+            _self.SetAffinity(Element.Water); // resists Water, weak to Air
             _self.Health.Died += OnDied;
+            _self.Health.Damaged += OnFirstHit;
             _attackTimer = baseAttackInterval;
             Acquire();
         }
@@ -137,10 +139,19 @@ namespace Elementborn.Game
             _playerDamage?.ApplyKnockback(push.normalized * tailKnockback);
         }
 
+        private bool _engaged;
+        private void OnFirstHit(DamageInfo _)
+        {
+            if (_engaged) return;
+            _engaged = true;
+            BossHealthBar.Engage(_self, "The Water Serpent");
+        }
+
         private void OnDied()
         {
             if (_dead) return;
             _dead = true;
+            BossHealthBar.Disengage();
             if (rewardOnDefeat != null) rewardOnDefeat.SetActive(true); // the prize appears
             PlayerInventory.Instance?.AddCurrency(Currency.Ruby, rubyReward);
             ScoreController.Instance?.AddKill(scoreReward);

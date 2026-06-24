@@ -16,7 +16,7 @@ Nothing below is missing *code* for the current design; it's the work that lives
 - **Audio** (`AudioController` + 20 placeholder SFX), a **settings menu** (Esc), **save slots** (F8) with
   skip-creation-on-load, **biome-blended** terrain colours, a **third-person** rig, and **all UI on
   `UiTheme`/TextMeshPro** (every screen retrofitted). See `AUDIO.md` and `PORTING.md`.
-- 92 EditMode test files + PlayMode tests and a GameCI workflow, plus `tools/ip-guard.sh` + `tools/validate.sh` + `tools/doctor.sh`
+- 108 EditMode test files + PlayMode tests and a GameCI workflow, plus `tools/ip-guard.sh` + `tools/validate.sh` + `tools/doctor.sh`
   (CI gates) and a tag-driven release + docs-publish pipeline (`VERSION`, `CHANGELOG.md`, `tools/bump-version.sh`).
 - Docs: this file, `INDEX.md`, `README.md`, `GETTING_STARTED.md`, `DEPLOYMENT.md`, `ART_GUIDE.md`,
   `PALETTE.md`, `UI_SPRITES.md`, `GENERATED_ART.md`, `MODELS.md`, `AUDIO.md`, `PORTING.md`, `INPUT.md`, `VR_COMBAT.md`, `ARENA.md`, `UNDERWATER.md`, `CREATURES.md`, `HIDDEN_MOVES.md`, `FACTIONS.md`, `MODDING.md`, `PLANTS.md`, `NPCS.md`, `EVOLUTION.md`, `LIMITATIONS.md`, `SOCIAL.md`, `BOOTSTRAP.md`, `NETCODE.md`, `VR_SETUP.md`, `QUESTS.md`, `ITEMS.md`, `SELF_HOSTING.md`, `PROGRESSION.md`, `WORLD.md`.
@@ -103,8 +103,25 @@ Most of these are now **done** (each shipped with tests/docs like the rest):
   (channel → summon → claim-featured, and craft → equip) via new objective kinds + events and a quest-prerequisite
   system. See **`GACHA.md`** and **`QUESTS.md`**.
 
-**Remaining code enhancements (optional):** none outstanding — the roadmap's code items are all in. What's
-left is genuinely Editor/Blender/device/console-SDK work below.
+**Design backlog (new feature ideas — not yet built):**
+- **Creature summoning spellbook** — craft an empty spellbook, then bind a creature by combining it with a drop
+  of that creature's blood (which slightly lowers its friendliness / tamed level) and inscribing the creature's
+  name; the finished page becomes that creature's summoning spell. Touches crafting + taming + the summon path.
+- **Paralyzer (playable archetype)** — a class whose channeling can *lock out* an opponent's channeling for a
+  short window; slightly more dexterous and faster than average, but weak against weapon users. New loadout/
+  archetype + a "channel-locked" status that mirrors the existing stun/control statuses.
+- **Custom NPC dialogue audio** — per-line voice/sound playback for NPC dialogue (an audio clip alongside each
+  line, routed through `AudioController`). Touches the dialogue system + audio.
+
+**Asset coverage (standing check):**
+- **3D model prompt coverage** — confirm every model the game references (each `CreatureKind`, plus the
+  `CreatureModelNames.Aliases` folder names and any other `Resources/Models/...` lookups) has a matching entry in
+  `docs/MESHY_PROMPTS.md`. Anything without a prompt is effectively a "missing model zip" — there's nothing to
+  generate or drop in for it yet — so it gets a prompt added to the sheet in the house style. Re-run whenever new
+  creatures/models are added.
+
+**Remaining roadmap code enhancements (optional):** none outstanding — the original roadmap's code items are all
+in. What's left otherwise is genuinely Editor/Blender/device/console-SDK work below.
 
 **Console (Xbox / PlayStation):** the code is portable and now gamepad-ready; the gated parts (licensed SDKs,
 dev kits, cert) can't live here. See **`PORTING.md`**.

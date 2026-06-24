@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Elementborn.Core;
 
 namespace Elementborn.Game
 {
@@ -16,6 +17,8 @@ namespace Elementborn.Game
         [SerializeField] private float lookSensitivity = 0.1f;
         [SerializeField] private float stickLookSpeed = 180f;
         [SerializeField] private float gravity = -9.81f;
+        [SerializeField] private float jumpSpeed = 5.5f;
+        [SerializeField] private float glideFallSpeed = GlideMotion.DefaultGlideFallSpeed;
 
         private CharacterController _controller;
         private float _pitch;
@@ -70,10 +73,18 @@ namespace Elementborn.Game
 
             Vector3 move = (transform.forward * input.y + transform.right * input.x) * moveSpeed;
 
-            if (_controller.isGrounded && _verticalVelocity < 0f) _verticalVelocity = -1f;
+            bool grounded = _controller.isGrounded;
+            if (grounded && _verticalVelocity < 0f) _verticalVelocity = -1f;
+            if (grounded && InputBindings.Jump.WasPressedThisFrame()) _verticalVelocity = jumpSpeed;
             _verticalVelocity += gravity * Time.deltaTime;
-            move.y = _verticalVelocity;
 
+            if (GlideMotion.IsGliding(grounded, _verticalVelocity, InputBindings.Jump.IsPressed()))
+            {
+                _verticalVelocity = GlideMotion.ClampDescent(_verticalVelocity, glideFallSpeed);
+                move *= GlideMotion.GlideForwardMultiplier; // horizontal only; move.y is set just below
+            }
+
+            move.y = _verticalVelocity;
             _controller.Move(move * Time.deltaTime);
         }
     }

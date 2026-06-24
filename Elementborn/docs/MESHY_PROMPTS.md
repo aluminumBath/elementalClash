@@ -1,13 +1,20 @@
 # Meshy prompts — everything still missing a model
 
+> **Status (current batch):** the full creature roster (all 31 `CreatureKind`s), every NPC, sidekick, weapon,
+> and the player hero (including per-element variants) have now been generated and wired in `CreatureModelNames`
+> / `ModelBindings`. The prompts below remain as the regeneration record; the “missing a model” framing is
+> historical. A large pool of extra creatures (turtles, dark/corrupted wolves, apex showpieces, etc.) is also
+> generated and available to slot into the story or future taming content.
+
+
 Paste each **Prompt** into Meshy AI (Text to 3D). They're tuned to the cel-shaded look and matched to the style of
 the existing batch. Suggested name = what to call the download so it slots straight into the right alias map
 (`CreatureModelNames`, `SidekickModelNames`, `WeaponModelNames`, `ItemModelNames`) — tell me the names you keep and
 I'll add the alias lines.
 
-**Sections:** [Creatures (13)](#creatures-13) · [Sidekick pets (5)](#sidekick-pets-5) ·
+**Sections:** [Creatures (13)](#creatures-13) · [Apex & elemental showpieces (15)](#apex--elemental-showpieces-15) · [Sidekick pets (5)](#sidekick-pets-5) ·
 [Weapons & gear (3)](#weapons--gear-3) · [Consumables (3)](#consumables-3) · [Materials (2)](#materials-2) ·
-[Foods (5)](#foods-5) · [Player hero (1)](#player-hero-1)
+[Foods (5)](#foods-5) · [Player hero (1)](#player-hero-1) · [Already-bound creatures (6)](#already-bound-creatures-6)
 
 **Shared style suffix** (already appended to each below, repeated here for reference):
 > Full body, single subject, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant
@@ -251,3 +258,159 @@ so `PlayerModelBinder` finds an Animator. Generate the mesh in a clean **T-pose*
 > character, neutral T-pose with arms straight out, symmetrical, centered, game-ready stylized 3D model, clean
 > rig-friendly humanoid topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no
 > background, no base.
+
+---
+
+## Apex & elemental showpieces (15)
+
+A lush, bioluminescent art-direction pass on the headline creatures — original designs, a glowing alien-ecology *vibe* rather than anything derived from a franchise. Most of these already have a model, so treat those as optional re-export upgrades; **FireDragon, AirDragonfly, AirJellyfish** are the ones still on the primitive fallback and worth generating first. Suggested names match the existing alias folders in `CreatureModelNames`, so a re-export drops straight in.
+
+| Kind | Element | Suggested name |
+| --- | --- | --- |
+| FireDragon | Fire | Ember_Dragon |
+| Phoenix | Fire | Fire_Phoenix |
+| Thunderbird | Fire | Thunderbird |
+| WaterDragon | Water | Azure_Wave_Dragon |
+| Goldkoi | Water | Blue_Gold_Tuna |
+| Skimfin | Water | Teal_Fantasy_Fish |
+| Gillcloak | Water | Abyss_Angler |
+| Tidewarden | Water | Purple_Kraken |
+| Direstalker | Earth | Shadow_Wolf |
+| Roc | Air | Giant_Eagle |
+| AirDragonfly | Air | Gale_Dragonfly |
+| AirJellyfish | Air | Sky_Jellyfish |
+| Ridgewing | Air | Blue_Fantasy_Bird |
+| Glidewisp | Air | Fawn_Sprite |
+| Skytyrant | Air | Storm_Wyvern |
+
+---
+
+**FireDragon — Ember_Dragon**
+> Ember fire dragon, muscular winged drake, cracked obsidian-black hide with molten glowing orange seams running between the scales, smoldering spines, tattered ember-lit wings, smoke curling off the shoulders, short curved horns, fierce predatory head, mountable size. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Phoenix — Fire_Phoenix**
+> Radiant fire phoenix, noble bird with long sweeping tail plumes, layered red-orange-gold feathers glowing like live coals at the tips, faint flame wisps trailing off the wingtips, tall regal crest, elegant raptor silhouette. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Thunderbird — Thunderbird**
+> Storm thunderbird, broad-winged raptor, slate-and-indigo plumage with thin electric-blue energy arcs crackling along the feather edges, glowing pale eyes, bristling charged neck ruff, powerful soaring build. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**WaterDragon — Azure_Wave_Dragon**
+> Azure wave dragon, long sinuous sea-serpent body coiling like a breaking wave, finned mane, webbed crest and trailing tail fins, wet scales shifting teal to deep blue with faint glowing aqua veins along the flanks, frilled gills, graceful aquatic, dripping sheen, mountable size. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Goldkoi — Blue_Gold_Tuna**
+> Goldkoi, elegant gold-and-jade aquatic glider, large koi-like creature with long flowing ribbon fins and a finned dorsal sail, shimmering gold scales edged in teal with soft pearlescent glow, trailing fins, serene and graceful, drifting. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Skimfin — Teal_Fantasy_Fish**
+> Skimfin, fast aquatic skimmer mount, streamlined torpedo-shaped fish-beast built for speed, glossy teal-and-silver hide, swept hydrodynamic fins and a powerful crescent tail, faint glowing cyan stripes, agile and sleek. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Gillcloak — Abyss_Angler**
+> Gillcloak, mantled deep-sea creature, broad cloak-like fin mantle draped around a stout angler body, bruised-violet skin, rows of soft glowing blue lure-lights along the mantle edge, wide toothy mouth, eerie bioluminescent abyssal look. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Tidewarden — Purple_Kraken**
+> Tidewarden, colossal sentient sea titan, huge kraken-like creature with massive coiling tentacles and a domed cephalopod head, deep amethyst-purple skin with glowing turquoise patterns pulsing across it, ancient wise eyes, barnacled, awe-inspiring scale. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Direstalker — Shadow_Wolf**
+> Direstalker, land apex predator, large powerful wolf-panther beast, dark mossy-black fur with stone-grey plated shoulders, glowing pale-green eyes and faint glowing lichen-lit cracks along its back, heavy clawed paws, low stalking menacing stance. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Roc — Giant_Eagle**
+> Colossal sky roc, enormous eagle-like mount big enough to ride, layered windswept slate-grey and white feathers with soft cyan glow on the primaries, fierce hooked beak, feathered leg armor, vast majestic wingspan. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**AirDragonfly — Gale_Dragonfly**
+> Giant rideable sky dragonfly, sleek iridescent insectoid body, four long translucent shimmering wings laced with glowing turquoise vein patterns, segmented opal-green thorax, large faceted glowing eyes, delicate but huge, hovering. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**AirJellyfish — Sky_Jellyfish**
+> Floating sky jellyfish mount, huge translucent bioluminescent bell drifting like a balloon, long flowing glowing tendrils in soft pink-violet, gentle pulsing inner light, faint mist around the canopy, weightless and dreamlike. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Ridgewing — Blue_Fantasy_Bird**
+> Ridgewing, cliff-soaring fantasy flyer, lean aerodynamic body with long stiff sail-like wings, sleek cobalt-blue feathers fading to white, swept-back head crest, faint glowing markings along the leading edge of the wings, built for gliding wind currents. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Glidewisp — Fawn_Sprite**
+> Glidewisp, tiny gentle forest flyer, small deer-like sprite creature with delicate feathered glider membranes between its limbs, soft fawn-and-moss coloring, big glowing amber eyes, faint floating spore-lights drifting around it, cute and ethereal. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Skytyrant — Storm_Wyvern**
+> Skytyrant, immense apex flying predator, massive bat-winged storm wyvern wreathed in storm clouds, dark charcoal scales with glowing electric-blue underglow along the wing membranes, jagged horned crown, lightning crackling between the spines, terrifying and regal. Full body, single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+## Already-bound creatures (6)
+
+These six kinds already have a `CreatureModelNames.Aliases` entry (a model folder is assigned), but had **no prompt on this sheet** — so the prompt to (re)generate them was missing. Added here for completeness; the suggested name is the existing alias folder, so a fresh download slots straight in. With these, **every `CreatureKind` now has a prompt.**
+
+| Kind | Element | Suggested name (existing alias) |
+| --- | --- | --- |
+| EarthCat | Earth | Leaf_Cub |
+| Horse | Earth / mount | Blue_Dino_Mount |
+| Spider | Forest | Antler_Spider_Creature |
+| Crab | Water | Coral_Crab_Spider |
+| Snake | Water | Teal_Serpent |
+| Dog | Companion | Patchwork_Pup |
+
+---
+
+**EarthCat — Leaf_Cub**
+> A small earth cat cub with mossy leaf-tufted fur, leafy pointed ears, a sprouting leaf-tipped tail, big curious
+> eyes and a sturdy little body. Fresh leaf-greens with bark-brown markings. Full body, single creature, neutral
+> A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable
+> for cel-shading, soft rim light, no background, no base.
+
+**Horse — Blue_Dino_Mount**
+> A rideable blue saurian mount with smooth scaly hide, a broad saddle-ready back, sturdy pillar legs, a long
+> balancing tail and a calm crested head, large enough to ride. Cool teal-blue with a cream underbelly. Full body,
+> single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth
+> readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Spider — Antler_Spider_Creature**
+> A forest spider crowned with branching antler-like growths rising from its back, eight segmented legs, a bristled
+> rounded abdomen and a cluster of small glowing eyes. Mottled bark-brown with amber highlights. Full body, single
+> creature, neutral pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable
+> forms suitable for cel-shading, soft rim light, no background, no base.
+
+**Crab — Coral_Crab_Spider**
+> A reef crab with a coral-encrusted carapace and living coral polyps along its shell, two oversized pincers,
+> jointed walking legs and small stalked eyes. Vivid coral pink, orange and aqua. Full body, single creature,
+> neutral pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms
+> suitable for cel-shading, soft rim light, no background, no base.
+
+**Snake — Teal_Serpent**
+> A sleek teal serpent with smooth iridescent scales, a long coiling body, subtle finned ridges along its spine and
+> bright alert eyes. Teal and seafoam with pale underscales. Full body, single creature, coiled neutral pose,
+> centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth readable forms suitable for
+> cel-shading, soft rim light, no background, no base.
+
+**Dog — Patchwork_Pup**
+> A friendly patchwork pup that looks stitched from mismatched patches of fur, with floppy ears, a bright
+> button-eyed gaze, a stubby wagging tail and a bouncy little body. Warm patches of tan, rust and cream. Full body,
+> single creature, neutral A-pose, centered, game-ready stylized 3D model, clean topology, vibrant colors, smooth
+> readable forms suitable for cel-shading, soft rim light, no background, no base.
+
+---
+
+## Story characters & emergent hybrids
+
+### Ambassador Sera Calderon — "Voice of Concord" (the diplomat)
+The beloved peace-broker whose death in the Convergence Tower blast opens the campaign. Create her now so the
+inciting scene has a face.
+
+> Original fantasy diplomat character, not a replica of any existing character. A dignified, warm middle-aged
+> stateswoman — the beloved "Voice of Concord," the neutral city where all four elemental realms meet. Graceful
+> bearing, kind and intelligent eyes, faint laugh-lines, hair worn up with a few escaping strands. She wears
+> elegant ceremonial peace-envoy robes in soft neutral ivory and slate, layered like folded diplomatic sashes,
+> trimmed with four understated embroidered motifs woven together as one emblem — a small flame, a wave, a leaf
+> over stone, and a swirl of wind — signifying the union of the realms. A simple circlet and a single clasped
+> pendant of clear crystal at the throat. Open, unarmed, hands slightly extended in a gesture of welcome and
+> reconciliation. Cel-shaded stylized game art, clean readable silhouette, mskin-friendly neutral pose for a
+> hero NPC. Palette: ivory, slate-grey, muted gold, with the four elemental accent colors kept small and subtle.
+
+### Skyotter — water/air storm-hybrid (added to the roster)
+The first emergent hybrid wired into the game (`CreatureKind.Skyotter`, Air element, rideable, swims and flies).
+Prompt as provided:
+
+> Original alien-fantasy skyotter creature inspired by vibrant bioluminescent fantasy ecosystems, not an exact
+> replica of any existing creature. A graceful otter-like amphibious mammal-dragon creature that can both swim
+> and fly, with a long flexible body, sleek fur-like aquatic hide, webbed paws, gliding wing membranes between
+> limbs and tail, feathered-fin ear frills, expressive intelligent eyes, and a long rudder-like tail for steering
+> through both water and air. Elemental theme: water, air, and storm. Add swirling hurricane markings along the
+> sides, glowing cyan and violet spiral patterns on the wing membranes, misty cloud-like fur tufts around the
+> shoulders and tail, translucent aqua fins, and small storm-crystal whiskers that spark with pale blue lightning.
+> The creature should feel playful, clever, powerful, and mystical, like a joyful river spirit that can rise into
+> the sky and summon hurricanes when threatened.
+
+*(Extract its zip into a `Skyotter` folder under `Models/Creatures/` to match the wired alias.)*

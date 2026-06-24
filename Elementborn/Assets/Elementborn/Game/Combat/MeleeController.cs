@@ -43,7 +43,7 @@ namespace Elementborn.Game
 
                 target.Apply(new DamageInfo(outcome.Damage, outcome.Element, outcome.Variant));
                 if (!outcome.Status.IsEmpty) target.ApplyStatus(outcome.Status);
-                if (outcome.Knockback > 0f) target.ApplyKnockback(dir * outcome.Knockback);
+                if (outcome.Knockback > 0f) target.ApplyKnockback(KnockbackImpulse.Directional(dir, outcome.Knockback));
                 FactionMember.RegisterHit(col.gameObject, gameObject);
                 break;
             }

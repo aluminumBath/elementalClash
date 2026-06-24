@@ -103,6 +103,7 @@ namespace Elementborn.Game
             if (_tameable != null) _tameable.SetKind(kind);
             if (_faction != null) _faction.Configure(Faction.Neutral, _element); // peaceful until provoked
             if (_self != null) _self.SetMaxHealth(_stats.MaxHealth);
+            if (_self != null && _element.HasValue) _self.SetAffinity(_element.Value); // elemental matchup
         }
 
         private void Update()

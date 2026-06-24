@@ -55,6 +55,8 @@ namespace Elementborn.Game
         public List<string> grimoireKeys = new List<string>();
         public List<int> grimoireTiers = new List<int>();
 
+        public List<string> discoveredElements = new List<string>();
+
         // Map: discovered leyline rifts (ids) + the local player's location-sharing opt-in.
         public List<string> discoveredRifts = new List<string>();
         public bool shareLocation;
@@ -69,6 +71,10 @@ namespace Elementborn.Game
 
         // Equipment: worn item id per slot (enum order; "" = empty).
         public List<string> equippedSlots = new List<string>();
+        public List<string> equippedEnchants = new List<string>();   // element name per slot, enum order ("" = none)
+
+        public int storyChapter;   // StoryChapter index — campaign progress
+        public int storyEnding;    // StoryEnding index — 0 = none chosen yet
 
         // Summon Beacon (gacha): the two summon resources plus per-banner pity state (parallel lists, by banner id).
         public int summonSigils;

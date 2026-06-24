@@ -74,6 +74,10 @@ namespace Elementborn.Core
 
             // Crafted (made at no shop, only via recipes — see Crafting.cs).
             Add(new ItemDef("tough_leather", "Tough Leather", "Cured and layered hide, far tougher than the raw skin.", ItemCategory.Material, 22));
+            // Craftable base armor — equip in the four armor slots, then enchant each with an element (additive resist).
+            Add(new ItemDef("iron_helm", "Iron Helm", "A banded helm; takes an elemental enchant well.", ItemCategory.Material, 28));
+            Add(new ItemDef("warding_cloak", "Warding Cloak", "A heavy traveller\u2019s cloak, easily imbued.", ItemCategory.Material, 26));
+            Add(new ItemDef("sturdy_boots", "Sturdy Boots", "Reinforced marching boots.", ItemCategory.Material, 24));
             Add(new ItemDef("elixir_of_vigor", "Elixir of Vigor", "Restores body and stamina at once.", ItemCategory.Consumable, 60));
             Add(new ItemDef("elemental_charm", "Elemental Charm", "A charm humming with all four elements.", ItemCategory.Treasure, 140));
 

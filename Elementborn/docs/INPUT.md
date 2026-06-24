@@ -11,13 +11,16 @@ the note at the bottom.
 | --- | --- | --- |
 | Move | `WASD` | Left stick |
 | Look | Mouse | Right stick |
+| Jump / glide (hold while falling) | `Space` | A / Cross |
 | Primary cast (hold to charge) | Left mouse | Right trigger |
 | Secondary cast (hold to charge) | Right mouse | Left trigger |
 | Defend | `F` | Left bumper |
-| Dash | `Space` | A / Cross |
+| Guard / parry (hold) | `Left Ctrl` | B / Circle |
+| Dash | `Left Alt` | D-pad left |
 | Interact | `E` | X / Square |
 | Element travel | `F` | Y / Triangle |
 | Summon mount | `M` | D-pad up |
+| Mount skill (while riding) | `Q` | Right-stick press |
 | Summon companions | `C` | D-pad down |
 | Settings | `Esc` | Start |
 | Save slots | `F8` | Select / Back |
@@ -25,7 +28,10 @@ the note at the bottom.
 | Quick save / load | `F5` / `F9` | — |
 
 Mounted movement also reads the left stick (and the triggers for fly up/down) through the mount's
-keyboard-fallback path.
+keyboard-fallback path. While mounted you keep your own combat — **channelers cast and non-channelers swing
+their equipped weapon** with the normal cast button — and the **mount skill** button triggers the creature's
+special move: ground mounts **Charge**, water mounts **Surge**, flyers **Divebomb** (charges and divebombs
+stagger foes they drive through; ~4 s cooldown).
 
 > The default for **Defend** and **Element travel** is the same key (`F`) — that overlap predates this scheme
 > and is harmless (element travel only fires near water). The rebinding menu is the place to split them if you

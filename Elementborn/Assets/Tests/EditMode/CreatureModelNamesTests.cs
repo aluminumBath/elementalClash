@@ -6,13 +6,6 @@ namespace Elementborn.Tests.EditMode
     public class CreatureModelNamesTests
     {
         [Test]
-        public void DefaultsToTheEnumName()
-        {
-            // Tiger has no model in the batch, so it resolves to its enum name.
-            Assert.AreEqual("Tiger", CreatureModelNames.ResourceName(CreatureKind.Tiger));
-        }
-
-        [Test]
         public void AliasedKindUsesTheAliasName()
         {
             // Phoenix is wired to the Fire_Phoenix model (kept in its own folder with its textures).
@@ -23,8 +16,17 @@ namespace Elementborn.Tests.EditMode
         [Test]
         public void ResourcePathIsRootPlusName()
         {
-            Assert.AreEqual("Models/Creatures/Tiger", CreatureModelNames.ResourcePath(CreatureKind.Tiger));
+            // Tiger is wired to the Tigris_Prowler model.
+            Assert.AreEqual("Models/Creatures/Tigris_Prowler/Tigris_Prowler", CreatureModelNames.ResourcePath(CreatureKind.Tiger));
             StringAssert.StartsWith(CreatureModelNames.ResourceRoot, CreatureModelNames.ResourcePath(CreatureKind.Tiger));
+        }
+
+        [Test]
+        public void EveryKindIsAliasedToAModel()
+        {
+            // The full roster has been generated — every kind maps to a real model folder (no enum-name fallback).
+            foreach (CreatureKind k in System.Enum.GetValues(typeof(CreatureKind)))
+                Assert.IsTrue(CreatureModelNames.Aliases.ContainsKey(k), k + " is missing a model alias");
         }
 
         [Test]
@@ -33,8 +35,8 @@ namespace Elementborn.Tests.EditMode
             foreach (CreatureKind k in System.Enum.GetValues(typeof(CreatureKind)))
             {
                 string path = CreatureModelNames.ResourcePath(k);
-                Assert.IsFalse(string.IsNullOrEmpty(path), $"{k} has no model path");
-                Assert.IsFalse(path.EndsWith("/"), $"{k} resolved to an empty file name");
+                Assert.IsFalse(string.IsNullOrEmpty(path), k + " has no model path");
+                Assert.IsFalse(path.EndsWith("/"), k + " resolved to an empty file name");
             }
         }
 
@@ -43,7 +45,7 @@ namespace Elementborn.Tests.EditMode
         {
             // Guards against an alias entry that maps a kind to "" (which would collapse to an empty file name).
             foreach (var kv in CreatureModelNames.Aliases)
-                Assert.IsFalse(string.IsNullOrEmpty(kv.Value), $"alias for {kv.Key} is empty");
+                Assert.IsFalse(string.IsNullOrEmpty(kv.Value), "alias for " + kv.Key + " is empty");
         }
     }
 }

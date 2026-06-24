@@ -43,8 +43,22 @@ namespace Elementborn.Core
             { CreatureKind.Skytyrant,   "Storm_Wyvern/Storm_Wyvern" },
             { CreatureKind.Ridgewing,   "Blue_Fantasy_Bird/Blue_Fantasy_Bird" },
             { CreatureKind.Glidewisp,   "Fawn_Sprite/Fawn_Sprite" },
-            // No close model in this batch (primitive fallback stays): FireDragon, Mermaid, EarthMole,
-            // AirDragonfly, AirJellyfish, WaterCat, IceCat, ElectricSquirrel, Eel, Monkey, Crocodile, Rhino, Tiger.
+            // Generated across the Meshy batches (see docs/MESHY_PROMPTS.md) — every CreatureKind now has a model.
+            // Extract each zip into a folder named as below (strip the "Meshy_AI_" prefix and the timestamp/suffix).
+            { CreatureKind.FireDragon,       "Ember_Dragon/Ember_Dragon" },
+            { CreatureKind.Eel,              "Current_Eel/Current_Eel" },
+            { CreatureKind.Mermaid,          "Tide_Mermaid/Tide_Mermaid" },
+            { CreatureKind.EarthMole,        "EarthMole_Stone_Mole/EarthMole_Stone_Mole" },
+            { CreatureKind.AirDragonfly,     "AirDragonfly_Gale_Dragonfly/AirDragonfly_Gale_Dragonfly" },
+            { CreatureKind.AirJellyfish,     "AirJellyfish_Sky_Jellyfish/AirJellyfish_Sky_Jellyfish" },
+            { CreatureKind.WaterCat,         "WaterCat_Wave_Cat/WaterCat_Wave_Cat" },
+            { CreatureKind.IceCat,           "IceCat/IceCat" },
+            { CreatureKind.ElectricSquirrel, "Spark_Squirrel/Spark_Squirrel" },
+            { CreatureKind.Monkey,           "Canopy_Monkey/Canopy_Monkey" },
+            { CreatureKind.Crocodile,        "Marsh_Crocodile/Marsh_Crocodile" },
+            { CreatureKind.Rhino,            "Boulder_Rhino/Boulder_Rhino" },
+            { CreatureKind.Tiger,            "Tigris_Prowler/Tigris_Prowler" },
+            { CreatureKind.Skyotter,         "Skyotter/Skyotter" },
         };
 
         /// <summary>The bare file name (no path, no extension) of a kind's model prefab.</summary>

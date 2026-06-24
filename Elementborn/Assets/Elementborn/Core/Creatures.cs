@@ -10,7 +10,9 @@ namespace Elementborn.Core
         // Wildlife by habitat
         Eel, Crab, Monkey, Crocodile, Snake, Roc, Thunderbird, Rhino, Tiger,
         // Exotic apex creatures — rare, hard to tame, in tough locations (original designs)
-        Ridgewing, Glidewisp, Skytyrant, Goldkoi, Direstalker, Skimfin, Gillcloak, Tidewarden
+        Ridgewing, Glidewisp, Skytyrant, Goldkoi, Direstalker, Skimfin, Gillcloak, Tidewarden,
+        // Emergent hybrids — born as the elemental borders weaken (story)
+        Skyotter
     }
 
     /// <summary>Static data for a creature: theme, who may own it, and how it's acquired.</summary>
@@ -115,6 +117,8 @@ namespace Elementborn.Core
                     return new CreatureInfo("Gillcloak", Core.Element.Water, null, true, false, false, 0, 0.11f);
                 case CreatureKind.Tidewarden:  // colossal sentient sea creature
                     return new CreatureInfo("Tidewarden", Core.Element.Water, null, true, false, false, 0, 0.06f);
+                case CreatureKind.Skyotter:    // playful water/air storm-hybrid; swims and flies, rideable
+                    return new CreatureInfo("Skyotter", Core.Element.Air, null, true, false, false, 0, 0.12f);
 
                 default:
                     return new CreatureInfo("Unknown", null, null, false, false, false, 0, 0.5f);

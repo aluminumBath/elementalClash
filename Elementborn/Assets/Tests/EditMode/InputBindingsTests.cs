@@ -10,7 +10,7 @@ namespace Elementborn.Tests.EditMode
         public void EveryRebindableActionHasKeyboardAndGamepadBindings()
         {
             Assert.IsNotNull(InputBindings.Map);
-            Assert.AreEqual(10, InputBindings.Rebindable.Count);
+            Assert.AreEqual(12, InputBindings.Rebindable.Count);
             foreach (var e in InputBindings.Rebindable)
             {
                 Assert.GreaterOrEqual(e.Action.bindings.Count, 2, $"{e.Label} should have kbm + gamepad bindings");

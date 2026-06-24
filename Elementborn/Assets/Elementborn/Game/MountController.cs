@@ -41,6 +41,10 @@ namespace Elementborn.Game
         private ComfortVignette _vignette;
         private readonly List<Behaviour> _disabled = new List<Behaviour>();
 
+        private MountSkill _skill;
+        private float _skillCd;
+        private float _burstTimer;
+
         public bool IsRidden => _rider != null;
 
         /// <summary>Configure a summoned craft (ice floe, air bubble) at runtime.</summary>
@@ -79,6 +83,10 @@ namespace Elementborn.Game
             riderRoot.transform.SetParent(seatT, false);
             riderRoot.transform.localPosition = Vector3.zero;
             riderRoot.transform.localRotation = Quaternion.identity;
+
+            _skill = MountAbilities.ForLocomotion(locomotion); // the mount's special move, by how it travels
+            _skillCd = 0f;
+            _burstTimer = 0f;
         }
 
         public void Dismount()
@@ -112,6 +120,16 @@ namespace Elementborn.Game
 
             ReadInput(out float forward, out float turn, out float vertical);
 
+            if (_skillCd > 0f) _skillCd -= Time.deltaTime;
+            bool skillPressed = InputBindings.MountSkill != null
+                ? InputBindings.MountSkill.WasPressedThisFrame()
+                : (Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame);
+            if (skillPressed && _skill != MountSkill.None && _skillCd <= 0f)
+            {
+                _burstTimer = MountAbilities.BurstDuration(_skill);
+                _skillCd = MountAbilities.Cooldown(_skill);
+            }
+
             if (Mathf.Abs(turn) > 0.001f)
                 transform.Rotate(Vector3.up, turn * turnSpeed * Time.deltaTime, Space.World);
 
@@ -135,6 +153,20 @@ namespace Elementborn.Game
             }
 
             transform.position = pos;
+
+            if (_burstTimer > 0f) // mount skill: a short burst along facing (flyers dive), staggering foes on impact moves
+            {
+                _burstTimer -= Time.deltaTime;
+                Vector3 dir = (locomotion == LocomotionType.Flying && _skill == MountSkill.Divebomb)
+                    ? (flat - Vector3.up).normalized
+                    : flat;
+                Vector3 bp = transform.position + dir * (MountAbilities.BurstSpeed(_skill) * Time.deltaTime);
+                if (locomotion == LocomotionType.Ground) bp.y = SampleGround(bp) + groundOffset;
+                else if (locomotion == LocomotionType.Water) bp.y = waterLevel + groundOffset;
+                transform.position = bp;
+                if (MountAbilities.HasImpact(_skill)) StaggerController.StaggerNearby(transform.position, 3.5f);
+                _vignette?.SetIntensity(1f);
+            }
 
             float speedFactor = Mathf.Clamp01(Mathf.Abs(forward) + Mathf.Abs(turn) * 0.5f + Mathf.Abs(vertical) * 0.5f);
             _vignette?.SetIntensity(speedFactor);

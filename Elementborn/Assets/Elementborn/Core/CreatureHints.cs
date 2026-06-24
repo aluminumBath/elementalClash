@@ -37,6 +37,7 @@ namespace Elementborn.Core
                 case CreatureKind.Snake:      return "lurks in the marshes";
                 case CreatureKind.FireDragon: return "nests near the volcano";
                 case CreatureKind.Rhino:      return "ranges the open plains";
+                case CreatureKind.Skyotter:   return "rides the storm-fronts where sea meets sky";
                 default:                       return "roams the wilds";
             }
         }

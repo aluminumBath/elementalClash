@@ -162,7 +162,7 @@ namespace Elementborn.Core
                 list.Add(new GrimoireEntry(GrimoireSection.Bestiary, kind.ToString(),
                     info.Name,
                     element + role,
-                    CreatureHints.WhereToFind(kind),
+                    CreatureHints.WhereToFind(kind) + " Tame it with a " + info.Name + " lure (markets, shrines, camps).",
                     "Tame chance about " + tamePct + "% once weakened and lured."));
             }
             return list;

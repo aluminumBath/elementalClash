@@ -7,6 +7,145 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Traversal: jump + glide (`GlideMotion`).** The player rig can now **jump** (tap) and **glide** (hold the jump
+  button while falling) — a slow, controlled descent with a little forward push, for riding down from heights and
+  crossing gaps. The glide math is a pure, tested `GlideMotion` helper. Jump took the conventional **Space / A**
+  slot, so **Dash moved to `Left Alt` / D-pad left** (rebindable as always; the VR jump/glide binding is TBD in the
+  VR-moves pass). Pairs with the altitude-cold hazard — climb to a high point and glide back down.
+- **Environmental hazards — altitude cold & underwater pressure (`EnvironmentHazards` + `EnvironmentHazardController`).**
+  A pure, tested model: climb above a safe altitude and the cold drains health (ramping to a cap); dive below a safe
+  depth and the pressure does the same. Exemptions reuse what's already in place — **cold**: Air/Fire channelers or a
+  **Fire chest** enchant; **pressure**: Water/Earth channelers or a **Water/Earth chest _and_ Air/Water helmet**
+  enchant. A bootstrap-spawned applier samples the player's altitude/depth each second and applies the rate as flat
+  health loss (one-shot warning toast on entering each hazard). Dormant on the flat surface — it comes alive with the
+  vertical heights and deep water in the cave pass.
+- **Concord hub — the Convergence Tower & the inciting blast (`ConcordSite`).** The capital city (the world's
+  `CapitalCity` region) is now Concord: `WorldSpawnPlacer` plants a `ConcordSite` there with a towering, four-
+  realm **Convergence Tower** landmark (element-tinted converging orbs) and the diplomat **Ambassador Calderon**
+  at its base. While the campaign sits at `Arrival`, approaching the tower triggers the inciting **tower blast**:
+  it shakes the world, removes the diplomat, and advances the story to `TheTowerBlast`. A save loaded past Arrival
+  builds the site in its aftermath state (no diplomat, no replayed blast). The tall spire also seeds the vertical
+  world to come. Built from `ToonPalette`-tinted primitives — drop-in models can replace the parts later.
+- **Story progression layer (`StoryController`).** A live, saved cursor through the campaign: it holds the current
+  `StoryChapter` and the chosen `StoryEnding`, advances along the `StoryArc` spine (`Advance`/`SetChapter`) and
+  records the Reckoning choice (`ChooseEnding`), raising `ChapterChanged`/`EndingChosen` for UI. It persists with
+  the save (new `storyChapter`/`storyEnding` fields, captured/restored alongside the other controllers) and is
+  spawned by the bootstrap scene. Scenes and scripted beats drive it — e.g. the coming tower-blast event will set
+  `TheTowerBlast`.
+- **Story-mode foundation.** Encoded the campaign as pure, tested data the dialogue/codex/quest layers can read:
+  `Core/StoryLore` (the four imprisoned **Creature Kings** — Ignivar/Fire·Phoenix, Thalassa/Water·Tidewarden,
+  **Terragor/Earth·crowned-Rhino**, Zephyreon/Air·Roc — plus the Sundering, the Great Betrayal, the neutral hub
+  **Concord**, and the diplomat **Ambassador Sera Calderon**), and `Core/StoryArc` (the six-chapter linear spine
+  from *Arrival in Concord* through the *Tower Blast* that kills the diplomat to the *Reckoning*, plus four ending
+  hooks: Restoration / Dominion / Human Supremacy / Shared World). Added two **story factions** to keep our names
+  while filling the storyline's gaps: **The Architects** (hidden) and **The Awakening** (King-cult); the joinable
+  four are unchanged. A story bible lives in `docs/STORY.md`, and the diplomat has a Meshy prompt.
+- **Skyotter** — a playful water/air **storm-hybrid** creature (rideable; swims and flies), added to the roster as
+  the first emergent hybrid born of the weakening borders. Wired into the catalog, model aliases, and bestiary
+  hints, with its prompt recorded in `docs/MESHY_PROMPTS.md`.
+- **Fixed** a stale test that still expected `Tiger` to have no model (it does now); replaced it with an invariant
+  that every `CreatureKind` resolves to a real model alias.
+- **Enchantable armor with additive elemental resistance.** Armor is now four separate slots — **helmet, cloak,
+  chest, boots** (plus charm and trinket) — and each worn piece can be **enchanted with an element** from the
+  equipment panel (tap a slot's *Enchant* row to cycle Fire/Water/Earth/Air). A new pure, unit-tested
+  `Core/ArmorResist` turns the equipped enchants into a per-incoming-element damage multiplier that **adds up
+  across pieces**: each piece resists the element it dominates and is vulnerable to the element that dominates it
+  (same cycle as the matchup), so four pieces of one element make a strong specialist with a matching glaring
+  weakness, while a mixed set evens out. `Damageable` gained an `IncomingElementScale` hook that the player's
+  `EquipmentController` binds to the live loadout. Base pieces (Iron Helm, Warding Cloak, Sturdy Boots; chest =
+  Tough Leather) are craftable, and enchants persist across save/load.
+  *Note:* expanding the armor slot enum shifts equipment save indices — pre-release saves should be re-made.
+- **Mounted abilities + fighting from the saddle.** Every mount now grants its rider a **special move** on a
+  dedicated, rebindable button (`Q` / right-stick press), keyed to how it travels: ground mounts **Charge**,
+  water mounts **Surge**, flyers **Divebomb**. Charges and divebombs stagger foes the mount drives through, on a
+  short cooldown — a pure, unit-tested `Core/MountAbilities` map drives it, executed by `MountController` with the
+  burst clamped to the mount's locomotion (no charging into the terrain). Combat stays live while riding, so you
+  keep fighting from the saddle — **channelers cast, non-channelers swing their equipped sword/spear/bow** with the
+  normal cast button. (New `StaggerController.StaggerNearby` powers the impact.)
+- **VR HUD placement pass.** The standing combat readouts — attunement, poise/stagger, and the guard/parry
+  indicator — now render in the headset. A new `VrHudAnchor` (separate from the menu-oriented `VrCanvasAdapter`)
+  converts each canvas to world space in VR and keeps it in the lower field of view, following the head with light
+  smoothing (never dead-centre, never rigidly locked). Each readout has its own head-relative offset so they don't
+  overlap (attunement lower-left, poise lower-centre, guard just above). Flat/desktop is untouched — the anchor
+  no-ops. The stagger flash rides the poise canvas, so in VR it's a brief localized red tint rather than a comfort-
+  unfriendly full-FOV flash. Offsets/sizes are starting values to tune on a headset. (`GameHud` currency/prompts
+  and the VR move/guard *gestures* remain for their own passes — see `VR_INPUT_MAP.md`.)
+- **Attunement HUD with discovery (fog-of-war matchups).** A compact left-side HUD readout shows the player's
+  element and how they fare defensively against each element (RESIST / WEAK / neutral) — but every element stays
+  **"???"** until the player has *encountered* it: by facing an opponent of that element (a periodic proximity
+  check over live enemies, reusing `StaggerController`) or by being struck by a move of it (the player's
+  `Damageable` damage feed). Your own element is known up front. Backed by a pure, unit-tested `Core/ElementDex`
+  and **persisted** with the save (new `discoveredElements`, folded into `PlayerInventory` like the Grimoire).
+- **Bestiary now reveals the taming item.** Each creature's Grimoire entry names the **lure** that tames it
+  ("Tame it with a <name> lure…") at the **Known** tier — same unknown→discovered gating as the rest of the
+  bestiary (creatures already revealed on sighting → defeat → tame). New `Damageable.Affinity` getter also lets
+  the element HUD and the enemy health-bar pip read a target's element.
+- **The matchup now cuts both ways + you can read it before committing.** Two follow-ups to elemental
+  effectiveness: (1) the **player has a defensive affinity** — `PlayerCombatController` sets its `Damageable`
+  affinity to the loadout's primary element (cleared for weapon users), so enemy attacks are scaled by the same
+  chart: you resist your strong matchup and take extra from your weakness, with the existing "WEAK!"/"RESIST" cue
+  firing over the player too. (2) Enemy floating health bars now carry a small **element pip** (an `ElementColor`-
+  tinted square just left of the bar, built lazily from `Damageable.Affinity`) so you can see a foe's element and
+  plan the matchup before swinging; non-elemental enemies show no pip. New `Damageable.Affinity` getter backs both.
+- **Elemental effectiveness, wired into real fights**: the `Core/ElementMatchup` chart (Fire ▶ Earth ▶ Air ▶
+  Water ▶ Fire; ×1.5 strong / ×0.6 resisted) was already applied by `Damageable` for any target with an affinity,
+  but only tamed creatures and the Serpent boss set one — so it was dormant for ordinary foes. `EnemyController`
+  now mirrors an element-typed enemy's element onto its `Damageable` affinity on `Configure`/`ConfigureById`
+  (non-elemental bandits stay neutral), so the matchup finally bites across normal combat. Hits now show a player-
+  facing cue — an orange **"WEAK!"** when the target is weak to your element, a cool **"RESIST"** when it shrugs part
+  of it off — and a pure `Effectiveness` classifier (`ElementMatchup.Classify`) backs both the multiplier and the cue.
+- **Guard & parry**: hold the guard input (Left-Ctrl / gamepad B, rebindable) to raise a guard driven by a pure,
+  unit-tested `Core/GuardState`. The first ~0.2s is a **parry window** — a hit there is negated and
+  counter-staggers the enemy in front of you (straight into a finisher), with a cyan flash + "PARRY!" cue; holding
+  past the window **blocks** (70% damage cut, which also slows your poise loss since less lands). Composes cleanly
+  with the existing faction damage-reduction via a new optional pre-mitigation `Damageable.IncomingModifier` hook;
+  enemies gained an all-registry + `ForceStagger` so the counter can target the foe in your frontal cone. Flat/PC +
+  gamepad now; VR guard gesture is part of the VR-moves pass.
+- **Player poise/stagger**: the player now has the same `Core/Poise` meter (`PlayerStaggerController`, self-booting,
+  found by tag). Incoming hits build a slim amber HUD bar; when it breaks the player is briefly stunned — which
+  `PlayerCombatController` already honours, so the stagger interrupts your offense — and the screen flashes red with
+  a "STAGGERED!" warning. Tankier than enemies and a shorter window; never a finisher target. Spacing/defense now
+  matters under pressure.
+- **Poise meter + stagger cue**: the floating enemy health bar now carries a thin poise sub-bar that fills (light
+  blue) toward a break and reads full/gold while the enemy is staggered, so the break is telegraphed. The break
+  itself fires a bright flash + a "STAGGER!" popup at the enemy.
+- **Stagger & finishers**: real hits build a pure, unit-tested `Core/Poise` meter on every enemy
+  (`Combat/StaggerController`, auto-required); on break the enemy is stunned (`EnemyController` already freezes on
+  it) and flagged staggered. `Combat/FinisherController` shows a prompt near a staggered enemy and, on the finisher
+  input (keyboard F / gamepad north), runs a `QuickTimeController` quick-time move — success executes the enemy
+  (defeat poof + score). VR finisher gesture is part of the VR-moves pass (calls `QuickTimeController.SubmitAction`).
+- **Elemental effectiveness**: `Core/ElementMatchup` (pure, unit-tested) scores attacker-vs-defender element on a
+  Fire ▶ Earth ▶ Air ▶ Water ▶ Fire cycle (×1.5 strong / ×0.6 weak / ×1 neutral). `Damageable` gained an optional
+  affinity (`SetAffinity`) and applies the multiplier in `Apply` before damage/feedback, so floating numbers show
+  the effective hit. Creatures set their affinity from their element; the water serpent is Water (resists Water,
+  weak to Air). Enemies have none unless assigned.
+- **VR admin-log gesture**: `WristMenuGesture` (self-bootstrapping) toggles `AdminLogConsole` when you look at your
+  left wrist and tap it with the right hand — HMD + controller poses from XR nodes through the unit-tested
+  `Core/WristGesture`, gated by `AdminUnlocked`. Flat/PC keeps F2. (Approximates the tap; refine with hand-tracking.)
+- **QTE VR input seam**: `QuickTimeController.SubmitAction(action)` lets a VR move/gesture detector feed quick-time
+  presses (keyboard/gamepad still polled). The move → action binding is left to the VR-moves pass (VR_INPUT_MAP.md).
+- **Quick-time complex moves**: `Core/QuickTimeSequence` (pure, unit-tested) generates a random series of
+  direction/face-button presses, each with a reaction-time window; `Game/QuickTimeController` (self-bootstrapping)
+  shows the prompts, reads keyboard/gamepad input, ticks the window, and fires success/failure callbacks. Optional
+  `Game/QuickTimeMoveTrigger` is a designer-droppable hook (UnityEvents) to bind a complex move. (Trigger
+  condition + VR button mapping left as design hooks — call `QuickTimeController.Begin` where the move should live.)
+- **Admin live-log console**: `Game/AdminLogConsole` (self-bootstrapping) captures all Unity logs into a pure,
+  unit-tested `Core/LogRing` and renders the recent lines in a screen-space panel, colour-coded by severity.
+  Toggle with F2 (admin-gated via `AdminUnlocked`, on in editor/dev builds) or `AdminLogConsole.Toggle()`;
+  `AdminLogConsole.Push` can surface other telemetry. (Headset toggle + gameplay-event feed are noted follow-ups.)
+- **Boss health bar**: `Game/BossHealthBar` (self-bootstrapping, reusable) draws a screen-anchored name + wide
+  drain bar for a boss, reusing `Core/HealthBarState`; the water serpent engages it on first hit and hides it on
+  defeat. Any boss calls `BossHealthBar.Engage(damageable, name)`.
+- **Hit-direction knockback**: unified through `Game/Combat/KnockbackImpulse` + the unit-tested
+  `Core/KnockbackForce` — projectile, melee, and heavy hits now flatten knockback to the ground plane and add a
+  small upward pop (clamped to a sane ceiling), so shoves read clearly and no longer inherit the caster's aim pitch.
+- **Enemy health bars**: `Combat/EnemyHealthBar` (auto-required on every `EnemyController`) floats a billboarded
+  bar over each enemy from two `ToonPalette`-tinted quads — appears on damage, retracts after a lull, drains from
+  the left, and steps green → yellow → red (fill + fade from the unit-tested `Core/HealthBarState`). It's a
+  detached object so `HitReaction`'s squash never catches it, and it's destroyed with the enemy.
+- **Defeat effect**: on `CombatFeedback.Defeated`, `Feel/DeathPoof` bursts element-tinted `ToonPalette` shards
+  (`Feel/Shard`) along the deterministic, unit-tested `Core/ShardBurst` spread — they scatter, tumble, and shrink
+  away — and enemies pop a gold "+score" number via the shared `Feel/FloatingText`. See `docs/MODELS.md`.
 - **Floating damage numbers**: `Feel/DamageNumbers` (self-bootstrapping) spawns a world-space `Feel/FloatingNumber`
   over every real hit off `CombatFeedback.Hit` — a TextMeshPro that billboards, climbs, pops, and fades, then
   self-destroys, with motion from the unit-tested `Core/DamagePopup` and element tint from the shared

@@ -119,6 +119,15 @@ namespace Elementborn.EditorTools
             Add(achievements, "AchievementController");
             Add(achievements, "AchievementsViewer");
 
+            // Story mode: the live cursor through the campaign (current chapter + chosen ending), saved with the game.
+            var story = new GameObject("Story");
+            Add(story, "StoryController");
+
+            // Environmental hazards: altitude cold + underwater pressure (with element/enchant exemptions),
+            // applied to the player on a tick. Dormant on the flat surface; bites in the heights and deep water.
+            var hazards = new GameObject("Hazards");
+            Add(hazards, "EnvironmentHazardController");
+
             // Crafting overlay (press B): turn loot materials into gear/consumables via recipes.
             var crafting = new GameObject("Crafting");
             Add(crafting, "CraftingViewer");

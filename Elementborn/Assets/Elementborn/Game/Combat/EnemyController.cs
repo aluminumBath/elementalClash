@@ -16,6 +16,8 @@ namespace Elementborn.Game
     [RequireComponent(typeof(FactionMember))]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(HitReaction))]
+    [RequireComponent(typeof(EnemyHealthBar))]
+    [RequireComponent(typeof(StaggerController))]
     public sealed class EnemyController : MonoBehaviour
     {
         [SerializeField] private EnemyKind kind = EnemyKind.Grunt;
@@ -64,6 +66,7 @@ namespace Elementborn.Game
             Configure(newKind);
             var fm = _faction != null ? _faction : GetComponent<FactionMember>();
             fm?.Configure(faction, element);
+            ApplyAffinity(element);
         }
 
         /// <summary>Configure from a registry id — built-in ("Grunt") or modded — so data-driven and modded
@@ -77,6 +80,16 @@ namespace Elementborn.Game
             if (_self != null) _self.SetMaxHealth(_stats.MaxHealth);
             var fm = _faction != null ? _faction : GetComponent<FactionMember>();
             fm?.Configure(faction, element ?? def.Element);
+            ApplyAffinity(element ?? def.Element);
+        }
+
+        // Mirror the enemy's element onto its Damageable as an affinity, so the ElementMatchup chart applies to
+        // incoming hits (strong/weak). Non-elemental enemies (e.g. weapon bandits) pass null and take neutral damage.
+        private void ApplyAffinity(Element? element)
+        {
+            if (!element.HasValue) return;
+            if (_self == null) _self = GetComponent<Damageable>();
+            _self?.SetAffinity(element.Value);
         }
 
         /// <summary>Force a specific target (the arena points every enemy at the player).</summary>
@@ -109,6 +122,7 @@ namespace Elementborn.Game
             if (_scored) return;
             _scored = true;
             ScoreController.Instance?.AddKill(_stats.ScoreValue);
+            Feel.FloatingText.Spawn(transform.position, "+" + _stats.ScoreValue, new Color(1f, 0.85f, 0.3f), 30f, 0.1f);
 
             var inv = PlayerInventory.Instance;
             if (inv != null)

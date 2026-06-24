@@ -102,6 +102,16 @@ namespace Elementborn.Game
                     }
                 }
             }
+
+            // Concord: the Convergence Tower, the diplomat, and the inciting blast, planted at the capital city.
+            var capital = world.Capital();
+            if (capital != null)
+            {
+                var hub = new GameObject("Concord");
+                hub.transform.SetParent(transform);
+                hub.transform.position = ToWorld(capital.MapPosition);
+                hub.AddComponent<ConcordSite>();
+            }
         }
 
         private static bool IsTown(PoiType t) => t == PoiType.City || t == PoiType.Village || t == PoiType.Market;

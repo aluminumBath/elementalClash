@@ -1,7 +1,8 @@
 namespace Elementborn.Core
 {
-    /// <summary>The joinable social factions (distinct from the combat <see cref="Faction"/> allegiance).</summary>
-    public enum FactionId { None, Symbiasts, Separatists, Cleicists, Synodists }
+    /// <summary>The joinable social factions (distinct from the combat <see cref="Faction"/> allegiance).
+    /// Architects and Awakening are story factions (not in the standard join list).</summary>
+    public enum FactionId { None, Symbiasts, Separatists, Cleicists, Synodists, Architects, Awakening }
 
     /// <summary>A faction's doctrinal view of something, strongest to weakest approval.</summary>
     public enum Doctrine { Reveres, Accepts, Dislikes, Abhors }
@@ -88,6 +89,20 @@ namespace Elementborn.Core
                         "Adaptable and well-supported.",
                         "Consensus is slow, with no single specialty.",
                         new FactionPerk(1.10f, 1.05f), Doctrine.Accepts, Doctrine.Accepts);
+
+                case FactionId.Architects:
+                    return new FactionProfile(id, "The Architects",
+                        "Order is kept by those willing to bear its secrets. The realms endure because someone decided the price — and keeps paying it in silence.",
+                        "Masters of leverage, secrets, and the machinery that runs the realms.",
+                        "They cannot be seen to act, and crumble once exposed.",
+                        new FactionPerk(1.08f, 1.12f), Doctrine.Dislikes, Doctrine.Dislikes);
+
+                case FactionId.Awakening:
+                    return new FactionProfile(id, "The Awakening",
+                        "The Kings are not monsters but gods in chains; every hybrid and stirring border is a sign. Their waking will remake the world — and we will be its faithful.",
+                        "Zealous and surging — convergence and hybrids only feed their fervour.",
+                        "Reckless, and apt to free what should perhaps stay bound.",
+                        new FactionPerk(1.18f, 0.95f), Doctrine.Reveres, Doctrine.Reveres);
 
                 default:
                     return new FactionProfile(FactionId.None, "Unaligned", "No allegiance.", "—", "—",

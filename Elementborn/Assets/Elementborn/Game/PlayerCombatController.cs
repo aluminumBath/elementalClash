@@ -42,6 +42,7 @@ namespace Elementborn.Game
             _underwater = GetComponent<UnderwaterController>();
             _body = GetComponentInParent<Damageable>();
             _hidden = GetComponent<HiddenMoveController>();
+            ApplyDefensiveAffinity();
             _input.IntentProduced += HandleIntent;
         }
 
@@ -142,6 +143,17 @@ namespace Elementborn.Game
         {
             _loadout = loadout;
             _abilities = new AbilitySystem(loadout);
+            ApplyDefensiveAffinity();
+        }
+
+        // The player's own element shapes their defenses: their primary element becomes their Damageable affinity,
+        // so the same ElementMatchup chart that helps them attack also decides what they resist / take extra from.
+        // (Weapon users with no element stay matchup-neutral.)
+        private void ApplyDefensiveAffinity()
+        {
+            if (_body == null) return;
+            if (_loadout != null && _loadout.IsChanneler) _body.SetAffinity(_loadout.Elements[0]);
+            else _body.ClearAffinity();
         }
     }
 }

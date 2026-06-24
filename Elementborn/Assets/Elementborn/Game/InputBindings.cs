@@ -35,6 +35,7 @@ namespace Elementborn.Game
         public static InputAction SecondaryCast { get; private set; }
         public static InputAction Defend { get; private set; }
         public static InputAction Dash { get; private set; }
+        public static InputAction Jump { get; private set; }            // tap: jump; hold while falling: glide
         public static InputAction Interact { get; private set; }
         public static InputAction ElementTravel { get; private set; }
         public static InputAction Mount { get; private set; }
@@ -42,6 +43,8 @@ namespace Elementborn.Game
         public static InputAction Menu { get; private set; }
         public static InputAction Slots { get; private set; }
         public static InputAction ExtendedCast { get; private set; } // hold: Primary->Heavy, Secondary->Sweep, Defend->Signature
+        public static InputAction Guard { get; private set; }         // hold to raise guard (parry window on raise, else block)
+        public static InputAction MountSkill { get; private set; }    // while mounted: the mount's special move (Charge/Surge/Divebomb)
 
         public static IReadOnlyList<Entry> Rebindable { get; private set; }
 
@@ -60,7 +63,8 @@ namespace Elementborn.Game
             PrimaryCast   = Button("PrimaryCast",   "<Mouse>/leftButton",  "<Gamepad>/rightTrigger");
             SecondaryCast = Button("SecondaryCast", "<Mouse>/rightButton", "<Gamepad>/leftTrigger");
             Defend        = Button("Defend",        "<Keyboard>/f",        "<Gamepad>/leftShoulder");
-            Dash          = Button("Dash",          "<Keyboard>/space",    "<Gamepad>/buttonSouth");
+            Dash          = Button("Dash",          "<Keyboard>/leftAlt",  "<Gamepad>/dpad/left");
+            Jump          = Button("Jump",          "<Keyboard>/space",    "<Gamepad>/buttonSouth");
             Interact      = Button("Interact",      "<Keyboard>/e",        "<Gamepad>/buttonWest");
             ElementTravel = Button("ElementTravel", "<Keyboard>/f",        "<Gamepad>/buttonNorth");
             Mount         = Button("Mount",         "<Keyboard>/m",        "<Gamepad>/dpad/up");
@@ -68,13 +72,17 @@ namespace Elementborn.Game
             Menu          = Button("Menu",          "<Keyboard>/escape",   "<Gamepad>/start");
             Slots         = Button("Slots",         "<Keyboard>/f8",       "<Gamepad>/select");
             ExtendedCast  = Button("ExtendedCast",  "<Keyboard>/leftShift","<Gamepad>/rightShoulder");
+            Guard         = Button("Guard",         "<Keyboard>/leftCtrl", "<Gamepad>/buttonEast");
+            MountSkill    = Button("MountSkill",    "<Keyboard>/q",        "<Gamepad>/rightStickPress");
 
             Rebindable = new List<Entry>
             {
                 new Entry("Primary cast", PrimaryCast),
                 new Entry("Secondary cast", SecondaryCast),
                 new Entry("Defend", Defend),
+                new Entry("Guard", Guard),
                 new Entry("Dash", Dash),
+                new Entry("Jump / glide", Jump),
                 new Entry("Interact", Interact),
                 new Entry("Element travel", ElementTravel),
                 new Entry("Summon mount", Mount),
@@ -82,6 +90,7 @@ namespace Elementborn.Game
                 new Entry("Open settings", Menu),
                 new Entry("Save slots", Slots),
                 new Entry("Heavy/Sweep/Signature (hold)", ExtendedCast),
+                new Entry("Mount skill", MountSkill),
             };
 
             LoadOverrides();

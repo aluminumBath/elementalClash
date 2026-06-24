@@ -11,7 +11,7 @@ namespace Elementborn.Tests.EditMode
         {
             var l = new EquipLoadout();
             Assert.IsTrue(l.Equip("tough_leather"));
-            Assert.AreEqual("tough_leather", l.EquippedIn(EquipSlot.Armor));
+            Assert.AreEqual("tough_leather", l.EquippedIn(EquipSlot.Chest));
             Assert.IsTrue(l.IsEquipped("tough_leather"));
         }
 
@@ -21,7 +21,7 @@ namespace Elementborn.Tests.EditMode
             var l = new EquipLoadout();
             l.Equip("hide");          // Armor
             l.Equip("tough_leather"); // Armor again -> replaces
-            Assert.AreEqual("tough_leather", l.EquippedIn(EquipSlot.Armor));
+            Assert.AreEqual("tough_leather", l.EquippedIn(EquipSlot.Chest));
             Assert.IsFalse(l.IsEquipped("hide"));
         }
 
@@ -65,7 +65,7 @@ namespace Elementborn.Tests.EditMode
 
             var loaded = new EquipLoadout();
             loaded.Load(saved);
-            Assert.AreEqual("tough_leather", loaded.EquippedIn(EquipSlot.Armor));
+            Assert.AreEqual("tough_leather", loaded.EquippedIn(EquipSlot.Chest));
             Assert.AreEqual("old_relic", loaded.EquippedIn(EquipSlot.Trinket));
             Assert.AreEqual(l.MaxHealthBonus, loaded.MaxHealthBonus);
             Assert.AreEqual(l.OffenseMultiplier, loaded.OffenseMultiplier, 0.0001f);

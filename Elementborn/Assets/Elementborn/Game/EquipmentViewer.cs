@@ -4,7 +4,7 @@ using Elementborn.Core;
 
 namespace Elementborn.Game
 {
-    /// <summary>The equipment panel (default key <b>V</b>). Shows the three slots with what's worn and the running
+    /// <summary>The equipment panel (default key <b>V</b>). Shows the slots with what is worn (armor slots can be enchanted with an element) and the running
     /// totals (+max HP, x power), and lists the gear in your bag with Equip/Unequip buttons. Equipping requires
     /// owning the item and re-applies the stat bonuses (max health via progression, power via combat). Built via
     /// <see cref="OverlayUi"/>, so it's world-space in VR. The bootstrap scene adds one.</summary>
@@ -56,6 +56,12 @@ namespace Elementborn.Game
                 {
                     var s = slot;
                     UiTheme.Button(_content, slot + ":  " + Name(worn) + "     —  Unequip", () => DoUnequip(s), 660, 42);
+                    if (EquipLoadout.IsArmorSlot(slot))
+                    {
+                        var e = loadout.EnchantIn(slot);
+                        string label = "      ⤷ Enchant: " + (e.HasValue ? e.Value.ToString() : "None") + "   (tap to change)";
+                        UiTheme.Button(_content, label, () => DoCycleEnchant(s), 660, 36);
+                    }
                 }
                 else
                 {
@@ -77,7 +83,23 @@ namespace Elementborn.Game
                                    (g.OffenseBonus > 0f ? "+" + Mathf.RoundToInt(g.OffenseBonus * 100f) + "% power" : "");
                     UiTheme.Button(_content, "Equip " + Name(id) + "  [" + g.Slot + "]   " + bonus, () => DoEquip(id), 660, 42);
                 }
-            if (!any) OverlayUi.Body(_content, "No gear in your bag yet — craft Tough Leather or an Elemental Charm (B).", 18);
+            if (!any) OverlayUi.Body(_content, "No gear in your bag yet — craft armor (Iron Helm, Warding Cloak, Tough Leather, Sturdy Boots) or an Elemental Charm (B).", 18);
+        }
+
+        // None -> Fire -> Water -> Earth -> Air -> None
+        private static readonly Element[] EnchantCycle = { Element.Fire, Element.Water, Element.Earth, Element.Air };
+        private void DoCycleEnchant(EquipSlot slot)
+        {
+            var eq = EquipmentController.Instance;
+            if (eq == null) return;
+            var cur = eq.Loadout.EnchantIn(slot);
+            int next = cur.HasValue ? System.Array.IndexOf(EnchantCycle, cur.Value) + 1 : 0;
+            if (next < 0 || next >= EnchantCycle.Length) eq.ClearEnchant(slot);
+            else eq.Enchant(slot, EnchantCycle[next]);
+            var now = eq.Loadout.EnchantIn(slot);
+            GameHud.Instance?.Toast("Enchant: " + (now.HasValue ? now.Value.ToString() : "None"));
+            AudioController.Instance?.Confirm();
+            Rebuild();
         }
 
         private void DoEquip(string itemId)

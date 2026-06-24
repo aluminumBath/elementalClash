@@ -14,9 +14,13 @@ binding yet**. This doc is the running checklist.
 | Secondary cast | Right mouse / LT | Left-hand thrust gesture |
 | Defend | `Defend` action | Right controller **B** |
 | Dash | `Dash` action | Right controller **A** |
+| Jump / glide | `Jump` action (Space / gamepad A) | TBD — VR-moves pass |
+| Guard / parry | hold `Guard` (Left Ctrl / gamepad B) | TBD — VR-moves pass |
 | Heavy | hold `ExtendedCast` + Primary | gesture stance (motion layer) |
 | Sweep | hold `ExtendedCast` + Secondary | gesture stance (motion layer) |
 | Signature | hold `ExtendedCast` + Defend | per-element special gesture (VR-first) |
+
+**Guard / parry** (`PlayerGuardController`): hold to raise a guard — the first ~0.2 s is a parry window (negates the hit and counter-staggers the foe in your frontal cone, opening a finisher); held longer it blocks (70% cut). Desktop/gamepad bind through `InputBindings.Guard` (Left Ctrl / gamepad B, rebindable). The **VR guard gesture is intentionally unmapped** and belongs to the VR-moves pass — a raised off-hand / shield pose is the likely candidate; whichever motion is chosen calls into the same `Core/GuardState`.
 
 ## Locomotion & comfort — mapped in VR
 
@@ -82,3 +86,19 @@ thumbstick-click and the controller menu buttons are still free for the menu/int
 
 (Generated as an audit of `InputBindings`, `VrInputProvider`, `VrGestureProvider`, `VrComfortLocomotion`, and the
 overlay controllers. Update as bindings are added.)
+
+## Persistent combat HUD (VR)
+
+The standing combat readouts — the **attunement** panel (`PlayerAttunementHud`), the **poise/stagger** bar (`PlayerStaggerController`), and the **guard/parry** indicator (`PlayerGuardController`) — are screen-space in flat play. In the headset they switch to **World Space** through `VrHudAnchor` (distinct from `VrCanvasAdapter`, which is for menus): a small panel kept in the lower field of view, following the head with light smoothing so it never sits dead-centre or feels rigidly locked. Each gets its own head-relative offset so they don't overlap — attunement lower-left, poise lower-centre, guard just above it. The offsets, sizes, and follow speed are sensible starting values to tune on a real headset. The stagger **flash** rides the same poise canvas, so in VR it reads as a brief red tint over that panel rather than a full-FOV flash — deliberately, since full-screen colour slams are a comfort hazard in VR.
+
+Still open: the main `GameHud` (currency, interaction prompts, toasts) is not yet world-space — decide whether it joins the same `VrHudAnchor` lower-HUD cluster or gets its own treatment (interaction prompts arguably want to sit near the thing you're looking at, not on a fixed HUD).
+
+## Admin live-log gesture (VR)
+
+Admins toggle the on-screen log (`AdminLogConsole`) by **looking at the inside of the left wrist and tapping it with the right hand**. `WristMenuGesture` reads the HMD + both controller poses from XR device nodes and evaluates the pure `Core/WristGesture` (gaze-angle + touch-distance), held ~0.35 s with a 1 s cooldown. Gated by `AdminLogConsole.AdminUnlocked` (editor/dev builds by default). On flat/PC the equivalent is **F2**.
+
+Approximation: it currently uses *look toward the left hand* + *right hand within ~12 cm*. Tighten to a palm-up inner-wrist pose once hand-tracking lands.
+
+## Quick-time "complex moves" (VR)
+
+Complex moves use a quick-time sequence (`Core/QuickTimeSequence` + `QuickTimeController`): a series of prompts (N/S/E/W), each hit within a reaction-time window. Keyboard/gamepad drive it out of the box. **In VR, the move/gesture → `QteAction` binding is decided here, alongside the rest of the VR moves** — a gesture detector calls `QuickTimeController.SubmitAction(action)` when it recognizes the matching motion. TODO (with the VR move pass): map each `QteAction` (and which moves open a QTE) to concrete controller gestures.

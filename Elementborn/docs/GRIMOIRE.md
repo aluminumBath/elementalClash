@@ -20,7 +20,7 @@ Each entry has four reveal layers, gated by a per-entry **discovery tier** (`Dis
 | ---- | ----- |
 | **Unknown** | nothing — the entry reads `???` and is locked |
 | **Glimpsed** | the name + a one-line glimpse |
-| **Known** | + the main detail |
+| **Known** | + the main detail (where to find it, and the lure that tames it) |
 | **Mastered** | + the deepest secret |
 
 `Grimoire.Redact(entry, tier)` returns exactly the lines a given tier may see (empty layers are skipped). The

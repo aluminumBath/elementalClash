@@ -45,18 +45,49 @@ namespace Elementborn.Game
             ProgressionController.Instance?.RefreshBonus();
         }
 
+        /// <summary>Imbue the armor worn in an armor slot with an element (additive elemental resistance). False if
+        /// the slot isn't armor or is empty.</summary>
+        public bool Enchant(EquipSlot slot, Element element)
+        {
+            if (!_loadout.Enchant(slot, element)) return false;
+            PushArmor();
+            return true;
+        }
+
+        public void ClearEnchant(EquipSlot slot) { _loadout.ClearEnchant(slot); PushArmor(); }
+
+        // Register the loadout's elemental resistances on the player's body. The delegate reads live loadout state,
+        // so equipping/enchanting after this is reflected automatically; we just (re)bind it defensively.
+        private Damageable _body;
+        private void Start() => PushArmor();
+        private void PushArmor()
+        {
+            if (_body == null)
+                _body = GetComponent<Damageable>() ?? GetComponentInParent<Damageable>() ?? GetComponentInChildren<Damageable>();
+            if (_body == null) // fallback: bind to the player's own Damageable wherever this controller lives
+            {
+                var combat = FindObjectOfType<PlayerCombatController>();
+                if (combat != null) _body = combat.GetComponentInParent<Damageable>();
+            }
+            if (_body != null) _body.IncomingElementScale = _loadout.IncomingMultiplier;
+        }
+
         public void CaptureInto(SaveData d)
         {
             if (d == null) return;
             d.equippedSlots.Clear();
             foreach (var s in _loadout.ToSave()) d.equippedSlots.Add(s);
+            d.equippedEnchants.Clear();
+            foreach (var s in _loadout.ToSaveEnchants()) d.equippedEnchants.Add(s);
         }
 
         public void RestoreFrom(SaveData d)
         {
             if (d == null) return;
             _loadout.Load(d.equippedSlots);
+            _loadout.LoadEnchants(d.equippedEnchants); // after Load(worn) so enchants on empty slots drop
             ProgressionController.Instance?.RefreshBonus();
+            PushArmor();
         }
     }
 }

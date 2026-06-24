@@ -74,12 +74,7 @@ namespace Elementborn.Game
                 target.Apply(new DamageInfo(outcome.Damage, outcome.Element, outcome.Variant));
                 if (!outcome.Status.IsEmpty) target.ApplyStatus(outcome.Status);
                 if (outcome.Knockback > 0f)
-                {
-                    Vector3 away = col.transform.position - impact;
-                    away.y = 0f;
-                    Vector3 push = away.sqrMagnitude > 0.0001f ? away.normalized : dir;
-                    target.ApplyKnockback(push * outcome.Knockback);
-                }
+                    target.ApplyKnockback(KnockbackImpulse.Radial(col.transform.position, impact, outcome.Knockback));
                 FactionMember.RegisterHit(col.gameObject, gameObject);
             }
         }

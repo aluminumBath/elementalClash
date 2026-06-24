@@ -200,11 +200,13 @@ namespace Elementborn.Game
             QuestController.Instance?.CaptureInto(d);
             ProgressionController.Instance?.CaptureInto(d);
             GrimoireController.Instance?.CaptureInto(d);
+            PlayerAttunementHud.Instance?.CaptureInto(d);
             MapState.Instance?.CaptureInto(d);
             CheckpointState.Instance?.CaptureInto(d);
             AchievementController.Instance?.CaptureInto(d);
             EquipmentController.Instance?.CaptureInto(d);
             SummonController.Instance?.CaptureInto(d);
+            StoryController.Instance?.CaptureInto(d);
             return d;
         }
 
@@ -263,11 +265,13 @@ namespace Elementborn.Game
             QuestController.Instance?.RestoreFrom(d);
             ProgressionController.Instance?.RestoreFrom(d);
             GrimoireController.Instance?.RestoreFrom(d);
+            PlayerAttunementHud.Instance?.RestoreFrom(d);
             MapState.Instance?.RestoreFrom(d);
             CheckpointState.Instance?.RestoreFrom(d);
             AchievementController.Instance?.RestoreFrom(d);
             EquipmentController.Instance?.RestoreFrom(d);
             SummonController.Instance?.RestoreFrom(d);
+            StoryController.Instance?.RestoreFrom(d);
 
             WalletChanged?.Invoke();
             OwnedChanged?.Invoke();
