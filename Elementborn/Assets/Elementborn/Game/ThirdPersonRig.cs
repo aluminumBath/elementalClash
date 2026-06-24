@@ -47,6 +47,10 @@ namespace Elementborn.Game
             _yaw = transform.eulerAngles.y;
             Cursor.lockState = CursorLockMode.Locked;
 
+            // Combat camera shake on the flat third-person camera (never the VR rig — headset shake = nausea).
+            if (rigCamera != null && rigCamera.GetComponent<Feel.CameraShaker>() == null)
+                rigCamera.gameObject.AddComponent<Feel.CameraShaker>();
+
             // Player model lives on the turnable body: a rigged humanoid if present, else the static mesh.
             var modelHost = body != null ? body.gameObject : gameObject;
             if (modelHost.GetComponent<PlayerModelBinder>() == null) modelHost.AddComponent<PlayerModelBinder>();
