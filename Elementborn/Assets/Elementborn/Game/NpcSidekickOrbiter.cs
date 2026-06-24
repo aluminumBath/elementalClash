@@ -1,4 +1,5 @@
 using UnityEngine;
+using Elementborn.Core;
 
 namespace Elementborn.Game
 {
@@ -16,6 +17,9 @@ namespace Elementborn.Game
         [SerializeField] private float height = 1.7f;
         [SerializeField] private float bob = 0.15f;
         [SerializeField] private float phaseDegrees = 0f;
+        [Header("Optional model")]
+        [SerializeField] private bool useSidekickModel = false;
+        [SerializeField] private WillowSidekick sidekick = WillowSidekick.Gunnar;
 
         private float _angle;
 
@@ -23,6 +27,8 @@ namespace Elementborn.Game
         {
             if (anchor == null && transform.parent != null) anchor = transform.parent;
             _angle = phaseDegrees;
+            if (useSidekickModel)
+                ModelLibrary.Attach(SidekickModelNames.ResourcePath(sidekick), gameObject, "Sidekick");
         }
 
         private void Update()

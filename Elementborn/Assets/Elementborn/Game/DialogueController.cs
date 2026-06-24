@@ -107,7 +107,13 @@ namespace Elementborn.Game
             UiTheme.Button(_content, "Goodbye", Hide, 200, 46);
         }
 
-        private static string RewardText(QuestState s) =>
-            s.Definition.Reward.Amount > 0 ? (s.Definition.Reward.Amount + " " + s.Definition.Reward.Currency) : "—";
+        private static string RewardText(QuestState s)
+        {
+            var r = s.Definition.Reward;
+            string txt = "";
+            if (r.Amount > 0) txt = r.Amount + " " + r.Currency;
+            if (r.Sigils > 0) txt = (txt.Length > 0 ? txt + ", " : "") + r.Sigils + " Sigils";
+            return txt.Length > 0 ? txt : "—";
+        }
     }
 }

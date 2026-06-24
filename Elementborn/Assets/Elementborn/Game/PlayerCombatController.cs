@@ -123,9 +123,16 @@ namespace Elementborn.Game
             if (FactionMembership.Instance != null)
                 outcome = outcome.Scaled(FactionMembership.Instance.OffenseMultiplier);
 
+            if (EquipmentController.Instance != null)
+                outcome = outcome.Scaled(EquipmentController.Instance.OffenseMultiplier); // worn gear
+
             Vector3 origin = castOrigin ? castOrigin.position : transform.position;
             // VFX binder, melee, dash, and Sanguine Grip controllers all listen to this.
             OutcomeReady?.Invoke(outcome, origin);
+
+            if (outcome.Damage > 0f) // the move's final damage total (after weather/faction/gear scaling)
+                GameEventLogger.Instance?.LogMath("cast_damage", outcome.Damage,
+                    $"element={outcome.Element};variant={outcome.Variant};kind={outcome.Kind}");
 
             if (_loadout.IsChanneler) // grimoire: reveal the Attacks entry for this element × intent
                 QuestEvents.RaiseAbilityCast(outcome.Element.ToString(), intent.Type.ToString());

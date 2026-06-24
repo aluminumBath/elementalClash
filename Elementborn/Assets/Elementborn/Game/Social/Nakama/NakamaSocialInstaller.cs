@@ -34,6 +34,9 @@ namespace Elementborn.Game.Social.NakamaNet
             try { await _connection.ConnectAsync(SystemInfo.deviceUniqueIdentifier); }
             catch (System.Exception e) { Debug.LogError("[Nakama] connect failed: " + e.Message); return; }
 
+            // Route session event logs to Neon via the server RPC (before identity, so the login event lands too).
+            GameEventLogger.Instance?.SetSink(new NeonEventSink(_connection));
+
             var hub = SocialHub.Instance;
             if (hub != null)
                 hub.SetIdentity(_connection.UserId, _connection.Username ?? "Player", UserRole.Player, hub.CurrentSessionId);

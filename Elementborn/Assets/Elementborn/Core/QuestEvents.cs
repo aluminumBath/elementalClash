@@ -20,6 +20,11 @@ namespace Elementborn.Core
         // Element + IntentType, both as .ToString(). Raised at each resolved channeler cast; the grimoire
         // uses it to reveal Attacks entries (and to glimpse the matching base bloodline).
         public static event Action<string, string> AbilityCast;
+        // Raised once per Summon Beacon roll (a x1 or x10 both count once); payload is a representative creature.
+        public static event Action<string> SummonPerformed;
+        public static event Action<string> ItemEquipped;   // gear item id
+        public static event Action<string> ItemCrafted;    // crafted output item id
+        public static event Action<string> FeaturedClaimed; // featured creature claimed with Motes
 
         public static void RaiseCreatureDefeated(string creatureKind) => CreatureDefeated?.Invoke(creatureKind);
         public static void RaiseCreatureTamed(string creatureKind) => CreatureTamed?.Invoke(creatureKind);
@@ -29,5 +34,9 @@ namespace Elementborn.Core
         public static void RaiseTalkedToNpc(string npcId) => TalkedToNpc?.Invoke(npcId);
         public static void RaiseQuestCompleted(string questId) => QuestCompleted?.Invoke(questId);
         public static void RaiseAbilityCast(string element, string intent) => AbilityCast?.Invoke(element, intent);
+        public static void RaiseSummonPerformed(string creatureKind) => SummonPerformed?.Invoke(creatureKind);
+        public static void RaiseItemEquipped(string itemId) => ItemEquipped?.Invoke(itemId);
+        public static void RaiseItemCrafted(string itemId) => ItemCrafted?.Invoke(itemId);
+        public static void RaiseFeaturedClaimed(string creatureKind) => FeaturedClaimed?.Invoke(creatureKind);
     }
 }

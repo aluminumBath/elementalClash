@@ -40,6 +40,7 @@ namespace Elementborn.Game
             {
                 GameHud.Instance?.Toast("Respawn point set — " + checkpointName);
                 AudioController.Instance?.Confirm();
+                GameEventLogger.Instance?.LogSpawn(checkpointName);
             }
         }
     }

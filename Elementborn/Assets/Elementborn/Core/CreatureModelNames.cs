@@ -1,0 +1,57 @@
+using System.Collections.Generic;
+
+namespace Elementborn.Core
+{
+    /// <summary>
+    /// Resolves where a creature's display model lives under <c>Resources</c>. Pure (no Unity) so the mapping is
+    /// unit-tested; <see cref="T:Elementborn.Game.CreatureModelLibrary"/> does the actual <c>Resources.Load</c>.
+    /// By default a kind maps to a prefab named exactly after the enum
+    /// (e.g. <c>Resources/Models/Creatures/Phoenix</c>). If your model files are named differently — say by colour
+    /// and shape — add an entry to <see cref="Aliases"/> pointing the kind at your file name. That single line is
+    /// the only code change needed to bind a model to a creature.
+    /// </summary>
+    public static class CreatureModelNames
+    {
+        /// <summary>Resources sub-path (relative to any <c>Resources/</c> folder) that all creature models live under.</summary>
+        public const string ResourceRoot = "Models/Creatures/";
+
+        /// <summary>
+        /// Kind → model file name, for models <i>not</i> named after the enum. Empty by default. Example:
+        /// <c>{ CreatureKind.Phoenix, "ember_bird_red" }</c> binds Phoenix to
+        /// <c>Resources/Models/Creatures/ember_bird_red</c>.
+        /// </summary>
+        public static readonly IReadOnlyDictionary<CreatureKind, string> Aliases = new Dictionary<CreatureKind, string>
+        {
+            // CreatureKind            ->  model at Resources/Models/Creatures/<value>(.fbx). The "<name>/<name>"
+            // form keeps each model (fbx + its textures) in its own folder so Meshy texture files can't collide.
+            // Edit freely — this map is the single source of truth; unmapped kinds fall back to a primitive.
+            { CreatureKind.WaterDragon, "Azure_Wave_Dragon/Azure_Wave_Dragon" },
+            { CreatureKind.Phoenix,     "Fire_Phoenix/Fire_Phoenix" },
+            { CreatureKind.Thunderbird, "Thunderbird/Thunderbird" },
+            { CreatureKind.Roc,         "Giant_Eagle/Giant_Eagle" },
+            { CreatureKind.Dog,         "Patchwork_Pup/Patchwork_Pup" },
+            { CreatureKind.Spider,      "Antler_Spider_Creature/Antler_Spider_Creature" },
+            { CreatureKind.Crab,        "Coral_Crab_Spider/Coral_Crab_Spider" },
+            { CreatureKind.Snake,       "Teal_Serpent/Teal_Serpent" },
+            { CreatureKind.EarthCat,    "Leaf_Cub/Leaf_Cub" },
+            { CreatureKind.Horse,       "Blue_Dino_Mount/Blue_Dino_Mount" },
+            { CreatureKind.Goldkoi,     "Blue_Gold_Tuna/Blue_Gold_Tuna" },
+            { CreatureKind.Skimfin,     "Teal_Fantasy_Fish/Teal_Fantasy_Fish" },
+            { CreatureKind.Gillcloak,   "Abyss_Angler/Abyss_Angler" },
+            { CreatureKind.Tidewarden,  "Purple_Kraken/Purple_Kraken" },
+            { CreatureKind.Direstalker, "Shadow_Wolf/Shadow_Wolf" },
+            { CreatureKind.Skytyrant,   "Storm_Wyvern/Storm_Wyvern" },
+            { CreatureKind.Ridgewing,   "Blue_Fantasy_Bird/Blue_Fantasy_Bird" },
+            { CreatureKind.Glidewisp,   "Fawn_Sprite/Fawn_Sprite" },
+            // No close model in this batch (primitive fallback stays): FireDragon, Mermaid, EarthMole,
+            // AirDragonfly, AirJellyfish, WaterCat, IceCat, ElectricSquirrel, Eel, Monkey, Crocodile, Rhino, Tiger.
+        };
+
+        /// <summary>The bare file name (no path, no extension) of a kind's model prefab.</summary>
+        public static string ResourceName(CreatureKind kind) =>
+            Aliases.TryGetValue(kind, out var name) && !string.IsNullOrEmpty(name) ? name : kind.ToString();
+
+        /// <summary>The full Resources path passed to <c>Resources.Load</c> for a kind's model.</summary>
+        public static string ResourcePath(CreatureKind kind) => ResourceRoot + ResourceName(kind);
+    }
+}

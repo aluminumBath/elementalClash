@@ -81,6 +81,15 @@ namespace Elementborn.Game
             return true;
         }
 
+        /// <summary>Grant ownership of a creature directly (used by the Summon Beacon). Returns true if it was new
+        /// (a duplicate returns false, letting the caller refund Motes instead).</summary>
+        public bool GrantOwned(CreatureKind kind)
+        {
+            if (!_owned.Add(kind)) return false;
+            OwnedChanged?.Invoke();
+            return true;
+        }
+
         /// <summary>Whether the player's element lets them use this creature.</summary>
         public bool CanUse(CreatureInfo info)
         {
@@ -193,6 +202,9 @@ namespace Elementborn.Game
             GrimoireController.Instance?.CaptureInto(d);
             MapState.Instance?.CaptureInto(d);
             CheckpointState.Instance?.CaptureInto(d);
+            AchievementController.Instance?.CaptureInto(d);
+            EquipmentController.Instance?.CaptureInto(d);
+            SummonController.Instance?.CaptureInto(d);
             return d;
         }
 
@@ -253,6 +265,9 @@ namespace Elementborn.Game
             GrimoireController.Instance?.RestoreFrom(d);
             MapState.Instance?.RestoreFrom(d);
             CheckpointState.Instance?.RestoreFrom(d);
+            AchievementController.Instance?.RestoreFrom(d);
+            EquipmentController.Instance?.RestoreFrom(d);
+            SummonController.Instance?.RestoreFrom(d);
 
             WalletChanged?.Invoke();
             OwnedChanged?.Invoke();

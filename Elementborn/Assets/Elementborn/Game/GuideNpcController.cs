@@ -30,7 +30,11 @@ namespace Elementborn.Game
 
         public GuideNpcInfo Info => _info;
 
-        private void Start() => _info = NpcCatalog.For(id);
+        private void Start()
+        {
+            _info = NpcCatalog.For(id);
+            ModelLibrary.Attach(NpcModelNames.ResourcePath(id), gameObject, "Npc");
+        }
 
         private void OnEnable() { InputBindings.Enable(); InteractionArbiter.Register(this); }
         private void OnDisable() => InteractionArbiter.Unregister(this);

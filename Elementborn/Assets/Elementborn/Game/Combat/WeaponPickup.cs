@@ -20,6 +20,8 @@ namespace Elementborn.Game
             material = weaponMaterial;
         }
 
+        private void Start() => ModelLibrary.Attach(WeaponModelNames.ResourcePath(type), gameObject, "Weapon");
+
         private void Reset()
         {
             var col = GetComponent<Collider>();

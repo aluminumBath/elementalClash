@@ -42,6 +42,7 @@ namespace Elementborn.Game
         private float _retargetTimer;
         private float _attackTimer;
         private bool _sighted; // grimoire: glimpse this kind the first time the player gets close
+        private readonly IRandomSource _lootRng = new SystemRandomSource(); // per-creature loot rolls
 
         public void Configure(CreatureKind newKind)
         {
@@ -62,12 +63,30 @@ namespace Elementborn.Game
         {
             Apply();
             if (_self != null && _self.Health != null) _self.Health.Died += OnDefeated;
+            CreatureModelLibrary.Attach(kind, gameObject); // real model if present in Resources, else keep placeholder
         }
 
         private void OnDefeated()
         {
             QuestEvents.RaiseCreatureDefeated(kind.ToString());
-            PlayerInventory.Instance?.AddItem("hide", 1); // simple loot drop
+            GrantLoot();
+        }
+
+        private void GrantLoot()
+        {
+            var pi = PlayerInventory.Instance;
+            if (pi == null) return;
+            var drops = LootTables.For(kind).Roll(_lootRng);
+            if (drops.Count == 0) return;
+
+            var sb = new System.Text.StringBuilder("Looted:");
+            foreach (var d in drops)
+            {
+                pi.AddItem(d.ItemId, d.Count);
+                var def = ItemCatalog.Get(d.ItemId);
+                sb.Append(' ').Append(def != null ? def.Name : d.ItemId).Append(" x").Append(d.Count);
+            }
+            GameHud.Instance?.Toast(sb.ToString());
         }
 
         private void OnDestroy()

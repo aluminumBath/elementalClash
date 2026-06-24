@@ -72,6 +72,11 @@ namespace Elementborn.Core
             // Treasure (sell-only fodder).
             Add(new ItemDef("old_relic", "Old Relic", "Worth something to the right buyer.", ItemCategory.Treasure, 40));
 
+            // Crafted (made at no shop, only via recipes — see Crafting.cs).
+            Add(new ItemDef("tough_leather", "Tough Leather", "Cured and layered hide, far tougher than the raw skin.", ItemCategory.Material, 22));
+            Add(new ItemDef("elixir_of_vigor", "Elixir of Vigor", "Restores body and stamina at once.", ItemCategory.Consumable, 60));
+            Add(new ItemDef("elemental_charm", "Elemental Charm", "A charm humming with all four elements.", ItemCategory.Treasure, 140));
+
             return d;
         }
     }
@@ -132,10 +137,30 @@ namespace Elementborn.Core
     }
 
     /// <summary>Pure shop transactions over an <see cref="Inventory"/> and a <see cref="Wallet"/>. Prices come from
-    /// the catalog; buy-back is at <see cref="SellFraction"/>. Nothing changes on a failed transaction.</summary>
+    /// the catalog; buy-back is category-aware (see <see cref="SellFractionFor"/>). Nothing changes on a failed
+    /// transaction.</summary>
     public static class Shop
     {
+        /// <summary>Default buy-back fraction, used for any category without a specific rate.</summary>
         public const float SellFraction = 0.5f;
+
+        /// <summary>
+        /// Buy-back fraction by category. Treasure is sell-only fodder, so it fetches near full price; tools and
+        /// consumables take a steeper resale haircut; crafting stock and food sell at the base rate. Every
+        /// fraction is below 1.0, so buying then re-selling is always a loss (no arbitrage loop).
+        /// </summary>
+        public static float SellFractionFor(ItemCategory category)
+        {
+            switch (category)
+            {
+                case ItemCategory.Treasure:   return 0.9f;
+                case ItemCategory.Tool:       return 0.4f;
+                case ItemCategory.Consumable: return 0.4f;
+                case ItemCategory.Material:   return SellFraction;
+                case ItemCategory.Food:       return SellFraction;
+                default:                      return SellFraction;
+            }
+        }
 
         public static int BuyPrice(string itemId)
         {
@@ -146,7 +171,8 @@ namespace Elementborn.Core
         public static int SellPrice(string itemId)
         {
             var def = ItemCatalog.Get(itemId);
-            return def != null ? Math.Max(1, (int)(def.Value * SellFraction)) : 0;
+            if (def == null) return 0;
+            return Math.Max(1, (int)(def.Value * SellFractionFor(def.Category)));
         }
 
         public static ShopResult Buy(Inventory inventory, Wallet wallet, string itemId, int count = 1)

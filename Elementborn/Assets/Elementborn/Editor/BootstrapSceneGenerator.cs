@@ -114,6 +114,26 @@ namespace Elementborn.EditorTools
             var grimoire = new GameObject("Grimoire");
             Add(grimoire, "GrimoireController");
 
+            // Achievements: a milestone tracker off the QuestEvents bus + a viewer (press K).
+            var achievements = new GameObject("Achievements");
+            Add(achievements, "AchievementController");
+            Add(achievements, "AchievementsViewer");
+
+            // Crafting overlay (press B): turn loot materials into gear/consumables via recipes.
+            var crafting = new GameObject("Crafting");
+            Add(crafting, "CraftingViewer");
+
+            // Equipment (press V): wear crafted/looted gear for max-health + power bonuses.
+            var equipment = new GameObject("Equipment");
+            Add(equipment, "EquipmentController");
+            Add(equipment, "EquipmentViewer");
+
+            // Summon Beacon (press U): currency-gated gacha — spend Sigils to roll companions & mounts into the
+            // roster, dust duplicates into Motes, claim a featured creature with Motes.
+            var summon = new GameObject("Summon");
+            Add(summon, "SummonController");
+            Add(summon, "SummonViewer");
+
             // Map systems: leyline state + always-on minimap + full map viewer (press M, also opened from a rift).
             var map = new GameObject("Map");
             Add(map, "MapState");

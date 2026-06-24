@@ -5,7 +5,7 @@ namespace Elementborn.Core
 {
     /// <summary>What a quest objective tracks. Targets are matched by name (a CreatureKind, a Currency, or an
     /// NpcId); an empty target means "any".</summary>
-    public enum ObjectiveKind { DefeatCreature, TameCreature, CollectCurrency, CollectItem, TalkToNpc }
+    public enum ObjectiveKind { DefeatCreature, TameCreature, CollectCurrency, CollectItem, TalkToNpc, CastAbility, SummonCreature, EquipItem, CraftItem, ClaimFeatured }
 
     public sealed class QuestObjective
     {
@@ -24,11 +24,12 @@ namespace Elementborn.Core
     {
         public Currency Currency { get; }
         public int Amount { get; }
+        public int Sigils { get; }     // optional Summon Beacon pull currency (0 = none)
         public string Note { get; }   // optional flavour line shown on turn-in
 
-        public QuestReward(Currency currency, int amount, string note = null)
+        public QuestReward(Currency currency, int amount, string note = null, int sigils = 0)
         {
-            Currency = currency; Amount = amount < 0 ? 0 : amount; Note = note;
+            Currency = currency; Amount = amount < 0 ? 0 : amount; Sigils = sigils < 0 ? 0 : sigils; Note = note;
         }
     }
 
@@ -40,12 +41,15 @@ namespace Elementborn.Core
         public string GiverNpcId { get; }   // GuideNpcId.ToString()
         public IReadOnlyList<QuestObjective> Objectives { get; }
         public QuestReward Reward { get; }
+        public IReadOnlyList<string> Prerequisites { get; }   // quest ids that must be Completed first (empty = none)
 
         public QuestDefinition(string id, string title, string summary, string giverNpcId,
-                               IReadOnlyList<QuestObjective> objectives, QuestReward reward)
+                               IReadOnlyList<QuestObjective> objectives, QuestReward reward,
+                               IReadOnlyList<string> prerequisites = null)
         {
             Id = id; Title = title; Summary = summary; GiverNpcId = giverNpcId;
             Objectives = objectives; Reward = reward;
+            Prerequisites = prerequisites ?? Array.Empty<string>();
         }
     }
 
@@ -93,7 +97,27 @@ namespace Elementborn.Core
         public QuestState Get(string id) => _states.TryGetValue(id, out var s) ? s : null;
         public IReadOnlyList<QuestState> All() => new List<QuestState>(_states.Values);
 
-        public IReadOnlyList<QuestState> AvailableFrom(string npcId) => Filter(npcId, QuestStatus.NotStarted);
+        public IReadOnlyList<QuestState> AvailableFrom(string npcId)
+        {
+            var list = new List<QuestState>();
+            foreach (var s in _states.Values)
+                if (s.Definition.GiverNpcId == npcId && s.Status == QuestStatus.NotStarted && PrerequisitesMet(s.Definition.Id))
+                    list.Add(s);
+            return list;
+        }
+
+        /// <summary>True if every prerequisite quest of <paramref name="id"/> is Completed (or it has none).</summary>
+        public bool PrerequisitesMet(string id)
+        {
+            var s = Get(id);
+            if (s == null) return false;
+            foreach (var pre in s.Definition.Prerequisites)
+            {
+                var ps = Get(pre);
+                if (ps == null || ps.Status != QuestStatus.Completed) return false;
+            }
+            return true;
+        }
         public IReadOnlyList<QuestState> ActiveFrom(string npcId) => Filter(npcId, QuestStatus.Active);
         public IReadOnlyList<QuestState> TurnInsFor(string npcId) => Filter(npcId, QuestStatus.ReadyToTurnIn);
 
@@ -118,6 +142,7 @@ namespace Elementborn.Core
         {
             var s = Get(id);
             if (s == null || s.Status != QuestStatus.NotStarted) return false;
+            if (!PrerequisitesMet(id)) return false;
             s.Status = QuestStatus.Active;
             Changed?.Invoke();
             return true;

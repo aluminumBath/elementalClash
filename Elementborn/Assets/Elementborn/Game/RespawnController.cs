@@ -48,6 +48,7 @@ namespace Elementborn.Game
         {
             if (_respawning) return;
             _respawning = true;
+            GameEventLogger.Instance?.LogStatus("health", player.Health.Current); // 0 — marks the death
             StartCoroutine(RespawnRoutine());
         }
 
@@ -67,15 +68,16 @@ namespace Elementborn.Game
 
             // Respawn priority: an activated checkpoint (the player's most recent "respawn here") wins, then a
             // claimed house, then the scene's spawn point.
-            Vector3 home;
+            Vector3 home; string source;
             if (CheckpointState.Instance != null && CheckpointState.Instance.TryActivePosition(out var cp))
-                home = cp;
+            { home = cp; source = "checkpoint"; }
             else if (PlayerInventory.Instance != null && PlayerInventory.Instance.HasHouse)
-                home = PlayerInventory.Instance.HouseLocation;
+            { home = PlayerInventory.Instance.HouseLocation; source = "house"; }
             else
-                home = _spawnPos;
+            { home = _spawnPos; source = "spawn"; }
             Teleport(home, _spawnRot);
             player.Health.Revive();
+            GameEventLogger.Instance?.LogRespawn($"{source}@{home.x:F0},{home.y:F0},{home.z:F0}");
             _overlayRoot.SetActive(false);
             SetControl(true);
             _respawning = false;

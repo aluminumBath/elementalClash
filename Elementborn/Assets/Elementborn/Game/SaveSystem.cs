@@ -62,6 +62,43 @@ namespace Elementborn.Game
         // Checkpoints: activated shrine ids + the active respawn anchor.
         public List<string> activatedCheckpoints = new List<string>();
         public string activeCheckpoint = "";
+
+        // Achievements: parallel lists mirroring AchievementProgress.ToSave() ("metric|param" -> count).
+        public List<string> achievementKeys = new List<string>();
+        public List<int> achievementCounts = new List<int>();
+
+        // Equipment: worn item id per slot (enum order; "" = empty).
+        public List<string> equippedSlots = new List<string>();
+
+        // Summon Beacon (gacha): the two summon resources plus per-banner pity state (parallel lists, by banner id).
+        public int summonSigils;
+        public int summonMotes;
+        public bool summonSeeded;   // has the one-time starter Sigil grant been applied?
+        public List<string> summonBannerIds = new List<string>();
+        public List<int> summonPity = new List<int>();
+        public List<int> summonGuaranteed = new List<int>();   // 1 = next Legendary is a guaranteed featured
+        public List<int> summonTotalPulls = new List<int>();
+
+        // Summon Beacon lifetime stats (all banners): pulls, per-tier counts, featured wins, Sigils spent, Motes earned.
+        public int summonStatPulls;
+        public int summonStatRare;
+        public int summonStatEpic;
+        public int summonStatLegendary;
+        public int summonStatFeaturedWins;
+        public int summonStatSigilsSpent;
+        public int summonStatMotesEarned;
+
+        // Recent-pulls log (newest first): the last few notable summons (Epic+). Parallel lists.
+        public List<string> summonHistKinds = new List<string>();
+        public List<int> summonHistRarity = new List<int>();
+        public List<int> summonHistFeatured = new List<int>();
+        public List<string> summonHistBanner = new List<string>();
+        public List<string> summonHistTicks = new List<string>();   // UTC ticks as string (JsonUtility-safe)
+
+        // Daily free summon.
+        public bool summonDailyClaimed;
+        public string summonDailyTicks = "0";   // UTC ticks of last claim, as string
+        public int summonLoginStreak;           // consecutive-day claim streak
     }
 
     /// <summary>

@@ -10,7 +10,9 @@ namespace Elementborn.Game
         UiClick, UiConfirm, UiBack,
         FireExplosion, FireBurn, WaterSplash, RockBreak, WindWhoosh,
         IceCrack, ZapLightning, MetalClang, HitSoft, WhooshShort,
-        LevelUp, Coin, Pickup, MusicCalm
+        LevelUp, Coin, Pickup, MusicCalm,
+        Footstep, FootstepWater, Jump, Land,
+        SummonPull, SummonRare, SummonEpic, SummonLegendary
     }
 
     /// <summary>
@@ -35,6 +37,10 @@ namespace Elementborn.Game
             { SfxKind.HitSoft, "hit_soft" }, { SfxKind.WhooshShort, "whoosh_short" },
             { SfxKind.LevelUp, "level_up" }, { SfxKind.Coin, "coin" }, { SfxKind.Pickup, "pickup" },
             { SfxKind.MusicCalm, "music_calm" },
+            { SfxKind.Footstep, "footstep" }, { SfxKind.FootstepWater, "footstep_water" },
+            { SfxKind.Jump, "jump" }, { SfxKind.Land, "land" },
+            { SfxKind.SummonPull, "summon_pull" }, { SfxKind.SummonRare, "summon_rare" },
+            { SfxKind.SummonEpic, "summon_epic" }, { SfxKind.SummonLegendary, "summon_legendary" },
         };
 
         private readonly Dictionary<SfxKind, AudioClip> _clips = new Dictionary<SfxKind, AudioClip>();
@@ -114,6 +120,16 @@ namespace Elementborn.Game
         public void LevelUp() => Play(SfxKind.LevelUp);
         public void Coin() => Play(SfxKind.Coin);
         public void Pickup() => Play(SfxKind.Pickup, 0.8f);
+        public void Footstep(Vector3 pos, bool water = false) => PlayAt(water ? SfxKind.FootstepWater : SfxKind.Footstep, pos, 0.7f);
+        public void Land(Vector3 pos) => PlayAt(SfxKind.Land, pos, 0.9f);
+        public void Jump(Vector3 pos) => PlayAt(SfxKind.Jump, pos, 0.8f);
+
+        /// <summary>The Beacon's "cast" whoosh, played when a summon is rolled.</summary>
+        public void SummonPull() => Play(SfxKind.SummonPull);
+
+        /// <summary>The reveal sting for a summon's best tier (louder for a Legendary).</summary>
+        public void SummonReveal(SummonRarity rarity) =>
+            Play(SfxForSummon(rarity), rarity == SummonRarity.Legendary ? 1f : 0.9f);
 
         // ---- ambient bed -----------------------------------------------------------------
         public void Ambient(SfxKind kind, float volume = 1f)
@@ -151,6 +167,17 @@ namespace Elementborn.Game
             if (o.Kind == OutcomeKind.Barrier) return SfxKind.MetalClang;
             if (o.Kind == OutcomeKind.Movement) return SfxKind.WhooshShort;
             return SfxForElement(o.Element);
+        }
+
+        /// <summary>The reveal sting that matches a summon tier. Pure, so it's unit-tested.</summary>
+        public static SfxKind SfxForSummon(SummonRarity rarity)
+        {
+            switch (rarity)
+            {
+                case SummonRarity.Legendary: return SfxKind.SummonLegendary;
+                case SummonRarity.Epic:      return SfxKind.SummonEpic;
+                default:                     return SfxKind.SummonRare;
+            }
         }
     }
 }

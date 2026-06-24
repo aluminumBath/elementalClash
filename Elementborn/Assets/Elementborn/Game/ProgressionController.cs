@@ -74,6 +74,7 @@ namespace Elementborn.Game
         private void OnLeveledUp(int levels)
         {
             Perks.Grant(levels);
+            GameEventLogger.Instance?.LogStatus("level", Progression.Level);
             int reward = Mathf.RoundToInt(20 * Progression.Level * Perks.RewardMultiplier);
             PlayerInventory.Instance?.AddCurrency(Currency.Silver, reward);
 
@@ -107,8 +108,12 @@ namespace Elementborn.Game
             EnsureBody();
             if (_playerBody == null || _playerBody.Health == null) return;
             if (_baseMaxHealth < 0f) _baseMaxHealth = _playerBody.Health.Max; // first-seen base
-            _playerBody.SetMaxHealth(_baseMaxHealth + Progression.BonusMaxHealth + Perks.BonusMaxHealth);
+            int gear = EquipmentController.Instance != null ? EquipmentController.Instance.MaxHealthBonus : 0;
+            _playerBody.SetMaxHealth(_baseMaxHealth + Progression.BonusMaxHealth + Perks.BonusMaxHealth + gear);
         }
+
+        /// <summary>Re-apply the max-health bonus (called when perks or worn gear change).</summary>
+        public void RefreshBonus() => ApplyBonus();
 
         public void CaptureInto(SaveData data)
         {

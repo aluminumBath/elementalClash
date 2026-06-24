@@ -69,6 +69,23 @@ namespace Elementborn.Game
 
         private void Refresh() { if (_open) Rebuild(); }
 
+        private void Use(string itemId)
+        {
+            if (!Consumables.TryGet(itemId, out var effect)) return;
+            var pi = PlayerInventory.Instance;
+            if (pi == null || !pi.Items.Has(itemId, 1)) return;
+            pi.Items.Remove(itemId, 1);
+
+            var tagged = GameObject.FindGameObjectWithTag("Player");
+            var dmg = tagged != null ? tagged.GetComponentInParent<Damageable>() : null;
+            if (effect.Heal > 0 && dmg != null && dmg.Health != null) dmg.Health.Heal(effect.Heal);
+            if (effect.RefillStamina) StaminaController.Instance?.Refill();
+
+            GameHud.Instance?.Toast("Used " + (ItemCatalog.Get(itemId)?.Name ?? itemId));
+            AudioController.Instance?.Confirm();
+            Rebuild();
+        }
+
         private void Rebuild()
         {
             if (_content == null) return;
@@ -90,8 +107,16 @@ namespace Elementborn.Game
                     var def = ItemCatalog.Get(e.Key);
                     if (def == null || def.Category != cat) continue;
                     if (!headerShown) { OverlayUi.Header(_content, cat.ToString(), 22); headerShown = true; }
-                    OverlayUi.Body(_content, def.Name + "   x" + e.Value + "   (" + def.Value + " ea)", 18,
-                        new Color(0.80f, 0.82f, 0.88f, 1f));
+                    if (Consumables.IsConsumable(e.Key))
+                    {
+                        string id = e.Key; // capture for the closure
+                        UiTheme.Button(_content, def.Name + "   x" + e.Value + "    —  Use", () => Use(id), 660, 42);
+                    }
+                    else
+                    {
+                        OverlayUi.Body(_content, def.Name + "   x" + e.Value + "   (" + def.Value + " ea)", 18,
+                            new Color(0.80f, 0.82f, 0.88f, 1f));
+                    }
                 }
             }
         }

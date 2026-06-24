@@ -46,7 +46,7 @@ namespace Elementborn.Game
 
         private void Build()
         {
-            var p = OverlayUi.Panel("VrOverlayHubCanvas", "Menu", 58, new Vector2(580, 760), Hide);
+            var p = OverlayUi.Panel("VrOverlayHubCanvas", "Menu", 58, new Vector2(580, 800), Hide);
             _canvas = p.canvas;
             var content = p.content;
 
@@ -57,6 +57,9 @@ namespace Elementborn.Game
             Entry(content, "Social",    () => FindObjectOfType<SocialMenuController>()?.Open());
             Entry(content, "Character", () => FindObjectOfType<CharacterScreenController>()?.Open());
             Entry(content, "Settings",  () => FindObjectOfType<SettingsController>()?.Open());
+            Entry(content, "Achievements", () => FindObjectOfType<AchievementsViewer>()?.Open());
+            Entry(content, "Crafting",  () => FindObjectOfType<CraftingViewer>()?.Open());
+            Entry(content, "Summon Beacon", () => FindObjectOfType<SummonViewer>()?.Open());
             Entry(content, "Save / Load", () => FindObjectOfType<SaveSlotController>()?.Show());
 
             OverlayUi.Header(content, "Actions");
@@ -69,7 +72,7 @@ namespace Elementborn.Game
         {
             // Close the hub, then open the chosen overlay. UiTheme.Button works with the EventSystem (and, in VR,
             // the XRI ray once its raycaster is on the rig).
-            UiTheme.Button(parent, label, () => { Hide(); open?.Invoke(); }, 480, 44);
+            UiTheme.Button(parent, label, () => { Hide(); open?.Invoke(); }, 480, 42);
         }
     }
 }

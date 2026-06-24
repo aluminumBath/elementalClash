@@ -32,6 +32,11 @@ namespace Elementborn.Game
             QuestEvents.CurrencyGained += OnCurrency;
             QuestEvents.ItemCollected += OnItem;
             QuestEvents.TalkedToNpc += OnTalked;
+            QuestEvents.AbilityCast += OnCast;
+            QuestEvents.SummonPerformed += OnSummon;
+            QuestEvents.ItemEquipped += OnEquipped;
+            QuestEvents.ItemCrafted += OnCrafted;
+            QuestEvents.FeaturedClaimed += OnFeaturedClaimed;
         }
 
         private void OnDisable()
@@ -41,6 +46,11 @@ namespace Elementborn.Game
             QuestEvents.CurrencyGained -= OnCurrency;
             QuestEvents.ItemCollected -= OnItem;
             QuestEvents.TalkedToNpc -= OnTalked;
+            QuestEvents.AbilityCast -= OnCast;
+            QuestEvents.SummonPerformed -= OnSummon;
+            QuestEvents.ItemEquipped -= OnEquipped;
+            QuestEvents.ItemCrafted -= OnCrafted;
+            QuestEvents.FeaturedClaimed -= OnFeaturedClaimed;
         }
 
         private void OnDestroy() { if (Instance == this) Instance = null; }
@@ -52,6 +62,11 @@ namespace Elementborn.Game
         private void OnCurrency(string currency, int amount) => Log.Record(ObjectiveKind.CollectCurrency, currency, amount);
         private void OnItem(string itemId, int amount) => Log.Record(ObjectiveKind.CollectItem, itemId, amount);
         private void OnTalked(string npcId) => Log.Record(ObjectiveKind.TalkToNpc, npcId);
+        private void OnCast(string element, string intent) => Log.Record(ObjectiveKind.CastAbility, element);
+        private void OnSummon(string kind) => Log.Record(ObjectiveKind.SummonCreature, kind);
+        private void OnEquipped(string itemId) => Log.Record(ObjectiveKind.EquipItem, itemId);
+        private void OnCrafted(string itemId) => Log.Record(ObjectiveKind.CraftItem, itemId);
+        private void OnFeaturedClaimed(string kind) => Log.Record(ObjectiveKind.ClaimFeatured, kind);
 
         public bool StartQuest(string questId) => Log != null && Log.Start(questId);
 
@@ -62,8 +77,10 @@ namespace Elementborn.Game
             var reward = Log.TurnIn(questId);
             if (reward == null) return false;
             if (reward.Amount > 0) PlayerInventory.Instance?.AddCurrency(reward.Currency, reward.Amount);
+            if (reward.Sigils > 0) SummonController.Instance?.AddSigils(reward.Sigils);
             string msg = "Quest complete!";
             if (reward.Amount > 0) msg += "  +" + reward.Amount + " " + reward.Currency;
+            if (reward.Sigils > 0) msg += "  +" + reward.Sigils + " Sigils";
             if (!string.IsNullOrEmpty(reward.Note)) msg += "  " + reward.Note;
             GameHud.Instance?.Toast(msg);
             AudioController.Instance?.Coin();

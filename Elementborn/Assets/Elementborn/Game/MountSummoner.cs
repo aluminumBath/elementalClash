@@ -64,6 +64,7 @@ namespace Elementborn.Game
             if (_mount == null) _mount = _summoned.AddComponent<MountController>();
             _mount.Configure(Locomotion.For(kind), false, waterLevel, 1f);
             _mount.Mount(gameObject);
+            CreatureModelLibrary.Attach(kind, _summoned); // its CreatureController is disabled, so attach here
         }
 
         private void SummonVehicle(VehicleKind kind)

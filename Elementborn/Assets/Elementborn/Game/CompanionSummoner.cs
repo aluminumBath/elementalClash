@@ -47,6 +47,7 @@ namespace Elementborn.Game
                 var cc = go.GetComponent<CompanionController>();
                 if (cc == null) cc = go.AddComponent<CompanionController>();
                 cc.Configure(k);
+                CreatureModelLibrary.Attach(k, go); // real model if present, else placeholder
                 _summoned.Add(go);
             }
 
