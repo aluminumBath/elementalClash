@@ -156,3 +156,16 @@ Concrete subscribers turn the animation events above into juice — all asset-fr
 | `Feel/FlashFeedback` | `AnyImpacted` / `AnyCastReleased` | A short-lived fading point light — warm spark on impact, larger cyan burst on cast release (`Feel/TransientLight` + `Feel/LightFade`). Self-bootstrapping. |
 
 So `AttackImpact` fires shake + hit-stop + spark together; `Land` and `Hurt` shake; `CastRelease` flashes cyan. Want more? Subscribe any system to the instance events (per-character) or add a static broadcast for `Stepped`/`Swung`/`Dodged` and a matching service.
+
+## Combat impact feedback (real hits)
+
+The hooks above fire from *animation* events; this layer makes the same juice fire from *actual damage*. `Damageable.Apply` broadcasts `CombatFeedback.Hit(pos, amount, element)` on any hit ≥ 1 and `CombatFeedback.Defeated(pos, element)` on death — a tiny global channel carrying the world position, so presentation reacts without referencing the combatants:
+
+| Reactor | Reacts to | Effect |
+| --- | --- | --- |
+| `Combat/HitReaction` | its own `Damageable.Health.Damaged` | Squash-pop on the model child (`Core/HitFeedback.SquashScale`, unit-tested) + flash to white via a `MaterialPropertyBlock` (originals restored exactly, no allocations). Scales the **child**, leaving the CharacterController untouched. Required automatically on every `EnemyController`. |
+| `Feel/FlashFeedback` | `CombatFeedback.Hit` / `Defeated` | Element-tinted spark at each hit (Fire orange, Water blue, Earth green, Air pale-cyan), bigger burst on defeat. |
+| `Feel/CameraShaker` | `CombatFeedback.Hit` | Shakes only for hits **within 12 m** of the camera, scaled by strength (`Core/HitFeedback.Intensity01`) — taking damage yourself is ~0 m, so it always registers; distant skirmishes stay calm. |
+| `Feel/HitStop` | `CombatFeedback.Hit` | Punches time only for **heavy** hits (≥ ~0.5 intensity) near the main camera, so chip damage and far fights don't stutter. |
+
+Net effect: cast Fire at an enemy → it flashes white and squashes, an orange spark pops at the hit, a heavy blow briefly freezes time, and a hit near you shakes the view; on defeat a larger burst fires. Any other `Damageable` (creatures, bosses) gets the lights/shake/hit-stop for free; add `HitReaction` to give it the squash-and-flash too.

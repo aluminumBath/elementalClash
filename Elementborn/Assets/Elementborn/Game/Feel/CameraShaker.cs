@@ -23,6 +23,7 @@ namespace Elementborn.Game.Feel
             AnimationEventReceiver.AnyImpacted += OnImpact;
             AnimationEventReceiver.AnyLanded += OnLand;
             AnimationEventReceiver.AnyWasHurt += OnHurt;
+            CombatFeedback.Hit += OnCombatHit;
         }
 
         private void OnDisable()
@@ -30,11 +31,22 @@ namespace Elementborn.Game.Feel
             AnimationEventReceiver.AnyImpacted -= OnImpact;
             AnimationEventReceiver.AnyLanded -= OnLand;
             AnimationEventReceiver.AnyWasHurt -= OnHurt;
+            CombatFeedback.Hit -= OnCombatHit;
         }
 
         private void OnImpact(Vector3 _) => Shake(0.12f, 0.18f);
         private void OnLand(Vector3 _) => Shake(0.22f, 0.30f);
         private void OnHurt(Vector3 _) => Shake(0.28f, 0.35f);
+
+        // Real hits shake the view only when they land close to this camera (you're in the fight) and carry weight,
+        // so distant skirmishes stay calm. Strength scales the shake; taking damage yourself is ~0 m away.
+        private void OnCombatHit(Vector3 pos, float amount, Element _)
+        {
+            if ((pos - transform.position).sqrMagnitude > 144f) return; // ignore hits > 12 m away
+            float i = HitFeedback.Intensity01(amount, 40f);
+            if (i < 0.15f) return;
+            Shake(0.06f + 0.16f * i, 0.16f + 0.16f * i);
+        }
 
         /// <summary>Trigger a shake. A stronger incoming shake takes over a weaker one already in progress.</summary>
         public void Shake(float amplitude, float duration)

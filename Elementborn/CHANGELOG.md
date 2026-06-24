@@ -7,6 +7,13 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Combat impact feedback**: real damage now drives the game-feel layer. `Damageable` broadcasts a global
+  `CombatFeedback.Hit`/`Defeated` (world position + amount + element); `Combat/HitReaction` (auto-required on every
+  `EnemyController`) squash-pops the struck model and flashes it white via a MaterialPropertyBlock (originals
+  restored, no allocations, CharacterController untouched); `Feel/FlashFeedback` pops an element-tinted spark per
+  hit and a burst on defeat; `Feel/CameraShaker` shakes for nearby hits and `Feel/HitStop` punches time for heavy
+  nearby hits — both gated by distance + strength (`Core/HitFeedback`, unit-tested) so distant/light hits stay
+  calm. See `docs/MODELS.md`.
 - **Game-feel subscribers**: concrete, asset-free reactions to the animation events — `Feel/CameraShaker`
   (decaying screen shake via unit-tested `Core/ShakeOffset`; third-person camera only, post-rig execution order,
   unscaled), `Feel/HitStop` (brief `Time.timeScale` dip on impact), and `Feel/FlashFeedback` (fading point-light

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Elementborn.Core;
 
 namespace Elementborn.Game.Feel
 {
@@ -23,10 +24,20 @@ namespace Elementborn.Game.Feel
             _instance = go.AddComponent<HitStop>();
         }
 
-        private void OnEnable() { AnimationEventReceiver.AnyImpacted += OnImpact; }
-        private void OnDisable() { AnimationEventReceiver.AnyImpacted -= OnImpact; }
+        private void OnEnable() { AnimationEventReceiver.AnyImpacted += OnImpact; CombatFeedback.Hit += OnCombatHit; }
+        private void OnDisable() { AnimationEventReceiver.AnyImpacted -= OnImpact; CombatFeedback.Hit -= OnCombatHit; }
 
         private void OnImpact(Vector3 _) => Freeze(0.06f, 0.10f);
+
+        // Only heavy hits near the camera punch time, so routine chip damage and distant fights don't stutter.
+        private void OnCombatHit(Vector3 pos, float amount, Element _)
+        {
+            if (Time.timeScale <= 0.01f) return; // don't fight a pause
+            var cam = Camera.main;
+            if (cam != null && (pos - cam.transform.position).sqrMagnitude > 144f) return;
+            if (HitFeedback.Intensity01(amount, 55f) < 0.5f) return;
+            Freeze(0.12f, 0.05f);
+        }
 
         /// <summary>Drop time scale to <paramref name="scale"/> for <paramref name="seconds"/> real seconds.</summary>
         public void Freeze(float scale, float seconds)

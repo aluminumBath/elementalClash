@@ -58,6 +58,7 @@ namespace Elementborn.Game
             _lastSource = damage.Source;
             if (damage.Amount >= 1f) AudioController.Instance?.PlayImpact(damage.Source, transform.position);
             Health.Apply(damage);
+            if (damage.Amount >= 1f) CombatFeedback.RaiseHit(transform.position, damage.Amount, damage.Source);
         }
 
         /// <summary>A standing incoming-damage modifier (faction defense perk). Positive cuts damage, negative
@@ -94,6 +95,7 @@ namespace Elementborn.Game
         private void HandleDeath()
         {
             AudioController.Instance?.PlayImpact(_lastSource, transform.position);
+            CombatFeedback.RaiseDefeated(transform.position, _lastSource);
             if (destroyOnDeath) Destroy(gameObject);
         }
     }

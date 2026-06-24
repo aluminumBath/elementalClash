@@ -15,6 +15,7 @@ namespace Elementborn.Game
     [RequireComponent(typeof(Damageable))]
     [RequireComponent(typeof(FactionMember))]
     [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(HitReaction))]
     public sealed class EnemyController : MonoBehaviour
     {
         [SerializeField] private EnemyKind kind = EnemyKind.Grunt;
