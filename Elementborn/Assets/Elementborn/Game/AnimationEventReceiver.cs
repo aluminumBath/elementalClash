@@ -29,6 +29,13 @@ namespace Elementborn.Game
         public event Action<Vector3> WasHurt;
         public event Action<Vector3> Vocalized;
 
+        // Static broadcast channel for global "game feel" services (camera shake, hit-stop, flashes) so they can
+        // react to any character's events without holding a reference. Only the feel-relevant hooks broadcast.
+        public static event Action<Vector3> AnyImpacted;
+        public static event Action<Vector3> AnyLanded;
+        public static event Action<Vector3> AnyCastReleased;
+        public static event Action<Vector3> AnyWasHurt;
+
         public bool LastFootLeft { get; private set; }
 
         private Vector3 P => transform.position;
@@ -42,20 +49,20 @@ namespace Elementborn.Game
 
         // ---- jump / land ----
         public void Jump() { Sfx?.Jump(P); Jumped?.Invoke(P); }
-        public void Land() { Sfx?.Land(P); Landed?.Invoke(P); }
+        public void Land() { Sfx?.Land(P); Landed?.Invoke(P); AnyLanded?.Invoke(P); }
 
         // ---- melee / weapon swings ----
         public void AttackWindup() { AttackWoundUp?.Invoke(P); }                       // anticipation marker
         public void AttackSwing() { Sfx?.Play(SfxKind.WhooshShort); Swung?.Invoke(P); }
-        public void AttackImpact() { Sfx?.PlayAt(SfxKind.HitSoft, P, 0.9f); Impacted?.Invoke(P); }
+        public void AttackImpact() { Sfx?.PlayAt(SfxKind.HitSoft, P, 0.9f); Impacted?.Invoke(P); AnyImpacted?.Invoke(P); }
 
         // ---- channeling / casts ----
         public void CastCharge() { CastCharged?.Invoke(P); }                           // charge-up marker
-        public void CastRelease() { Sfx?.PlayAt(SfxKind.WindWhoosh, P, 0.9f); CastReleased?.Invoke(P); }
+        public void CastRelease() { Sfx?.PlayAt(SfxKind.WindWhoosh, P, 0.9f); CastReleased?.Invoke(P); AnyCastReleased?.Invoke(P); }
 
         // ---- reactions ----
         public void Dodge() { Sfx?.Play(SfxKind.WhooshShort, 0.6f); Dodged?.Invoke(P); }
-        public void Hurt() { Sfx?.PlayAt(SfxKind.HitSoft, P, 1f); WasHurt?.Invoke(P); }
+        public void Hurt() { Sfx?.PlayAt(SfxKind.HitSoft, P, 1f); WasHurt?.Invoke(P); AnyWasHurt?.Invoke(P); }
         public void Vocalize() { Vocalized?.Invoke(P); }                               // effort/voice marker
     }
 }
