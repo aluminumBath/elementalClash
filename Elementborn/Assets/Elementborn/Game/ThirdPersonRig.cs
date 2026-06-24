@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Elementborn.Core;
 
 namespace Elementborn.Game
 {
@@ -45,6 +46,10 @@ namespace Elementborn.Game
             }
             _yaw = transform.eulerAngles.y;
             Cursor.lockState = CursorLockMode.Locked;
+
+            // Player model lives on the turnable body: a rigged humanoid if present, else the static mesh.
+            var modelHost = body != null ? body.gameObject : gameObject;
+            if (modelHost.GetComponent<PlayerModelBinder>() == null) modelHost.AddComponent<PlayerModelBinder>();
         }
 
         private void Update()

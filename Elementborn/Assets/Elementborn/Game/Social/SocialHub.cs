@@ -64,6 +64,7 @@ namespace Elementborn.Game.Social
             if (!string.IsNullOrEmpty(sessionId)) CurrentSessionId = sessionId;
             CurrentUser = new UserRef(userId, name, role);
             Directory.Register(CurrentUser);
+            GameEventLogger.Instance?.LogLogin(userId, name); // user details only — never a password
         }
 
         private void OnDestroy() { if (Instance == this) Instance = null; }
