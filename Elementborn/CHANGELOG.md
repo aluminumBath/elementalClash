@@ -7,6 +7,16 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Game-feel subscribers**: concrete, asset-free reactions to the animation events — `Feel/CameraShaker`
+  (decaying screen shake via unit-tested `Core/ShakeOffset`; third-person camera only, post-rig execution order,
+  unscaled), `Feel/HitStop` (brief `Time.timeScale` dip on impact), and `Feel/FlashFeedback` (fading point-light
+  spark on impact / cyan burst on cast, via `Feel/TransientLight` + `Feel/LightFade`). All listen on new static
+  broadcast events on `AnimationEventReceiver` (`AnyImpacted`/`AnyLanded`/`AnyCastReleased`/`AnyWasHurt`), so they
+  need no reference to the runtime-spawned player. See `docs/MODELS.md`.
+- **Meshy prompt sheet** (`docs/MESHY_PROMPTS.md`) expanded from the 13 missing creatures to **everything still
+  without a model**: 5 sidekick pets (incl. the unmatched Chameleon), 3 weapons (Dagger, Sai, a real War Hammer),
+  3 consumable potions, 2 materials, 5 foods, and a rig-ready player hero — each with a paste-ready prompt and a
+  suggested alias name, organized under a section index.
 - **Animation event hooks**: `Game/AnimationEventReceiver` exposes 14 hooks for Unity Animation Events on the
   player's rigged clips — footsteps (incl. left/right/water), jump, land, attack windup/swing/impact, cast
   charge/release, dodge, hurt, vocalize — each playing the right sound (new `footstep`/`jump`/`land` SFX added)

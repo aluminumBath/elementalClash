@@ -144,3 +144,15 @@ Once the player uses a rigged model, `PlayerModelBinder` adds an **`AnimationEve
 | `Vocalize` | — | `Vocalized` |
 
 New footstep/jump/land clips load from `Resources/Audio/` (`footstep`, `footstep_water`, `jump`, `land`); missing files simply don't play. If your clips have **no** authored footstep events, add **`ProceduralFootsteps`** to the body instead — it emits steps from distance travelled (gated on grounded + moving) and shares the same sound path. The static-mesh fallback gets `ProceduralFootsteps` automatically, so footsteps work today.
+
+## Game-feel subscribers
+
+Concrete subscribers turn the animation events above into juice — all asset-free (no particles/materials to wire), all listening on `AnimationEventReceiver`'s **static** broadcast events so they need no reference to the runtime-spawned player:
+
+| Service | Listens to | Effect |
+| --- | --- | --- |
+| `Feel/CameraShaker` | `AnyImpacted` / `AnyLanded` / `AnyWasHurt` | Decaying screen-plane shake (`Core/ShakeOffset`, unit-tested). Added to the **third-person camera only** (never VR). Runs at execution order 2000 so it offsets *after* the rig places the camera, and on unscaled time so hit-stop doesn't stall it. |
+| `Feel/HitStop` | `AnyImpacted` | Brief `Time.timeScale` dip (~0.06× for 0.1 s real) restored on unscaled time. Self-bootstrapping. |
+| `Feel/FlashFeedback` | `AnyImpacted` / `AnyCastReleased` | A short-lived fading point light — warm spark on impact, larger cyan burst on cast release (`Feel/TransientLight` + `Feel/LightFade`). Self-bootstrapping. |
+
+So `AttackImpact` fires shake + hit-stop + spark together; `Land` and `Hurt` shake; `CastRelease` flashes cyan. Want more? Subscribe any system to the instance events (per-character) or add a static broadcast for `Stepped`/`Swung`/`Dodged` and a matching service.
