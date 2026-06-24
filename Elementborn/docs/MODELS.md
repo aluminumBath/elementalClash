@@ -169,3 +169,7 @@ The hooks above fire from *animation* events; this layer makes the same juice fi
 | `Feel/HitStop` | `CombatFeedback.Hit` | Punches time only for **heavy** hits (≥ ~0.5 intensity) near the main camera, so chip damage and far fights don't stutter. |
 
 Net effect: cast Fire at an enemy → it flashes white and squashes, an orange spark pops at the hit, a heavy blow briefly freezes time, and a hit near you shakes the view; on defeat a larger burst fires. Any other `Damageable` (creatures, bosses) gets the lights/shake/hit-stop for free; add `HitReaction` to give it the squash-and-flash too.
+
+### Floating damage numbers
+
+`Feel/DamageNumbers` (self-bootstrapping) also listens on `CombatFeedback.Hit` and spawns a `Feel/FloatingNumber` over each hit: a world-space TextMeshPro that billboards to the camera, climbs, pops, and fades, then self-destroys — motion from the unit-tested `Core/DamagePopup` (`Format` rounds to an integer, ≥ 1 for any real hit; `Evaluate` gives the rise/alpha/scale curves). Numbers are tinted by element via the shared `ElementColor` and grow a little with hit strength. Text uses TMP's default font (the same one the UI uses); if no TMP font is configured the service stays silent rather than render broken glyphs. Chip/DoT ticks never appear — they fall below the `amount >= 1` threshold that raises `CombatFeedback.Hit`, and `HitReaction` ignores sub-1 ticks too so burning targets don't flicker.

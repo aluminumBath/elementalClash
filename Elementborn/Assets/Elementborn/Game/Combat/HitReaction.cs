@@ -60,6 +60,7 @@ namespace Elementborn.Game
 
         private void OnDamaged(DamageInfo info)
         {
+            if (info.Amount < 1f) return; // ignore burn/DoT chip ticks so a burning target doesn't flicker
             if (!_captured || _renderers == null || _renderers.Length == 0) Capture();
             if (!gameObject.activeInHierarchy) return;
             if (_running != null) StopCoroutine(_running);

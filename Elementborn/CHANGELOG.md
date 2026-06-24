@@ -7,6 +7,11 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Floating damage numbers**: `Feel/DamageNumbers` (self-bootstrapping) spawns a world-space `Feel/FloatingNumber`
+  over every real hit off `CombatFeedback.Hit` — a TextMeshPro that billboards, climbs, pops, and fades, then
+  self-destroys, with motion from the unit-tested `Core/DamagePopup` and element tint from the shared
+  `Game/ElementColor`. Size grows with hit strength; uses TMP's default font and stays silent if none is set up.
+  Also gated `Combat/HitReaction` to hits ≥ 1 so burn/DoT ticks no longer flicker the target. See `docs/MODELS.md`.
 - **Combat impact feedback**: real damage now drives the game-feel layer. `Damageable` broadcasts a global
   `CombatFeedback.Hit`/`Defeated` (world position + amount + element); `Combat/HitReaction` (auto-required on every
   `EnemyController`) squash-pops the struck model and flashes it white via a MaterialPropertyBlock (originals
