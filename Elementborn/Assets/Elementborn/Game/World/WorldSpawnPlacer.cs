@@ -112,6 +112,23 @@ namespace Elementborn.Game
                 hub.transform.position = ToWorld(capital.MapPosition);
                 hub.AddComponent<ConcordSite>();
             }
+
+            // Discoverable site entrances: at most one of each kind, on a region whose biome fits it.
+            var placedSites = new System.Collections.Generic.HashSet<SiteKind>();
+            foreach (var region in world.Regions)
+            {
+                var kind = SiteCatalog.ForBiome(region.Biome);
+                if (kind.HasValue && placedSites.Add(kind.Value))
+                    SpawnSiteEntrance(kind.Value, ToWorld(region.MapPosition), region.Id);
+            }
+        }
+
+        private void SpawnSiteEntrance(SiteKind kind, Vector3 at, string regionId)
+        {
+            var go = new GameObject("Site_" + kind);
+            go.transform.SetParent(transform);
+            go.transform.position = at;
+            go.AddComponent<SiteEntrance>().Configure(kind, regionId + "_" + kind);
         }
 
         private static bool IsTown(PoiType t) => t == PoiType.City || t == PoiType.Village || t == PoiType.Market;

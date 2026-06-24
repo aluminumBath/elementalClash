@@ -7,6 +7,18 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Discoverable site entrances (`SiteCatalog` + `SiteEntrance`).** The world now seeds entrances to instanced
+  destinations — a **Cave Mouth**, **Wind-Torn Aerie**, **Sunken Gate**, **Sealed Temple**, and **Hidden Spring** —
+  each placed on a region whose biome fits (mountains, cloud-temple, island, forest-temple, marsh). Walk up and it's
+  discovered (one-time toast); stand close for an Interact to enter. A pure, tested `SiteCatalog` defines each site's
+  domain (surface / aerial / underwater / subterranean) and payload (boss / treasure / rare creature / lore);
+  `SiteEntrance` builds a tinted portal marker and discovers/offers entry via the shared interaction arbiter. The
+  instanced interior each opens into is the next pass — for now, entering reveals the site's lore.
+- **Traversal: wall climb (`ClimbMotion`).** Push into a steep surface to cling and scale it — ascend with forward,
+  strafe sideways, press Jump to drop off, clear the top to mantle up and over. No new button: it auto-engages on
+  steep walls you walk into (flat play; VR grab-climb is a VR-moves-pass item). The climbability rule (too steep to
+  walk, not an overhang) is a pure, tested `ClimbMotion` helper. With jump + glide, the full ascend-and-descend loop
+  is in — scale a cliff up into the altitude cold, then glide back down.
 - **Traversal: jump + glide (`GlideMotion`).** The player rig can now **jump** (tap) and **glide** (hold the jump
   button while falling) — a slow, controlled descent with a little forward push, for riding down from heights and
   crossing gaps. The glide math is a pure, tested `GlideMotion` helper. Jump took the conventional **Space / A**

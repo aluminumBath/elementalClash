@@ -15,6 +15,7 @@ binding yet**. This doc is the running checklist.
 | Defend | `Defend` action | Right controller **B** |
 | Dash | `Dash` action | Right controller **A** |
 | Jump / glide | `Jump` action (Space / gamepad A) | TBD — VR-moves pass |
+| Climb | hold forward into a steep wall | TBD — VR grab-climb (VR-moves pass) |
 | Guard / parry | hold `Guard` (Left Ctrl / gamepad B) | TBD — VR-moves pass |
 | Heavy | hold `ExtendedCast` + Primary | gesture stance (motion layer) |
 | Sweep | hold `ExtendedCast` + Secondary | gesture stance (motion layer) |

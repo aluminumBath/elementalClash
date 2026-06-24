@@ -19,10 +19,16 @@ namespace Elementborn.Game
         [SerializeField] private float gravity = -9.81f;
         [SerializeField] private float jumpSpeed = 5.5f;
         [SerializeField] private float glideFallSpeed = GlideMotion.DefaultGlideFallSpeed;
+        [SerializeField] private float climbSpeed = 3f;
+        [SerializeField] private float climbReach = 0.7f;
+        [SerializeField] private float climbRayHeight = 1f;
+        [SerializeField] private float mantleBoost = 3f;
+        [SerializeField] private float maxWalkableNormalY = ClimbMotion.DefaultMaxWalkableNormalY;
 
         private CharacterController _controller;
         private float _pitch;
         private float _verticalVelocity;
+        private bool _climbing;
 
         private void Awake()
         {
@@ -71,6 +77,12 @@ namespace Elementborn.Game
             if (pad != null) input += pad.leftStick.ReadValue();
             input = Vector2.ClampMagnitude(input, 1f);
 
+            if (TryClimb(input, out Vector3 climbMove))
+            {
+                _controller.Move(climbMove * Time.deltaTime);
+                return;
+            }
+
             Vector3 move = (transform.forward * input.y + transform.right * input.x) * moveSpeed;
 
             bool grounded = _controller.isGrounded;
@@ -86,6 +98,49 @@ namespace Elementborn.Game
 
             move.y = _verticalVelocity;
             _controller.Move(move * Time.deltaTime);
+        }
+
+        // Flat-play wall climb: push into a steep surface to cling and ascend; press Jump to drop off; clearing
+        // the top edge mantles you up and over. (VR grab-climb is a separate VR-moves-pass item.)
+        private bool TryClimb(Vector2 input, out Vector3 climbMove)
+        {
+            climbMove = Vector3.zero;
+            if (input.y <= 0.1f) { _climbing = false; return false; } // only climb while pushing toward the wall
+
+            Vector3 normal = -transform.forward;
+            bool climbableAhead = false;
+            Vector3 origin = transform.position + Vector3.up * climbRayHeight + transform.forward * (_controller.radius * 0.9f);
+            if (Physics.Raycast(origin, transform.forward, out RaycastHit hit, climbReach, ~0, QueryTriggerInteraction.Ignore))
+            {
+                climbableAhead = ClimbMotion.IsClimbable(hit.normal.y, maxWalkableNormalY);
+                if (climbableAhead) normal = hit.normal;
+            }
+
+            if (climbableAhead)
+            {
+                if (InputBindings.Jump.WasPressedThisFrame())
+                {
+                    _climbing = false;
+                    _verticalVelocity = jumpSpeed; // hop off; the normal movement path takes over next frame
+                    return false;
+                }
+                _climbing = true;
+                _verticalVelocity = 0f;
+                Vector3 wallRight = Vector3.Cross(Vector3.up, normal);
+                if (wallRight.sqrMagnitude > 1e-4f) wallRight.Normalize();
+                climbMove = (Vector3.up * input.y + wallRight * input.x) * climbSpeed - normal * 0.6f; // ascend + hug
+                return true;
+            }
+
+            if (_climbing) // was on the wall and just cleared the top: mantle up and over the lip
+            {
+                _climbing = false;
+                _verticalVelocity = 0f;
+                climbMove = transform.forward * moveSpeed + Vector3.up * mantleBoost;
+                return true;
+            }
+
+            return false;
         }
     }
 }
