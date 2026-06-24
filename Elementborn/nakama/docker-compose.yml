@@ -4,6 +4,12 @@
 # Client connects to 127.0.0.1:7350 with server key "defaultkey".
 #
 # This is a development setup. Change passwords and the server key before exposing it anywhere.
+#
+# Event logs → Neon: the events_ingest RPC writes to whatever DB Nakama uses. To send logs to Neon, set
+# NAKAMA_DB_ADDRESS to your Neon **direct** DSN (NOT the -pooler host — Nakama keeps its own pool and the
+# PgBouncer pooler breaks prepared statements). Put it in an untracked nakama/.env, e.g.:
+#   NAKAMA_DB_ADDRESS=neondb_owner:YOUR_PASSWORD@ep-ancient-darkness-atetic57.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require
+# Never commit the password. Rotate it in the Neon console if it has ever been shared. Default below is local.
 
 version: "3"
 services:
@@ -26,9 +32,9 @@ services:
       - "/bin/sh"
       - "-ecx"
       - >
-        /nakama/nakama migrate up --database.address root@cockroachdb:26257 &&
+        /nakama/nakama migrate up --database.address ${NAKAMA_DB_ADDRESS:-root@cockroachdb:26257} &&
         exec /nakama/nakama --name nakama1
-        --database.address root@cockroachdb:26257
+        --database.address ${NAKAMA_DB_ADDRESS:-root@cockroachdb:26257}
         --logger.level DEBUG
         --session.token_expiry_sec 7200
         --socket.server_key defaultkey

@@ -32,6 +32,8 @@ function InitModule(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkrunt
     initializer.registerRpc("ban", rpcBan);
     initializer.registerRpc("unban", rpcUnban);
     initializer.registerRpc("dev_seed_admin", rpcDevSeedAdmin);
+    initializer.registerRpc("events_ingest", rpcEventsIngest);
+    ensureEventTables(nk, logger);
     initializer.registerMatch(MATCH_MODULE, {
         matchInit: matchInit,
         matchJoinAttempt: matchJoinAttempt,
@@ -192,6 +194,63 @@ function matchTerminate(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nk
 
 function matchSignal(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, dispatcher: nkruntime.MatchDispatcher, tick: number, state: nkruntime.MatchState, data: string): { state: nkruntime.MatchState, data?: string } {
     return { state: state, data: data };
+}
+
+// ---- session event logging --------------------------------------------------------------------------
+//
+// The client (GameEventLogger → NeonEventSink) batches a session's events to the "events_ingest" RPC; we
+// write them to the SAME database Nakama is configured to use. Point Nakama at Neon (NAKAMA_DB_ADDRESS in
+// docker-compose) and these tables live in Neon. nk.sqlExec talks only to Nakama's own DB, which is exactly
+// why routing the connection string through the server (never the client) is the safe design. See
+// docs/EVENT_LOGGING.md. The DB credential lives only in the server env — never here, never in the client.
+
+function ensureEventTables(nk: nkruntime.Nakama, logger: nkruntime.Logger): void {
+    try {
+        nk.sqlExec("CREATE TABLE IF NOT EXISTS game_sessions (" +
+            "session_id uuid PRIMARY KEY, user_id text, display_name text, platform text, " +
+            "app_version text, started_at timestamptz NOT NULL DEFAULT now(), ended_at timestamptz)", []);
+        nk.sqlExec("CREATE TABLE IF NOT EXISTS session_events (" +
+            "id bigserial PRIMARY KEY, session_id uuid NOT NULL REFERENCES game_sessions(session_id), " +
+            "seq bigint NOT NULL, kind text NOT NULL, name text NOT NULL, detail text, " +
+            "occurred_at timestamptz NOT NULL, UNIQUE (session_id, seq))", []);
+        nk.sqlExec("CREATE INDEX IF NOT EXISTS session_events_by_session ON session_events (session_id, seq)", []);
+        nk.sqlExec("CREATE INDEX IF NOT EXISTS session_events_by_kind ON session_events (kind, occurred_at)", []);
+        logger.info("Elementborn event tables ready.");
+    } catch (e) {
+        logger.warn("event tables not ensured (DB not ready or unsupported): " + e);
+    }
+}
+
+// payload: the client's JSON batch — an array of { session, seq, ts, kind, name, detail }.
+function rpcEventsIngest(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, payload: string): string {
+    let events: any[];
+    try { events = JSON.parse(payload); } catch (e) { throw Error("events_ingest: invalid JSON"); }
+    if (!events || events.length === undefined) throw Error("events_ingest: expected an array");
+    if (events.length === 0) return JSON.stringify({ ok: true, ingested: 0 });
+
+    const userId: string | null = ctx.userId || null;
+    const sessionId: string = events[0].session;
+
+    // Ensure the parent session row exists (idempotent) so the FK holds.
+    nk.sqlExec(
+        "INSERT INTO game_sessions (session_id, user_id) VALUES ($1, $2) " +
+        "ON CONFLICT (session_id) DO UPDATE SET user_id = COALESCE(game_sessions.user_id, EXCLUDED.user_id)",
+        [sessionId, userId]);
+
+    let ingested = 0;
+    for (let i = 0; i < events.length; i++) {
+        const e = events[i];
+        // Duplicate batches (retries) are harmless: (session, seq) is unique.
+        nk.sqlExec(
+            "INSERT INTO session_events (session_id, seq, kind, name, detail, occurred_at) " +
+            "VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (session_id, seq) DO NOTHING",
+            [e.session, e.seq, e.kind, e.name, e.detail, e.ts]);
+        if (e.name === "session_end" || e.kind === "SessionEnd") {
+            nk.sqlExec("UPDATE game_sessions SET ended_at = $2 WHERE session_id = $1", [e.session, e.ts]);
+        }
+        ingested++;
+    }
+    return JSON.stringify({ ok: true, ingested: ingested });
 }
 
 // Keep InitModule referenced so the bundler/compiler doesn't drop it.

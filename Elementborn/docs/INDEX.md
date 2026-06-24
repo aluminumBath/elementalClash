@@ -60,6 +60,13 @@ Start here. The docs in reading order:
     as the player sights, defeats, tames, casts, and meets bloodlines.
 36. **`MAP.md`** — runtime navigation: minimap, map viewer, leyline-rift fast travel, and locating self (always)
     and consenting friends.
+37. **`GACHA.md`** — the Summon Beacon: the currency-gated summon loop (Sigils + Motes), the two banners, drop
+    rates, hard pity, the featured 50/50 + guarantee, the **featured rotation**, duplicate refunds, the Motes
+    spark exchange, and the Beacon's sounds.
+38. **`EVENT_LOGGING.md`** — per-session event timelines (logins without passwords, actions, math, spawns,
+    errors), the client logger + sink seam, and the Neon Postgres schema + server-routed ingestion.
+39. **`MESHY_PROMPTS.md`** — ready-to-paste Meshy text-to-3D prompts for the 13 creature kinds that still have
+    no model, element-themed and matched to the cel-shaded look.
 
 ## By task
 
@@ -89,7 +96,11 @@ Start here. The docs in reading order:
 | See which controls aren't mapped to VR yet | `VR_INPUT_MAP.md` |
 | Forge/imbue weapons & wands from stones | `WEAPONS.md` |
 | Understand the discovery grimoire (bestiary/attacks/bloodlines) | `GRIMOIRE.md` |
+| Track achievements & milestones | `PROGRESSION.md` |
 | Minimap, fast travel, locate self/friends | `MAP.md` |
+| Roll the Summon Beacon (gacha: Sigils, pity, banners) | `GACHA.md` |
+| Log a session's events for debugging (→ Neon Postgres) | `EVENT_LOGGING.md` |
+| Generate the missing creature models (Meshy prompts) | `MESHY_PROMPTS.md` |
 | See how the code is organized | `README.md` (Architecture / Layout) |
 
 ## A note on scope

@@ -7,6 +7,139 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Animation event hooks**: `Game/AnimationEventReceiver` exposes 14 hooks for Unity Animation Events on the
+  player's rigged clips — footsteps (incl. left/right/water), jump, land, attack windup/swing/impact, cast
+  charge/release, dodge, hurt, vocalize — each playing the right sound (new `footstep`/`jump`/`land` SFX added)
+  and raising a positioned C# event for VFX, camera shake, hit-stop, or damage timing. `Game/ProceduralFootsteps`
+  drives footsteps from distance travelled (`Core/FootstepCadence`, unit-tested) when clips have no authored
+  events, and the binder adds it to the static-mesh fallback automatically. See `docs/MODELS.md`. the third-person rig now adds a `PlayerModelBinder` that prefers a rigged humanoid
+  prefab (skinned mesh + Animator) at `Models/Characters/PlayerRigged`, driving its idle/walk/run from the body's
+  measured speed via a `Speed` blend param (`Core/LocomotionAnimation`, unit-tested), and falls back to the
+  static mesh when none exists.
+- **Items in the world**: `Core/ItemModelNames` maps catalog items to gem/relic models and `Game/WorldItemPickup`
+  shows an item's 3D model and grants it on touch (ember_shard, river_pearl, old_relic, elemental_charm mapped;
+  others keep a primitive and stay icon-only in the UI). See `docs/MODELS.md`. `Core/ModelBindings.cs` adds `NpcModelNames` (Willow/Kiana/Parfa → humanoids),
+  `SidekickModelNames` (Willow's pets → loose stand-ins), `WeaponModelNames` (weapon pickups → gear),
+  `PlayerModelNames` (third-person player model), and a `PropCatalog` reference registry for structures/VFX. A generic
+  `Game/ModelLibrary.Attach(path, host)` loads them (primitive fallback), wired into `GuideNpcController`,
+  `WeaponPickup`, `ThirdPersonRig`, and `NpcSidekickOrbiter` (opt-in). The import script now covers every
+  category. Items (consumables/materials) stay icon-only; the player model is a static mesh (no skeletal anim
+  yet). See `docs/MODELS.md`.
+- **Meshy prompt sheet** (`docs/MESHY_PROMPTS.md`): ready-to-paste text-to-3D prompts for the 13 creature kinds
+  with no model (FireDragon, Mermaid, Tiger, …), element-themed and matched to the cel-shaded look. `CreatureModelNames.Aliases` now maps 18 `CreatureKind`s to the Meshy AI models
+  in `Assets/generated_assets` (e.g. WaterDragon→Azure_Wave_Dragon, Phoenix→Fire_Phoenix, Direstalker→Shadow_Wolf).
+  `tools/import-creature-models.sh` extracts the mapped models into `Resources/Models/Creatures/<alias>/`. Kinds
+  with no close model (FireDragon, Mermaid, Tiger, …) keep the primitive fallback. See `docs/MODELS.md`.
+- **Event logs → Neon via Nakama RPC**: the `events_ingest` server RPC (`nakama/src/main.ts`) creates the tables
+  on startup and inserts each event with `nk.sqlExec` (writes to whatever DB Nakama uses — point it at Neon via
+  `NAKAMA_DB_ADDRESS`). The client `NeonEventSink` (behind `ELEMENTBORN_NAKAMA`) ships batches and is installed by
+  `NakamaSocialInstaller`. The DB credential stays server-side only. See `docs/EVENT_LOGGING.md`.
+- **Per-session event logging**: every play session now opens a uniquely-identified, append-only event log
+  (`Core/SessionEventLog`, pure + unit-tested) fed by a self-bootstrapping `GameEventLogger`. It auto-captures
+  gameplay off the `QuestEvents` bus (casts, defeats, tames, summons, crafts, equips, currency, items, NPC talk,
+  quests) and offers typed `Log*` calls for logins (id + name, **never passwords**), action errors, move math
+  totals, statuses, spawn/respawn points, and the final leaderboard. Events buffer and flush in JSON batches
+  through an `IEventSink` (console by default; a Neon-Postgres sink routes through the server so the DB
+  connection string never ships in the client). Wired: session start/end, the bus, login (`SocialHub`), respawn
+  and respawn-anchor (`RespawnController` / `CheckpointObject`), move-damage math (`PlayerCombatController`), and
+  health/level status. Includes the Neon schema. See
+  `docs/EVENT_LOGGING.md`.
+- **Login-streak bonus**: claiming the daily summon now advances a consecutive-day streak (continues on the next
+  UTC day, resets if a day is skipped) and pays escalating Sigils on a 7-day cycle (`40/40/60/60/80/100/200`, day
+  7 a milestone) plus a capped per-week loyalty bonus (`+10`/week, max `+100`). The Beacon panel shows the streak
+  day and the next bonus; rules are a pure, unit-tested `LoginStreak`; the streak persists. See `docs/GACHA.md`.
+
+### Changed
+- **Category-aware shop sell prices**: buy-back is no longer a flat 50% of value. `Shop.SellFractionFor` now
+  scales by item category — sell-only **treasure** ~90%, **tools**/**consumables** ~40%, **materials**/**food**
+  the base 50% — all below full price so there's no buy-and-resell arbitrage. See `docs/ITEMS.md`.
+- **Daily free summon**: a once-per-day no-cost pull on the standard Wild Beacon, surfaced at the top of the
+  Beacon panel (with a countdown when not yet available). Refreshes at UTC midnight via a pure, unit-tested
+  `DailySummon` helper; the controller persists the last-claim time. The free pull runs full resolution (rates,
+  pity, refunds, history, stats) and fires the `SummonPerformed` quest hook, so it can complete *Answer the
+  Beacon*. The paid and free paths now share one `ResolvePull` routine. See `docs/GACHA.md`.
+- **Per-creature model binding (with placeholder fallback)**: creatures can now show real models instead of one
+  shared primitive prefab. Drop a prefab/`.fbx` at `Resources/Models/Creatures/<CreatureKind>` (or add a
+  `CreatureModelNames.Aliases` entry if your file is named differently) and `CreatureModelLibrary` loads it and
+  attaches it to spawned creatures, hiding the placeholder. If no model is present the placeholder stays, so the
+  game is unchanged until art is added — bind creatures one at a time. Hooked into `CreatureController` (wild /
+  tamed), `MountSummoner`, and `CompanionSummoner`; pure path resolver is unit-tested. See `docs/MODELS.md`.
+- **Quest chaining (prerequisites)**: a `QuestDefinition` can now list prerequisite quest ids; a quest is only
+  offered and only startable once every prerequisite is *Completed* (`QuestLog.PrerequisitesMet`, enforced in
+  `AvailableFrom` and `Start`). The onboarding quests now form two short chains — Willow: **First Channeling →
+  Answer the Beacon → Claim the Featured**; Parfa: **First Craft → Gear Up**. See `docs/QUESTS.md`.
+- **"Claim the Featured" objective (teaches the Motes exchange)**: a new `ObjectiveKind.ClaimFeatured` and a
+  `QuestEvents.FeaturedClaimed` event (raised by `SummonController.ClaimFeatured`), wired through `QuestController`.
+  The new **Claim the Featured** quest (50 Silver + 100 Sigils) asks you to spend Motes on a banner's featured
+  creature, closing the summon-economy loop. See `docs/GACHA.md`.
+- **Onboarding quests for the core procedures**: a short starter line that teaches each basic action by doing it
+  once — **Answer the Beacon** (summon), **First Channeling** (channel an element), **Gear Up** (equip gear), and
+  **First Craft** (craft an item). Backed by four new `ObjectiveKind`s (`SummonCreature`, `CastAbility`,
+  `EquipItem`, `CraftItem`) and the events that feed them: a new `QuestEvents.SummonPerformed` (raised once per
+  Beacon roll), `ItemEquipped` (raised by `EquipmentController.Equip`), `ItemCrafted` (raised by the crafting
+  flow), and the existing `AbilityCast` now also forwarded into the `QuestLog`. See `docs/QUESTS.md`.
+- **Recent-pulls history**: the Summon Beacon panel now shows a **Recent pulls** log — your last few notable
+  summons (Epic or better) with tier, creature, banner, featured marker, and a relative age ("2h ago"). It's a
+  pure, unit-tested newest-first ring buffer (`SummonHistory`, capacity 8) that `SummonController` records each
+  notable pull into (timestamped from its clock seam) and persists via `SaveData`. See `docs/GACHA.md`.
+- **Summon history / stats**: the Summon Beacon now keeps a lifetime, all-banner tally — total pulls, counts by
+  tier, featured wins, and Sigils spent / Motes earned — surfaced as a "Summon history" section in the panel
+  (alongside per-banner pulls and the observed Legendary rate). It's a pure, unit-tested `SummonStats` that
+  `SummonController` feeds on every roll and persists via `SaveData`. See `docs/GACHA.md`.
+- **Quests can reward Sigils**: `QuestReward` gained an optional `Sigils` amount (0 = none), granted on turn-in
+  through `SummonController.AddSigils` and shown in the dialogue reward line and the completion toast. Several
+  starter quests now grant Sigils (A Wild Start +120, A Gentle Hand +200, Pelts for the Tanner +160), giving the
+  Beacon an in-world faucet beyond level-ups. See `docs/QUESTS.md` and `docs/GACHA.md`.
+- **Summon Beacon (gacha loop)**: a repeatable, currency-gated summon over the existing creature roster, so it
+  needs no new art — everything pulled drops into the roster usable by the companion/mount summoners. `Summoning`
+  (Core, pure, unit-tested) defines the rarity tiers, banners, tunable `SummonConfig`, per-banner `SummonState`,
+  and the seedable resolver `SummonRoller` (tier roll honouring **hard pity**, the featured **50/50 + guarantee**,
+  and a ten-pull **Epic floor**); `SummonBannerCatalog` holds the two banners (no-rate-up **Wild Beacon** and
+  Phoenix-rate-up **Flamecaller Beacon**) and is the single rarity knob. `SummonController` owns two new
+  currencies — **Sigils** (pulls; 1600 to start, +60 per level via `Progression.LeveledUp`) and **Motes**
+  (duplicate dust) — spends and rolls, grants new creatures via the new `PlayerInventory.GrantOwned` or refunds
+  Motes for duplicates, and lets Motes claim a banner's featured creature outright; state persists through
+  `SaveData`. The `SummonViewer` (key **U**, and on the VR hub) shows balances, the banner selector, pity,
+  ×1/×10 pulls, the Motes claim, the last results, and a collection roster. See `docs/GACHA.md`.
+- **Featured-banner rotation**: the Summon Beacon's featured slot now **rotates** — one themed beacon per
+  Legendary (Flamecaller/Phoenix, Emberwyrm/Fire Dragon, Tidewyrm/Water Dragon, Stormcrown/Skytyrant,
+  Deepward/Tidewarden, Nightprowl/Direstalker). `SummonBannerCatalog.FeaturedForPeriod` builds the active banner
+  under a **stable slot id** so pity and the lost-50/50 guarantee carry across rotations; the period is whole
+  `rotationPeriodDays`-day windows (default 7) since a fixed UTC epoch via the pure, unit-tested
+  `SummonBannerCatalog.PeriodFor` (the controller passes `DateTime.UtcNow`, overridable with `SetClock`). The
+  `SummonViewer` shows the current featured banner and a "rotates in N days" countdown. See `docs/GACHA.md`.
+- **Summon sounds**: the Beacon has its own placeholder SFX (4 new, synthesized by `make_sfx.py`) — a "cast"
+  whoosh (`SummonPull`) on a roll, then a per-tier **reveal sting** (`SummonRare` / `SummonEpic` /
+  `SummonLegendary`) chosen by the pure `AudioController.SfxForSummon`; a Motes claim plays the Legendary sting.
+  Replaces the Beacon's earlier reuse of the generic level-up/confirm sounds. See `docs/AUDIO.md`.
+- **Equippable gear**: crafted/looted items can now be **worn** for passive bonuses. `EquipLoadout` (Core, pure,
+  unit-tested) holds one item per slot (Armor / Charm / Trinket) and sums `MaxHealthBonus` + `OffenseMultiplier`
+  from `GearCatalog` (Hide / Tough Leather armor, the Elemental Charm, the Old Relic trinket). `EquipmentController`
+  folds max-health into `ProgressionController` (stacking with level + perks) and the power multiplier into
+  `PlayerCombatController` (alongside weather/faction), persisting worn slots via `PlayerInventory`. The
+  `EquipmentViewer` (key **V**) shows slots, totals, and equip/unequip. See `docs/PROGRESSION.md`. (Not on the VR
+  hub yet — that list is full pending a scroll.)
+- **Usable consumables**: consumables can now be **used from the inventory** (key I) — each shows a Use button.
+  `Consumables` (Core, pure, unit-tested) maps an item to a `ConsumableEffect` (heal amount + stamina refill); the
+  inventory applies it to the player's `Health.Heal` / `StaminaController.Refill` and spends one. Healing Tonic
+  heals, Stamina Draught refills stamina, Elixir of Vigor does both. See `docs/ITEMS.md`.
+- **Crafting**: a `RecipeBook` (Core) of recipes turning loot materials into gear/consumables, with pure
+  unit-tested `Crafting.CanCraft` / `Crafting.Missing` checks. The `CraftingViewer` (key **B**, and on the VR hub)
+  lists each recipe with held counts and crafts on click — consuming inputs via `Items.Remove` and granting the
+  output via `PlayerInventory.AddItem` (which counts toward the Collector achievement). Recipes upgrade raw drops
+  into the consumables and three new craft-only items (Tough Leather, Elixir of Vigor, the four-element Elemental
+  Charm) plus a Reforged Relic. See `docs/ITEMS.md`.
+- **Achievements / milestones**: a pure, unit-tested `AchievementProgress` tracker (counts per metric + qualifier,
+  so "any" and targeted achievements share one feed) over an `AchievementCatalog` of 13 across eight metrics.
+  `AchievementController` drives it from the `QuestEvents` bus (defeats, tames, sightings, casts, items, currency,
+  quests, NPCs), toasts + plays the level-up fanfare on each unlock (`Record` returns only the ones that just
+  crossed), and persists via `PlayerInventory`. An `AchievementsViewer` (key **K**, and on the VR hub) shows the
+  checklist with progress. See `docs/PROGRESSION.md`.
+- **Loot drops**: defeated creatures now roll a **weighted `LootTable`** (Core) instead of a hardcoded `hide` —
+  `Rolls` weighted picks with quantity ranges and a "nothing" slot, seeded through `IRandomSource` so it's
+  deterministic and unit-tested. `LootTables.For(kind)` themes drops by element/habitat (fire/water/earth/air/apex)
+  over a beast baseline, every entry a real `ItemCatalog` id. `CreatureController.OnDefeated` grants the rolls and
+  toasts the haul. See `docs/ITEMS.md`.
 - **Interact works in VR**: `VrInteractInput` reads the right-hand grip (legacy XR `CommonUsages.gripButton`) and
   signals the shared `InteractionArbiter`, firing the current best interaction through the same path the desktop
   Interact key uses — so NPCs, pickups/activation, mounting, taming, and the rift/checkpoint prompts are reachable

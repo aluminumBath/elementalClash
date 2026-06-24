@@ -36,8 +36,9 @@ world-space UI work noted under the menus below.)
 
 A single **`VrOverlayHub`** is the headset entry point to the panels. The **left-hand menu button**
 (`CommonUsages.menuButton`, read like the grip) opens a panel with a button per overlay — **Quests, Inventory,
-Grimoire, Map, Social, Character, Settings** — each opening it through the overlay's public `Open()`, so none of
-them need the keyboard in VR. (Desktop keeps its per-panel keys L/I/G/M/J/C/Esc; the hub is also on **Tab** for
+Grimoire, Map, Social, Character, Settings, Achievements, Crafting, Summon Beacon** (plus the action verbs) — each opening it through the
+overlay's public `Open()`, so none of
+them need the keyboard in VR. (Desktop keeps its per-panel keys L/I/G/M/J/C/K/B/U/Esc; the hub is also on **Tab** for
 testing.) The panels switch to **World Space** in the headset via `VrCanvasAdapter` (attached by the overlay
 builders) and are placed in front of the player on open. The one remaining piece is the in-editor XRI raycaster
 (see the gap list) that lets the controller ray click them.

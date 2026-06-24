@@ -51,6 +51,31 @@ Level and within-level XP save and load through the same path as quests and item
 `PlayerInventory.ToSave`/`LoadFrom` → `ProgressionController.CaptureInto`/`RestoreFrom`). Quit at level 4 and
 you're level 4 on return, max-health bonus and all.
 
+## Achievements
+
+A milestone layer on top of progression. `AchievementProgress` (Core, pure, unit-tested) counts events per
+(metric, qualifier): each event bumps both an "any" bucket and — when it carries a qualifier — a specific one, so
+broad ("defeat 25 creatures") and targeted ("earn 1000 **silver**") achievements both advance off the same feed.
+`AchievementCatalog` defines them across eight metrics (creatures defeated/tamed/sighted, abilities cast, items
+collected, currency earned, quests completed, NPCs met). `AchievementController` (added by the bootstrap) drives it
+from the `QuestEvents` bus, and on each unlock it toasts and plays the level-up fanfare; `Record` returns exactly
+the achievements that crossed their target so nothing fires twice. Counts persist through `PlayerInventory`
+(`SaveData.achievementKeys` / `achievementCounts`). The `AchievementsViewer` (key **K**, and on the VR hub) lists
+every achievement with its progress and a `[x]` when done. To add or retune one, edit `AchievementCatalog` in
+`Achievements.cs`.
+
+## Equipment
+
+Worn gear is another source of the same bonuses. `EquipLoadout` (Core, pure, unit-tested) tracks one item per
+slot (**Armor / Charm / Trinket**) and aggregates `MaxHealthBonus` and `OffenseMultiplier` from `GearCatalog` —
+which maps a handful of items to gear (Hide and Tough Leather as armor, the Elemental Charm, the Old Relic as a
+trinket). `EquipmentController` (added by the bootstrap) holds the loadout: equipping requires owning the item,
+its max-health bonus is folded into `ProgressionController.ApplyBonus` (so HP totals stack level + perks + gear),
+and its `OffenseMultiplier` scales outgoing ability power in `PlayerCombatController` alongside the weather/faction
+multipliers. Worn slots persist through `PlayerInventory`. The `EquipmentViewer` (key **V**) shows the slots, the
+running totals, and Equip/Unequip buttons for the gear in your bag. To add gear, extend `GearCatalog` in
+`Equipment.cs`. (It isn't on the VR hub yet — the hub list is full pending a scroll; key V works in flat play.)
+
 ## Tuning / extending
 
 XP per defeat and per quest are serialized on `ProgressionController`. The bonus is currently max health only;

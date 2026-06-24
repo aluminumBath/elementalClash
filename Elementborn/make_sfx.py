@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Synthesize Elementborn's placeholder sound effects with numpy.
 
-Regenerates the 16 placeholder SFX (plus a looping ambient music bed) referenced by docs/AUDIO.md, using simple synthesis —
+Regenerates the 20 placeholder SFX (plus a looping ambient music bed) referenced by docs/AUDIO.md, using simple synthesis —
 filtered noise, sweeps, and inharmonic partials. They're deliberately rough stand-ins until real sound design.
 
 Usage:
@@ -52,6 +52,15 @@ def partials(base, ratios, dur, tau):
     for i, r in enumerate(ratios):
         out += (0.7 ** i) * tone(base * r, dur)
     return out * expdecay(dur, tau)
+
+
+def mix(*sigs):
+    """Sum signals of differing lengths, left-aligned and zero-padded to the longest."""
+    n = max(s.size for s in sigs)
+    out = np.zeros(n)
+    for s in sigs:
+        out[:s.size] += s
+    return out
 
 
 def finish(sig):
@@ -123,6 +132,29 @@ def gen():
     s["coin"] = coin
     s["pickup"] = (tone(740, 0.07) + 0.3 * tone(1110, 0.07)) * expdecay(0.07, 0.05) \
         + 0.2 * bandnoise(0.07, 1500, 5000) * expdecay(0.07, 0.02)
+    # Summon Beacon (gacha): a rising "cast" whoosh, then a per-tier reveal sting (rare < epic < legendary).
+    swell_pull = np.sin(np.linspace(0, np.pi, int(SR * 0.5)))
+    s["summon_pull"] = sweep(280, 1300, 0.5) * swell_pull \
+        + 0.5 * bandnoise(0.5, 600, 4200) * swell_pull \
+        + 0.2 * tone(1760, 0.5) * expdecay(0.5, 0.3)
+
+    def arpeggio(freqs, note=0.2, step=0.09, tau=0.15):
+        total = step * (len(freqs) - 1) + note
+        out = np.zeros(int(SR * total))
+        for i, fr in enumerate(freqs):
+            seg = tone(fr, note) * expdecay(note, tau)
+            st = int(SR * step * i)
+            out[st:st + seg.size] += seg[:out.size - st]
+        return out
+
+    s["summon_rare"] = arpeggio([1047, 1319], note=0.16, step=0.08, tau=0.12)
+    s["summon_epic"] = mix(
+        arpeggio([1319, 1568, 1976], note=0.2, step=0.09, tau=0.14),
+        0.15 * partials(1976, [1, 2, 3], 0.5, 0.2))
+    s["summon_legendary"] = mix(
+        arpeggio([1047, 1319, 1568, 2093, 2637], note=0.32, step=0.12, tau=0.22),
+        0.3 * partials(262, [1, 2, 3, 4], 0.95, 0.5),
+        0.2 * bandnoise(0.95, 4000, 12000) * expdecay(0.95, 0.5))
     return s
 
 

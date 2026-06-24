@@ -52,3 +52,95 @@ Each model ships in two formats, from the same geometry — pick the one for you
 - Pipeline choice: for the `ToonLit` vertex-color path use **PLY → Blender → FBX**; for a fast colored
   drop-in use the **OBJ**.
 - Colors are palette hues (wood, metal, stone, leaf, wall, roof) — see `PALETTE.md`.
+
+## Creature & character models (runtime binding)
+
+The placeholders above are for **geometric world props**. **Creatures** are still rendered from one shared
+primitive prefab per spawn type — so a Phoenix and a Direstalker look the same until you bind real models.
+There's now a code path for that, with a safe fallback.
+
+**Drop-in convention:** put each model prefab under a `Resources` folder at
+`Assets/Elementborn/Resources/Models/Creatures/<Name>` (an imported `.fbx` works — Unity treats the imported
+model as a loadable prefab). At runtime `CreatureModelLibrary` loads it and attaches it to the spawned creature,
+hiding the primitive placeholder. **If no model is found, the placeholder stays** — the game runs unchanged until
+you add art, so you can bind creatures one at a time.
+
+- **Default name = the `CreatureKind` enum name.** e.g. `Resources/Models/Creatures/Phoenix.fbx` binds to
+  `CreatureKind.Phoenix`. The full list of kinds is in `Core/Creatures.cs`.
+- **Files named by colour/shape instead?** Add one line per creature to `CreatureModelNames.Aliases`
+  (`Core/CreatureModelNames.cs`): `{ CreatureKind.Phoenix, "ember_bird_red" }` points Phoenix at
+  `Resources/Models/Creatures/ember_bird_red`. That alias line is the only code change a binding needs.
+
+**Getting your generated FBX in:** unzip each archive, then move the `.fbx` (and its textures) into
+`Assets/Elementborn/Resources/Models/Creatures/`. Rename to the kind it represents, or add an alias. Set the
+import scale / orientation so the model rests at local origin facing +Z (it's attached at the host's local zero).
+Switch its material(s) to `Elementborn/ToonLit` for the cel look.
+
+**Where it hooks:** wild & tamed creatures via `CreatureController.Start`; summoned mounts via `MountSummoner`;
+companions via `CompanionSummoner`. The attach is idempotent (one model per creature). Mapping is pure and
+unit-tested (`CreatureModelNamesTests`); the loader caches hits and misses.
+
+## Creature model mapping (Meshy AI batch)
+
+The Meshy AI models in `Assets/generated_assets/` are wired in `CreatureModelNames.Aliases`. `tools/import-creature-models.sh` extracts the mapped ones into `Resources/Models/Creatures/<alias>/<alias>.fbx` (each in its own folder so textures don't collide). After running it, import in Unity and switch materials to `Elementborn/ToonLit`.
+
+| CreatureKind | Model (alias) |
+| --- | --- |
+| WaterDragon | Azure_Wave_Dragon |
+| Phoenix | Fire_Phoenix |
+| Thunderbird | Thunderbird |
+| Roc | Giant_Eagle |
+| Dog | Patchwork_Pup |
+| Spider | Antler_Spider_Creature |
+| Crab | Coral_Crab_Spider |
+| Snake | Teal_Serpent |
+| EarthCat | Leaf_Cub |
+| Horse | Blue_Dino_Mount |
+| Goldkoi | Blue_Gold_Tuna |
+| Skimfin | Teal_Fantasy_Fish |
+| Gillcloak | Abyss_Angler |
+| Tidewarden | Purple_Kraken |
+| Direstalker | Shadow_Wolf |
+| Skytyrant | Storm_Wyvern |
+| Ridgewing | Blue_Fantasy_Bird |
+| Glidewisp | Fawn_Sprite |
+
+**No close model in this batch** (still primitive fallback — generate or assign one and add an alias line): FireDragon (no fire dragon was generated), Mermaid, EarthMole, AirDragonfly, AirJellyfish, WaterCat, IceCat, ElectricSquirrel, Eel, Monkey, Crocodile, Rhino, Tiger.
+
+The other ~110 archives are props, gear, characters, structures, and VFX (weapons, banners, gems, portals, scholars, fish schools, etc.) — not creature kinds; place those where their own systems expect them.
+
+## Non-creature model bindings (Meshy AI batch)
+
+Beyond creatures, these maps in `Core/ModelBindings.cs` bind NPCs, sidekick pets, weapons/gear, and the player to batch models; the Game-layer `ModelLibrary.Attach(path, host)` loads them with the same primitive fallback. `tools/import-creature-models.sh` extracts all of them into `Resources/Models/<Category>/<alias>/<alias>.fbx`. Hooks: guide NPCs (`GuideNpcController`), weapon pickups (`WeaponPickup`), the player body (`ThirdPersonRig`), and sidekick orbiters (`NpcSidekickOrbiter`, opt-in via *Use Sidekick Model*).
+
+**NPCs** (`NpcModelNames`): Willow → Verdant_Dryad · Kiana → Azure_Water_Mage · Parfa → Steamwright_Adventurer.
+
+**Sidekick pets** (`SidekickModelNames`, loose stand-ins): Gunnar → Moss_Wolf · Parrot → Teal_Hornbill · Blobfish → Lure_Fish · Mushroom → Luminescent_Mushroom. **Chameleon** has no match → primitive (generate one).
+
+**Weapons / gear** (`WeaponModelNames`): Sword → Emberblade · LongBow → Gilded_Arc_Bow · Shield → Azure_Aegis · Hammer → Stormcleaver_Axe (a heavy stand-in). **Dagger** and **Sai** have no match → primitive.
+
+**Player** (`PlayerModelNames` + `PlayerModelBinder`): the rig adds a `PlayerModelBinder` to its body, which prefers a **rigged humanoid** prefab at `Resources/Models/Characters/PlayerRigged/PlayerRigged` (skinned mesh + Animator) and drives its locomotion — it measures the body's planar speed and feeds a `Speed` float (0 idle → 0.5 walk → 1 run, eased) to the Animator's 1D blend tree (`Core/LocomotionAnimation`, unit-tested). With no rigged prefab it falls back to the static Windborne_Traveler mesh. To enable animation: rig a humanoid (Mixamo / Meshy-rig), build a prefab whose Animator Controller has a float `Speed` param driving idle/walk/run, and drop it at that path.
+
+**Structures / set-dressing / VFX** (`PropCatalog`): a reference registry of batch models (rift_portal → Azure_Arc_Portal, checkpoint_spire → Azure_Crystal_Spire, throne → Throne_of_the_Crystal, vine_gate, mushroom_grove, treasure_chest, banner, crystal_pool, radiant_tree). These are **placed in scenes by hand**, not code-bound — the catalog just makes the names discoverable.
+
+**Items / loot** (`ItemModelNames` + `WorldItemPickup`): items can sit in the world now. Drop a `WorldItemPickup` (set its item id + amount) anywhere; it shows the item's model and grants it on touch. Mapped: ember_shard → Emberstone_Gem, river_pearl → Pearl_Oyster, old_relic → Triskelion_Disc, elemental_charm → Prismatic_Helix_Gem. Potions, foods, and raw materials have no fitting batch model → primitive (they stay icon-only in the inventory UI regardless).
+
+## Animation event hooks
+
+Once the player uses a rigged model, `PlayerModelBinder` adds an **`AnimationEventReceiver`** to it. Author Unity Animation Events on the clips and point them at these methods — each plays the right sound (`AudioController`) and raises a C# event (carrying the world position) for VFX, camera shake, hit-stop, or damage timing:
+
+| Event name (author exactly) | Sound | C# event |
+| --- | --- | --- |
+| `Footstep` / `FootstepLeft` / `FootstepRight` | footstep | `Stepped(pos, isLeft)` |
+| `FootstepWater` | footstep_water | `Stepped` |
+| `Jump` / `Land` | jump / land | `Jumped` / `Landed` |
+| `AttackWindup` | — | `AttackWoundUp` |
+| `AttackSwing` | whoosh_short | `Swung` |
+| `AttackImpact` | hit_soft | `Impacted` ← best for hit-stop / shake |
+| `CastCharge` | — | `CastCharged` |
+| `CastRelease` | wind_whoosh | `CastReleased` |
+| `Dodge` | whoosh_short | `Dodged` |
+| `Hurt` | hit_soft | `WasHurt` |
+| `Vocalize` | — | `Vocalized` |
+
+New footstep/jump/land clips load from `Resources/Audio/` (`footstep`, `footstep_water`, `jump`, `land`); missing files simply don't play. If your clips have **no** authored footstep events, add **`ProceduralFootsteps`** to the body instead — it emits steps from distance travelled (gated on grounded + moving) and shares the same sound path. The static-mesh fallback gets `ProceduralFootsteps` automatically, so footsteps work today.

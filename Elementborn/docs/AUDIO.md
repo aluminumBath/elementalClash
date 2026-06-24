@@ -12,7 +12,7 @@ the game, meant to be replaced with real foley/music later.
 - Volumes come from **`SettingsStore.Current`**: `masterVolume` → `AudioListener.volume`, `sfxVolume` scales
   one-shots, `musicVolume` scales the ambient bed. The settings menu (Esc) changes them live.
 
-## The placeholder clips (16 SFX + 1 music loop)
+## The placeholder clips (20 SFX + 1 music loop)
 | File (`Resources/Audio/…`) | `SfxKind` | Used for |
 |---|---|---|
 | `fire_explosion.wav` | `FireExplosion` | Fire projectile / blast; fire impacts |
@@ -31,6 +31,10 @@ the game, meant to be replaced with real foley/music later.
 | `level_up.wav` | `LevelUp` | Rising arpeggio on level-up |
 | `coin.wav` | `Coin` | Reward / buy / sell |
 | `pickup.wav` | `Pickup` | Loot / item gained |
+| `summon_pull.wav` | `SummonPull` | Beacon "cast" whoosh when a summon is rolled |
+| `summon_rare.wav` | `SummonRare` | Rare (★★★) reveal sting |
+| `summon_epic.wav` | `SummonEpic` | Epic (★★★★) reveal sting |
+| `summon_legendary.wav` | `SummonLegendary` | Legendary (★★★★★) reveal sting / Motes claim |
 | `music_calm.wav` | `MusicCalm` | Looping ambient bed (seamless) |
 
 ## Mapping (where sounds fire)
@@ -46,6 +50,9 @@ the game, meant to be replaced with real foley/music later.
   buy/sell or feeding plays `UiBack`); loot drops play `Pickup`; feeding a sidekick plays `UiConfirm`.
 - **Map & travel** — attuning a leyline rift plays `UiConfirm` (alongside the toast); a leyline fast-travel warp
   plays `WhooshShort`.
+- **Summon Beacon** — a pull plays `SummonPull` (the "cast" whoosh), then the batch's **best tier** plays its
+  reveal sting via `SfxForSummon` (`SummonRare` / `SummonEpic` / `SummonLegendary`); claiming the featured
+  creature with Motes plays `SummonLegendary`. The whoosh and the sting layer, since a roll resolves instantly.
 
 ## Replacing the placeholders
 1. Drop a `.wav`/`.ogg` with the **same filename** into `Assets/Elementborn/Resources/Audio/`.

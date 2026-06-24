@@ -7,15 +7,16 @@ statically verified**. What remains is hands-on work that can only happen in the
 Nothing below is missing *code* for the current design; it's the work that lives outside a code repo.
 
 ## Already done (in this repo)
-- All gameplay systems: elemental combat + gacha roll, factions & aggression, economy/ownership/taming,
+- All gameplay systems: elemental combat + gacha (the character roll **and** the currency-gated **Summon
+  Beacon** loop), factions & aggression, economy/ownership/taming,
   mounts & vehicles + comfort vignette, element travel, the wild bestiary, rare companions, weather +
   day/night, the HUD, interaction prompts, saving, the shop, and the defend/dash polish.
 - Cel/toon shaders (lit + a vertex-color toggle, sky, water, comfort vignette) and the low-poly
   **mesh-terrain** generator + builder.
-- **Audio** (`AudioController` + 13 placeholder SFX), a **settings menu** (Esc), **save slots** (F8) with
+- **Audio** (`AudioController` + 20 placeholder SFX), a **settings menu** (Esc), **save slots** (F8) with
   skip-creation-on-load, **biome-blended** terrain colours, a **third-person** rig, and **all UI on
   `UiTheme`/TextMeshPro** (every screen retrofitted). See `AUDIO.md` and `PORTING.md`.
-- 67 EditMode test files + PlayMode tests and a GameCI workflow, plus `tools/ip-guard.sh` + `tools/validate.sh` + `tools/doctor.sh`
+- 89 EditMode test files + PlayMode tests and a GameCI workflow, plus `tools/ip-guard.sh` + `tools/validate.sh` + `tools/doctor.sh`
   (CI gates) and a tag-driven release + docs-publish pipeline (`VERSION`, `CHANGELOG.md`, `tools/bump-version.sh`).
 - Docs: this file, `INDEX.md`, `README.md`, `GETTING_STARTED.md`, `DEPLOYMENT.md`, `ART_GUIDE.md`,
   `PALETTE.md`, `UI_SPRITES.md`, `GENERATED_ART.md`, `MODELS.md`, `AUDIO.md`, `PORTING.md`, `INPUT.md`, `VR_COMBAT.md`, `ARENA.md`, `UNDERWATER.md`, `CREATURES.md`, `HIDDEN_MOVES.md`, `FACTIONS.md`, `MODDING.md`, `PLANTS.md`, `NPCS.md`, `EVOLUTION.md`, `LIMITATIONS.md`, `SOCIAL.md`, `BOOTSTRAP.md`, `NETCODE.md`, `VR_SETUP.md`, `QUESTS.md`, `ITEMS.md`, `SELF_HOSTING.md`, `PROGRESSION.md`, `WORLD.md`.
@@ -35,7 +36,10 @@ compile gate (the in-repo checks are static only). Add the Unity license secrets
 
 ### Phase 3 — Art pass (Blender + 2D) · your turn
 Replace the code-built placeholders with low-poly, vertex-colored meshes and 2D UI sprites. This is the
-largest remaining effort.
+largest remaining effort. **Creature models now have a runtime drop-in:** put an `.fbx`/prefab at
+`Resources/Models/Creatures/<CreatureKind>` (or add a `CreatureModelNames.Aliases` line) and it's used
+automatically, with the primitive placeholder as fallback — so binding a creature is a per-file step, not a code
+change. See **`MODELS.md` ▸ Creature & character models**.
 → **`ART_GUIDE.md`** (object-by-object), **`PALETTE.md`** (the colors), **`UI_SPRITES.md`** (UI sizes).
 Skill: Blender + an image editor.
 
@@ -59,7 +63,7 @@ On-device QA, the Quest performance pass, balance, bug-fixing, polish.
 
 ## Optional code enhancements
 Most of these are now **done** (each shipped with tests/docs like the rest):
-- ✅ **Audio hooks** — `AudioController` + 13 synthesized placeholder SFX in `Resources/Audio/`, mapped to
+- ✅ **Audio hooks** — `AudioController` + 20 synthesized placeholder SFX in `Resources/Audio/`, mapped to
   abilities/impacts/UI; volumes via the settings store. See **`AUDIO.md`**.
 - ✅ **Settings menu** — `SettingsController` (Esc): volumes, mouse sensitivity, FOV, invert-Y, comfort
   vignette; persisted; applied live to audio, the rigs, and the vignette.
@@ -86,6 +90,18 @@ Most of these are now **done** (each shipped with tests/docs like the rest):
   (`GestureProfile`) feeding a `VrGestureProvider`. A stance layer (hold-to-charge, guard, Water's ice-flow
   combo) and a dedicated arena mode (waves, dodging, combo scoring, stamina, plus Heavy/Sweep per element) are
   now in. See **`VR_COMBAT.md`** and **`ARENA.md`**.
+- ✅ **Summon Beacon (gacha loop)** — a repeatable, currency-gated summon on top of the creature roster:
+  two banners, **Sigils** to pull and **Motes** from duplicates, base rates with **hard pity**, a featured
+  **50/50 + guarantee**, a ten-pull Epic floor, a Motes spark exchange, a **once-per-day free summon** with a **login-streak** bonus
+  (UTC-midnight reset). The featured banner **rotates**
+  (a themed beacon per Legendary, on a configurable day cycle; pity carries across rotations), and the Beacon
+  has its **own sounds** (a cast whoosh + per-tier reveal stings). It tracks a **lifetime history** (pulls, tier
+  counts, featured wins, Sigils spent / Motes earned) plus a **recent-pulls log** (last few Epic+ summons with
+  ages), and **quest rewards can grant Sigils** as an in-world faucet beyond level-ups. Pure
+  resolver/rotation/stats/history (`SummonRoller`, `SummonBannerCatalog`, `SummonStats`, `SummonHistory`) +
+  controller + overlay (key **U** / VR hub), persisted. **Chained onboarding quests** teach the core procedures
+  (channel → summon → claim-featured, and craft → equip) via new objective kinds + events and a quest-prerequisite
+  system. See **`GACHA.md`** and **`QUESTS.md`**.
 
 **Remaining code enhancements (optional):** none outstanding — the roadmap's code items are all in. What's
 left is genuinely Editor/Blender/device/console-SDK work below.

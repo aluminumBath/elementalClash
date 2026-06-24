@@ -82,6 +82,27 @@ namespace Elementborn.Tests.EditMode
         }
 
         [Test]
+        public void SellPriceIsCategoryAware()
+        {
+            // Treasure is sell-only fodder -> near full price (0.9).
+            Assert.AreEqual(36, Shop.SellPrice("old_relic"));       // 40 * 0.9
+            Assert.AreEqual(126, Shop.SellPrice("elemental_charm")); // 140 * 0.9
+            // Consumables take a steeper resale haircut (0.4).
+            Assert.AreEqual(6, Shop.SellPrice("healing_tonic"));    // 15 * 0.4
+            // Crafting material stays at the base rate (0.5).
+            Assert.AreEqual(12, Shop.SellPrice("river_pearl"));     // 25 * 0.5 -> 12 (truncated)
+        }
+
+        [Test]
+        public void NoCategoryAllowsArbitrage()
+        {
+            foreach (ItemCategory c in System.Enum.GetValues(typeof(ItemCategory)))
+                Assert.Less(Shop.SellFractionFor(c), 1.0f, $"{c} would let players buy and resell for profit");
+            // Treasure fetches more than a tool of equal value.
+            Assert.Greater(Shop.SellFractionFor(ItemCategory.Treasure), Shop.SellFractionFor(ItemCategory.Tool));
+        }
+
+        [Test]
         public void EverySidekickFoodIsARealItem()
         {
             foreach (WillowSidekick s in System.Enum.GetValues(typeof(WillowSidekick)))
