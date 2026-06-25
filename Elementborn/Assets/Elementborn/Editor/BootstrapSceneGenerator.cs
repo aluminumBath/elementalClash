@@ -96,6 +96,11 @@ namespace Elementborn.EditorTools
             var flow = Add(boot, "GameFlowController");
             if (mtb != null) Wire(flow, "meshTerrainBuilder", mtb);
 
+            // Platform: per-device frame-rate target at boot + a dev frame-time overlay (toggle with F3).
+            var platform = new GameObject("Platform");
+            Add(platform, "PerformanceController");
+            Add(platform, "PerformanceHud");
+
             // Social overlay (press J in play mode): notifications / friends / chat / feedback / moderation.
             var social = new GameObject("Social");
             Add(social, "SocialMenuController");

@@ -7,6 +7,14 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Platform frame-rate target + profiling overlay (`FrameStats` + `PerformanceController` + `PerformanceHud`).**
+  First step of the polish/platform pass and the make-or-break one for Quest: at boot the frame target is set per
+  platform (Quest standalone pinned to 72 Hz with vSync off so the target governs; PCVR and flat left to their own
+  compositor), and a dev overlay (toggle **F3**) shows live FPS plus average and peak frame time over a rolling
+  window, colour-graded green/amber/red against that platform's FPS budget. The window math is a pure, unit-tested
+  `FrameStats` ring; the overlay is non-interactive, built lazily so it costs nothing while hidden, and reads in the
+  editor/flat game view where most profiling iteration happens. (Per-device render-scale / fixed-foveation / quality
+  tuning is profiled on hardware on top of this baseline.)
 - **PvP duels (`DuelMatch` + `DuelController`).** Challenge a friend to a 1v1: a first-to-three clash plays out
   round by round with a live scoreboard, a declared winner, a spoils-of-victory reward, and a clean exit back to the
   world. The duel rules — challenge, accept/decline, scored rounds, and resolution the moment someone hits the
