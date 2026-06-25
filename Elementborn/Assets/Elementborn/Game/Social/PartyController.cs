@@ -32,11 +32,18 @@ namespace Elementborn.Game.Social
         public void InviteToParty(string friendId)
         {
             if (!_roster.Active) _roster.Form(LocalId);
-            SocialHub.Instance?.Invites?.InviteFriend(friendId); // real session invite + notification
+            SendSessionInvite(friendId); // real session invite + notification
             var r = _roster.Join(friendId);
             if (r == PartyJoinResult.PartyFull) GameHud.Instance?.Toast("Your party is full.");
             else if (r == PartyJoinResult.Joined) GameHud.Instance?.Toast(Name(friendId) + " joined your party.");
             Refresh();
+        }
+
+        private void SendSessionInvite(string friendId)
+        {
+            var hub = SocialHub.Instance;
+            if (hub == null || hub.Invites == null) return;
+            hub.Invites.Invite(hub.CurrentUser.Id, friendId, hub.CurrentSessionId);
         }
 
         public void LeaveParty()

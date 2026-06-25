@@ -225,7 +225,7 @@ namespace Elementborn.Game
             v.childControlWidth = true; v.childControlHeight = true;
             v.childForceExpandWidth = true; v.childForceExpandHeight = false; v.childAlignment = TextAnchor.UpperLeft;
             var fitter = content.AddComponent<ContentSizeFitter>();
-            fitter.verticalFit = ContentSizeFitter.Fit.PreferredSize;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             scroll.viewport = vr;
             scroll.content = cc;

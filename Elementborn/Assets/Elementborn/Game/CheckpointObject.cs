@@ -6,7 +6,7 @@ namespace Elementborn.Game
     /// <summary>
     /// An in-world respawn shrine. Standing in range offers an Interact to set it as your respawn anchor (through
     /// <see cref="CheckpointState"/>). Spawned by <see cref="CheckpointSpawner"/> from the canonical
-    /// <see cref="WorldMap"/> list, so it offers its interaction through the shared <see cref="InteractionArbiter"/>.
+    /// <see cref="WorldMapLayout"/> list, so it offers its interaction through the shared <see cref="InteractionArbiter"/>.
     /// </summary>
     public sealed class CheckpointObject : MonoBehaviour, IInteractable
     {

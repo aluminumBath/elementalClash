@@ -27,7 +27,7 @@ namespace Elementborn.Game
         {
             // VR: left-hand menu button, rising edge (legacy XR input, matching VrInteractInput).
             var d = InputDevices.GetDeviceAtXRNode(menuHand);
-            bool menuNow = d.isValid && d.TryGetFeatureValue(CommonUsages.menuButton, out bool m) && m;
+            bool menuNow = d.isValid && d.TryGetFeatureValue(UnityEngine.XR.CommonUsages.menuButton, out bool m) && m;
             if (menuNow && !_prevMenu) Toggle();
             _prevMenu = menuNow;
 

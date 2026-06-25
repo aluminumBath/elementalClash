@@ -56,10 +56,17 @@ namespace Elementborn.Game.Social
             if (_guild == null || !_guild.CanManage(LocalId)) return;
             if (_guild.Join(friendId))
             {
-                SocialHub.Instance?.Invites?.InviteFriend(friendId);
+                SendSessionInvite(friendId);
                 GameHud.Instance?.Toast(Name(friendId) + " joined the guild.");
             }
             Refresh();
+        }
+
+        private void SendSessionInvite(string friendId)
+        {
+            var hub = SocialHub.Instance;
+            if (hub == null || hub.Invites == null) return;
+            hub.Invites.Invite(hub.CurrentUser.Id, friendId, hub.CurrentSessionId);
         }
 
         public void LeaveGuild()

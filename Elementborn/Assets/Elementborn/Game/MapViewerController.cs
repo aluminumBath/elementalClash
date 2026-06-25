@@ -121,7 +121,7 @@ namespace Elementborn.Game
 
             foreach (var rift in state.Network.All)
             {
-                Vector2 n = Minimap.WorldToNormalized(rift.World, WorldMap.BoundsMin, WorldMap.BoundsMax);
+                Vector2 n = Minimap.WorldToNormalized(rift.World, WorldMapLayout.BoundsMin, WorldMapLayout.BoundsMax);
                 if (state.Network.IsDiscovered(rift.Id)) AddRiftButton(rift, n);
                 else AddDot(n, RiftDim, 12f, null);
             }
@@ -131,17 +131,17 @@ namespace Elementborn.Game
                 foreach (var m in cps.Markers())
                 {
                     bool active = cps.IsActive(m.Id);
-                    Vector2 cn = Minimap.WorldToNormalized(m.World, WorldMap.BoundsMin, WorldMap.BoundsMax);
+                    Vector2 cn = Minimap.WorldToNormalized(m.World, WorldMapLayout.BoundsMin, WorldMapLayout.BoundsMax);
                     AddDot(cn, active ? CheckpointActive : CheckpointDot, active ? 14f : 11f,
                         active ? m.Label + " (respawn)" : null);
                 }
 
             var rig = RigTeleporter.Rig;
             if (rig != null)
-                AddDot(Minimap.WorldToNormalized(rig.position, WorldMap.BoundsMin, WorldMap.BoundsMax), SelfDot, 16f, "You");
+                AddDot(Minimap.WorldToNormalized(rig.position, WorldMapLayout.BoundsMin, WorldMapLayout.BoundsMax), SelfDot, 16f, "You");
 
             foreach (var f in state.FriendMarkers()) // empty until a live position feed exists (consent-gated)
-                AddDot(Minimap.WorldToNormalized(f.World, WorldMap.BoundsMin, WorldMap.BoundsMax), FriendDot, 14f, f.Label);
+                AddDot(Minimap.WorldToNormalized(f.World, WorldMapLayout.BoundsMin, WorldMapLayout.BoundsMax), FriendDot, 14f, f.Label);
 
             if (_shareLabel != null) _shareLabel.text = ShareText();
         }

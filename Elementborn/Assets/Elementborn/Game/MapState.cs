@@ -7,7 +7,7 @@ namespace Elementborn.Game
 {
     /// <summary>
     /// Runtime owner of the map's navigation state: the leyline <see cref="FastTravelNetwork"/> (seeded from
-    /// <see cref="WorldMap"/>), the friend <see cref="LocationSharing"/> set, and the local player's own broadcast
+    /// <see cref="WorldMapLayout"/>), the friend <see cref="LocationSharing"/> set, and the local player's own broadcast
     /// opt-in. Rift objects discover through it, the minimap and viewer read from it, and it persists through
     /// <see cref="PlayerInventory"/>. The bootstrap scene adds one.
     /// </summary>
@@ -36,7 +36,7 @@ namespace Elementborn.Game
         {
             if (Instance != null && Instance != this) { Destroy(this); return; }
             Instance = this;
-            _network = WorldMap.BuildNetwork();
+            _network = WorldMapLayout.BuildNetwork();
         }
 
         private void OnDestroy() { if (Instance == this) Instance = null; }

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using Elementborn.Core;
 
-namespace Elementborn.Game
+namespace Elementborn.nakama.Game
 {
     /// <summary>
     /// A code-built top-down world map screen (uGUI, no prefabs): region nodes coloured by biome,

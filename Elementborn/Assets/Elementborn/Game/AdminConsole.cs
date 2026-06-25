@@ -92,7 +92,7 @@ namespace Elementborn.Game
         private void DiscoverAllRifts()
         {
             if (MapState.Instance == null) return;
-            foreach (var rift in WorldMap.Rifts) MapState.Instance.Discover(rift.Id);
+            foreach (var rift in WorldMapLayout.Rifts) MapState.Instance.Discover(rift.Id);
             GameHud.Instance?.Toast("All leyline rifts discovered.");
         }
 

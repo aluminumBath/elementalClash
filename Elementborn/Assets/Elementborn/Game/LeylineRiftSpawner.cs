@@ -4,7 +4,7 @@ using Elementborn.Core;
 namespace Elementborn.Game
 {
     /// <summary>Spawns a <see cref="LeylineRiftObject"/> with a simple floating crystal marker for each canonical
-    /// rift in <see cref="WorldMap"/>, snapped to the terrain. The bootstrap scene adds one.</summary>
+    /// rift in <see cref="WorldMapLayout"/>, snapped to the terrain. The bootstrap scene adds one.</summary>
     public sealed class LeylineRiftSpawner : MonoBehaviour
     {
         [SerializeField] private float markerScale = 1.6f;
@@ -12,7 +12,7 @@ namespace Elementborn.Game
 
         private void Start()
         {
-            foreach (var rift in WorldMap.Rifts)
+            foreach (var rift in WorldMapLayout.Rifts)
             {
                 var go = new GameObject("Rift_" + rift.Id);
                 go.transform.SetParent(transform, false);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Elementborn.Core;
+using Elementborn.Game.Social;
 
 namespace Elementborn.Game
 {

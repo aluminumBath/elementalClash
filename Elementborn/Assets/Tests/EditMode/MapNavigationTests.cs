@@ -125,11 +125,11 @@ namespace Elementborn.Tests.EditMode
 
         // ---- canonical overworld (WorldMap) ----
         [Test]
-        public void WorldMapRiftsAreUniqueAndIncludeCrystal()
+        public void WorldMapLayoutRiftsAreUniqueAndIncludeCrystal()
         {
-            Assert.Greater(WorldMap.Rifts.Count, 0);
+            Assert.Greater(WorldMapLayout.Rifts.Count, 0);
             var ids = new HashSet<string>();
-            foreach (var r in WorldMap.Rifts)
+            foreach (var r in WorldMapLayout.Rifts)
             {
                 Assert.IsFalse(string.IsNullOrEmpty(r.Id));
                 Assert.IsTrue(ids.Add(r.Id), "duplicate rift id: " + r.Id);
@@ -140,9 +140,9 @@ namespace Elementborn.Tests.EditMode
         [Test]
         public void BuildNetworkRegistersAllAndDiscoversNone()
         {
-            var net = WorldMap.BuildNetwork();
-            Assert.AreEqual(WorldMap.Rifts.Count, net.All.Count);
-            foreach (var r in WorldMap.Rifts) Assert.IsFalse(net.IsDiscovered(r.Id));
+            var net = WorldMapLayout.BuildNetwork();
+            Assert.AreEqual(WorldMapLayout.Rifts.Count, net.All.Count);
+            foreach (var r in WorldMapLayout.Rifts) Assert.IsFalse(net.IsDiscovered(r.Id));
             Assert.IsFalse(net.CanTravelTo("crystal"));   // can't travel to an undiscovered rift
             Assert.IsTrue(net.Discover("crystal"));
             Assert.IsTrue(net.CanTravelTo("crystal"));
@@ -152,8 +152,8 @@ namespace Elementborn.Tests.EditMode
         public void CrystalNormalizesToMapCentre()
         {
             LeylineRift crystal = default;
-            foreach (var r in WorldMap.Rifts) if (r.Id == "crystal") crystal = r;
-            var n = Minimap.WorldToNormalized(crystal.World, WorldMap.BoundsMin, WorldMap.BoundsMax);
+            foreach (var r in WorldMapLayout.Rifts) if (r.Id == "crystal") crystal = r;
+            var n = Minimap.WorldToNormalized(crystal.World, WorldMapLayout.BoundsMin, WorldMapLayout.BoundsMax);
             Assert.AreEqual(0.5f, n.x, 0.001f);
             Assert.AreEqual(0.5f, n.y, 0.001f);
         }

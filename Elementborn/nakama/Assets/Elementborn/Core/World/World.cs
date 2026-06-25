@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Elementborn.Core
+namespace Elementborn.nakama.Core.World
 {
     /// <summary>Region archetypes that make up the world (all original, no IP names).</summary>
     public enum BiomeType

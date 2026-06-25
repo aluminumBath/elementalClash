@@ -65,12 +65,12 @@ namespace Elementborn.Tests.EditMode
         }
 
         [Test]
-        public void WorldMapDefinesDistinctCheckpointsApartFromRifts()
+        public void WorldMapLayoutDefinesDistinctCheckpointsApartFromRifts()
         {
-            Assert.Greater(WorldMap.Checkpoints.Count, 0);
-            var ids = WorldMap.Checkpoints.Select(c => c.Id).ToList();
+            Assert.Greater(WorldMapLayout.Checkpoints.Count, 0);
+            var ids = WorldMapLayout.Checkpoints.Select(c => c.Id).ToList();
             Assert.AreEqual(ids.Count, ids.Distinct().Count()); // unique ids
-            var riftIds = new HashSet<string>(WorldMap.Rifts.Select(r => r.Id));
+            var riftIds = new HashSet<string>(WorldMapLayout.Rifts.Select(r => r.Id));
             Assert.IsFalse(ids.Any(id => riftIds.Contains(id))); // checkpoints are not rifts
         }
     }

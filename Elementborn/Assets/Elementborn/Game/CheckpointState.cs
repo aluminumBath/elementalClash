@@ -30,7 +30,7 @@ namespace Elementborn.Game
         /// <summary>Activate a known checkpoint (ignored if the id isn't canonical). True if the anchor changed.</summary>
         public bool Activate(string id)
         {
-            foreach (var c in WorldMap.Checkpoints)
+            foreach (var c in WorldMapLayout.Checkpoints)
                 if (c.Id == id) return _log.Activate(id);
             return false;
         }
@@ -41,7 +41,7 @@ namespace Elementborn.Game
             position = default;
             string id = _log.Active;
             if (string.IsNullOrEmpty(id)) return false;
-            foreach (var c in WorldMap.Checkpoints)
+            foreach (var c in WorldMapLayout.Checkpoints)
                 if (c.Id == id)
                 {
                     Vector3 p = c.World;
@@ -56,7 +56,7 @@ namespace Elementborn.Game
         public List<MapMarker> Markers()
         {
             var list = new List<MapMarker>();
-            foreach (var c in WorldMap.Checkpoints)
+            foreach (var c in WorldMapLayout.Checkpoints)
                 list.Add(new MapMarker(c.Id, MapMarkerKind.Checkpoint, c.World, c.Name));
             return list;
         }

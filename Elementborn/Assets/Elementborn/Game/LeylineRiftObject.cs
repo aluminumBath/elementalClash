@@ -6,7 +6,7 @@ namespace Elementborn.Game
     /// <summary>
     /// An in-world leyline rift. Stepping near it discovers it (so it becomes a fast-travel destination); standing
     /// in range also offers an Interact to open the leyline map. Discovery and travel run through
-    /// <see cref="MapState"/>. Spawned by <see cref="LeylineRiftSpawner"/> from the canonical <see cref="WorldMap"/>
+    /// <see cref="MapState"/>. Spawned by <see cref="LeylineRiftSpawner"/> from the canonical <see cref="WorldMapLayout"/>
     /// list, so it offers its interaction through the shared <see cref="InteractionArbiter"/>.
     /// </summary>
     public sealed class LeylineRiftObject : MonoBehaviour, IInteractable

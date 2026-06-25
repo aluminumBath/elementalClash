@@ -4,7 +4,7 @@ using Elementborn.Core;
 namespace Elementborn.Game
 {
     /// <summary>Spawns a <see cref="CheckpointObject"/> with a simple glowing obelisk marker for each canonical
-    /// checkpoint in <see cref="WorldMap"/>, snapped to the terrain. The bootstrap scene adds one.</summary>
+    /// checkpoint in <see cref="WorldMapLayout"/>, snapped to the terrain. The bootstrap scene adds one.</summary>
     public sealed class CheckpointSpawner : MonoBehaviour
     {
         [SerializeField] private float markerScale = 1.2f;
@@ -12,7 +12,7 @@ namespace Elementborn.Game
 
         private void Start()
         {
-            foreach (var cp in WorldMap.Checkpoints)
+            foreach (var cp in WorldMapLayout.Checkpoints)
             {
                 var go = new GameObject("Checkpoint_" + cp.Id);
                 go.transform.SetParent(transform, false);

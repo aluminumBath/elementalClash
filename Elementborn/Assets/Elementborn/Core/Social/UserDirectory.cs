@@ -19,6 +19,10 @@ namespace Elementborn.Core.Social
         }
 
         public UserRef WithRole(UserRole role) => new UserRef(Id, DisplayName, role);
+
+        // Compatibility alias for older UI/controller code. The canonical field is DisplayName.
+        public string Name => DisplayName;
+
         public bool IsAdmin => Role == UserRole.Admin;
         public bool CanModerateSessions => Role == UserRole.Admin || Role == UserRole.SessionAdmin;
     }
