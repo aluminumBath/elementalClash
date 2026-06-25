@@ -64,6 +64,7 @@ namespace Elementborn.Game
             foreach (var kv in ClipNames)
             {
                 var clip = Resources.Load<AudioClip>("Audio/" + kv.Value);
+                if (clip == null) clip = ProceduralSfx.Build(kv.Key); // synthesized placeholder until real audio ships
                 if (clip != null) _clips[kv.Key] = clip;
             }
 

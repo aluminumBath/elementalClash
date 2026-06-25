@@ -7,6 +7,52 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **PvP duels (`DuelMatch` + `DuelController`).** Challenge a friend to a 1v1: a first-to-three clash plays out
+  round by round with a live scoreboard, a declared winner, a spoils-of-victory reward, and a clean exit back to the
+  world. The duel rules — challenge, accept/decline, scored rounds, and resolution the moment someone hits the
+  target — are a pure, unit-tested state machine that rejects scoring before acceptance, after the finish, or from a
+  non-participant. Reachable from a **Duel** button on each friend in the Social menu; offline the rival auto-accepts
+  and each clash is a fair contested roll so it's playable solo, while the networked build accepts on the rival's
+  client and resolves each round through live arena combat. **This closes out the multiplayer experience pass: with
+  visible co-op presence, parties, trading, guilds, and now duels all built on the existing social/Nakama seam, the
+  gameplay layer over the backend is complete — real co-op/PvP networking is now a server-deployment concern rather
+  than missing game code.**
+- **Guilds — persistent, ranked player groups (`Guild` + `GuildController`).** Unlike the transient party, a guild
+  is a named group that *saves with your game*: a ranked roster (Leader > Officer > Member) with rank-gated actions —
+  invite, kick only those below you, promote/demote with single-leader transfer of command, automatic succession
+  when the leader leaves, and rename — all in a pure, unit-tested core, plus a `Restore` path that rebuilds the
+  roster with every rank intact on load. It's distinct from the NPC lore factions. Includes a light guild chat
+  (quick phrases with a guildmate reply) and is reachable from a new **Guild** entry in the Social menu. Offline an
+  invited friend joins immediately so it's demonstrable solo; the networked build joins them on accept and routes
+  chat through Nakama. Guild state is folded into the save via `CaptureInto` / `RestoreFrom`.
+- **Player-to-player trading (`TradeSession` + `TradeController`).** A proper trade window with a tamper-safe
+  handshake: both sides stake items and currency, both lock, both confirm, and only then does an atomic swap fire —
+  removing exactly what you staked and granting exactly what they offered. The safety rule is the heart of it and is
+  unit-tested: *any* change to *either* offer instantly voids both locks and confirmations, so the deal can't be
+  altered after the other side commits to what they saw; confirming is impossible until both are locked. You can
+  only stake what you actually own (caps enforced against the live bag and wallet). Reachable from a **Trade** button
+  on each friend in the Social menu; offline a demo partner stakes a small reward and mirrors your lock/confirm so
+  the whole flow is playable solo, while the networked build feeds the partner's real actions into the same session.
+- **Parties — group up for co-op (`PartyRoster` + `PartyController`).** A real party now sits on top of the
+  session-invite system: a capped four-player roster with a leader, join/leave, kick, promote, disband, and
+  automatic leader succession when the leader departs — all in a pure, unit-tested core. Inviting a friend forms the
+  party (you as leader) and fires a genuine session invite through SocialHub; offline the invitee is seated
+  immediately so it's demonstrable solo, while the networked build seats them on their client's accept. Reachable
+  from a new **Party** entry in the Social menu, with a roster panel for managing members and inviting friends.
+- **You can see your friends now — visible co-op presence (`CoopAllies`).** Friend presence was tracked and
+  consent-gated but only ever drawn as dots on the map; it's now rendered in the world as ally figures — a tinted
+  capsule with a billboarded nameplate per sharing friend — that smoothly chase each friend's reported position and
+  vanish when they stop sharing or go offline. It reads the exact same freshness-filtered, consent-gated set the map
+  uses (newly exposed read-only from `MapState`), so the privacy rules are identical, and it follows whatever the
+  active presence source publishes — the dev simulator offline, the Nakama feed online — with no change either way.
+  First step of building the multiplayer *experience* on top of the existing social backend.
+- **The game has sound now — synthesized placeholder audio (`ToneSynth` + `ProceduralSfx`).** The audio system was
+  fully built (pooled one-shots, ambient bed, volume mixing across 25 sound kinds) but silent in the scaffold,
+  since no audio files ship with the code. A pure, unit-tested software synth now renders a PCM buffer for every
+  `SfxKind` — UI blips, element-tinted impact booms, footsteps, jump/land, the summon stings per rarity, and a calm
+  ambient pad — and AudioController falls back to these whenever a real clip is missing from `Resources/Audio`.
+  Press play and it's audible; drop a real `.wav` into `Resources/Audio` and it transparently overrides the
+  placeholder. (Final recorded/composed audio remains an authoring pass on top of this, same as art assets.)
 - **Procedural body animation — things move now instead of sliding (`BodyAnimation` + `ProceduralAnimator`).**
   Every creature, enemy, and boss gets a breathing idle bob and sway, a crouch wind-up the instant an attack
   telegraphs, and a forward lunge when it lands — driven off the controllers' existing `AttackTelegraphed` /

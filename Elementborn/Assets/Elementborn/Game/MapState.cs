@@ -103,6 +103,10 @@ namespace Elementborn.Game
 
         public List<MapMarker> FriendMarkers() => Locator.VisibleFriends(FriendIds, _sharing, _friendPositions);
 
+        /// <summary>The consent-gated, freshness-filtered world positions of friends currently sharing with us —
+        /// the same set the map draws, exposed read-only so the world can render them as visible co-op ally figures.</summary>
+        public IReadOnlyDictionary<string, Vector3> VisibleFriendWorldPositions => _friendPositions;
+
         // --- persistence (folded into PlayerInventory.ToSave / LoadFrom) ---
         public void CaptureInto(SaveData d)
         {

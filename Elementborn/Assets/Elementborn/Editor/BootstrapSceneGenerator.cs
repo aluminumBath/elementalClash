@@ -99,6 +99,10 @@ namespace Elementborn.EditorTools
             // Social overlay (press J in play mode): notifications / friends / chat / feedback / moderation.
             var social = new GameObject("Social");
             Add(social, "SocialMenuController");
+            Add(social, "PartyController");
+            Add(social, "TradeController");
+            Add(social, "GuildController");
+            Add(social, "DuelController");
 
             // Quest loop: tracks objectives from gameplay events and grants rewards on turn-in.
             var quests = new GameObject("Quests");
@@ -151,6 +155,7 @@ namespace Elementborn.EditorTools
             // Map systems: leyline state + always-on minimap + full map viewer (press M, also opened from a rift).
             var map = new GameObject("Map");
             Add(map, "MapState");
+            Add(map, "CoopAllies"); // renders sharing friends as visible in-world figures, not just map dots
             Add(map, "MinimapHud");
             Add(map, "MapViewerController");
             Add(map, "CheckpointState"); // respawn shrines: activation + active anchor, drawn on the map

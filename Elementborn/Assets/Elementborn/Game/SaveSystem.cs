@@ -55,6 +55,12 @@ namespace Elementborn.Game
         public List<string> grimoireKeys = new List<string>();
         public List<int> grimoireTiers = new List<int>();
 
+        // Player guild: a persistent, ranked roster (id/name + parallel member-id/rank lists). Not an NPC faction.
+        public string guildId = "";
+        public string guildName = "";
+        public List<string> guildMemberIds = new List<string>();
+        public List<int> guildMemberRanks = new List<int>();
+
         public List<string> discoveredElements = new List<string>();
 
         // Map: discovered leyline rifts (ids) + the local player's location-sharing opt-in.

@@ -205,6 +205,7 @@ namespace Elementborn.Game
             CheckpointState.Instance?.CaptureInto(d);
             AchievementController.Instance?.CaptureInto(d);
             EquipmentController.Instance?.CaptureInto(d);
+            GuildController.Instance?.CaptureInto(d);
             SummonController.Instance?.CaptureInto(d);
             StoryController.Instance?.CaptureInto(d);
             return d;
@@ -270,6 +271,7 @@ namespace Elementborn.Game
             CheckpointState.Instance?.RestoreFrom(d);
             AchievementController.Instance?.RestoreFrom(d);
             EquipmentController.Instance?.RestoreFrom(d);
+            GuildController.Instance?.RestoreFrom(d);
             SummonController.Instance?.RestoreFrom(d);
             StoryController.Instance?.RestoreFrom(d);
 

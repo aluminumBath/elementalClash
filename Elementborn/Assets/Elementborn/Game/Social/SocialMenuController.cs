@@ -142,6 +142,8 @@ namespace Elementborn.Game.Social
             AddTabButton(rail.transform, "Chat", Tab.Chat);
             AddTabButton(rail.transform, "Feedback", Tab.Feedback);
             _moderationTab = AddTabButton(rail.transform, "Moderation", Tab.Moderation);
+            UiTheme.Button(rail.transform, "Party", () => { Hide(); PartyController.Instance?.Open(); }, 220, 48);
+            UiTheme.Button(rail.transform, "Guild", () => { Hide(); GuildController.Instance?.Open(); }, 220, 48);
 
             var content = new GameObject("Content", typeof(RectTransform));
             content.transform.SetParent(root.transform, false);
@@ -255,6 +257,8 @@ namespace Elementborn.Game.Social
                 var row = Row(friendList, 56);
                 NameLabel(row, Name(id));
                 Fix(UiTheme.Button(row, "Invite", () => { _invites?.InviteFriend(id); GameHud.Instance?.Toast("Invited " + Name(id)); }, 110, 40), 110);
+                Fix(UiTheme.Button(row, "Trade", () => { Hide(); TradeController.Instance?.OpenWith(id); }, 110, 40), 110);
+                Fix(UiTheme.Button(row, "Duel", () => { Hide(); DuelController.Instance?.Challenge(id); }, 110, 40), 110);
                 Fix(UiTheme.Button(row, "Remove", () => _friends.Unfriend(id), 110, 40), 110);
             }
 
