@@ -9,4 +9,5 @@ EditorBuildSettings:
     path: Assets/Elementborn/Scenes/Bootstrap.unity
     guid: c6470edacafb1ea45a075f2929438dba
   m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: e85386675a946574ba3e0c3c802681e2, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: f8c402dd34ac34c4da6ca2e38041d885, type: 2}

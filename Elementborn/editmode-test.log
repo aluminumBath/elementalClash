@@ -1,0 +1,27 @@
+. is not a valid directory name. Please make sure there are no unallowed characters in the name.
+. is not a valid directory name. Please make sure there are no unallowed characters in the name.
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.5/staging' branch; Version is '6000.5.0f1 (88b47c5e7076) revision 8959100'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-steel" at "2026-06-25T15:41:43.8554227Z"
+OS: 'Windows 11  (10.0.26200) Core' Language: 'en' Physical Memory: 32212 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-06-25T15:41:43Z
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.5.0f1\Editor\Unity.exe
+-batchmode
+-projectPath
+.
+-runTests
+-testPlatform
+EditMode
+-testResults
+.\editmode-test-results.xml
+-logFile
+.\editmode-test.log
+-quit
+Successfully changed project path to: C:/Users/steel/Desktop/Code/elementalClash/Elementborn
+C:/Users/steel/Desktop/Code/elementalClash/Elementborn
+Exiting without the bug reporter. Application will terminate with return code 1
