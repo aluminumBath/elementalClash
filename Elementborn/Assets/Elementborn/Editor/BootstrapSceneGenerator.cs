@@ -100,6 +100,7 @@ namespace Elementborn.EditorTools
             var platform = new GameObject("Platform");
             Add(platform, "PerformanceController");
             Add(platform, "PerformanceHud");
+            Add(platform, "PauseMenu");
 
             // Social overlay (press J in play mode): notifications / friends / chat / feedback / moderation.
             var social = new GameObject("Social");

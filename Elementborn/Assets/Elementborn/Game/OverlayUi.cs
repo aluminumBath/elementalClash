@@ -13,6 +13,7 @@ namespace Elementborn.Game
         {
             var canvas = UiTheme.Canvas(name, sortOrder);
             canvas.gameObject.AddComponent<VrCanvasAdapter>(); // world-space in VR; no-op on flat/desktop
+            canvas.gameObject.AddComponent<UiGateToken>();     // modal: holds the Esc gate while it's on-screen
 
             var root = new GameObject("Root", typeof(RectTransform));
             root.transform.SetParent(canvas.transform, false);

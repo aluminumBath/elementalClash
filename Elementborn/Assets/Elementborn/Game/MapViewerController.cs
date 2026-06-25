@@ -62,6 +62,7 @@ namespace Elementborn.Game
         private void Build()
         {
             _canvas = UiTheme.Canvas("MapViewerCanvas", 57);
+            _canvas.gameObject.AddComponent<UiGateToken>();
             _canvas.gameObject.AddComponent<VrCanvasAdapter>();
 
             var root = new GameObject("Root", typeof(RectTransform), typeof(Image));

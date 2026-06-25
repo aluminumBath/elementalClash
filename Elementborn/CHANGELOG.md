@@ -7,6 +7,14 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Pause menu + Escape-key routing (`PauseMenu` + `UiGate`).** Pressing Escape in the world now freezes the game
+  (timeScale 0) and shows Resume / Settings / Main Menu / Quit; Resume restores time and re-locks the cursor, Main
+  Menu reboots the scene to the title. The fiddly part — which screen owns Escape — is solved properly rather than
+  worked around: a tiny shared `UiGate` is held by whatever modal screen is on-screen (a `UiGateToken` on its canvas
+  raises the gate while active and lowers it when hidden or destroyed, so it tracks reality whether a panel is
+  toggled or torn down). Pause only claims Escape when the gate is clear and a player exists, so it never opens on
+  top of an open menu, and every existing menu keeps its own Escape-to-close. One change to `OverlayUi.Panel` gated
+  all sixteen modal screens at once; Social and Map (custom canvases) opt in with the same token.
 - **Platform frame-rate target + profiling overlay (`FrameStats` + `PerformanceController` + `PerformanceHud`).**
   First step of the polish/platform pass and the make-or-break one for Quest: at boot the frame target is set per
   platform (Quest standalone pinned to 72 Hz with vSync off so the target governs; PCVR and flat left to their own
