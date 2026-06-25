@@ -21,8 +21,7 @@ namespace Elementborn.Tests.EditMode
         public void MappedSidekicksHaveModels_UnmappedFallBackToEnumName()
         {
             Assert.AreEqual("Moss_Wolf/Moss_Wolf", SidekickModelNames.ResourceName(WillowSidekick.Gunnar));
-            // Chameleon is intentionally unmapped — it falls back to the enum name (→ primitive at runtime).
-            Assert.AreEqual("Chameleon", SidekickModelNames.ResourceName(WillowSidekick.Chameleon));
+            Assert.AreEqual("Prism_Chameleon/Prism_Chameleon", SidekickModelNames.ResourceName(WillowSidekick.Chameleon));
             foreach (var kv in SidekickModelNames.Aliases)
                 Assert.IsFalse(string.IsNullOrEmpty(kv.Value), $"sidekick alias for {kv.Key} is empty");
         }
@@ -32,8 +31,7 @@ namespace Elementborn.Tests.EditMode
         {
             Assert.AreEqual("Models/Weapons/Emberblade/Emberblade", WeaponModelNames.ResourcePath(WeaponType.Sword));
             Assert.AreEqual("Models/Weapons/Gilded_Arc_Bow/Gilded_Arc_Bow", WeaponModelNames.ResourcePath(WeaponType.LongBow));
-            // Dagger has no batch model — falls back to the enum name.
-            Assert.AreEqual("Dagger", WeaponModelNames.ResourceName(WeaponType.Dagger));
+            Assert.AreEqual("Fang_Dagger/Fang_Dagger", WeaponModelNames.ResourceName(WeaponType.Dagger));
         }
 
         [Test]

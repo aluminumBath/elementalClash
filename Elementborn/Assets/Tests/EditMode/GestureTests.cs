@@ -57,13 +57,13 @@ namespace Elementborn.Tests.EditMode
             var fire = GestureProfile.For(Element.Fire);
             Assert.AreEqual(IntentType.PrimaryCast, fire.IntentFor(GestureKind.Thrust));
             Assert.AreEqual(IntentType.SecondaryCast, fire.IntentFor(GestureKind.Uppercut));
-            Assert.AreEqual(IntentType.None, fire.IntentFor(GestureKind.Whip)); // not a fire motion
+            Assert.AreEqual(IntentType.Sweep, fire.IntentFor(GestureKind.Whip));
 
             // Water: flowing
             var water = GestureProfile.For(Element.Water);
             Assert.AreEqual(IntentType.PrimaryCast, water.IntentFor(GestureKind.Whip));
             Assert.AreEqual(IntentType.SecondaryCast, water.IntentFor(GestureKind.Slam));
-            Assert.AreEqual(IntentType.None, water.IntentFor(GestureKind.Thrust));
+            Assert.AreEqual(IntentType.Sweep, water.IntentFor(GestureKind.Thrust));
 
             // Earth: heavy
             var earth = GestureProfile.For(Element.Earth);

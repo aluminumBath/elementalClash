@@ -40,7 +40,9 @@ namespace Elementborn.Tests.EditMode
             for (int seed = 0; seed < 50; seed++)
             {
                 var k = Wildlife.Pick(BiomeType.CloudTemple, new SystemRandomSource(seed));
-                Assert.IsTrue(k == CreatureKind.AirDragonfly || k == CreatureKind.AirJellyfish, $"got {k}");
+                var info = CreatureCatalog.For(k);
+                Assert.AreEqual(Element.Air, info.Element, $"got {k}");
+                Assert.IsFalse(info.IsCompanion, $"got companion {k}");
             }
         }
     }

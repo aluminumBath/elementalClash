@@ -37,6 +37,9 @@ namespace Elementborn.Core
         public static Vector3 ArcPoint(Vector3 start, Vector3 end, float height, float u)
         {
             u = Mathf.Clamp01(u);
+            if (u <= 0f) return start;
+            if (u >= 1f) return end;
+
             Vector3 p = Vector3.Lerp(start, end, u);
             p.y += height * Mathf.Sin(Mathf.PI * u);
             return p;

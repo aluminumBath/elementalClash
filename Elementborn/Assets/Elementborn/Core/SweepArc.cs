@@ -35,7 +35,7 @@ namespace Elementborn.Core
             facing.y = 0f;
             if (facing.sqrMagnitude < 0.0001f) return true; // no facing -> omni at close range
 
-            return Vector3.Angle(facing, toTarget) <= halfAngleDegrees;
+            return Vector3.Angle(facing, toTarget) <= halfAngleDegrees + 0.001f;
         }
     }
 }

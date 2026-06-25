@@ -176,7 +176,7 @@ namespace Elementborn.Core
         {
             var def = ItemCatalog.Get(itemId);
             if (def == null) return 0;
-            return Math.Max(1, (int)(def.Value * SellFractionFor(def.Category)));
+            return Math.Max(1, (int)(def.Value * SellFractionFor(def.Category) + 0.0001f));
         }
 
         public static ShopResult Buy(Inventory inventory, Wallet wallet, string itemId, int count = 1)

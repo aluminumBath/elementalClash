@@ -132,41 +132,35 @@ namespace Elementborn.Core
             }
         }
 
-        // Common wildlife: mostly hide, the odd consumable, often nothing.
+        // Common wildlife: mostly hide, the odd consumable, and a few low-value forage drops.
         private static readonly LootTable Beast = new LootTable(2,
             new LootEntry("hide", 60, 1, 2),
-            new LootEntry("sunflower_seeds", 12, 1, 2),
-            new LootEntry("healing_tonic", 6, 1),
-            new LootEntry("", 22, 1));
+            new LootEntry("sunflower_seeds", 34, 1, 2),
+            new LootEntry("healing_tonic", 6, 1));
 
         private static readonly LootTable Fire = new LootTable(2,
             new LootEntry("ember_shard", 45, 1, 2),
-            new LootEntry("hide", 30, 1, 2),
-            new LootEntry("old_relic", 5, 1),
-            new LootEntry("", 20, 1));
+            new LootEntry("hide", 50, 1, 2),
+            new LootEntry("old_relic", 5, 1));
 
         private static readonly LootTable Water = new LootTable(2,
             new LootEntry("river_pearl", 40, 1, 2),
-            new LootEntry("deep_jelly", 25, 1, 2),
-            new LootEntry("hide", 20, 1),
-            new LootEntry("", 15, 1));
+            new LootEntry("deep_jelly", 40, 1, 2),
+            new LootEntry("hide", 20, 1));
 
         private static readonly LootTable Earth = new LootTable(2,
             new LootEntry("ore_marrow_bone", 40, 1, 2),
-            new LootEntry("compost_truffle", 25, 1),
-            new LootEntry("hide", 20, 1, 2),
-            new LootEntry("", 15, 1));
+            new LootEntry("compost_truffle", 40, 1),
+            new LootEntry("hide", 20, 1, 2));
 
         private static readonly LootTable Air = new LootTable(2,
-            new LootEntry("iridescent_beetle", 45, 1, 2),
-            new LootEntry("hide", 30, 1),
-            new LootEntry("", 25, 1));
+            new LootEntry("iridescent_beetle", 70, 1, 2),
+            new LootEntry("hide", 30, 1));
 
         // Apex predator: more rolls, a real shot at a relic.
         private static readonly LootTable Apex = new LootTable(3,
             new LootEntry("old_relic", 25, 1),
             new LootEntry("ember_shard", 20, 1, 2),
-            new LootEntry("hide", 35, 1, 2),
-            new LootEntry("", 20, 1));
+            new LootEntry("hide", 55, 1, 2));
     }
 }

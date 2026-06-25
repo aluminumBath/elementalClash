@@ -94,7 +94,7 @@ namespace Elementborn.Core
                 case CreatureKind.Roc:
                     return new CreatureInfo("Roc", Core.Element.Air, null, true, false, false, 0, 0.15f);
                 case CreatureKind.Thunderbird:
-                    return new CreatureInfo("Thunderbird", Core.Element.Fire, null, true, false, false, 0, 0.15f);
+                    return new CreatureInfo("Thunderbird", Core.Element.Air, null, true, false, false, 0, 0.15f);
                 case CreatureKind.Rhino:
                     return new CreatureInfo("Plains Rhino", Core.Element.Earth, null, true, false, false, 0, 0.25f);
                 case CreatureKind.Tiger:
