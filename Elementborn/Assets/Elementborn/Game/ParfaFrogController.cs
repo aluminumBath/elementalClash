@@ -22,6 +22,39 @@ namespace Elementborn.Game
         {
             var p = GameObject.FindGameObjectWithTag("Player");
             if (p != null) _combat = p.GetComponentInParent<PlayerCombatController>();
+            BuildFrogs();
+        }
+
+        // The two frogs as side-by-side visuals turned toward each other, mid-squabble. Each gets a tinted
+        // placeholder (visible until its Meshy model is imported) and a ProceduralAnimator for an idle bob — the
+        // models are static, so the bob is what gives them life, and the pair de-sync by position so they bicker
+        // out of step. ModelLibrary.Attach swaps in the real model and hides the placeholder once it exists.
+        private void BuildFrogs()
+        {
+            if (transform.Find("Hurricane Frog") != null) return; // idempotent
+            MakeFrog("Hurricane Frog", FrogModelNames.Hurricane, new Vector3(-0.55f, 0f, 0f),  22f, Element.Air);
+            MakeFrog("Steam Frog",     FrogModelNames.Steam,     new Vector3( 0.55f, 0f, 0f), -22f, Element.Water);
+        }
+
+        private void MakeFrog(string label, string resourcePath, Vector3 offset, float yaw, Element tint)
+        {
+            var go = new GameObject(label);
+            go.transform.SetParent(transform, false);
+            go.transform.localPosition = offset;
+            go.transform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+
+            var placeholder = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            placeholder.name = "Placeholder";
+            placeholder.transform.SetParent(go.transform, false);
+            placeholder.transform.localScale = new Vector3(0.5f, 0.36f, 0.5f);
+            var col = placeholder.GetComponent<Collider>();
+            if (col != null) Destroy(col);
+            var mr = placeholder.GetComponent<MeshRenderer>();
+            if (mr != null) mr.sharedMaterial = ToonPalette.Tinted(ElementColor.For(tint));
+
+            ModelLibrary.Attach(resourcePath, go, "Frog");      // real model hides the placeholder when present
+            if (go.GetComponent<ProceduralAnimator>() == null)
+                go.AddComponent<ProceduralAnimator>();
         }
 
         private void OnEnable() { InputBindings.Enable(); InteractionArbiter.Register(this); }

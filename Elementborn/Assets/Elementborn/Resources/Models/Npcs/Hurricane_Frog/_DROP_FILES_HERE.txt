@@ -1,0 +1,14 @@
+Parfa's Hurricane Frog (the air/storm half of her bickering pair) loads from THIS folder:
+    Resources.Load<GameObject>("Models/Npcs/Hurricane_Frog/Hurricane_Frog")
+
+This is a STATIC model (no baked clips) — no AnimatorController needed. The ParfaFrogController
+gives it an idle bob automatically via ProceduralAnimator.
+Full steps: docs/ASSET_IMPORT_Meshy.md  (section: Parfa's Frogs)
+
+Needed in this folder:
+    Hurricane_Frog.prefab    <- the model (textured material assigned)
+    the *image-to-3d-texture.fbx
+    the *image-to-3d-texture.png   (base colour)
+
+Raw export kept local (not in the scaffold zip). Falls back to a tinted placeholder until the prefab exists.
+Delete this marker once the prefab is in.

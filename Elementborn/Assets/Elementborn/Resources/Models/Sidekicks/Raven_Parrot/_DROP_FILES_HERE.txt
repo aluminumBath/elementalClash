@@ -1,0 +1,16 @@
+Willow's Parrot sidekick (WillowSidekick.Parrot) loads its model from THIS folder:
+    Resources.Load<GameObject>("Models/Sidekicks/Raven_Parrot/Raven_Parrot")
+
+This one is RIGGED with 5 baked clips, so it needs an AnimatorController.
+Full steps: docs/ASSET_IMPORT_Meshy.md  (section: Willow's Parrot)
+
+Needed in this folder:
+    Raven_Parrot.prefab          <- model with Animator + Raven_Parrot.controller assigned
+    Raven_Parrot.controller      <- references the 5 baked clips (Walking is the looping default)
+    the 5 *_withSkin.fbx files    (mesh + one clip each; set Rig = Generic)
+    *_texture_0.png               (base colour)
+    *_texture_0_normal.png        (set Texture Type = Normal map)
+
+The raw ~167 MB Meshy export is intentionally NOT in the scaffold zip — keep it local.
+Until Raven_Parrot.prefab exists, the sidekick falls back to its tinted placeholder (safe).
+Delete this marker once the prefab is in.

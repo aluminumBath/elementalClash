@@ -7,6 +7,25 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Balance & QA foundation — central tuning table (`Balance`) + automated sanity suite (`BalanceSanityTests`).**
+  Kicks off #7. `Balance` is the one pure, engine-free home for tuning: global difficulty dials (enemy health,
+  enemy/player damage, rewards, drop rate, XP, gacha generosity — all default 1.0, so systems migrate onto them
+  incrementally) plus the sanity bounds the QA suite enforces. The new EditMode suite runs invariants over the
+  *live* content, so a careless tuning edit fails a test instead of shipping: ability base damage stays positive and
+  in range, charge bonuses never go negative, upgrade multipliers stay ≥ 1, projectile speeds and status durations
+  are positive; the Summon Beacon keeps legendary rarer than epic and below the rare ceiling, a ten-pull never costs
+  more than ten singles, dupe refunds reward rarity, and hard-pity is positive; the character roll keeps the full
+  Confluence rarer than a sub-art; the XP curve is strictly increasing; and the item catalog has no negative prices.
+- **Real Meshy models wired — Willow's Parrot + Parfa's two frogs.** Three uploaded Meshy exports are now bound and
+  load through `Resources` with a safe placeholder fallback until their prefabs exist. **Willow's Parrot** is
+  re-pointed (`SidekickModelNames`) to a rigged raven-parrot carrying 5 baked clips (`Raven_Parrot`); to make rigged
+  models behave, `ProceduralAnimator` now detects an Animator + controller on the visual and **stands down**, so baked
+  skeletal animation plays without the procedural idle bob fighting it (static placeholders and un-rigged models keep
+  the bob as before). **Parfa's two bickering frogs** get a new `FrogModelNames` binding and are built by
+  `ParfaFrogController` as a facing pair (`Hurricane_Frog` air, `Steam_Frog` water), each with a tinted placeholder and
+  an idle bob; the frogs object is now placed beside Parfa in the bootstrap, so the air-vs-water accord puzzle (embody
+  both → a Diamond, once) is playable in the demo scene. Raw exports stay local (not zipped); import steps in
+  `docs/ASSET_IMPORT_Meshy.md`.
 - **Localization foundation (`LocaleTable` + `Localization`).** UI text no longer has to be hardcoded: a pure,
   unit-tested locale table does key→string lookup with a fallback chain (current locale → English base → the key
   itself), so any untranslated or missing string degrades to readable text instead of a blank or a crash. The

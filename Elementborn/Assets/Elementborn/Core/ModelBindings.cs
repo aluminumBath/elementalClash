@@ -28,13 +28,22 @@ namespace Elementborn.Core
         public static readonly IReadOnlyDictionary<WillowSidekick, string> Aliases = new Dictionary<WillowSidekick, string>
         {
             { WillowSidekick.Gunnar,   "Moss_Wolf/Moss_Wolf" },                       // her rock-channeling direwolf
-            { WillowSidekick.Parrot,   "Teal_Hornbill/Teal_Hornbill" },
+            { WillowSidekick.Parrot,   "Raven_Parrot/Raven_Parrot" },              // Meshy biped raven-parrot, rigged, 5 baked clips
             { WillowSidekick.Blobfish,  "Lure_Fish/Lure_Fish" },
             { WillowSidekick.Mushroom,  "Luminescent_Mushroom/Luminescent_Mushroom" },
             // Chameleon: no match in the batch → primitive fallback.
         };
         public static string ResourceName(WillowSidekick s) => Aliases.TryGetValue(s, out var n) ? n : s.ToString();
         public static string ResourcePath(WillowSidekick s) => ResourceRoot + ResourceName(s);
+    }
+
+    /// <summary>Parfa's two bickering frogs (the air-vs-water accord puzzle). Static Meshy models, so a primitive
+    /// fallback shows until they are imported. Hurricane = the air-storm frog, Steam = the water-heat frog.</summary>
+    public static class FrogModelNames
+    {
+        public const string ResourceRoot = "Models/Npcs/";
+        public const string Hurricane = ResourceRoot + "Hurricane_Frog/Hurricane_Frog";
+        public const string Steam     = ResourceRoot + "Steam_Frog/Steam_Frog";
     }
 
     /// <summary>Weapon pickups → gear model. Dagger / Sai / None have no batch model → primitive fallback.</summary>

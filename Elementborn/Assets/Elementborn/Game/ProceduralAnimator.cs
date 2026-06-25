@@ -24,6 +24,7 @@ namespace Elementborn.Game
         private float _lungeT = -1f;   // <0 = not lunging
         private float _lungeDir = 1f;  // +1 thrust forward (strike), -1 pull back (wind-up)
         private bool _captured;
+        private bool _suppressed;       // a rigged model with its own Animator drives itself; we stand down
         private EnemyController _enemy;
 
         private void Start()
@@ -53,7 +54,17 @@ namespace Elementborn.Game
             _visual = PickVisual();
             _baseLocalPos = _visual.localPosition;
             _baseLocalRot = _visual.localRotation;
+            _suppressed = HasOwnAnimator();
             _captured = true;
+        }
+
+        // A rigged model carries its own Animator + controller (baked clips). When one is present we leave motion
+        // entirely to it, rather than fighting skeletal animation with a procedural bob and lunge. Placeholder
+        // primitives and static models have no controller, so they keep the procedural life as before.
+        private bool HasOwnAnimator()
+        {
+            var anim = GetComponentInChildren<Animator>(true);
+            return anim != null && anim.runtimeAnimatorController != null;
         }
 
         private Transform PickVisual()
@@ -72,6 +83,7 @@ namespace Elementborn.Game
         private void Update()
         {
             if (!_captured || _visual == null) Capture();
+            if (_suppressed) return;                              // rigged model animates itself
             if (_visual == null || _visual == transform) return; // no separate visual to animate locally
 
             float t = Time.time + _phase;

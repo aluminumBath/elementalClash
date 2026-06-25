@@ -5,6 +5,10 @@
 > / `ModelBindings`. The prompts below remain as the regeneration record; the “missing a model” framing is
 > historical. A large pool of extra creatures (turtles, dark/corrupted wolves, apex showpieces, etc.) is also
 > generated and available to slot into the story or future taming content.
+>
+> **Imported assets (2026-06):** real Meshy models are now wired for **Willow's Parrot** (a rigged
+> raven-parrot with 5 baked clips → `Raven_Parrot`) and **Parfa's two frogs** (static `Hurricane_Frog`
+> + `Steam_Frog`). Import steps live in `docs/ASSET_IMPORT_Meshy.md`.
 
 
 Paste each **Prompt** into Meshy AI (Text to 3D). They're tuned to the cel-shaded look and matched to the style of

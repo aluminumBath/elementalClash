@@ -339,6 +339,11 @@ namespace Elementborn.EditorTools
             Npc(demo.transform, "Kiana", 1, new Vector3(-4f, 1f, 4f));
             Npc(demo.transform, "Parfa", 2, new Vector3(0f, 1f, 6f));
 
+            var frogs = new GameObject("Parfa's Frogs");
+            frogs.transform.SetParent(demo.transform, false);
+            frogs.transform.position = new Vector3(1.7f, 0.45f, 6f);   // at Parfa's side; builds its own two frog visuals
+            Add(frogs, "ParfaFrogController");
+
             var market = GameObject.CreatePrimitive(PrimitiveType.Cube);
             market.name = "Merchant";
             market.transform.SetParent(demo.transform, false);
