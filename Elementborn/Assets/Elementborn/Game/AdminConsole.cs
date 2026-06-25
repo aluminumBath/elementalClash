@@ -67,6 +67,7 @@ namespace Elementborn.Game
             UiTheme.Button(_content, "Discover all leyline rifts", DiscoverAllRifts);
             UiTheme.Button(_content, "Teleport to Concord", TeleportToConcord);
             UiTheme.Button(_content, "Cricket: toggle earring form", () => CricketCompanion.Instance?.ToggleEarring());
+            UiTheme.Button(_content, "Language: switch en/es", () => { var loc = Localization.Instance; if (loc != null) loc.SetLocale(loc.Current == "en" ? "es" : "en"); });
 
             // Live toggles + values (the form).
             OverlayUi.Body(_content, "Toggles & values", 20, Section);

@@ -98,9 +98,11 @@ namespace Elementborn.EditorTools
 
             // Platform: per-device frame-rate target at boot + a dev frame-time overlay (toggle with F3).
             var platform = new GameObject("Platform");
+            Add(platform, "Localization");
             Add(platform, "PerformanceController");
             Add(platform, "PerformanceHud");
             Add(platform, "PauseMenu");
+            Add(platform, "LoadingScreen");
 
             // Social overlay (press J in play mode): notifications / friends / chat / feedback / moderation.
             var social = new GameObject("Social");

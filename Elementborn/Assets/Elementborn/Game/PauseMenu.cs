@@ -38,13 +38,13 @@ namespace Elementborn.Game
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            var panel = OverlayUi.Panel("PauseCanvas", "PAUSED", 240, new Vector2(520, 520), Resume);
+            var panel = OverlayUi.Panel("PauseCanvas", Localization.T("menu.paused"), 240, new Vector2(520, 520), Resume);
             _panel = panel.canvas.gameObject;
             var c = panel.content;
-            UiTheme.Button(c, "Resume", Resume, 360, 54);
-            UiTheme.Button(c, "Settings", () => SettingsController.EnsureInstance().Open(), 360, 50);
-            UiTheme.Button(c, "Main Menu", ToMenu, 360, 50);
-            UiTheme.Button(c, "Quit", Quit, 360, 50);
+            UiTheme.Button(c, Localization.T("menu.resume"), Resume, 360, 54);
+            UiTheme.Button(c, Localization.T("menu.settings"), () => SettingsController.EnsureInstance().Open(), 360, 50);
+            UiTheme.Button(c, Localization.T("menu.mainMenu"), ToMenu, 360, 50);
+            UiTheme.Button(c, Localization.T("menu.quit"), Quit, 360, 50);
         }
 
         public void Resume()

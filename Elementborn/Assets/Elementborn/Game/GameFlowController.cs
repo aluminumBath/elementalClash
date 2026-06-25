@@ -189,22 +189,37 @@ namespace Elementborn.Game
 
         private void EnterWorld(WorldRegion start)
         {
+            StartCoroutine(EnterWorldRoutine(start));
+        }
+
+        private System.Collections.IEnumerator EnterWorldRoutine(WorldRegion start)
+        {
             Current = Stage.World;
             StartRegion = start;
             if (_mapGo != null) Destroy(_mapGo);
+
+            LoadingScreen.Instance?.Show(Localization.T("hud.loadingWorld"));
+            yield return null; // let the loading overlay render before the blocking build
+            yield return null;
 
             GatePlayer(true);
             if (World != null)
             {
                 if (terrainBuilder != null) terrainBuilder.Build(World);
+                LoadingScreen.Instance?.SetProgress(0.4f); yield return null;
                 if (meshTerrainBuilder != null) meshTerrainBuilder.Build(World);
+                LoadingScreen.Instance?.SetProgress(0.7f); yield return null;
                 if (structurePlacer != null) structurePlacer.Place(World);
+                LoadingScreen.Instance?.SetProgress(0.88f); yield return null;
                 if (spawnPlacer != null) spawnPlacer.Place(World);
+                LoadingScreen.Instance?.SetProgress(1f); yield return null;
             }
 
             // Cricket wakes with the player and stays for the whole game; the tutorial runs on a fresh start.
             new GameObject("Cricket").AddComponent<CricketCompanion>().Spawn(_firstRunTutorial);
+            yield return null;
 
+            LoadingScreen.Instance?.Hide();
             Debug.Log($"[Elementborn] Flow: entering world at {(start != null ? start.Name : "(none)")}.");
         }
 

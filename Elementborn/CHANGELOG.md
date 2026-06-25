@@ -7,6 +7,22 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Localization foundation (`LocaleTable` + `Localization`).** UI text no longer has to be hardcoded: a pure,
+  unit-tested locale table does key→string lookup with a fallback chain (current locale → English base → the key
+  itself), so any untranslated or missing string degrades to readable text instead of a blank or a crash. The
+  `Localization` service seeds the shipped strings (English plus a sample Spanish locale to prove switching),
+  exposes `T(key)` to the UI, remembers the chosen locale in PlayerPrefs, and raises `LocaleChanged` so open screens
+  can rebuild. The pause menu and the loading message are wired through it end-to-end, and AdminConsole has an
+  en/es switch to demonstrate it live; migrating the rest of the visible strings onto the table is now incremental
+  authoring rather than new system work. **This rounds out the #6 polish/platform code foundation — frame-rate
+  target + profiling overlay, pause menu + Esc routing, loading screen, and localization are all in.**
+- **Loading screen for world generation (`LoadingScreen`).** Entering the world used to freeze on a half-built
+  frame while terrain, structures, and spawns were generated; that work now runs inside a coroutine that shows a
+  "Generating world" overlay, yields a frame so it actually renders *before* the blocking build, then steps a
+  progress bar between each phase (terrain → mesh → structures → spawns) and hides when done. The overlay is a dark
+  cover quad parented to the active camera so it works in both flat and VR (the same camera-follow approach the
+  co-op nameplates use), with a message and animated dots. (A true VR fade-to-black during heavier async loads is a
+  later polish step on top of this.)
 - **Pause menu + Escape-key routing (`PauseMenu` + `UiGate`).** Pressing Escape in the world now freezes the game
   (timeScale 0) and shows Resume / Settings / Main Menu / Quit; Resume restores time and re-locks the cursor, Main
   Menu reboots the scene to the title. The fiddly part — which screen owns Escape — is solved properly rather than

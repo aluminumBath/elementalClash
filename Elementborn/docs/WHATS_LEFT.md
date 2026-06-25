@@ -16,7 +16,7 @@ Nothing below is missing *code* for the current design; it's the work that lives
 - **Audio** (`AudioController` + 20 placeholder SFX), a **settings menu** (Esc), **save slots** (F8) with
   skip-creation-on-load, **biome-blended** terrain colours, a **third-person** rig, and **all UI on
   `UiTheme`/TextMeshPro** (every screen retrofitted). See `AUDIO.md` and `PORTING.md`.
-- 123 EditMode test files + PlayMode tests and a GameCI workflow, plus `tools/ip-guard.sh` + `tools/validate.sh` + `tools/doctor.sh`
+- 124 EditMode test files + PlayMode tests and a GameCI workflow, plus `tools/ip-guard.sh` + `tools/validate.sh` + `tools/doctor.sh`
   (CI gates) and a tag-driven release + docs-publish pipeline (`VERSION`, `CHANGELOG.md`, `tools/bump-version.sh`).
 - Docs: this file, `INDEX.md`, `README.md`, `GETTING_STARTED.md`, `DEPLOYMENT.md`, `ART_GUIDE.md`,
   `PALETTE.md`, `UI_SPRITES.md`, `GENERATED_ART.md`, `MODELS.md`, `AUDIO.md`, `PORTING.md`, `INPUT.md`, `VR_COMBAT.md`, `ARENA.md`, `UNDERWATER.md`, `CREATURES.md`, `HIDDEN_MOVES.md`, `FACTIONS.md`, `MODDING.md`, `PLANTS.md`, `NPCS.md`, `EVOLUTION.md`, `LIMITATIONS.md`, `SOCIAL.md`, `BOOTSTRAP.md`, `NETCODE.md`, `VR_SETUP.md`, `QUESTS.md`, `ITEMS.md`, `SELF_HOSTING.md`, `PROGRESSION.md`, `WORLD.md`.
