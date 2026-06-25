@@ -108,6 +108,7 @@ namespace Elementborn.Game
             _self = GetComponent<Damageable>();
             _cc = GetComponent<CharacterController>();
             _faction = GetComponent<FactionMember>();
+            if (GetComponent<ProceduralAnimator>() == null) gameObject.AddComponent<ProceduralAnimator>();
         }
 
         private void Start()

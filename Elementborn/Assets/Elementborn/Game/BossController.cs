@@ -52,6 +52,10 @@ namespace Elementborn.Game
             string reward = _silverReward + " Silver" + (_gemReward > 0 ? " and " + _gemReward + " Ruby" : "");
             string who = string.IsNullOrEmpty(_bossName) ? "The boss" : _bossName;
             GameHud.Instance?.Toast(who + " falls! You claim " + reward + ".");
+
+            // The first boss felled after the tower blast pushes the investigation onward.
+            if (StoryController.Instance != null && StoryController.Instance.Chapter == StoryChapter.TheTowerBlast)
+                StoryController.Instance.Advance();
         }
 
         private void Update()

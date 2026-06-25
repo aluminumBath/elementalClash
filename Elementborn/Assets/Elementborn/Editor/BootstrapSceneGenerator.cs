@@ -122,6 +122,7 @@ namespace Elementborn.EditorTools
             // Story mode: the live cursor through the campaign (current chapter + chosen ending), saved with the game.
             var story = new GameObject("Story");
             Add(story, "StoryController");
+            Add(story, "StoryDirector");
 
             // Environmental hazards: altitude cold + underwater pressure (with element/enchant exemptions),
             // applied to the player on a tick. Dormant on the flat surface; bites in the heights and deep water.

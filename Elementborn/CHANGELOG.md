@@ -7,6 +7,30 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Procedural body animation — things move now instead of sliding (`BodyAnimation` + `ProceduralAnimator`).**
+  Every creature, enemy, and boss gets a breathing idle bob and sway, a crouch wind-up the instant an attack
+  telegraphs, and a forward lunge when it lands — driven off the controllers' existing `AttackTelegraphed` /
+  `AttackLanded` events. The animator touches only the visual child's local position and rotation, so it composes
+  cleanly with HitReaction's squash (which owns the child's scale) and the AI's facing (which owns the root's
+  rotation); it picks whichever child is actually visible, so it animates the placeholder today and a real model
+  the moment one is dropped in. Self-attached by EnemyController and CreatureController — no per-spawn wiring.
+- **Legible main-quest spine (`StoryDirector`).** The campaign is no longer just tracked silently — its current
+  beat is announced when the player enters the world and again on every chapter change (title + what's at stake),
+  so there's always a sense of where the story stands. And the spine now moves through play: felling the first
+  site boss after the Tower Blast advances the chapter from *The Tower Blast* into *Ashes and Accusations*, tying
+  the dungeon content into the story. (Deeper per-chapter missions, side quests, dialogue, and the endings UI
+  remain an ongoing authoring effort on top of this spine.)
+- **Verified + locked the site loop end-to-end (`SiteWiringTests`).** Confirmed an open-world `SiteEntrance`
+  opens its themed interior with the right boss and lore: the entrance configures from `SiteCatalog.For(kind)` and
+  the interior keys everything off `info.Kind`/`Domain`/`Payload`. New integration tests assert the catalogs stay
+  consistent — every kind self-reports, each site round-trips through its biome (so the placer seeds the right
+  entrance), boss sites resolve to themed bosses (Aerie→Air, Sunken Gate→Water) with real models/health, and the
+  Sunken Gate is Underwater (so it floods). No code changes were needed — the wiring was already correct.
+- **Defeat path inside dungeons.** Going down in a site interior no longer leaves the instance stuck open. The
+  interior now watches the player while inside; on death it tears the instance down (clears contents, resets the
+  in-state so it can be re-entered) with an "overwhelmed in the depths" message, while the existing
+  `RespawnController` handles the actual respawn back at a checkpoint on the surface. Manual exit and teardown both
+  unsubscribe cleanly, so the watch never leaks.
 - **Boss defeat reward.** Clearing a site boss now pays off instead of just ending: each boss in `BossCatalog`
   carries a silver + premium-gem payout (180–260 silver, 1–3 rubies), and `BossController` grants it on the boss's
   death event with a named victory toast ("Azure Arbor Guardian falls! You claim 260 Silver and 3 Ruby."). Leaving

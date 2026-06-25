@@ -27,6 +27,7 @@ namespace Elementborn.Game
         private Transform _contents;   // per-visit; destroyed on exit
         private Vector3 _returnPosition;
         private bool _inside;
+        private Damageable _playerBody; // watched while inside, so a death tears the instance down
 
         public bool IsInside => _inside;
 
@@ -36,7 +37,7 @@ namespace Elementborn.Game
             Instance = this;
         }
 
-        private void OnDestroy() { if (Instance == this) Instance = null; }
+        private void OnDestroy() { UnsubscribeDeath(); if (Instance == this) Instance = null; }
 
         public void Enter(SiteInfo info, Vector3 returnPosition)
         {
@@ -46,6 +47,7 @@ namespace Elementborn.Game
             PopulateContents(info);
             RigTeleporter.WarpTo(PocketOrigin + new Vector3(0f, 1.2f, -8f)); // back of the entrance hall
             _inside = true;
+            SubscribeDeath();
             GameHud.Instance?.Toast("Entered " + info.DisplayName);
         }
 
@@ -53,9 +55,34 @@ namespace Elementborn.Game
         {
             if (!_inside) return;
             _inside = false;
+            UnsubscribeDeath();
             if (_contents != null) Destroy(_contents.gameObject);
             RigTeleporter.WarpTo(_returnPosition);
             GameHud.Instance?.Toast("You return to the surface world.");
+        }
+
+        private void SubscribeDeath()
+        {
+            var rig = RigTeleporter.Rig;
+            _playerBody = rig != null ? rig.GetComponentInParent<Damageable>() : null;
+            if (_playerBody != null && _playerBody.Health != null) _playerBody.Health.Died += OnPlayerDown;
+        }
+
+        private void UnsubscribeDeath()
+        {
+            if (_playerBody != null && _playerBody.Health != null) _playerBody.Health.Died -= OnPlayerDown;
+            _playerBody = null;
+        }
+
+        // The player fell in the depths: tear the instance down so it resets and can be re-entered. We don't warp
+        // here — the RespawnController already gets them back on their feet (at a checkpoint on the surface).
+        private void OnPlayerDown()
+        {
+            if (!_inside) return;
+            _inside = false;
+            if (_contents != null) Destroy(_contents.gameObject);
+            UnsubscribeDeath();
+            GameHud.Instance?.Toast("You were overwhelmed in the depths.");
         }
 
         private void EnsureRoom()

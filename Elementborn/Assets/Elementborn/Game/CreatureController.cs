@@ -56,6 +56,7 @@ namespace Elementborn.Game
             _tameable = GetComponent<Tameable>();
             _home = transform.position;
             _wanderTarget = _home;
+            if (GetComponent<ProceduralAnimator>() == null) gameObject.AddComponent<ProceduralAnimator>();
         }
 
         private void Start()
