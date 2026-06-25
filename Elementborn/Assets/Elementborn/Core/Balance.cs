@@ -37,5 +37,24 @@ namespace Elementborn.Core
 
         /// <summary>A difficulty dial is valid when it is positive and not absurdly large.</summary>
         public static bool ScaleIsSane(float scale) => scale > 0f && scale <= MaxScale;
+
+        // ---- Scaling helpers (the one place the dials are actually applied) ---------------------------------
+        // Systems call these where a value is produced or consumed, so the dial and its rounding live in one
+        // tested spot. With every dial at 1.0 these are identities; a designer retunes by editing a dial above.
+        public static float ScaledEnemyHealth(float raw)  => raw * EnemyHealthScale;
+        public static float ScaledEnemyDamage(float raw)  => raw * EnemyDamageScale;
+        public static float ScaledPlayerDamage(float raw) => raw * PlayerDamageScale;
+        public static int   ScaledReward(int raw)         => RoundCount(raw * RewardScale);
+        public static int   ScaledXp(int raw)             => RoundCount(raw * XpScale);
+        public static int   ScaledDropWeight(int raw)     => RoundCount(raw * DropRateScale);
+
+        // Rewards, XP, and weights are whole numbers: round to nearest, never let a positive input scale away to
+        // nothing (a 1-reward must not vanish), and never go negative.
+        private static int RoundCount(float scaled)
+        {
+            if (scaled <= 0f) return 0;
+            int r = (int)System.Math.Round((double)scaled);
+            return r < 1 ? 1 : r;
+        }
     }
 }

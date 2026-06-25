@@ -7,6 +7,24 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Batch-2 asset bindings filled from the supplied mapping.** Bound the two remaining weapons (Dagger→`Fang_Dagger`,
+  Sai→`Twin_Sai`), Willow's last sidekick (Chameleon→`Prism_Chameleon`), six world items by catalog id (healing tonic,
+  stamina draught, elixir of vigor, ore-marrow bone, sunflower seeds, tough leather), and two set-dressing props
+  (coral garden, ouroboros). The rigged player needs no binding change — `PlayerModelBinder` already loads
+  `PlayerRigged` first and drives a `Speed` Animator parameter, so dropping the rigged prefab in swaps the static
+  mannequin for the animated hero. Every binding degrades to its placeholder until the FBX is imported; folder
+  placement is documented in `docs/ASSET_IMPORT_Meshy.md`. (Poison vial, arrow, wand base, and grapple have no
+  matching entity yet and are pending a decision.)
+- **#7 deepening — difficulty dials wired + sanity suite broadened.** The first global dials are now live at clean
+  single chokepoints: `XpScale` in `Progression.AddXp`, and `EnemyHealthScale` + `EnemyDamageScale` in
+  `EnemyArchetypes.For` (the one stat source every enemy spawn reads). The scaling logic — rounding whole-number
+  rewards/XP/weights, never letting a positive value vanish or go negative — now lives in tested `Balance` helpers
+  (`ScaledEnemyHealth`, `ScaledEnemyDamage`, `ScaledPlayerDamage`, `ScaledReward`, `ScaledXp`, `ScaledDropWeight`),
+  so the remaining dials (player damage, rewards, drop rate, gacha) are a one-line adoption away. Every dial defaults
+  to 1.0, so behaviour is unchanged today. The QA suite grew to cover every enemy archetype (positive
+  health/speed/ranges), every boss (positive health multiplier + scale, non-negative rewards, a name), and every
+  creature's loot table — well-formed weights and counts, and crucially that every drop references a real catalogued
+  item, catching a typo'd drop id before it ships.
 - **Balance & QA foundation — central tuning table (`Balance`) + automated sanity suite (`BalanceSanityTests`).**
   Kicks off #7. `Balance` is the one pure, engine-free home for tuning: global difficulty dials (enemy health,
   enemy/player damage, rewards, drop rate, XP, gacha generosity — all default 1.0, so systems migrate onto them

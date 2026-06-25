@@ -26,7 +26,16 @@ namespace Elementborn.Core
     /// <summary>Stat block per enemy kind. Tweak here to rebalance.</summary>
     public static class EnemyArchetypes
     {
-        public static EnemyStats For(EnemyKind kind) => kind switch
+        public static EnemyStats For(EnemyKind kind)
+        {
+            var b = Base(kind);
+            // Global difficulty dials, applied once at the single source every spawn reads (1.0 = unchanged).
+            return new EnemyStats(
+                Balance.ScaledEnemyHealth(b.MaxHealth), b.MoveSpeed, Balance.ScaledEnemyDamage(b.Damage),
+                b.AttackRange, b.AttackCooldown, b.ScoreValue, b.IsRanged);
+        }
+
+        private static EnemyStats Base(EnemyKind kind) => kind switch
         {
             //                                       hp     spd    dmg   range   cd   score  ranged
             EnemyKind.Grunt        => new EnemyStats(30f,  3.0f,   8f,   2.0f,  1.2f, 100,  false),

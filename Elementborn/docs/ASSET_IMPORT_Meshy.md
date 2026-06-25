@@ -130,6 +130,47 @@ Requires Rig = Generic (step 3) first, so each FBX exposes its clip.
 
 ---
 
+## Batch 2 — bindings filled (drop each FBX + texture into the folder, make a prefab named after the folder)
+
+All bound in code now; each falls back to a placeholder until its prefab exists. Same simple static import as
+the frogs (no AnimatorController) unless noted. Folders are under `Assets/Elementborn/Resources/`.
+
+**Weapons** — `Models/Weapons/<folder>/<folder>.prefab`
+
+| Asset | Weapon | Folder |
+|---|---|---|
+| Fang Dagger | Dagger | `Fang_Dagger` |
+| Twin Sai | Sai | `Twin_Sai` |
+
+(Emberblade→Sword, Gilded Arc Bow→LongBow, Azure Aegis→Shield, Stormcleaver Axe→Hammer were already bound.)
+
+**Sidekick** — `Models/Sidekicks/Prism_Chameleon/Prism_Chameleon.prefab` (Willow's Chameleon — her last open slot).
+
+**Items** — `Models/Items/<folder>/<folder>.prefab`, bound by catalog id
+
+| Asset | Item id | Folder |
+|---|---|---|
+| Healing Tonic | `healing_tonic` | `Healing_Tonic` |
+| Stamina Draught | `stamina_draught` | `Stamina_Draught` |
+| Vigor Elixir | `elixir_of_vigor` | `Vigor_Elixir` |
+| Ore-marrow Bone | `ore_marrow_bone` | `Ore_Marrow_Bone` |
+| Sunflower Seeds | `sunflower_seeds` | `Sunflower_Seeds` |
+| Cured Leather | `tough_leather` | `Cured_Leather` |
+
+**Props** — `Models/Props/<folder>` (hand-placed set dressing): `Underwater_Coral_Garden`, `Ouroboros`.
+
+### Rigged player (animated — like the parrot)
+`PlayerModelBinder` already prefers a rigged model: it loads `Models/Characters/PlayerRigged/PlayerRigged` first,
+takes its `Animator`, and drives locomotion through a float parameter named **`Speed`**. So:
+1. Drop the rigged player FBX(s) + textures into `Models/Characters/PlayerRigged/`.
+2. Build an AnimatorController with a **`Speed`** float driving an idle⇄walk⇄run blend (or states), plus any
+   attack/emote states your clips provide.
+3. Save `PlayerRigged.prefab` with an `Animator` using that controller.
+4. Play — the static `Windborne_Traveler` mannequin is replaced by the rigged hero, and `ProceduralAnimator`'s
+   coexistence keeps anything from fighting the skeletal animation.
+
+---
+
 ## Optimisation note (later, optional)
 The parrot ships the same mesh 5× (one per clip FBX) — fine to import, wasteful to ship. When you're
 ready to trim build size: keep one FBX as the mesh, extract the other four clips, and compress the

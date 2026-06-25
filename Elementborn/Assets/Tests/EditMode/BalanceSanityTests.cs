@@ -191,5 +191,86 @@ namespace Elementborn.Tests.EditMode
             foreach (var item in all)
                 Assert.GreaterOrEqual(item.Value, 0, "item '" + item.Id + "' has a negative price");
         }
+
+        // ---- Difficulty-dial scaling helpers ----------------------------------------------------------------
+
+        [Test]
+        public void ScalingHelpers_AreIdentityAtDefaultDialsAndNeverNegative()
+        {
+            // Every dial defaults to 1.0, so the helpers pass values through unchanged.
+            Assert.That(Balance.ScaledEnemyHealth(30f), Is.EqualTo(30f).Within(0.001));
+            Assert.That(Balance.ScaledEnemyDamage(8f),  Is.EqualTo(8f).Within(0.001));
+            Assert.That(Balance.ScaledPlayerDamage(15f), Is.EqualTo(15f).Within(0.001));
+            Assert.AreEqual(100, Balance.ScaledReward(100));
+            Assert.AreEqual(100, Balance.ScaledXp(100));
+            Assert.AreEqual(2,   Balance.ScaledDropWeight(2));
+
+            // Zero in stays zero; a positive whole-number reward never rounds away to nothing or goes negative.
+            Assert.AreEqual(0, Balance.ScaledReward(0));
+            Assert.AreEqual(0, Balance.ScaledXp(0));
+            Assert.GreaterOrEqual(Balance.ScaledReward(1), 1);
+            Assert.GreaterOrEqual(Balance.ScaledXp(1), 1);
+            Assert.GreaterOrEqual(Balance.ScaledDropWeight(1), 1);
+        }
+
+        // ---- Enemy archetypes -------------------------------------------------------------------------------
+
+        [Test]
+        public void EnemyArchetypes_AreAllSane()
+        {
+            foreach (EnemyKind kind in System.Enum.GetValues(typeof(EnemyKind)))
+            {
+                var s = EnemyArchetypes.For(kind);
+                Assert.Greater(s.MaxHealth, 0f, kind + " max health");
+                Assert.Greater(s.MoveSpeed, 0f, kind + " move speed");
+                Assert.GreaterOrEqual(s.Damage, 0f, kind + " damage");
+                Assert.Greater(s.AttackRange, 0f, kind + " attack range");
+                Assert.Greater(s.AttackCooldown, 0f, kind + " attack cooldown");
+                Assert.GreaterOrEqual(s.ScoreValue, 0, kind + " score");
+            }
+        }
+
+        // ---- Boss catalog -----------------------------------------------------------------------------------
+
+        [Test]
+        public void BossCatalog_AreAllSane()
+        {
+            foreach (SiteKind kind in System.Enum.GetValues(typeof(SiteKind)))
+            {
+                var b = BossCatalog.For(kind);
+                Assert.Greater(b.HealthMultiplier, 0f, kind + " health multiplier");
+                Assert.Greater(b.Scale, 0f, kind + " scale");
+                Assert.GreaterOrEqual(b.SilverReward, 0, kind + " silver reward");
+                Assert.GreaterOrEqual(b.GemReward, 0, kind + " gem reward");
+                Assert.IsFalse(string.IsNullOrEmpty(b.Name), kind + " name");
+            }
+        }
+
+        // ---- Loot tables ------------------------------------------------------------------------------------
+
+        [Test]
+        public void LootTables_AreWellFormedAndReferenceRealItems()
+        {
+            foreach (CreatureKind kind in System.Enum.GetValues(typeof(CreatureKind)))
+            {
+                var table = LootTables.For(kind);
+                Assert.IsNotNull(table, kind + " loot table");
+                Assert.GreaterOrEqual(table.Rolls, 1, kind + " rolls");
+                Assert.IsNotNull(table.Entries);
+                Assert.Greater(table.Entries.Count, 0, kind + " has no loot entries");
+
+                int totalWeight = 0;
+                foreach (var e in table.Entries)
+                {
+                    Assert.GreaterOrEqual(e.Weight, 0, kind + " negative weight");
+                    Assert.GreaterOrEqual(e.MinCount, 0, kind + " negative min count");
+                    Assert.LessOrEqual(e.MinCount, e.MaxCount, kind + " min count exceeds max");
+                    Assert.IsFalse(string.IsNullOrEmpty(e.ItemId), kind + " empty item id");
+                    Assert.IsTrue(ItemCatalog.Exists(e.ItemId), kind + " drops unknown item '" + e.ItemId + "'");
+                    totalWeight += e.Weight;
+                }
+                Assert.Greater(totalWeight, 0, kind + " loot table can never drop anything");
+            }
+        }
     }
 }

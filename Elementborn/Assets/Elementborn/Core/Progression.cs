@@ -26,6 +26,7 @@ namespace Elementborn.Core
         public int AddXp(int amount)
         {
             if (amount <= 0) return 0;
+            amount = Balance.ScaledXp(amount);   // global XP dial (1.0 = unchanged)
             Xp += amount;
             int gained = 0;
             while (Xp >= XpToNext)

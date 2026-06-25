@@ -21,7 +21,7 @@ namespace Elementborn.Core
         public static string ResourcePath(GuideNpcId id) => ResourceRoot + ResourceName(id);
     }
 
-    /// <summary>Willow's sidekick pets → loose stand-ins (no exact pet models exist; Chameleon has none).</summary>
+    /// <summary>Willow's sidekick pets → models (Parrot is the rigged raven; all five are now bound).</summary>
     public static class SidekickModelNames
     {
         public const string ResourceRoot = "Models/Sidekicks/";
@@ -31,7 +31,7 @@ namespace Elementborn.Core
             { WillowSidekick.Parrot,   "Raven_Parrot/Raven_Parrot" },              // Meshy biped raven-parrot, rigged, 5 baked clips
             { WillowSidekick.Blobfish,  "Lure_Fish/Lure_Fish" },
             { WillowSidekick.Mushroom,  "Luminescent_Mushroom/Luminescent_Mushroom" },
-            // Chameleon: no match in the batch → primitive fallback.
+            { WillowSidekick.Chameleon, "Prism_Chameleon/Prism_Chameleon" },
         };
         public static string ResourceName(WillowSidekick s) => Aliases.TryGetValue(s, out var n) ? n : s.ToString();
         public static string ResourcePath(WillowSidekick s) => ResourceRoot + ResourceName(s);
@@ -46,7 +46,7 @@ namespace Elementborn.Core
         public const string Steam     = ResourceRoot + "Steam_Frog/Steam_Frog";
     }
 
-    /// <summary>Weapon pickups → gear model. Dagger / Sai / None have no batch model → primitive fallback.</summary>
+    /// <summary>Weapon pickups → gear model. Only None lacks a model now → primitive fallback.</summary>
     public static class WeaponModelNames
     {
         public const string ResourceRoot = "Models/Weapons/";
@@ -56,6 +56,8 @@ namespace Elementborn.Core
             { WeaponType.LongBow, "Gilded_Arc_Bow/Gilded_Arc_Bow" },
             { WeaponType.Shield,  "Azure_Aegis/Azure_Aegis" },
             { WeaponType.Hammer,  "Stormcleaver_Axe/Stormcleaver_Axe" },  // closest heavy two-hander in the batch
+            { WeaponType.Dagger,  "Fang_Dagger/Fang_Dagger" },
+            { WeaponType.Sai,     "Twin_Sai/Twin_Sai" },
         };
         public static string ResourceName(WeaponType t) => Aliases.TryGetValue(t, out var n) ? n : t.ToString();
         public static string ResourcePath(WeaponType t) => ResourceRoot + ResourceName(t);
@@ -73,8 +75,7 @@ namespace Elementborn.Core
     }
 
     /// <summary>Catalog item id → a world model (for items placed/dropped in the world via WorldItemPickup).
-    /// Only items with a fitting batch model are mapped; potions, foods, and raw materials have none yet and
-    /// fall back to a primitive.</summary>
+    /// Items with a fitting Meshy model are mapped; the rest fall back to a primitive.</summary>
     public static class ItemModelNames
     {
         public const string ResourceRoot = "Models/Items/";
@@ -84,6 +85,12 @@ namespace Elementborn.Core
             { "river_pearl",     "Pearl_Oyster/Pearl_Oyster" },
             { "old_relic",       "Triskelion_Disc/Triskelion_Disc" },
             { "elemental_charm", "Prismatic_Helix_Gem/Prismatic_Helix_Gem" },
+            { "healing_tonic",   "Healing_Tonic/Healing_Tonic" },
+            { "stamina_draught", "Stamina_Draught/Stamina_Draught" },
+            { "elixir_of_vigor", "Vigor_Elixir/Vigor_Elixir" },
+            { "ore_marrow_bone", "Ore_Marrow_Bone/Ore_Marrow_Bone" },
+            { "sunflower_seeds", "Sunflower_Seeds/Sunflower_Seeds" },
+            { "tough_leather",   "Cured_Leather/Cured_Leather" },
         };
         public static string ResourceName(string itemId) => itemId != null && Aliases.TryGetValue(itemId, out var n) ? n : itemId;
         public static string ResourcePath(string itemId) => itemId == null ? null : ResourceRoot + ResourceName(itemId);
@@ -105,6 +112,8 @@ namespace Elementborn.Core
             { "banner",           "Azure_Ornate_Banner" },
             { "crystal_pool",     "Emerald_Cavern_Pool" },
             { "radiant_tree",     "Radiant_Purple_Tree" },
+            { "coral_garden",     "Underwater_Coral_Garden" },
+            { "ouroboros",        "Ouroboros" },
         };
         public static string ResourcePath(string key) => Props.TryGetValue(key, out var n) ? ResourceRoot + n : null;
     }
