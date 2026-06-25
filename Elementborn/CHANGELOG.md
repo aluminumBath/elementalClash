@@ -7,6 +7,76 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Boss defeat reward.** Clearing a site boss now pays off instead of just ending: each boss in `BossCatalog`
+  carries a silver + premium-gem payout (180–260 silver, 1–3 rubies), and `BossController` grants it on the boss's
+  death event with a named victory toast ("Azure Arbor Guardian falls! You claim 260 Silver and 3 Ruby."). Leaving
+  before the kill grants nothing (the subscription is cleaned up on teardown).
+- **Approach inscriptions (`ApproachLore` + `ApproachInscription`).** The walk into a site now has a sense of
+  place: a stele in the entrance hall surfaces a per-site line of lore the first time the player passes it
+  (distance-based, one-shot, no prompt) — the Sunken Gate warns of its Guardian, the Aerie of its storms, and so
+  on. Lines live in the engine-free, tested `ApproachLore`; the entrance-hall stele is placed for every site
+  interior, so the approach in is no longer empty.
+- **Multi-chamber dungeon layout for site interiors.** Entering a site is no longer a single bare room. The
+  interior is now a short approach — an entrance hall, a pinched corridor, then the boss arena at the far end —
+  built from primitives with centre doorways linking the spaces, so a boss fight has buildup: you walk in, move
+  through the corridor, and the boss awaits in the arena (with the exit beside it for after the kill). The Sunken
+  Gate's flood now covers the whole footprint, so the full approach is submerged.
+- **Boss special attack (`BossController` + pure `BossAttackPattern`).** Site bosses now fight differently from
+  rank-and-file enemies: on top of their normal attacks they periodically wind up a telegraphed shockwave — a
+  growing, element-tinted ground ring you can read and back away from — that bursts and deals an element-typed
+  blow (respecting the matchup) to the player if they're still inside its radius when it lands. The cadence
+  (charge → telegraph → strike → reset) is the engine-free, tested `BossAttackPattern`; `BossController` renders
+  the tell and applies the hit, and is attached to every site boss in `SiteInteriorController`.
+- **Cricket is non-combatant.** Locked the invariant: Cricket has no Damageable and no colliders, so she has no
+  attacks and can never take damage — purely a companion.
+- **Real site bosses (`BossCatalog` + boss-model wiring).** Site interiors no longer drop a random strong creature
+  as their "boss." Each boss-bearing site now spawns a named, themed boss from a pure `BossCatalog` (SiteKind →
+  name, model, element, size, health): the **Sunken Gate** is guarded by the *Azure Arbor Guardian* (Water), the
+  **Aerie** by the *Stormwing Phoenix* (Air), with an *Ironhorn Warden* (Earth) fallback. `SiteInteriorController`
+  spawns a strong enemy archetype for real stats/behaviour, then overrides its element, scales it up (2.2–2.4×),
+  buffs its health (5.5–6.5×, via a new `EnemyController.ScaleHealth`), and dresses it in the uploaded boss model
+  via `CreatureModelLibrary.AttachExternal` (loads `Resources/Models/Bosses/<ModelName>`; falls back to the scaled
+  placeholder when the art isn't present, so it runs today and upgrades when models are dropped in). The boss
+  announces itself on entry and gets a floating health bar for free (EnemyController already requires one).
+- **Cricket can resize / hide as an earring.** Cricket now scales uniformly for whatever a scene needs — and can
+  shrink to a tiny earring tucked at the player's ear when hiding — always keeping her proportions (no distortion).
+  API: `SetSize(multiplier)`, `SetEarringMode(bool)`, `ToggleEarring()`; the earring form rides closer to the head
+  with a near-still hover. A dev toggle ("Cricket: toggle earring form") was added to the admin console.
+- **Cricket — companion bat + first-run tutorial (`CricketCompanion`, pure `TutorialScript`).** A tiny bat named
+  Cricket now wakes with the player on world entry and floats at their shoulder for the whole game (code-built
+  primitives, bobbing and turning to face you). On a fresh start she delivers the first-run tutorial — channeling,
+  combat, the element cycle, jump/glide, and where to explore — as a small world-space panel the player taps
+  through (Next / Skip / "Got it!"). The lines and cursor live in the engine-free `TutorialScript` (tested);
+  `GameFlowController` spawns Cricket in `EnterWorld` and only runs the tutorial when the run began with **New
+  Game** (Continue skips it). Cricket persists as a silent companion once the tutorial is done.
+- **Main menu / title screen (`MainMenuController`).** The game now opens on a proper front door instead of
+  dropping straight into character creation or the world map. Four actions on a world-space `OverlayUi` panel
+  (so it works in VR and on flat/desktop from one path): **New Game** (into character creation), **Continue**
+  (loads the saved journey; greyed out with a "no saved journey yet" note when none exists), **Settings** (opens
+  the shared settings overlay on top), and **Quit**. `GameFlowController` gained a `Menu` stage at the front: its
+  boot sequence now shows the menu and only enters creation or the map once the player chooses, instead of
+  auto-loading. The menu re-asserts cursor visibility while up (the settings overlay's close handler relocks it
+  for gameplay). New Game leaves any existing save on disk until the fresh character saves over it — a
+  confirm-before-overwrite prompt is noted as a later polish item.
+- **Water-driven pressure (`WaterBody` + pure `Submersion`).** The deep-pressure hazard now measures depth against
+  real bodies of water instead of a single global level. `Submersion.Depth(surfaceY, pointY)` (engine-free, tested)
+  gives the vertical drop below a surface; the Game-layer `WaterBody` adds an XZ footprint and a global registry, and
+  `EnvironmentHazardController` reads `WaterBody.SubmersionDepth(player)` each tick. `TerrainBuilder` registers the
+  **ocean** as a map-sized body at sea level (`seaLevel × heightScale = 14.4`), so diving into a deep basin now bites
+  unless you're attuned to Water/Earth. The **Sunken Gate** interior (`SiteInteriorController`) floods itself — a
+  pressure-bearing `WaterBody` set high overhead plus a translucent surface "lid" — making it a genuinely submerged
+  chamber rather than a dry pocket. Dry ground and non-water interiors report depth 0, so nothing else changes.
+  (heal to full, +1000 silver, advance the story chapter, trigger the Convergence Tower blast, discover all rifts,
+  teleport to Concord) plus live controls (god-mode toggle, environmental-hazards on/off, a time-scale slider, and
+  set-affinity buttons). It reads current values — HP, silver, affinity, chapter — so it doubles as a state
+  inspector. Built with OverlayUi/UiTheme, so it's world-space in VR; a VR open binding is a VR-moves-pass item.
+- **Instanced interior loader (`SiteInteriorController`) + a temple in every biome.** Entering a site entrance now
+  warps the player into a reusable pocket interior (built off-world near sea level so the hazards stay quiet),
+  populated from the site's payload — a strong foe for **boss** sites, a tameable creature for **rare-creature**
+  sites, a hoard to claim for **treasure** sites, a monument + lore for **lore** sites — with an **exit portal** that
+  returns the player to the entrance and clears the room. Built on the fast-travel teleport (`RigTeleporter`) and the
+  Arena's enemy spawn; real boss models and rewards land in a follow-up. Separately, **every biome present now gets at
+  least one Sealed Temple** (placed off-centre so it won't stack on another site sharing the region).
 - **Discoverable site entrances (`SiteCatalog` + `SiteEntrance`).** The world now seeds entrances to instanced
   destinations — a **Cave Mouth**, **Wind-Torn Aerie**, **Sunken Gate**, **Sealed Temple**, and **Hidden Spring** —
   each placed on a region whose biome fits (mountains, cloud-temple, island, forest-temple, marsh). Walk up and it's
@@ -427,6 +497,11 @@ All notable changes to Elementborn are recorded here. The format follows
   only "placeholders" are intentional procedural meshes/VFX awaiting an art pass.
 
 ### Fixed
+- **Sea level for water locomotion.** Water creatures, water companions, summoned mounts, and the element-travel
+  craft (ice floe / air bubble) each carried their own `waterLevel` field defaulting to **y=0**, but the actual
+  ocean surface is `seaLevel × heightScale = 14.4` — so anything riding the water sat ~14m too low. Sea level is now
+  a single authoritative value (`WorldWater.SeaLevelY`), set by `TerrainBuilder` at build and read by every
+  locomotion site, so they ride the real surface and stay in sync with the ocean visual and the pressure body.
 - **VR input conflict**: right controller **A** drove both Dash (combat) and Recenter (locomotion), so a press
   fired both. Recenter now lives on the **right thumbstick-click** (`primary2DAxisClick`) in `VrComfortLocomotion`,
   leaving A as Dash-only. `VR_INPUT_MAP.md` updated.

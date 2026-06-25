@@ -13,6 +13,7 @@ the note at the bottom.
 | Look | Mouse | Right stick |
 | Jump / glide (hold while falling) | `Space` | A / Cross |
 | Climb (auto on steep walls; `Jump` drops off) | hold forward into wall | hold forward into wall |
+| Admin / cheat console (dev) | Backquote key | — |
 | Primary cast (hold to charge) | Left mouse | Right trigger |
 | Secondary cast (hold to charge) | Right mouse | Left trigger |
 | Defend | `F` | Left bumper |
