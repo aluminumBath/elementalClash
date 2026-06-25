@@ -9,5 +9,7 @@ EditorBuildSettings:
     path: Assets/Elementborn/Scenes/Bootstrap.unity
     guid: c6470edacafb1ea45a075f2929438dba
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 856abf4f8e8e9214f89bad7181744355, type: 2}
+    com.unity.dt.app-ui: {fileID: 11400000, guid: 99f9c9493070a9d4c979a8fec7c5a8d3, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: e85386675a946574ba3e0c3c802681e2, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: f8c402dd34ac34c4da6ca2e38041d885, type: 2}
