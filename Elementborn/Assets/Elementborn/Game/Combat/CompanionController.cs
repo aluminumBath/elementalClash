@@ -22,7 +22,6 @@ namespace Elementborn.Game
         [SerializeField] private float blinkCooldown = 6f;
         [SerializeField] private float webCooldown = 5f;
         [SerializeField] private float flyAltitude = 5f;
-        [SerializeField] private float waterLevel = 0f;
 
         private CompanionProfile _profile;
         private CreatureCombatStats _combat;
@@ -175,7 +174,7 @@ namespace Elementborn.Game
         {
             switch (_locomotion)
             {
-                case LocomotionType.Water: return waterLevel;
+                case LocomotionType.Water: return WorldWater.SeaLevelY;
                 case LocomotionType.Flying:
                     return TerrainHeight.Sample(pos) + flyAltitude;
                 default:

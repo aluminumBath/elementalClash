@@ -44,6 +44,8 @@ namespace Elementborn.Game
         public Terrain Built { get; private set; }
         public TerrainModel Model { get; private set; }
 
+        private WaterBody _ocean;
+
         private void Start()
         {
             if (buildOnStart) Build();
@@ -85,8 +87,30 @@ namespace Elementborn.Game
 
             if (waterSurface != null) waterSurface.Build(terrainSize, seaLevel * heightScale);
 
+            // Sea level is authoritative from here: the pressure body, water mounts, and water creatures all
+            // read WorldWater, so the ocean surface, its visual, and everything riding it line up.
+            WorldWater.SeaLevelY = seaLevel * heightScale;
+
+            // The ocean is a pressure-bearing body whether or not a visual surface is drawn: dive into a
+            // deep basin and the crushing depths apply, unless you're attuned to Water/Earth.
+            EnsureOceanBody(WorldWater.SeaLevelY);
+
             Debug.Log($"[Elementborn] Terrain built: {Model.Resolution}^2 cells, water {Model.WaterFraction():P0}.");
             return Built;
+        }
+
+        // Creates (once) and positions a map-sized water volume at sea level so the pressure hazard has
+        // an ocean to measure depth against. Footprint matches the terrain's [0, terrainSize] span.
+        private void EnsureOceanBody(float surfaceY)
+        {
+            if (_ocean == null)
+            {
+                var go = new GameObject("OceanWaterBody");
+                go.transform.SetParent(transform, false);
+                _ocean = go.AddComponent<WaterBody>();
+            }
+            float half = terrainSize * 0.5f;
+            _ocean.Configure(new Vector2(half, half), new Vector2(half, half), surfaceY);
         }
 
         private void ApplyLayers(TerrainData data)

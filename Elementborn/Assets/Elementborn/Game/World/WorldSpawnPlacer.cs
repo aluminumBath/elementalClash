@@ -113,13 +113,18 @@ namespace Elementborn.Game
                 hub.AddComponent<ConcordSite>();
             }
 
-            // Discoverable site entrances: at most one of each kind, on a region whose biome fits it.
-            var placedSites = new System.Collections.Generic.HashSet<SiteKind>();
+            // Site entrances: every biome gets at least one Sealed Temple, plus one of each special site on a
+            // fitting biome (the temple is nudged off-centre so it won't stack on a special site in the region).
+            var biomesWithTemple = new System.Collections.Generic.HashSet<BiomeType>();
+            var placedSpecial = new System.Collections.Generic.HashSet<SiteKind>();
             foreach (var region in world.Regions)
             {
-                var kind = SiteCatalog.ForBiome(region.Biome);
-                if (kind.HasValue && placedSites.Add(kind.Value))
-                    SpawnSiteEntrance(kind.Value, ToWorld(region.MapPosition), region.Id);
+                if (biomesWithTemple.Add(region.Biome))
+                    SpawnSiteEntrance(SiteKind.TempleDoor, ToWorld(region.MapPosition + new Vector2(9f, 0f)), region.Id + "_temple");
+
+                var special = SiteCatalog.ForBiome(region.Biome);
+                if (special.HasValue && special.Value != SiteKind.TempleDoor && placedSpecial.Add(special.Value))
+                    SpawnSiteEntrance(special.Value, ToWorld(region.MapPosition), region.Id);
             }
         }
 

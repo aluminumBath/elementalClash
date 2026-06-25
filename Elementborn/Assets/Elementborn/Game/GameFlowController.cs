@@ -17,7 +17,7 @@ namespace Elementborn.Game
     /// </summary>
     public sealed class GameFlowController : MonoBehaviour
     {
-        public enum Stage { Boot, Creation, Map, World }
+        public enum Stage { Boot, Menu, Creation, Map, World }
 
         [Header("Player rig (assigned, or found at runtime)")]
         [SerializeField] private PlayerCombatController player;
@@ -44,6 +44,8 @@ namespace Elementborn.Game
 
         private GameObject _creationGo;
         private GameObject _mapGo;
+        private GameObject _menuGo;
+        private bool _firstRunTutorial;
 
         private void Start()
         {
@@ -60,17 +62,8 @@ namespace Elementborn.Game
             ControlGlyphs.EnsureMonitor();
             ModLoader.LoadAll();
 
-            // If a finished character was saved, rebuild it and jump straight to the map.
-            var save = SaveSystem.Load();
-            if (save != null && save.created && PlayerInventory.Instance != null)
-            {
-                PlayerInventory.Instance.LoadFrom(save);
-                ApplyLoadedCharacter();
-                EnterMap();
-                return;
-            }
-
-            EnterCreation();
+            // The title screen is the front door: it decides whether to start fresh or continue a save.
+            EnterMenu();
         }
 
         /// <summary>Applies a loaded character (loadout + faction element) to the live player rig.</summary>
@@ -92,6 +85,56 @@ namespace Elementborn.Game
         }
 
         // ---- stages ------------------------------------------------------------------------
+
+        private void EnterMenu()
+        {
+            Current = Stage.Menu;
+            GatePlayer(false);
+
+            var save = SaveSystem.Load();
+            bool hasSave = save != null && save.created;
+
+            _menuGo = new GameObject("MainMenu");
+            _menuGo.transform.SetParent(transform, false);
+            _menuGo.AddComponent<MainMenuController>()
+                .Show(hasSave, NewGame, ContinueGame, OpenSettings, QuitGame);
+
+            Debug.Log("[Elementborn] Flow: main menu.");
+        }
+
+        // New Game starts a fresh character. An existing save on disk is left untouched until the new
+        // character saves over it (a confirm-before-overwrite prompt is a later polish item).
+        private void NewGame()
+        {
+            if (_menuGo != null) Destroy(_menuGo);
+            _firstRunTutorial = true;
+            EnterCreation();
+        }
+
+        private void ContinueGame()
+        {
+            if (_menuGo != null) Destroy(_menuGo);
+            _firstRunTutorial = false;
+            var save = SaveSystem.Load();
+            if (save != null && save.created && PlayerInventory.Instance != null)
+            {
+                PlayerInventory.Instance.LoadFrom(save);
+                ApplyLoadedCharacter();
+                EnterMap();
+            }
+            else EnterCreation(); // no valid save to resume — fall back to a fresh start
+        }
+
+        private void OpenSettings() => SettingsController.EnsureInstance().Open();
+
+        private void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
 
         private void EnterCreation()
         {
@@ -158,6 +201,9 @@ namespace Elementborn.Game
                 if (structurePlacer != null) structurePlacer.Place(World);
                 if (spawnPlacer != null) spawnPlacer.Place(World);
             }
+
+            // Cricket wakes with the player and stays for the whole game; the tutorial runs on a fresh start.
+            new GameObject("Cricket").AddComponent<CricketCompanion>().Spawn(_firstRunTutorial);
 
             Debug.Log($"[Elementborn] Flow: entering world at {(start != null ? start.Name : "(none)")}.");
         }

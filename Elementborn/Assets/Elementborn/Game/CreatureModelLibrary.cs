@@ -63,6 +63,33 @@ namespace Elementborn.Game
             return model;
         }
 
+        /// <summary>Attach a model from <c>Resources/Models/Bosses/&lt;resourceName&gt;</c> (an uploaded boss, not keyed
+        /// by CreatureKind). Same behaviour as <see cref="Attach"/>: hides the host's placeholder when a model is
+        /// found, returns null (host untouched) when none exists, and never stacks a second mesh.</summary>
+        public static GameObject AttachExternal(string resourceName, GameObject host, bool hidePlaceholder = true)
+        {
+            if (host == null || string.IsNullOrEmpty(resourceName)) return null;
+
+            foreach (Transform child in host.transform)
+                if (child.name.StartsWith(AttachedPrefix)) return child.gameObject;
+
+            var prefab = Resources.Load<GameObject>("Models/Bosses/" + resourceName);
+            if (prefab == null) return null;
+
+            Renderer[] placeholder = hidePlaceholder ? host.GetComponentsInChildren<Renderer>(true) : null;
+
+            var model = Object.Instantiate(prefab, host.transform);
+            model.transform.localPosition = Vector3.zero;
+            model.transform.localRotation = Quaternion.identity;
+            model.name = AttachedPrefix + resourceName;
+
+            if (placeholder != null)
+                foreach (var r in placeholder)
+                    if (r != null) r.enabled = false;
+
+            return model;
+        }
+
         /// <summary>Drop cached lookups (tests / asset reloads).</summary>
         public static void ClearCache()
         {

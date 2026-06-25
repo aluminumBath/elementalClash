@@ -10,8 +10,6 @@ namespace Elementborn.Game
     /// bites once the vertical heights and the deep water exist. Spawned by the bootstrap scene.</summary>
     public sealed class EnvironmentHazardController : MonoBehaviour
     {
-        [Tooltip("World Y of the water surface; depth is measured below this.")]
-        [SerializeField] private float waterLevel = 0f;
         [Tooltip("Seconds between hazard damage applications.")]
         [SerializeField] private float tickInterval = 1f;
 
@@ -38,7 +36,9 @@ namespace Elementborn.Game
 
             float y = _player.transform.position.y;
             float altitude = y;                 // above sea level (water baseline)
-            float depth = waterLevel - y;       // below the surface (negative when above water)
+            // Depth comes from whichever body of water actually contains the player: the ocean at sea
+            // level, or a flooded interior overhead. Dry ground reports 0 — no pressure, as before.
+            float depth = WaterBody.SubmersionDepth(_player.transform.position);
 
             var loadout = _player.Loadout;
             bool channeler = loadout != null && loadout.IsChanneler;

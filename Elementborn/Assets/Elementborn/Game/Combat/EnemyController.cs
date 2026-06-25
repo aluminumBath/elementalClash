@@ -93,6 +93,9 @@ namespace Elementborn.Game
         }
 
         /// <summary>Force a specific target (the arena points every enemy at the player).</summary>
+        /// <summary>Multiply this enemy's configured max health — used to make site bosses tanky. Call after Configure.</summary>
+        public void ScaleHealth(float multiplier) { if (_self != null) _self.SetMaxHealth(_stats.MaxHealth * multiplier); }
+
         public void SetTarget(Transform t)
         {
             target = t;

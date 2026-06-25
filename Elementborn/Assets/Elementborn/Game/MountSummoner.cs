@@ -15,7 +15,6 @@ namespace Elementborn.Game
         [SerializeField] private GameObject creaturePrefab;
         [SerializeField] private GameObject vehiclePrefab;
         [SerializeField] private InputActionReference summonAction;
-        [SerializeField] private float waterLevel = 0f;
         [SerializeField] private float spawnDistance = 2.5f;
 
         private MountController _mount;
@@ -62,7 +61,7 @@ namespace Elementborn.Game
 
             _mount = _summoned.GetComponent<MountController>();
             if (_mount == null) _mount = _summoned.AddComponent<MountController>();
-            _mount.Configure(Locomotion.For(kind), false, waterLevel, 1f);
+            _mount.Configure(Locomotion.For(kind), false, WorldWater.SeaLevelY, 1f);
             _mount.Mount(gameObject);
             CreatureModelLibrary.Attach(kind, _summoned); // its CreatureController is disabled, so attach here
         }
@@ -88,7 +87,7 @@ namespace Elementborn.Game
 
             _mount = _summoned.GetComponent<MountController>();
             if (_mount == null) _mount = _summoned.AddComponent<MountController>();
-            _mount.Configure(info.Locomotion, false, waterLevel, 1f);
+            _mount.Configure(info.Locomotion, false, WorldWater.SeaLevelY, 1f);
             _mount.Mount(gameObject);
         }
 

@@ -128,6 +128,10 @@ namespace Elementborn.EditorTools
             var hazards = new GameObject("Hazards");
             Add(hazards, "EnvironmentHazardController");
 
+            // Admin / cheat console (dev tool; the backquote key toggles it).
+            var adminConsole = new GameObject("Admin Console");
+            Add(adminConsole, "AdminConsole");
+
             // Crafting overlay (press B): turn loot materials into gear/consumables via recipes.
             var crafting = new GameObject("Crafting");
             Add(crafting, "CraftingViewer");
@@ -161,6 +165,12 @@ namespace Elementborn.EditorTools
             Wire(placer, "enemyPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefab));
             Wire(placer, "civilianPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(CivilianPrefab));
             Wire(flow, "spawnPlacer", placer);
+
+            // Site interiors: the instanced pocket spaces that site entrances open into.
+            var siteInteriors = new GameObject("Site Interiors");
+            var interior = Add(siteInteriors, "SiteInteriorController");
+            Wire(interior, "enemyPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefab));
+            Wire(interior, "creaturePrefab", AssetDatabase.LoadAssetAtPath<GameObject>(CreaturePrefab));
 
             // Leyline rifts: spawns a discoverable, fast-travelable rift for each canonical WorldMap node.
             var rifts = new GameObject("Leyline Rifts");

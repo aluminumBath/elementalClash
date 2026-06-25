@@ -14,7 +14,6 @@ namespace Elementborn.Game
     public sealed class ElementTravelController : MonoBehaviour
     {
         [SerializeField] private InputActionReference travelAction;
-        [SerializeField] private float waterLevel = 0f;
         [SerializeField] private float waterReach = 3f; // how far above the water line you may summon
 
         private MountController _active;
@@ -42,7 +41,7 @@ namespace Elementborn.Game
                 return;
             }
 
-            Vector3 at = new Vector3(transform.position.x, waterLevel, transform.position.z);
+            Vector3 at = new Vector3(transform.position.x, WorldWater.SeaLevelY, transform.position.z);
             _craft = mode == TravelMode.IceFloe ? BuildFloe(at) : BuildBubble(at);
             _active = _craft.GetComponent<MountController>();
             _active.Mount(gameObject);
@@ -62,7 +61,7 @@ namespace Elementborn.Game
             return fm != null ? fm.Element : (Element?)null;
         }
 
-        private bool NearWater() => transform.position.y <= waterLevel + waterReach;
+        private bool NearWater() => transform.position.y <= WorldWater.SeaLevelY + waterReach;
 
         private bool TravelPressed()
         {
@@ -85,7 +84,7 @@ namespace Elementborn.Game
             disc.GetComponent<MeshRenderer>().sharedMaterial = ToonPalette.Tinted(new Color(0.72f, 0.9f, 1f));
 
             var mc = go.AddComponent<MountController>();
-            mc.Configure(LocomotionType.Water, false, waterLevel, 0.12f);
+            mc.Configure(LocomotionType.Water, false, WorldWater.SeaLevelY, 0.12f);
             return go;
         }
 
@@ -103,7 +102,7 @@ namespace Elementborn.Game
             sphere.GetComponent<MeshRenderer>().sharedMaterial = BubbleMaterial();
 
             var mc = go.AddComponent<MountController>();
-            mc.Configure(LocomotionType.Water, true, waterLevel, 0.1f); // bubble disables attacks
+            mc.Configure(LocomotionType.Water, true, WorldWater.SeaLevelY, 0.1f); // bubble disables attacks
             return go;
         }
 

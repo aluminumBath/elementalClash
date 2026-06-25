@@ -44,8 +44,14 @@ namespace Elementborn.Game
             return true;
         }
 
-        // The instanced-interior loader is wired in here in the interior pass; for now, reveal the site's flavour.
-        private void Enter() => GameHud.Instance?.Toast(_info.Lore);
+        // Open the instanced interior this entrance leads to; the player returns here on leaving.
+        private void Enter()
+        {
+            if (SiteInteriorController.Instance != null)
+                SiteInteriorController.Instance.Enter(_info, transform.position + Vector3.up * 1f);
+            else
+                GameHud.Instance?.Toast(_info.Lore);
+        }
 
         private void BuildMarker()
         {
