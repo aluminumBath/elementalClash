@@ -11,9 +11,13 @@ namespace Elementborn.Game
     }
 
     /// <summary>
-    /// A real, self-contained prototype loop:
-    /// Start menu -> talk to NPC -> collect shard -> return shard -> save/load.
-    /// This is intentionally simple and does not depend on unfinished production systems.
+    /// Self-contained prototype loop:
+    /// New prototype -> choose element -> talk to NPC -> collect shard -> return shard -> test ability -> save/load.
+    ///
+    /// v82:
+    /// - No longer auto-loads an old completed PlayerPrefs save by default.
+    /// - Adds explicit New Prototype / Resume Saved paths.
+    /// - Resets shard/dummy scene state when starting fresh.
     /// </summary>
     public sealed class ElementbornPrototypeGameManager : MonoBehaviour
     {
@@ -21,6 +25,7 @@ namespace Elementborn.Game
         public const string SaveKeyPlayerX = "Elementborn.Prototype.PlayerX";
         public const string SaveKeyPlayerY = "Elementborn.Prototype.PlayerY";
         public const string SaveKeyPlayerZ = "Elementborn.Prototype.PlayerZ";
+        public const string SaveKeyElement = "Elementborn.Prototype.Element";
 
         public static ElementbornPrototypeGameManager Instance { get; private set; }
 
@@ -30,7 +35,9 @@ namespace Elementborn.Game
 
         [Header("Prototype State")]
         public bool menuOpen = true;
+        public bool loadSavedStateOnAwake = false;
         public ElementbornPrototypeQuestState questState = ElementbornPrototypeQuestState.NotStarted;
+        public ElementbornPrototypeElementType selectedElement = ElementbornPrototypeElementType.Fire;
 
         [Header("UI")]
         public bool showHud = true;
@@ -38,6 +45,9 @@ namespace Elementborn.Game
 
         private string message = "Welcome to Elementborn.";
         private float messageUntil;
+        private string dialogueSpeaker = "";
+        private string dialogueText = "";
+        private float dialogueUntil;
 
         public bool HasStarted => !menuOpen;
 
@@ -45,7 +55,17 @@ namespace Elementborn.Game
         {
             Instance = this;
             ResolveReferences();
-            LoadIfPresent(false);
+
+            if (loadSavedStateOnAwake)
+            {
+                LoadIfPresent(false);
+            }
+            else
+            {
+                ResetSceneRuntimeState(false);
+                ApplySelectedElement();
+                ShowMessage("Choose New Prototype or Resume Saved.");
+            }
         }
 
         private void OnDestroy()
@@ -84,30 +104,67 @@ namespace Elementborn.Game
         public void StartPrototype()
         {
             menuOpen = false;
+            ApplySelectedElement();
             ShowMessage("Prototype started. Talk to Ember Guide with E.");
+        }
+
+        public void StartNewPrototype()
+        {
+            ClearSavedState();
+            questState = ElementbornPrototypeQuestState.NotStarted;
+            ResetSceneRuntimeState(true);
+            ApplySelectedElement();
+            menuOpen = false;
+            ShowDialogue("Ember Guide", "Welcome, channeler. Speak with me, then recover the glowing shard.");
+        }
+
+        public void ResumeSavedPrototype()
+        {
+            LoadIfPresent(true);
+            menuOpen = false;
+        }
+
+        public void SetElement(ElementbornPrototypeElementType element)
+        {
+            selectedElement = element;
+            ApplySelectedElement();
+            ShowMessage("Attuned to " + ElementbornPrototypeVisualUtility.GetElementName(element) + ". Press Q to cast.");
+        }
+
+        private void ApplySelectedElement()
+        {
+            ElementbornPrototypeElementalAbility ability = player != null ? player.GetComponent<ElementbornPrototypeElementalAbility>() : null;
+            if (ability != null)
+            {
+                ability.currentElement = selectedElement;
+            }
+
+            ElementbornPrototypePlayerVisual visual = player != null ? player.GetComponent<ElementbornPrototypePlayerVisual>() : null;
+            if (visual != null)
+            {
+                visual.ApplyElement(selectedElement);
+            }
         }
 
         public void ResetPrototype()
         {
-            questState = ElementbornPrototypeQuestState.NotStarted;
+            StartNewPrototype();
+        }
+
+        public void ClearSavedState()
+        {
             PlayerPrefs.DeleteKey(SaveKeyQuestState);
             PlayerPrefs.DeleteKey(SaveKeyPlayerX);
             PlayerPrefs.DeleteKey(SaveKeyPlayerY);
             PlayerPrefs.DeleteKey(SaveKeyPlayerZ);
+            PlayerPrefs.DeleteKey(SaveKeyElement);
             PlayerPrefs.Save();
-
-            if (player != null)
-            {
-                player.Teleport(new Vector3(0f, 1f, -8f));
-            }
-
-            menuOpen = false;
-            ShowMessage("Prototype reset.");
         }
 
         public void Save()
         {
             PlayerPrefs.SetInt(SaveKeyQuestState, (int)questState);
+            PlayerPrefs.SetInt(SaveKeyElement, (int)selectedElement);
 
             if (player != null)
             {
@@ -127,6 +184,15 @@ namespace Elementborn.Game
             {
                 questState = (ElementbornPrototypeQuestState)PlayerPrefs.GetInt(SaveKeyQuestState, 0);
             }
+            else
+            {
+                questState = ElementbornPrototypeQuestState.NotStarted;
+            }
+
+            if (PlayerPrefs.HasKey(SaveKeyElement))
+            {
+                selectedElement = (ElementbornPrototypeElementType)PlayerPrefs.GetInt(SaveKeyElement, 0);
+            }
 
             if (player != null &&
                 PlayerPrefs.HasKey(SaveKeyPlayerX) &&
@@ -141,9 +207,81 @@ namespace Elementborn.Game
                 player.Teleport(position);
             }
 
+            ResetSceneRuntimeState(false);
+            ApplySceneForQuestState();
+            ApplySelectedElement();
+
             if (showMessage)
             {
-                ShowMessage("Loaded prototype state.");
+                ShowMessage("Loaded prototype state: " + questState + ".");
+            }
+        }
+
+        public void ResetSceneRuntimeState(bool resetPlayer)
+        {
+            ResolveReferences();
+
+            if (resetPlayer && player != null)
+            {
+                player.Teleport(new Vector3(0f, 1f, -8f));
+            }
+
+            ElementbornPrototypeInteractable[] interactables =
+                FindObjectsByType<ElementbornPrototypeInteractable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            for (int i = 0; i < interactables.Length; i++)
+            {
+                ElementbornPrototypeInteractable interactable = interactables[i];
+                if (interactable == null)
+                {
+                    continue;
+                }
+
+                if (interactable.kind == ElementbornPrototypeInteractableKind.ShardResource)
+                {
+                    interactable.gameObject.SetActive(true);
+                }
+
+                interactable.EnsureInteractionRadius();
+            }
+
+            ElementbornPrototypeDummyEnemy[] dummies =
+                FindObjectsByType<ElementbornPrototypeDummyEnemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            for (int i = 0; i < dummies.Length; i++)
+            {
+                if (dummies[i] != null)
+                {
+                    dummies[i].ResetDummy();
+                }
+            }
+
+            dialogueText = "";
+            dialogueSpeaker = "";
+            dialogueUntil = 0f;
+        }
+
+        private void ApplySceneForQuestState()
+        {
+            ElementbornPrototypeInteractable[] interactables =
+                FindObjectsByType<ElementbornPrototypeInteractable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            for (int i = 0; i < interactables.Length; i++)
+            {
+                ElementbornPrototypeInteractable interactable = interactables[i];
+                if (interactable == null)
+                {
+                    continue;
+                }
+
+                if (interactable.kind == ElementbornPrototypeInteractableKind.ShardResource)
+                {
+                    bool shouldShowShard =
+                        questState == ElementbornPrototypeQuestState.NotStarted ||
+                        questState == ElementbornPrototypeQuestState.TalkedToGuide;
+
+                    interactable.gameObject.SetActive(shouldShowShard);
+                }
             }
         }
 
@@ -179,23 +317,24 @@ namespace Elementborn.Game
             if (questState == ElementbornPrototypeQuestState.NotStarted)
             {
                 questState = ElementbornPrototypeQuestState.TalkedToGuide;
-                ShowMessage("Ember Guide: Please recover the glowing shard near the basalt stones.");
+                ShowDialogue("Ember Guide", "You feel the world answering your element. Recover the glowing shard near the basalt stones, then try your first channeling bolt with Q.");
+                ApplySceneForQuestState();
                 return;
             }
 
             if (questState == ElementbornPrototypeQuestState.TalkedToGuide)
             {
-                ShowMessage("Ember Guide: The shard is east of here. Look for the glowing crystal.");
+                ShowDialogue("Ember Guide", "The shard is east of here. The training dummy is beyond it if you want to test your attunement.");
                 return;
             }
 
             if (questState == ElementbornPrototypeQuestState.CollectedShard)
             {
-                ShowMessage("Ember Guide: Take the shard to the return pedestal.");
+                ShowDialogue("Ember Guide", "Take the shard to the return pedestal, then cast at the training dummy.");
                 return;
             }
 
-            ShowMessage("Ember Guide: The prototype loop is complete. Nice!");
+            ShowDialogue("Ember Guide", "The prototype loop is complete. Start a New Prototype from the menu to replay it, or keep testing elemental bolts on the dummy.");
         }
 
         private void HandleShardResource(ElementbornPrototypeInteractable interactable)
@@ -220,7 +359,7 @@ namespace Elementborn.Game
                 return;
             }
 
-            ShowMessage("The shard objective is already complete.");
+            ShowMessage("The shard objective is already complete. Start a New Prototype from the menu to replay.");
         }
 
         private void HandleReturnPoint()
@@ -228,8 +367,9 @@ namespace Elementborn.Game
             if (questState == ElementbornPrototypeQuestState.CollectedShard)
             {
                 questState = ElementbornPrototypeQuestState.Completed;
+                ApplySceneForQuestState();
                 Save();
-                ShowMessage("Quest complete! Prototype loop saved.");
+                ShowMessage("Quest complete! Prototype loop saved. Press Q to test your elemental bolt on the dummy.");
                 return;
             }
 
@@ -253,7 +393,7 @@ namespace Elementborn.Game
                 case ElementbornPrototypeQuestState.CollectedShard:
                     return "Objective: Return the shard to the pedestal.";
                 case ElementbornPrototypeQuestState.Completed:
-                    return "Objective: Complete. Explore the prototype area.";
+                    return "Objective: Test your elemental bolt on the training dummy.";
                 default:
                     return "Objective: Unknown.";
             }
@@ -263,6 +403,14 @@ namespace Elementborn.Game
         {
             message = string.IsNullOrWhiteSpace(text) ? string.Empty : text;
             messageUntil = Time.time + 5f;
+        }
+
+        public void ShowDialogue(string speaker, string text)
+        {
+            dialogueSpeaker = string.IsNullOrWhiteSpace(speaker) ? "Elementborn" : speaker;
+            dialogueText = string.IsNullOrWhiteSpace(text) ? string.Empty : text;
+            dialogueUntil = Time.time + 7f;
+            ShowMessage(dialogueSpeaker + ": " + dialogueText);
         }
 
         private void ResolveReferences()
@@ -289,59 +437,104 @@ namespace Elementborn.Game
             if (showHud)
             {
                 DrawHud();
+                DrawDialogue();
             }
         }
 
         private void DrawMenu()
         {
-            const int width = 520;
-            const int height = 310;
+            const int width = 600;
+            const int height = 430;
             Rect rect = new Rect((Screen.width - width) / 2f, (Screen.height - height) / 2f, width, height);
             GUI.Box(rect, "Elementborn Prototype");
 
-            GUI.Label(new Rect(rect.x + 24, rect.y + 44, width - 48, 42),
-                "A small playable loop for testing movement, camera, interaction, quest state, and save/load.");
+            GUI.Label(new Rect(rect.x + 24, rect.y + 42, width - 48, 42),
+                "Choose an element, start fresh, or resume your saved prototype loop.");
 
-            if (GUI.Button(new Rect(rect.x + 145, rect.y + 98, 230, 34), "Start / Resume"))
+            GUI.Label(new Rect(rect.x + 80, rect.y + 92, 440, 22), "Attunement: " + ElementbornPrototypeVisualUtility.GetElementName(selectedElement));
+
+            if (GUI.Button(new Rect(rect.x + 80, rect.y + 120, 100, 30), "Fire"))
             {
-                StartPrototype();
+                SetElement(ElementbornPrototypeElementType.Fire);
             }
 
-            if (GUI.Button(new Rect(rect.x + 145, rect.y + 140, 230, 34), "Save"))
+            if (GUI.Button(new Rect(rect.x + 190, rect.y + 120, 100, 30), "Water"))
+            {
+                SetElement(ElementbornPrototypeElementType.Water);
+            }
+
+            if (GUI.Button(new Rect(rect.x + 300, rect.y + 120, 100, 30), "Earth"))
+            {
+                SetElement(ElementbornPrototypeElementType.Earth);
+            }
+
+            if (GUI.Button(new Rect(rect.x + 410, rect.y + 120, 100, 30), "Air"))
+            {
+                SetElement(ElementbornPrototypeElementType.Air);
+            }
+
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 172, 230, 34), "New Prototype"))
+            {
+                StartNewPrototype();
+            }
+
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 214, 230, 34), "Resume Saved"))
+            {
+                ResumeSavedPrototype();
+            }
+
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 256, 230, 34), "Save Current"))
             {
                 Save();
             }
 
-            if (GUI.Button(new Rect(rect.x + 145, rect.y + 182, 230, 34), "Load"))
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 298, 230, 34), "Clear Save"))
             {
-                LoadIfPresent(true);
-                menuOpen = false;
+                ClearSavedState();
+                questState = ElementbornPrototypeQuestState.NotStarted;
+                ResetSceneRuntimeState(true);
+                ShowMessage("Save cleared. Choose New Prototype.");
             }
 
-            if (GUI.Button(new Rect(rect.x + 145, rect.y + 224, 230, 34), "Reset Prototype"))
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 340, 230, 34), "Start Without Loading"))
             {
-                ResetPrototype();
+                StartPrototype();
             }
 
-            GUI.Label(new Rect(rect.x + 24, rect.y + 270, width - 48, 22), "Esc toggles menu. F5 saves. F9 loads. F1 toggles debug help.");
+            GUI.Label(new Rect(rect.x + 24, rect.y + 392, width - 48, 22), "Esc menu | F5 save | F9 load | Q cast | 1-4 switch elements.");
         }
 
         private void DrawHud()
         {
-            Rect rect = new Rect(16, 16, 520, showDebugHelp ? 132 : 82);
+            Rect rect = new Rect(16, 16, 600, showDebugHelp ? 174 : 114);
             GUI.Box(rect, "Elementborn Prototype HUD");
-            GUI.Label(new Rect(28, 42, 496, 20), GetObjectiveText());
+            GUI.Label(new Rect(28, 42, 560, 20), GetObjectiveText());
+            GUI.Label(new Rect(28, 64, 560, 20), "Attunement: " + ElementbornPrototypeVisualUtility.GetElementName(selectedElement) + " | Ability: Q");
 
             if (Time.time < messageUntil && !string.IsNullOrWhiteSpace(message))
             {
-                GUI.Label(new Rect(28, 64, 496, 22), message);
+                GUI.Label(new Rect(28, 86, 560, 34), message);
             }
 
             if (showDebugHelp)
             {
-                GUI.Label(new Rect(28, 90, 496, 20), "Move: WASD / Arrows | Sprint: Shift | Jump: Space | Interact: E");
-                GUI.Label(new Rect(28, 110, 496, 20), "Menu: Esc | Save: F5 | Load: F9 | Toggle help: F1");
+                GUI.Label(new Rect(28, 126, 560, 20), "Move: WASD / Arrows | Sprint: Shift | Jump: Space | Interact: E | Cast: Q");
+                GUI.Label(new Rect(28, 146, 560, 20), "Elements: 1 Fire, 2 Water, 3 Earth, 4 Air | Menu: Esc | Save: F5 | Load: F9");
             }
+        }
+
+        private void DrawDialogue()
+        {
+            if (Time.time >= dialogueUntil || string.IsNullOrWhiteSpace(dialogueText))
+            {
+                return;
+            }
+
+            const int width = 760;
+            const int height = 104;
+            Rect rect = new Rect((Screen.width - width) / 2f, Screen.height - height - 36f, width, height);
+            GUI.Box(rect, dialogueSpeaker);
+            GUI.Label(new Rect(rect.x + 24, rect.y + 36, width - 48, 54), dialogueText);
         }
     }
 }

@@ -276,3 +276,21 @@ Added a self-contained prototype gameplay scene builder with main menu, HUD, pla
 
 ### Reliable prototype interaction
 Made prototype interaction distance-based and forgiving, added automatic trigger-radius helpers to interactables, and added repair/report menu commands for existing generated scenes.
+
+
+## v81 additions
+
+### Elementborn style + elemental ability prototype
+Added element choice, Fire/Water/Earth/Air attunement switching, Q-cast elemental bolt, a damageable training dummy, a styled channeler proxy player, an elemental quadrant test arena, and improved dialogue/HUD.
+
+
+## v82 additions
+
+### Prototype reset + bolt hit feedback
+Prevented accidental old completed-save auto-load, added explicit New Prototype/Resume Saved/Clear Save paths, added an editor reset menu, and made elemental bolts reliably hit the training dummy with visible HP/impact feedback.
+
+
+## v83 additions
+
+### Dummy reset null-reference fix
+Made `ElementbornPrototypeDummyEnemy.ResetDummy()` safe in Edit Mode before `Awake()` runs by lazily caching renderers/colliders and defensively resetting dummy state from the editor repair menu.

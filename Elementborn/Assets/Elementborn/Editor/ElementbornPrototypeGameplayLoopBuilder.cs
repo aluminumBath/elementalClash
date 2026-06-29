@@ -21,13 +21,14 @@ namespace Elementborn.Game.EditorTools
             scene.name = "Elementborn_Prototype_Gameplay";
 
             CreateLighting();
-            CreateGround();
+            CreateElementalArena();
             GameObject player = CreatePlayer();
             CreateCamera(player.transform);
             CreateManager(player);
             CreateGuideNpc();
             CreateShard();
             CreateReturnPedestal();
+            CreateTrainingDummy();
             CreateLandmarks();
             CreateInstructionSigns();
 
@@ -55,9 +56,9 @@ namespace Elementborn.Game.EditorTools
             Scene scene = EditorSceneManager.GetActiveScene();
 
             CreateLighting();
-            if (GameObject.Find("Prototype Ground") == null)
+            if (GameObject.Find("Elementborn Test Arena") == null)
             {
-                CreateGround();
+                CreateElementalArena();
             }
 
             GameObject player = FindOrCreatePlayer();
@@ -84,6 +85,11 @@ namespace Elementborn.Game.EditorTools
             if (GameObject.Find("Return Pedestal") == null)
             {
                 CreateReturnPedestal();
+            }
+
+            if (GameObject.Find("Training Dummy") == null)
+            {
+                CreateTrainingDummy();
             }
 
             if (scene.IsValid())
@@ -115,7 +121,7 @@ namespace Elementborn.Game.EditorTools
         private static void CreateLighting()
         {
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.45f, 0.5f, 0.58f);
+            RenderSettings.ambientLight = new Color(0.48f, 0.52f, 0.58f);
 
             GameObject lightGo = GameObject.Find("Prototype Sun");
             if (lightGo == null)
@@ -123,21 +129,43 @@ namespace Elementborn.Game.EditorTools
                 lightGo = new GameObject("Prototype Sun");
                 Light light = lightGo.AddComponent<Light>();
                 light.type = LightType.Directional;
-                light.intensity = 1.35f;
+                light.intensity = 1.45f;
                 lightGo.transform.rotation = Quaternion.Euler(45f, -35f, 0f);
             }
         }
 
-        private static void CreateGround()
+        private static void CreateElementalArena()
         {
+            GameObject arena = new GameObject("Elementborn Test Arena");
+
+            CreateArenaTile(arena.transform, "Fire Quarter", new Vector3(9f, -0.01f, 9f), new Color(0.55f, 0.18f, 0.08f));
+            CreateArenaTile(arena.transform, "Water Quarter", new Vector3(-9f, -0.01f, 9f), new Color(0.08f, 0.22f, 0.58f));
+            CreateArenaTile(arena.transform, "Earth Quarter", new Vector3(-9f, -0.01f, -9f), new Color(0.16f, 0.42f, 0.16f));
+            CreateArenaTile(arena.transform, "Air Quarter", new Vector3(9f, -0.01f, -9f), new Color(0.58f, 0.72f, 0.76f));
+
+            GameObject center = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            center.name = "Central Convergence Platform";
+            center.transform.SetParent(arena.transform);
+            center.transform.position = new Vector3(0f, 0.08f, 0f);
+            center.transform.localScale = new Vector3(4.2f, 0.16f, 4.2f);
+            SetMaterial(center, "Central Convergence Material", new Color(0.32f, 0.28f, 0.48f));
+
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Prototype Ground";
-            ground.transform.localScale = new Vector3(18f, 1f, 18f);
-            Renderer renderer = ground.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sharedMaterial = CreateMaterial("Prototype Ground Green", new Color(0.25f, 0.44f, 0.24f));
-            }
+            ground.transform.SetParent(arena.transform);
+            ground.transform.position = new Vector3(0f, -0.03f, 0f);
+            ground.transform.localScale = new Vector3(22f, 1f, 22f);
+            SetMaterial(ground, "Prototype Base Ground", new Color(0.22f, 0.34f, 0.25f));
+        }
+
+        private static void CreateArenaTile(Transform parent, string name, Vector3 position, Color color)
+        {
+            GameObject tile = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            tile.name = name;
+            tile.transform.SetParent(parent);
+            tile.transform.position = position;
+            tile.transform.localScale = new Vector3(17f, 0.05f, 17f);
+            SetMaterial(tile, name + " Material", color);
         }
 
         private static GameObject FindOrCreatePlayer()
@@ -153,26 +181,66 @@ namespace Elementborn.Game.EditorTools
 
         private static GameObject CreatePlayer()
         {
-            GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            player.name = "Prototype Player";
+            GameObject player = new GameObject("Prototype Player");
             player.transform.position = new Vector3(0f, 1f, -8f);
-            Renderer renderer = player.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sharedMaterial = CreateMaterial("Prototype Player Blue", new Color(0.2f, 0.45f, 0.95f));
-            }
 
-            Collider collider = player.GetComponent<Collider>();
-            if (collider != null)
-            {
-                Object.DestroyImmediate(collider);
-            }
+            CharacterController characterController = player.AddComponent<CharacterController>();
+            characterController.height = 2f;
+            characterController.radius = 0.35f;
+            characterController.center = Vector3.zero;
 
-            player.AddComponent<CharacterController>();
             ElementbornPrototypePlayerController controller = player.AddComponent<ElementbornPrototypePlayerController>();
             controller.interactRange = 5.5f;
+
+            ElementbornPrototypeElementalAbility ability = player.AddComponent<ElementbornPrototypeElementalAbility>();
+            ability.currentElement = ElementbornPrototypeElementType.Fire;
+
+            ElementbornPrototypePlayerVisual visual = player.AddComponent<ElementbornPrototypePlayerVisual>();
+
             TrySetTag(player, "Player");
+            CreateStyledPlayerProxy(player.transform);
+
             return player;
+        }
+
+        private static void CreateStyledPlayerProxy(Transform player)
+        {
+            GameObject body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            body.name = "Stylized Channeler Body";
+            body.transform.SetParent(player, false);
+            body.transform.localPosition = Vector3.zero;
+            body.transform.localScale = new Vector3(0.8f, 1f, 0.8f);
+            SetMaterial(body, "Channeler Tunic Blue", new Color(0.12f, 0.25f, 0.55f));
+
+            Collider bodyCollider = body.GetComponent<Collider>();
+            if (bodyCollider != null)
+            {
+                Object.DestroyImmediate(bodyCollider);
+            }
+
+            GameObject sash = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            sash.name = "Elemental Sash";
+            sash.transform.SetParent(player, false);
+            sash.transform.localPosition = new Vector3(0f, 0.25f, -0.42f);
+            sash.transform.localScale = new Vector3(0.95f, 0.18f, 0.08f);
+            SetMaterial(sash, "Fire Attunement Sash", ElementbornPrototypeVisualUtility.GetElementColor(ElementbornPrototypeElementType.Fire));
+            Collider sashCollider = sash.GetComponent<Collider>();
+            if (sashCollider != null)
+            {
+                Object.DestroyImmediate(sashCollider);
+            }
+
+            GameObject head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            head.name = "Stylized Channeler Head";
+            head.transform.SetParent(player, false);
+            head.transform.localPosition = new Vector3(0f, 1.22f, 0f);
+            head.transform.localScale = new Vector3(0.52f, 0.52f, 0.52f);
+            SetMaterial(head, "Channeler Head Material", new Color(0.82f, 0.62f, 0.45f));
+            Collider headCollider = head.GetComponent<Collider>();
+            if (headCollider != null)
+            {
+                Object.DestroyImmediate(headCollider);
+            }
         }
 
         private static void CreateCamera(Transform player)
@@ -195,6 +263,8 @@ namespace Elementborn.Game.EditorTools
             ElementbornPrototypeGameManager manager = managerGo.AddComponent<ElementbornPrototypeGameManager>();
             manager.player = player.GetComponent<ElementbornPrototypePlayerController>();
             manager.playCamera = Camera.main;
+            manager.selectedElement = ElementbornPrototypeElementType.Fire;
+            manager.loadSavedStateOnAwake = false;
         }
 
         private static void CreateGuideNpc()
@@ -203,11 +273,7 @@ namespace Elementborn.Game.EditorTools
             npc.name = "Ember Guide";
             npc.transform.position = new Vector3(-4f, 1f, -3f);
             npc.transform.localScale = new Vector3(0.9f, 1f, 0.9f);
-            Renderer renderer = npc.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sharedMaterial = CreateMaterial("Prototype Guide Orange", new Color(0.95f, 0.45f, 0.18f));
-            }
+            SetMaterial(npc, "Prototype Guide Orange", new Color(0.95f, 0.45f, 0.18f));
 
             ElementbornPrototypeInteractable interactable = npc.AddComponent<ElementbornPrototypeInteractable>();
             interactable.kind = ElementbornPrototypeInteractableKind.GuideNpc;
@@ -221,12 +287,8 @@ namespace Elementborn.Game.EditorTools
             GameObject shard = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             shard.name = "Glowing Shard";
             shard.transform.position = new Vector3(7f, 1f, 1.5f);
-            shard.transform.localScale = new Vector3(0.9f, 1.4f, 0.9f);
-            Renderer renderer = shard.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sharedMaterial = CreateMaterial("Prototype Shard Cyan", new Color(0.1f, 0.9f, 1f));
-            }
+            shard.transform.localScale = new Vector3(0.9f, 1.25f, 0.9f);
+            SetMaterial(shard, "Prototype Shard Cyan", new Color(0.1f, 0.9f, 1f));
 
             ElementbornPrototypeInteractable interactable = shard.AddComponent<ElementbornPrototypeInteractable>();
             interactable.kind = ElementbornPrototypeInteractableKind.ShardResource;
@@ -241,11 +303,7 @@ namespace Elementborn.Game.EditorTools
             pedestal.name = "Return Pedestal";
             pedestal.transform.position = new Vector3(0f, 0.5f, 6f);
             pedestal.transform.localScale = new Vector3(1.4f, 0.5f, 1.4f);
-            Renderer renderer = pedestal.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sharedMaterial = CreateMaterial("Prototype Pedestal Violet", new Color(0.55f, 0.25f, 0.95f));
-            }
+            SetMaterial(pedestal, "Prototype Pedestal Violet", new Color(0.55f, 0.25f, 0.95f));
 
             ElementbornPrototypeInteractable interactable = pedestal.AddComponent<ElementbornPrototypeInteractable>();
             interactable.kind = ElementbornPrototypeInteractableKind.ReturnPoint;
@@ -254,11 +312,24 @@ namespace Elementborn.Game.EditorTools
             AddLabel(pedestal.transform, "Return Pedestal", new Vector3(0f, 1.4f, 0f));
         }
 
+        private static void CreateTrainingDummy()
+        {
+            GameObject dummy = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            dummy.name = "Training Dummy";
+            dummy.transform.position = new Vector3(9.5f, 1f, 6.5f);
+            dummy.transform.localScale = new Vector3(0.95f, 1.2f, 0.95f);
+            SetMaterial(dummy, "Training Dummy Charcoal", new Color(0.18f, 0.12f, 0.1f));
+
+            dummy.AddComponent<ElementbornPrototypeDummyEnemy>();
+            AddLabel(dummy.transform, "Training Dummy\nPress Q", new Vector3(0f, 2.7f, 0f));
+        }
+
         private static void CreateLandmarks()
         {
-            CreateLandmark("Basalt Stone A", new Vector3(5.2f, 1f, 4.5f), new Vector3(1.2f, 2f, 1.2f), new Color(0.12f, 0.12f, 0.14f));
-            CreateLandmark("Basalt Stone B", new Vector3(8.6f, 0.75f, 3.5f), new Vector3(1.4f, 1.5f, 1.4f), new Color(0.13f, 0.12f, 0.12f));
-            CreateLandmark("Water Marker", new Vector3(-7f, 0.2f, 5f), new Vector3(3f, 0.15f, 3f), new Color(0.1f, 0.35f, 0.9f));
+            CreateLandmark("Fire Spire", new Vector3(12f, 1.8f, 9f), new Vector3(1.3f, 3.6f, 1.3f), new Color(0.6f, 0.13f, 0.08f));
+            CreateLandmark("Water Marker", new Vector3(-12f, 0.2f, 9f), new Vector3(4f, 0.2f, 4f), new Color(0.1f, 0.35f, 0.9f));
+            CreateLandmark("Earth Monolith", new Vector3(-12f, 1.6f, -9f), new Vector3(1.9f, 3.2f, 1.9f), new Color(0.14f, 0.3f, 0.12f));
+            CreateLandmark("Air Obelisk", new Vector3(12f, 1.6f, -9f), new Vector3(1f, 3.2f, 1f), new Color(0.65f, 0.78f, 0.82f));
         }
 
         private static void CreateLandmark(string name, Vector3 position, Vector3 scale, Color color)
@@ -267,17 +338,13 @@ namespace Elementborn.Game.EditorTools
             landmark.name = name;
             landmark.transform.position = position;
             landmark.transform.localScale = scale;
-            Renderer renderer = landmark.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sharedMaterial = CreateMaterial(name + " Material", color);
-            }
+            SetMaterial(landmark, name + " Material", color);
         }
 
         private static void CreateInstructionSigns()
         {
-            CreateSign("Prototype Instructions", new Vector3(0f, 1.5f, -12f), "Talk > Collect > Return");
-            CreateSign("Controls Sign", new Vector3(-7f, 1.5f, -8f), "WASD + E");
+            CreateSign("Prototype Instructions", new Vector3(0f, 1.5f, -12f), "Talk > Collect > Return > Cast");
+            CreateSign("Controls Sign", new Vector3(-7f, 1.5f, -8f), "WASD + E + Q");
         }
 
         private static void CreateSign(string name, Vector3 position, string label)
@@ -286,12 +353,7 @@ namespace Elementborn.Game.EditorTools
             sign.name = name;
             sign.transform.position = position;
             sign.transform.localScale = new Vector3(3.5f, 1.4f, 0.18f);
-            Renderer renderer = sign.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.sharedMaterial = CreateMaterial(name + " Material", new Color(0.32f, 0.18f, 0.08f));
-            }
-
+            SetMaterial(sign, name + " Material", new Color(0.32f, 0.18f, 0.08f));
             AddLabel(sign.transform, label, new Vector3(0f, 0f, -0.12f));
         }
 
@@ -310,6 +372,15 @@ namespace Elementborn.Game.EditorTools
             label.characterSize = 0.3f;
             label.fontSize = 48;
             label.color = Color.white;
+        }
+
+        private static void SetMaterial(GameObject go, string materialName, Color color)
+        {
+            Renderer renderer = go != null ? go.GetComponent<Renderer>() : null;
+            if (renderer != null)
+            {
+                renderer.sharedMaterial = CreateMaterial(materialName, color);
+            }
         }
 
         private static Material CreateMaterial(string name, Color color)
