@@ -116,29 +116,6 @@ namespace Elementborn.Game
             return false;
         }
 
-        private void HitDummy(ElementbornPrototypeDummyEnemy dummy, Vector3 impactPoint)
-        {
-            if (dummy == null || hasHit)
-            {
-                return;
-            }
-
-            hasHit = true;
-            dummy.TakeDamage(damage, element);
-            CreateImpact(impactPoint);
-            Destroy(gameObject);
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other == null || hasHit)
-            {
-                return;
-            }
-
-            TryHitDamageTarget(other, transform.position);
-        }
-
         private bool TryHitDamageTarget(Collider collider, Vector3 impactPoint)
         {
             if (collider == null || hasHit)
@@ -163,6 +140,20 @@ namespace Elementborn.Game
             return false;
         }
 
+        private void HitDummy(ElementbornPrototypeDummyEnemy dummy, Vector3 impactPoint)
+        {
+            if (dummy == null || hasHit)
+            {
+                return;
+            }
+
+            hasHit = true;
+            dummy.TakeDamage(damage, element);
+            dummy.ApplyElementalEffect(element, direction);
+            CreateImpact(impactPoint);
+            Destroy(gameObject);
+        }
+
         private void HitHostile(ElementbornPrototypeHostileEnemy hostile, Vector3 impactPoint)
         {
             if (hostile == null || hasHit)
@@ -172,8 +163,19 @@ namespace Elementborn.Game
 
             hasHit = true;
             hostile.TakeDamage(damage, element);
+            hostile.ApplyElementalEffect(element, direction);
             CreateImpact(impactPoint);
             Destroy(gameObject);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other == null || hasHit)
+            {
+                return;
+            }
+
+            TryHitDamageTarget(other, transform.position);
         }
 
         private void EnsurePhysicsSetup()

@@ -31,6 +31,12 @@ namespace Elementborn.Game.EditorTools
             CreateTrainingDummy();
             CreateHostileEnemy();
             CreateElementalGates();
+            CreateEnvoys();
+            CreateResourceNodes();
+            CreateHealingShrines();
+            CreateLootChests();
+            CreateLoreStones();
+            CreateHubDressing();
             CreateLandmarks();
             CreateInstructionSigns();
 
@@ -69,6 +75,12 @@ namespace Elementborn.Game.EditorTools
             if (GameObject.Find("Training Dummy") == null) CreateTrainingDummy();
             if (GameObject.Find("Training Hostile") == null) CreateHostileEnemy();
             if (GameObject.Find("Fire Gate") == null) CreateElementalGates();
+            if (GameObject.Find("Fire Envoy") == null) CreateEnvoys();
+            if (GameObject.Find("Fire Essence Node") == null) CreateResourceNodes();
+            if (GameObject.Find("Convergence Healing Shrine") == null) CreateHealingShrines();
+            if (GameObject.Find("Convergence Reward Chest") == null) CreateLootChests();
+            if (GameObject.Find("Lore Stone of Unity") == null) CreateLoreStones();
+            if (GameObject.Find("Hub Market Stall A") == null) CreateHubDressing();
 
             if (scene.IsValid()) EditorSceneManager.MarkSceneDirty(scene);
 
@@ -125,6 +137,11 @@ namespace Elementborn.Game.EditorTools
             ground.transform.position = new Vector3(0f, -0.03f, 0f);
             ground.transform.localScale = new Vector3(22f, 1f, 22f);
             SetMaterial(ground, "Prototype Base Ground", new Color(0.22f, 0.34f, 0.25f));
+
+            CreateRoad("North Road", new Vector3(0f, 0.04f, 8f), new Vector3(3f, 0.06f, 13f));
+            CreateRoad("South Road", new Vector3(0f, 0.04f, -8f), new Vector3(3f, 0.06f, 13f));
+            CreateRoad("East Road", new Vector3(8f, 0.04f, 0f), new Vector3(13f, 0.06f, 3f));
+            CreateRoad("West Road", new Vector3(-8f, 0.04f, 0f), new Vector3(13f, 0.06f, 3f));
         }
 
         private static void CreateArenaTile(Transform parent, string name, Vector3 position, Color color)
@@ -135,6 +152,15 @@ namespace Elementborn.Game.EditorTools
             tile.transform.position = position;
             tile.transform.localScale = new Vector3(17f, 0.05f, 17f);
             SetMaterial(tile, name + " Material", color);
+        }
+
+        private static void CreateRoad(string name, Vector3 position, Vector3 scale)
+        {
+            GameObject road = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            road.name = name;
+            road.transform.position = position;
+            road.transform.localScale = scale;
+            SetMaterial(road, name + " Material", new Color(0.28f, 0.25f, 0.22f));
         }
 
         private static GameObject FindOrCreatePlayer()
@@ -195,6 +221,9 @@ namespace Elementborn.Game.EditorTools
             head.transform.localScale = new Vector3(0.52f, 0.52f, 0.52f);
             SetMaterial(head, "Channeler Head Material", new Color(0.82f, 0.62f, 0.45f));
             DestroyCollider(head);
+
+            AddCrownOrHood(player, new Color(0.08f, 0.12f, 0.22f));
+            AddShoulderCloak(player, new Color(0.08f, 0.12f, 0.22f));
         }
 
         private static void CreateCamera(Transform player)
@@ -223,17 +252,24 @@ namespace Elementborn.Game.EditorTools
 
         private static void CreateGuideNpc()
         {
-            GameObject npc = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            npc.name = "Ember Guide";
-            npc.transform.position = new Vector3(-4f, 1f, -3f);
-            npc.transform.localScale = new Vector3(0.9f, 1f, 0.9f);
-            SetMaterial(npc, "Prototype Guide Orange", new Color(0.95f, 0.45f, 0.18f));
-
+            GameObject npc = CreateCapsuleNpc("Ember Guide", new Vector3(-4f, 1f, -3f), new Color(0.95f, 0.45f, 0.18f));
             ElementbornPrototypeInteractable interactable = npc.AddComponent<ElementbornPrototypeInteractable>();
             interactable.kind = ElementbornPrototypeInteractableKind.GuideNpc;
             interactable.displayName = "Ember Guide";
             interactable.activationRadius = 5f;
             AddLabel(npc.transform, "Ember Guide", new Vector3(0f, 2.4f, 0f));
+            AddMarker(npc, "!", ElementbornPrototypeMarkerKind.Talk, 3.3f);
+            AddCrownOrHood(npc.transform, new Color(0.8f, 0.18f, 0.06f));
+        }
+
+        private static GameObject CreateCapsuleNpc(string name, Vector3 position, Color color)
+        {
+            GameObject npc = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            npc.name = name;
+            npc.transform.position = position;
+            npc.transform.localScale = new Vector3(0.9f, 1f, 0.9f);
+            SetMaterial(npc, name + " Material", color);
+            return npc;
         }
 
         private static void CreateShard()
@@ -249,6 +285,8 @@ namespace Elementborn.Game.EditorTools
             interactable.displayName = "Glowing Shard";
             interactable.activationRadius = 3.25f;
             AddLabel(shard.transform, "Glowing Shard", new Vector3(0f, 1.8f, 0f));
+            AddMarker(shard, "◆", ElementbornPrototypeMarkerKind.Objective, 2.5f);
+            shard.AddComponent<ElementbornPrototypeSpin>().bobAmplitude = 0.08f;
         }
 
         private static void CreateReturnPedestal()
@@ -264,6 +302,7 @@ namespace Elementborn.Game.EditorTools
             interactable.displayName = "Return Pedestal";
             interactable.activationRadius = 4f;
             AddLabel(pedestal.transform, "Return Pedestal", new Vector3(0f, 1.4f, 0f));
+            AddMarker(pedestal, "⬢", ElementbornPrototypeMarkerKind.Objective, 2.4f);
         }
 
         private static void CreateTrainingDummy()
@@ -275,6 +314,7 @@ namespace Elementborn.Game.EditorTools
             SetMaterial(dummy, "Training Dummy Charcoal", new Color(0.18f, 0.12f, 0.1f));
             dummy.AddComponent<ElementbornPrototypeDummyEnemy>();
             AddLabel(dummy.transform, "Training Dummy\nPress Q", new Vector3(0f, 2.7f, 0f));
+            AddMarker(dummy, "◎", ElementbornPrototypeMarkerKind.Combat, 3.6f);
         }
 
         private static void CreateHostileEnemy()
@@ -286,39 +326,226 @@ namespace Elementborn.Game.EditorTools
             SetMaterial(hostile, "Hostile Red", new Color(0.42f, 0.08f, 0.08f));
             hostile.AddComponent<ElementbornPrototypeHostileEnemy>();
             AddLabel(hostile.transform, "Hostile\nDamages Player", new Vector3(0f, 2.7f, 0f));
+            AddMarker(hostile, "⚔", ElementbornPrototypeMarkerKind.Combat, 3.6f);
+            AddShoulderCloak(hostile.transform, new Color(0.25f, 0.02f, 0.02f));
         }
 
         private static void CreateElementalGates()
         {
-            CreateGate("Fire Gate", new Vector3(0f, 1.8f, 14f), ElementbornPrototypeElementType.Fire);
-            CreateGate("Water Gate", new Vector3(-14f, 1.8f, 0f), ElementbornPrototypeElementType.Water);
-            CreateGate("Earth Gate", new Vector3(0f, 1.8f, -14f), ElementbornPrototypeElementType.Earth);
-            CreateGate("Air Gate", new Vector3(14f, 1.8f, 0f), ElementbornPrototypeElementType.Air);
+            CreateGate("Fire Gate", new Vector3(0f, 1.8f, 14f), 0f, ElementbornPrototypeElementType.Fire);
+            CreateGate("Water Gate", new Vector3(-14f, 1.8f, 0f), 90f, ElementbornPrototypeElementType.Water);
+            CreateGate("Earth Gate", new Vector3(0f, 1.8f, -14f), 180f, ElementbornPrototypeElementType.Earth);
+            CreateGate("Air Gate", new Vector3(14f, 1.8f, 0f), -90f, ElementbornPrototypeElementType.Air);
         }
 
-        private static void CreateGate(string name, Vector3 position, ElementbornPrototypeElementType element)
+        private static void CreateGate(string name, Vector3 position, float yaw, ElementbornPrototypeElementType element)
         {
+            GameObject root = new GameObject(name);
+            root.transform.position = position;
+            root.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+
             Color color = ElementbornPrototypeVisualUtility.GetElementColor(element);
 
-            GameObject left = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            left.name = name + " Left Pillar";
-            left.transform.position = position + new Vector3(-1.4f, 0f, 0f);
-            left.transform.localScale = new Vector3(0.4f, 3.6f, 0.4f);
-            SetMaterial(left, name + " Material", color);
+            GameObject left = CreateChildCube(root.transform, "Left Pillar", new Vector3(-1.4f, 0f, 0f), new Vector3(0.4f, 3.6f, 0.4f), color);
+            GameObject right = CreateChildCube(root.transform, "Right Pillar", new Vector3(1.4f, 0f, 0f), new Vector3(0.4f, 3.6f, 0.4f), color);
+            GameObject top = CreateChildCube(root.transform, "Top Beam", new Vector3(0f, 1.7f, 0f), new Vector3(3.2f, 0.35f, 0.45f), color);
 
-            GameObject right = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            right.name = name + " Right Pillar";
-            right.transform.position = position + new Vector3(1.4f, 0f, 0f);
-            right.transform.localScale = new Vector3(0.4f, 3.6f, 0.4f);
-            SetMaterial(right, name + " Material", color);
+            TextMesh label = AddLabel(top.transform, ElementbornPrototypeVisualUtility.GetElementName(element) + "\nGATE", new Vector3(0f, 1.2f, -0.35f));
 
-            GameObject top = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            top.name = name;
-            top.transform.position = position + new Vector3(0f, 1.7f, 0f);
-            top.transform.localScale = new Vector3(3.2f, 0.35f, 0.45f);
-            SetMaterial(top, name + " Material", color);
+            ElementbornPrototypeElementGate gate = root.AddComponent<ElementbornPrototypeElementGate>();
+            gate.element = element;
+            gate.leftPillar = left.transform;
+            gate.rightPillar = right.transform;
+            gate.topBeam = top.transform;
+            gate.label = label;
 
-            AddLabel(top.transform, ElementbornPrototypeVisualUtility.GetElementName(element), new Vector3(0f, 1.2f, -0.35f));
+            ElementbornPrototypeInteractable interactable = root.AddComponent<ElementbornPrototypeInteractable>();
+            interactable.kind = ElementbornPrototypeInteractableKind.ElementGate;
+            interactable.displayName = name;
+            interactable.gateElement = element;
+            interactable.element = element;
+            interactable.gateController = gate;
+            interactable.activationRadius = 5f;
+            AddMarker(root, "⇧", ElementbornPrototypeMarkerKind.Gate, 4.6f);
+        }
+
+        private static void CreateEnvoys()
+        {
+            CreateEnvoy("Fire Envoy", new Vector3(4.8f, 1f, 4.8f), ElementbornPrototypeElementType.Fire,
+                "Fire Envoy: Fire channelers prize resolve. Supremacists call it purity; unifiers call it courage.");
+            CreateEnvoy("Water Envoy", new Vector3(-4.8f, 1f, 4.8f), ElementbornPrototypeElementType.Water,
+                "Water Envoy: Water adapts. It remembers old wounds and finds paths through hard stone.");
+            CreateEnvoy("Earth Envoy", new Vector3(-4.8f, 1f, -4.8f), ElementbornPrototypeElementType.Earth,
+                "Earth Envoy: Earth stands for kinship, borders, memory, and stubborn survival.");
+            CreateEnvoy("Air Envoy", new Vector3(4.8f, 1f, -4.8f), ElementbornPrototypeElementType.Air,
+                "Air Envoy: Air carries rumor, prayer, rebellion, and freedom across every wall.");
+        }
+
+        private static void CreateEnvoy(string name, Vector3 position, ElementbornPrototypeElementType element, string text)
+        {
+            GameObject envoy = CreateCapsuleNpc(name, position, ElementbornPrototypeVisualUtility.GetElementColor(element));
+            ElementbornPrototypeInteractable interactable = envoy.AddComponent<ElementbornPrototypeInteractable>();
+            interactable.kind = ElementbornPrototypeInteractableKind.EnvoyNpc;
+            interactable.displayName = name;
+            interactable.element = element;
+            interactable.customText = text;
+            interactable.activationRadius = 4.5f;
+            AddLabel(envoy.transform, name, new Vector3(0f, 2.4f, 0f));
+            AddMarker(envoy, "?", ElementbornPrototypeMarkerKind.Talk, 3.25f);
+            AddShoulderCloak(envoy.transform, ElementbornPrototypeVisualUtility.GetElementColor(element));
+        }
+
+        private static void CreateResourceNodes()
+        {
+            CreateResourceNode("Fire Essence Node", new Vector3(8f, 0.8f, 8.8f), ElementbornPrototypeElementType.Fire);
+            CreateResourceNode("Water Essence Node", new Vector3(-8.8f, 0.8f, 8f), ElementbornPrototypeElementType.Water);
+            CreateResourceNode("Earth Essence Node", new Vector3(-8f, 0.8f, -8.8f), ElementbornPrototypeElementType.Earth);
+            CreateResourceNode("Air Essence Node", new Vector3(8.8f, 0.8f, -8f), ElementbornPrototypeElementType.Air);
+        }
+
+        private static void CreateResourceNode(string name, Vector3 position, ElementbornPrototypeElementType element)
+        {
+            GameObject node = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            node.name = name;
+            node.transform.position = position;
+            node.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+            SetMaterial(node, name + " Material", ElementbornPrototypeVisualUtility.GetElementColor(element));
+
+            ElementbornPrototypeInteractable interactable = node.AddComponent<ElementbornPrototypeInteractable>();
+            interactable.kind = ElementbornPrototypeInteractableKind.ResourceNode;
+            interactable.displayName = name;
+            interactable.element = element;
+            interactable.amount = 1;
+            interactable.activationRadius = 3f;
+            AddLabel(node.transform, name, new Vector3(0f, 1.4f, 0f));
+            node.AddComponent<ElementbornPrototypeSpin>().bobAmplitude = 0.08f;
+            AddMarker(node, "+", ElementbornPrototypeMarkerKind.Resource, 2.25f);
+        }
+
+        private static void CreateHealingShrines()
+        {
+            CreateShrine("Convergence Healing Shrine", new Vector3(-3.2f, 0.5f, 1.6f), new Color(0.35f, 1f, 0.72f));
+            CreateShrine("Outer Rest Shrine", new Vector3(10f, 0.5f, -2f), new Color(0.7f, 0.9f, 1f));
+        }
+
+        private static void CreateShrine(string name, Vector3 position, Color color)
+        {
+            GameObject shrine = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            shrine.name = name;
+            shrine.transform.position = position;
+            shrine.transform.localScale = new Vector3(1f, 0.5f, 1f);
+            SetMaterial(shrine, name + " Material", color);
+
+            ElementbornPrototypeInteractable interactable = shrine.AddComponent<ElementbornPrototypeInteractable>();
+            interactable.kind = ElementbornPrototypeInteractableKind.HealingShrine;
+            interactable.displayName = name;
+            interactable.activationRadius = 3.5f;
+            AddLabel(shrine.transform, "Healing Shrine", new Vector3(0f, 1.3f, 0f));
+            AddMarker(shrine, "✚", ElementbornPrototypeMarkerKind.Shrine, 2.4f);
+        }
+
+        private static void CreateLootChests()
+        {
+            CreateChest("Convergence Reward Chest", new Vector3(3.2f, 0.45f, 1.6f), "Chest needs essence after the hostile is defeated.");
+            CreateChest("Side Supply Chest", new Vector3(-9f, 0.45f, 2.5f), "A small chest used to test loot interaction.");
+        }
+
+        private static void CreateChest(string name, Vector3 position, string text)
+        {
+            GameObject chest = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            chest.name = name;
+            chest.transform.position = position;
+            chest.transform.localScale = new Vector3(1.2f, 0.8f, 0.8f);
+            SetMaterial(chest, name + " Material", new Color(0.72f, 0.45f, 0.16f));
+
+            GameObject lid = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            lid.name = name + " Lid";
+            lid.transform.SetParent(chest.transform, false);
+            lid.transform.localPosition = new Vector3(0f, 0.58f, 0f);
+            lid.transform.localScale = new Vector3(1.08f, 0.18f, 1.05f);
+            SetMaterial(lid, name + " Lid Material", new Color(0.92f, 0.68f, 0.26f));
+            DestroyCollider(lid);
+
+            ElementbornPrototypeInteractable interactable = chest.AddComponent<ElementbornPrototypeInteractable>();
+            interactable.kind = ElementbornPrototypeInteractableKind.LootChest;
+            interactable.displayName = name;
+            interactable.customText = text;
+            interactable.activationRadius = 3.25f;
+            AddLabel(chest.transform, name, new Vector3(0f, 1.2f, 0f));
+            AddMarker(chest, "$", ElementbornPrototypeMarkerKind.Loot, 2.35f);
+        }
+
+        private static void CreateLoreStones()
+        {
+            CreateLoreStone("Lore Stone of Unity", new Vector3(-2.2f, 1.2f, -2.4f),
+                "The oldest inscription says the center was built before the factions had names. It warns: division begins when power forgets responsibility.");
+            CreateLoreStone("Lore Stone of Dominion", new Vector3(2.2f, 1.2f, -2.4f),
+                "A later hand carved over the stone: peace is only real when the strongest element enforces it.");
+            CreateLoreStone("Lore Stone of Bloodlines", new Vector3(0f, 1.2f, -4.2f),
+                "Some bloodlines channel cleanly. Some combine strangely. Some are feared because no one understands what they might become.");
+        }
+
+        private static void CreateLoreStone(string name, Vector3 position, string text)
+        {
+            GameObject stone = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            stone.name = name;
+            stone.transform.position = position;
+            stone.transform.localScale = new Vector3(0.55f, 2.2f, 0.35f);
+            SetMaterial(stone, name + " Material", new Color(0.22f, 0.22f, 0.28f));
+
+            ElementbornPrototypeInteractable interactable = stone.AddComponent<ElementbornPrototypeInteractable>();
+            interactable.kind = ElementbornPrototypeInteractableKind.LoreStone;
+            interactable.displayName = name;
+            interactable.customText = text;
+            interactable.activationRadius = 3.5f;
+            AddLabel(stone.transform, name.Replace("Lore Stone of ", ""), new Vector3(0f, 1.35f, -0.25f));
+            AddMarker(stone, "i", ElementbornPrototypeMarkerKind.Lore, 2.9f);
+        }
+
+        private static void CreateHubDressing()
+        {
+            CreateMarketStall("Hub Market Stall A", new Vector3(-5.5f, 0.55f, 0f), new Color(0.5f, 0.18f, 0.08f));
+            CreateMarketStall("Hub Market Stall B", new Vector3(5.5f, 0.55f, 0f), new Color(0.08f, 0.18f, 0.5f));
+            CreateBanner("Unifier Banner", new Vector3(-1.6f, 1.4f, 3.2f), new Color(0.2f, 0.75f, 0.45f));
+            CreateBanner("Dominion Banner", new Vector3(1.6f, 1.4f, 3.2f), new Color(0.75f, 0.18f, 0.18f));
+            CreateArchway("Small Central Arch", new Vector3(0f, 1.4f, 3.2f), new Color(0.33f, 0.29f, 0.38f));
+        }
+
+        private static void CreateMarketStall(string name, Vector3 position, Color color)
+        {
+            GameObject baseBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            baseBox.name = name;
+            baseBox.transform.position = position;
+            baseBox.transform.localScale = new Vector3(2.2f, 0.7f, 1.2f);
+            SetMaterial(baseBox, name + " Wood", new Color(0.32f, 0.18f, 0.08f));
+
+            GameObject canopy = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            canopy.name = name + " Canopy";
+            canopy.transform.position = position + Vector3.up * 0.9f;
+            canopy.transform.localScale = new Vector3(2.5f, 0.25f, 1.5f);
+            SetMaterial(canopy, name + " Canopy Material", color);
+        }
+
+        private static void CreateBanner(string name, Vector3 position, Color color)
+        {
+            GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            pole.name = name + " Pole";
+            pole.transform.position = position + Vector3.left * 0.35f;
+            pole.transform.localScale = new Vector3(0.12f, 2.4f, 0.12f);
+            SetMaterial(pole, name + " Pole Material", new Color(0.18f, 0.16f, 0.12f));
+
+            GameObject cloth = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cloth.name = name;
+            cloth.transform.position = position + new Vector3(0.2f, 0.35f, 0f);
+            cloth.transform.localScale = new Vector3(0.9f, 1.2f, 0.08f);
+            SetMaterial(cloth, name + " Cloth", color);
+        }
+
+        private static void CreateArchway(string name, Vector3 position, Color color)
+        {
+            CreateChildlessCube(name + " Left", position + new Vector3(-1.2f, 0f, 0f), new Vector3(0.3f, 2.8f, 0.3f), color);
+            CreateChildlessCube(name + " Right", position + new Vector3(1.2f, 0f, 0f), new Vector3(0.3f, 2.8f, 0.3f), color);
+            CreateChildlessCube(name, position + new Vector3(0f, 1.4f, 0f), new Vector3(2.7f, 0.3f, 0.35f), color);
         }
 
         private static void CreateLandmarks()
@@ -340,7 +567,7 @@ namespace Elementborn.Game.EditorTools
 
         private static void CreateInstructionSigns()
         {
-            CreateSign("Prototype Instructions", new Vector3(0f, 1.5f, -12f), "Talk > Choose > Collect > Return > Cast");
+            CreateSign("Prototype Instructions", new Vector3(0f, 1.5f, -12f), "Talk > Choose > Collect > Return > Gate > Defeat > Essence > Chest > Lore");
             CreateSign("Controls Sign", new Vector3(-7f, 1.5f, -8f), "WASD + E + Q\nShift stamina");
         }
 
@@ -354,7 +581,27 @@ namespace Elementborn.Game.EditorTools
             AddLabel(sign.transform, label, new Vector3(0f, 0f, -0.12f));
         }
 
-        private static void AddLabel(Transform parent, string text, Vector3 localPosition)
+        private static GameObject CreateChildCube(Transform parent, string name, Vector3 localPosition, Vector3 scale, Color color)
+        {
+            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = localPosition;
+            go.transform.localScale = scale;
+            SetMaterial(go, name + " Material", color);
+            return go;
+        }
+
+        private static void CreateChildlessCube(string name, Vector3 position, Vector3 scale, Color color)
+        {
+            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = name;
+            go.transform.position = position;
+            go.transform.localScale = scale;
+            SetMaterial(go, name + " Material", color);
+        }
+
+        private static TextMesh AddLabel(Transform parent, string text, Vector3 localPosition)
         {
             GameObject labelGo = new GameObject("Label");
             labelGo.transform.SetParent(parent, false);
@@ -369,6 +616,7 @@ namespace Elementborn.Game.EditorTools
             label.characterSize = 0.3f;
             label.fontSize = 48;
             label.color = Color.white;
+            return label;
         }
 
         private static void SetMaterial(GameObject go, string materialName, Color color)
@@ -390,6 +638,38 @@ namespace Elementborn.Game.EditorTools
             material.name = name;
             material.color = color;
             return material;
+        }
+
+
+        private static ElementbornPrototypeQuestMarker AddMarker(GameObject go, string text, ElementbornPrototypeMarkerKind kind, float height = 2.8f)
+        {
+            ElementbornPrototypeQuestMarker marker = go.AddComponent<ElementbornPrototypeQuestMarker>();
+            marker.markerText = text;
+            marker.kind = kind;
+            marker.localOffset = new Vector3(0f, height, 0f);
+            return marker;
+        }
+
+        private static void AddCrownOrHood(Transform parent, Color color)
+        {
+            GameObject hood = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            hood.name = "Stylized Hood Ring";
+            hood.transform.SetParent(parent, false);
+            hood.transform.localPosition = new Vector3(0f, 1.56f, 0f);
+            hood.transform.localScale = new Vector3(0.55f, 0.08f, 0.55f);
+            SetMaterial(hood, "Stylized Hood Material", color);
+            DestroyCollider(hood);
+        }
+
+        private static void AddShoulderCloak(Transform parent, Color color)
+        {
+            GameObject cloak = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cloak.name = "Stylized Shoulder Cloak";
+            cloak.transform.SetParent(parent, false);
+            cloak.transform.localPosition = new Vector3(0f, 0.82f, 0.24f);
+            cloak.transform.localScale = new Vector3(1.05f, 0.5f, 0.16f);
+            SetMaterial(cloak, "Stylized Cloak Material", color);
+            DestroyCollider(cloak);
         }
 
         private static void DestroyCollider(GameObject go)

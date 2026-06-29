@@ -300,3 +300,27 @@ Made `ElementbornPrototypeDummyEnemy.ResetDummy()` safe in Edit Mode before `Awa
 
 ### Game-zone prototype upgrade
 Added player health/stamina/death/respawn, hostile enemy AI/damage, branch choice with Ember Guide, HUD health/stamina/cooldown indicators, and visible elemental gates around the central hub.
+
+
+## v85 additions
+
+### Elemental gates + status effects
+Added interactive elemental gates, post-shard gate progression, element-specific projectile effects, gate reset handling, and hostile-defeat zone completion.
+
+
+## v86 additions
+
+### Filled-out prototype zone content
+Added envoys, lore stones, resource nodes, healing shrines, loot chests, hub dressing, inventory/progression counters, and a longer zone-completion quest chain.
+
+
+## v87 additions
+
+### Readable messages + journal
+Increased HUD/dialogue message durations, enlarged message/dialogue UI, added a recent message log, added a toggleable quest journal, and added Enter-to-dismiss dialogue.
+
+
+## v88 additions
+
+### Visual identity + markers + compass
+Added floating quest markers, objective compass, better primitive silhouettes, spinning/bobbing pickups, first relic reward state, and more readable world-object guidance.

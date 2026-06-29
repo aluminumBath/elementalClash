@@ -17,6 +17,8 @@ namespace Elementborn.Game
         private float flashUntil;
         private bool cachedInitialPosition;
         private bool flashVisualActive;
+        private string lastStatusText = "";
+        private float statusUntil;
         private readonly Color baseColor = new Color(0.18f, 0.12f, 0.1f);
 
         private void Awake()
@@ -44,14 +46,16 @@ namespace Elementborn.Game
                 Respawn();
             }
 
+            if (!string.IsNullOrWhiteSpace(lastStatusText) && Time.time >= statusUntil)
+            {
+                lastStatusText = "";
+                UpdateHealthLabel();
+            }
+
             UpdateFlashVisual();
             FaceHealthLabelToCamera();
         }
 
-        /// <summary>
-        /// Safe in Play Mode and Edit Mode. Earlier v82 called this from an editor menu before Awake,
-        /// which meant renderers/colliders were still null.
-        /// </summary>
         public void ResetDummy()
         {
             CacheSceneReferencesIfNeeded();
@@ -64,6 +68,8 @@ namespace Elementborn.Game
             currentHealth = maxHealth;
             flashUntil = 0f;
             flashVisualActive = false;
+            lastStatusText = "";
+            statusUntil = 0f;
 
             EnsureHealthLabel();
             UpdateHealthLabel();
@@ -73,8 +79,6 @@ namespace Elementborn.Game
 
         public void TakeDamage(float amount, ElementbornPrototypeElementType element)
         {
-            CacheSceneReferencesIfNeeded();
-
             if (currentHealth <= 0f)
             {
                 return;
@@ -96,6 +100,37 @@ namespace Elementborn.Game
             {
                 Defeat();
             }
+        }
+
+        public void ApplyElementalEffect(ElementbornPrototypeElementType element, Vector3 impactDirection)
+        {
+            switch (element)
+            {
+                case ElementbornPrototypeElementType.Fire:
+                    lastStatusText = "Burning";
+                    TakeDamage(5f, element);
+                    break;
+                case ElementbornPrototypeElementType.Water:
+                    lastStatusText = "Drenched";
+                    break;
+                case ElementbornPrototypeElementType.Earth:
+                    lastStatusText = "Staggered";
+                    transform.position += SafeHorizontal(impactDirection) * 0.5f;
+                    break;
+                case ElementbornPrototypeElementType.Air:
+                    lastStatusText = "Buffeted";
+                    transform.position += SafeHorizontal(impactDirection) * 0.9f;
+                    break;
+            }
+
+            statusUntil = Time.time + 2.5f;
+            UpdateHealthLabel();
+        }
+
+        private Vector3 SafeHorizontal(Vector3 direction)
+        {
+            direction.y = 0f;
+            return direction.sqrMagnitude > 0.001f ? direction.normalized : Vector3.forward;
         }
 
         private void Defeat()
@@ -178,13 +213,7 @@ namespace Elementborn.Game
 
         private bool IsHealthLabelRenderer(Renderer renderer)
         {
-            if (renderer == null)
-            {
-                return false;
-            }
-
-            return healthLabel != null &&
-                   renderer.gameObject == healthLabel.gameObject;
+            return renderer != null && healthLabel != null && renderer.gameObject == healthLabel.gameObject;
         }
 
         private void EnsureHealthLabel()
@@ -213,7 +242,6 @@ namespace Elementborn.Game
             healthLabel.characterSize = 0.28f;
             healthLabel.color = Color.white;
 
-            // New child label means cached renderer list may need refreshing.
             renderers = GetComponentsInChildren<Renderer>(true);
         }
 
@@ -223,7 +251,8 @@ namespace Elementborn.Game
 
             if (healthLabel != null)
             {
-                healthLabel.text = "Training Dummy\nHP " + Mathf.CeilToInt(currentHealth) + "/" + Mathf.CeilToInt(maxHealth);
+                string status = string.IsNullOrWhiteSpace(lastStatusText) ? "" : "\n" + lastStatusText;
+                healthLabel.text = "Training Dummy\nHP " + Mathf.CeilToInt(currentHealth) + "/" + Mathf.CeilToInt(maxHealth) + status;
             }
         }
 

@@ -18,6 +18,11 @@ namespace Elementborn.Game.EditorTools
             PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyPlayerZ);
             PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyElement);
             PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyPathChoice);
+            PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyEssence);
+            PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyCoins);
+            PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyLore);
+            PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyChests);
+            PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyZoneLevel);
             PlayerPrefs.Save();
 
             ElementbornPrototypeGameManager manager = Object.FindAnyObjectByType<ElementbornPrototypeGameManager>();
@@ -26,6 +31,11 @@ namespace Elementborn.Game.EditorTools
                 Undo.RecordObject(manager, "Reset Prototype Manager State");
                 manager.questState = ElementbornPrototypeQuestState.NotStarted;
                 manager.pathChoice = ElementbornPrototypePathChoice.None;
+                manager.elementalEssence = 0;
+                manager.coins = 0;
+                manager.loreDiscovered = 0;
+                manager.chestsOpened = 0;
+                manager.zoneLevel = 1;
                 manager.loadSavedStateOnAwake = false;
                 manager.ResetSceneRuntimeState(true);
                 EditorUtility.SetDirty(manager);
@@ -36,10 +46,25 @@ namespace Elementborn.Game.EditorTools
             for (int i = 0; i < interactables.Length; i++)
             {
                 ElementbornPrototypeInteractable interactable = interactables[i];
-                if (interactable != null && interactable.kind == ElementbornPrototypeInteractableKind.ShardResource)
+                if (interactable == null)
                 {
-                    interactable.gameObject.SetActive(true);
+                    continue;
+                }
+
+                try
+                {
+                    interactable.ResetInteractable();
+                    interactable.EnsureInteractionRadius();
+                    if (interactable.kind == ElementbornPrototypeInteractableKind.ShardResource)
+                    {
+                        interactable.gameObject.SetActive(true);
+                    }
+                    EditorUtility.SetDirty(interactable);
                     EditorUtility.SetDirty(interactable.gameObject);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("Elementborn could not reset prototype interactable '" + interactable.name + "': " + ex.Message);
                 }
             }
 
@@ -84,6 +109,28 @@ namespace Elementborn.Game.EditorTools
                 catch (System.Exception ex)
                 {
                     Debug.LogWarning("Elementborn could not reset prototype hostile '" + hostile.name + "': " + ex.Message);
+                }
+            }
+
+            ElementbornPrototypeElementGate[] gates =
+                Object.FindObjectsByType<ElementbornPrototypeElementGate>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < gates.Length; i++)
+            {
+                ElementbornPrototypeElementGate gate = gates[i];
+                if (gate == null)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    gate.CloseGate();
+                    EditorUtility.SetDirty(gate);
+                    EditorUtility.SetDirty(gate.gameObject);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("Elementborn could not reset prototype gate '" + gate.name + "': " + ex.Message);
                 }
             }
 

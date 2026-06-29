@@ -20,6 +20,11 @@ namespace Elementborn.Game
         private float nextAttackAt;
         private float respawnAt;
         private float flashUntil;
+        private float slowedUntil;
+        private float stunnedUntil;
+        private float burningUntil;
+        private float nextBurnTickAt;
+        private string lastStatusText = "";
         private bool cached;
         private bool defeated;
         private readonly Color baseColor = new Color(0.42f, 0.08f, 0.08f);
@@ -36,6 +41,7 @@ namespace Elementborn.Game
         private void Update()
         {
             Cache();
+            TickBurning();
             UpdateFlashVisual();
             FaceHealthLabelToCamera();
 
@@ -54,6 +60,11 @@ namespace Elementborn.Game
                 return;
             }
 
+            if (Time.time < stunnedUntil)
+            {
+                return;
+            }
+
             Vector3 toPlayer = player.transform.position - transform.position;
             toPlayer.y = 0f;
             float distance = toPlayer.magnitude;
@@ -63,9 +74,11 @@ namespace Elementborn.Game
                 return;
             }
 
+            float effectiveMoveSpeed = Time.time < slowedUntil ? moveSpeed * 0.45f : moveSpeed;
+
             if (distance > attackRange && distance > 0.05f)
             {
-                Vector3 step = toPlayer.normalized * moveSpeed * Time.deltaTime;
+                Vector3 step = toPlayer.normalized * effectiveMoveSpeed * Time.deltaTime;
                 transform.position += step;
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(toPlayer.normalized, Vector3.up), Time.deltaTime * 10f);
             }
@@ -99,16 +112,79 @@ namespace Elementborn.Game
             }
         }
 
+        public void ApplyElementalEffect(ElementbornPrototypeElementType element, Vector3 impactDirection)
+        {
+            if (defeated || currentHealth <= 0f)
+            {
+                return;
+            }
+
+            Vector3 push = SafeHorizontal(impactDirection);
+
+            switch (element)
+            {
+                case ElementbornPrototypeElementType.Fire:
+                    burningUntil = Time.time + 3.0f;
+                    nextBurnTickAt = Time.time + 0.7f;
+                    lastStatusText = "Burning";
+                    break;
+                case ElementbornPrototypeElementType.Water:
+                    slowedUntil = Time.time + 2.75f;
+                    lastStatusText = "Slowed";
+                    break;
+                case ElementbornPrototypeElementType.Earth:
+                    stunnedUntil = Time.time + 0.9f;
+                    transform.position += push * 1.3f;
+                    lastStatusText = "Stunned";
+                    break;
+                case ElementbornPrototypeElementType.Air:
+                    transform.position += push * 2.8f;
+                    lastStatusText = "Pushed";
+                    break;
+            }
+
+            UpdateHealthLabel();
+        }
+
         public void ResetEnemy()
         {
             Cache();
             defeated = false;
             transform.position = initialPosition;
             currentHealth = maxHealth;
+            slowedUntil = 0f;
+            stunnedUntil = 0f;
+            burningUntil = 0f;
+            nextBurnTickAt = 0f;
+            lastStatusText = "";
             SetVisibleAndCollidable(true);
             EnsureHealthLabel();
             UpdateHealthLabel();
             ApplyColor(baseColor);
+        }
+
+        private void TickBurning()
+        {
+            if (defeated || currentHealth <= 0f || Time.time >= burningUntil || Time.time < nextBurnTickAt)
+            {
+                return;
+            }
+
+            nextBurnTickAt = Time.time + 0.7f;
+            currentHealth = Mathf.Max(0f, currentHealth - 4f);
+            flashUntil = Time.time + 0.12f;
+            UpdateHealthLabel();
+
+            if (currentHealth <= 0f)
+            {
+                Defeat();
+            }
+        }
+
+        private Vector3 SafeHorizontal(Vector3 direction)
+        {
+            direction.y = 0f;
+            return direction.sqrMagnitude > 0.001f ? direction.normalized : Vector3.forward;
         }
 
         private void Defeat()
@@ -120,6 +196,7 @@ namespace Elementborn.Game
             ElementbornPrototypeGameManager manager = ElementbornPrototypeGameManager.Instance;
             if (manager != null)
             {
+                manager.NotifyHostileDefeated(this);
                 manager.ShowMessage("Hostile defeated. It will respawn shortly.");
             }
         }
@@ -208,7 +285,8 @@ namespace Elementborn.Game
             EnsureHealthLabel();
             if (healthLabel != null)
             {
-                healthLabel.text = "Hostile\nHP " + Mathf.CeilToInt(currentHealth) + "/" + Mathf.CeilToInt(maxHealth);
+                string status = string.IsNullOrWhiteSpace(lastStatusText) ? "" : "\n" + lastStatusText;
+                healthLabel.text = "Hostile\nHP " + Mathf.CeilToInt(currentHealth) + "/" + Mathf.CeilToInt(maxHealth) + status;
             }
         }
 

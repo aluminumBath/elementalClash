@@ -7,7 +7,13 @@ namespace Elementborn.Game
         Generic,
         GuideNpc,
         ShardResource,
-        ReturnPoint
+        ReturnPoint,
+        ElementGate,
+        ResourceNode,
+        HealingShrine,
+        LootChest,
+        LoreStone,
+        EnvoyNpc
     }
 
     public sealed class ElementbornPrototypeInteractable : MonoBehaviour
@@ -16,6 +22,20 @@ namespace Elementborn.Game
 
         public ElementbornPrototypeInteractableKind kind;
         public string displayName = "Interactable";
+
+        [Header("Element")]
+        public ElementbornPrototypeElementType element = ElementbornPrototypeElementType.Fire;
+
+        [Header("Element Gate")]
+        public ElementbornPrototypeElementType gateElement = ElementbornPrototypeElementType.Fire;
+        public ElementbornPrototypeElementGate gateController;
+
+        [Header("One-shot Interaction")]
+        public bool consumed;
+        public int amount = 1;
+
+        [TextArea(2, 5)]
+        public string customText;
 
         [Header("Prototype Interaction")]
         [Min(0.5f)] public float activationRadius = 4f;
@@ -26,12 +46,14 @@ namespace Elementborn.Game
 
         private void Awake()
         {
+            ResolveGateController();
             EnsureInteractionRadius();
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            ResolveGateController();
             if (!Application.isPlaying)
             {
                 return;
@@ -51,6 +73,18 @@ namespace Elementborn.Game
                     return "Collect " + displayName;
                 case ElementbornPrototypeInteractableKind.ReturnPoint:
                     return "Use " + displayName;
+                case ElementbornPrototypeInteractableKind.ElementGate:
+                    return "Open " + ElementbornPrototypeVisualUtility.GetElementName(gateElement) + " Gate";
+                case ElementbornPrototypeInteractableKind.ResourceNode:
+                    return consumed ? displayName + " depleted" : "Harvest " + displayName;
+                case ElementbornPrototypeInteractableKind.HealingShrine:
+                    return "Rest at " + displayName;
+                case ElementbornPrototypeInteractableKind.LootChest:
+                    return consumed ? displayName + " opened" : "Open " + displayName;
+                case ElementbornPrototypeInteractableKind.LoreStone:
+                    return "Read " + displayName;
+                case ElementbornPrototypeInteractableKind.EnvoyNpc:
+                    return "Talk to " + displayName;
                 default:
                     return displayName;
             }
@@ -73,6 +107,70 @@ namespace Elementborn.Game
             }
 
             return Vector3.Distance(player.position, transform.position) <= activationRadius;
+        }
+
+        public void ResolveGateController()
+        {
+            if (gateController == null)
+            {
+                gateController = GetComponent<ElementbornPrototypeElementGate>();
+            }
+        }
+
+        public void ResetInteractable()
+        {
+            consumed = false;
+
+            if (kind == ElementbornPrototypeInteractableKind.ResourceNode ||
+                kind == ElementbornPrototypeInteractableKind.LootChest)
+            {
+                gameObject.SetActive(true);
+            }
+
+            Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+            Color color = GetResetColor();
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Renderer renderer = renderers[i];
+                if (renderer != null && renderer.GetComponent<TextMesh>() == null)
+                {
+                    renderer.enabled = true;
+                    renderer.sharedMaterial = ElementbornPrototypeVisualUtility.CreateRuntimeMaterial(name + " Reset", color);
+                }
+            }
+        }
+
+        public void MarkConsumed()
+        {
+            consumed = true;
+
+            if (kind == ElementbornPrototypeInteractableKind.ResourceNode)
+            {
+                Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    Renderer renderer = renderers[i];
+                    if (renderer != null && renderer.GetComponent<TextMesh>() == null)
+                    {
+                        renderer.sharedMaterial = ElementbornPrototypeVisualUtility.CreateRuntimeMaterial(name + " Depleted", Color.gray);
+                    }
+                }
+            }
+        }
+
+        private Color GetResetColor()
+        {
+            if (kind == ElementbornPrototypeInteractableKind.ResourceNode)
+            {
+                return ElementbornPrototypeVisualUtility.GetElementColor(element);
+            }
+
+            if (kind == ElementbornPrototypeInteractableKind.LootChest)
+            {
+                return new Color(0.72f, 0.45f, 0.16f);
+            }
+
+            return ElementbornPrototypeVisualUtility.GetElementColor(element);
         }
 
         public void EnsureInteractionRadius()
