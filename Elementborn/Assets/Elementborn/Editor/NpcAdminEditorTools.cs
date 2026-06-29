@@ -171,7 +171,7 @@ The social-circle roster adds a Wind Capital neighborhood cluster plus Kelly in 
             rect.sizeDelta = rectSize;
             Text label = go.AddComponent<Text>();
             label.text = text;
-            label.font = Elementborn.Game.ElementbornBuiltinFontUtility.GetDefaultFont();
+            Elementborn.Game.ElementbornBuiltinFontUtility.ApplyDefaultFont(label);
             label.fontSize = size;
             label.alignment = TextAnchor.MiddleCenter;
             label.color = new Color(1f, 0.96f, 0.86f, 1f);

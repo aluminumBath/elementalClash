@@ -276,7 +276,7 @@ Fire Capital Systems
             GameObject go = new GameObject(name);
             go.transform.SetParent(parent, false);
             Text label = go.AddComponent<Text>();
-            label.font = Elementborn.Game.ElementbornBuiltinFontUtility.GetDefaultFont();
+            Elementborn.Game.ElementbornBuiltinFontUtility.ApplyDefaultFont(label);
             label.fontSize = size;
             label.color = Color.white;
             label.text = text;

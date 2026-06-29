@@ -85,7 +85,7 @@ namespace Elementborn.Game
         {
             var go = new GameObject("Label", typeof(RectTransform));
             go.transform.SetParent(parent, false);
-            var font = TMP_Settings.defaultFontAsset;
+            var font = Elementborn.Game.ElementbornTmpFontUtility.GetDefaultFontAsset();
             if (font != null)
             {
                 var t = go.AddComponent<TextMeshProUGUI>();
@@ -214,7 +214,7 @@ namespace Elementborn.Game
             int fontSize = Mathf.RoundToInt(height * 0.42f);
             var phColor = new Color(0.62f, 0.64f, 0.70f, 1f);
 
-            if (TMP_Settings.defaultFontAsset != null)
+            if (Elementborn.Game.ElementbornTmpFontUtility.GetDefaultFontAsset() != null)
             {
                 var area = new GameObject("TextArea", typeof(RectTransform), typeof(RectMask2D));
                 area.transform.SetParent(go.transform, false);

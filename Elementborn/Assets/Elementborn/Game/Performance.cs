@@ -74,7 +74,7 @@ namespace Elementborn.Game
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 5000;
 
-            var font = TMP_Settings.defaultFontAsset;
+            var font = Elementborn.Game.ElementbornTmpFontUtility.GetDefaultFontAsset();
             if (font == null) return; // asset-free guard: no font, no readout (canvas stays empty)
 
             var t = new GameObject("PerfText");

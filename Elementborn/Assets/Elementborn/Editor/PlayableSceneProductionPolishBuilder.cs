@@ -77,7 +77,7 @@ namespace Elementborn.Game.EditorTools
             GameObject textGo = new GameObject("Guide Text");
             textGo.transform.SetParent(panel.transform, false);
             Text text = textGo.AddComponent<Text>();
-            text.font = Elementborn.Game.ElementbornBuiltinFontUtility.GetDefaultFont();
+            Elementborn.Game.ElementbornBuiltinFontUtility.ApplyDefaultFont(text);
             text.fontSize = 16;
             text.color = Color.white;
             text.alignment = TextAnchor.UpperLeft;

@@ -3,32 +3,90 @@ using UnityEngine;
 namespace Elementborn.Game
 {
     /// <summary>
-    /// Unity 6 removed Arial.ttf as a valid built-in font resource.
-    /// Use this helper for generated UGUI text so editor/runtime tools are version tolerant.
+    /// Version-tolerant font helper for generated UGUI text.
+    /// Unity 6 removed Arial.ttf as a valid built-in font resource, but some editor
+    /// generation code still needs a concrete non-null Font for Text components.
     /// </summary>
     public static class ElementbornBuiltinFontUtility
     {
+        private static Font cachedDefaultFont;
+
         public static Font GetDefaultFont()
         {
-            Font font = null;
+            if (cachedDefaultFont != null)
+            {
+                return cachedDefaultFont;
+            }
+
+            cachedDefaultFont = TryBuiltin("LegacyRuntime.ttf");
+            if (cachedDefaultFont != null)
+            {
+                return cachedDefaultFont;
+            }
+
+            cachedDefaultFont = TryBuiltin("Arial.ttf");
+            if (cachedDefaultFont != null)
+            {
+                return cachedDefaultFont;
+            }
+
+            cachedDefaultFont = TryOsFont("Segoe UI", 16);
+            if (cachedDefaultFont != null)
+            {
+                return cachedDefaultFont;
+            }
+
+            cachedDefaultFont = TryOsFont("Arial", 16);
+            if (cachedDefaultFont != null)
+            {
+                return cachedDefaultFont;
+            }
+
+            cachedDefaultFont = TryOsFont("Liberation Sans", 16);
+            return cachedDefaultFont;
+        }
+
+        public static void ApplyDefaultFont(UnityEngine.UI.Text text)
+        {
+            if (text == null)
+            {
+                return;
+            }
+
+            Font font = GetDefaultFont();
+            if (font != null)
+            {
+                text.font = font;
+            }
+        }
+
+        private static Font TryBuiltin(string resourceName)
+        {
+            if (string.IsNullOrWhiteSpace(resourceName))
+            {
+                return null;
+            }
 
             try
             {
-                font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                return Resources.GetBuiltinResource<Font>(resourceName);
             }
             catch
             {
-                font = null;
+                return null;
             }
+        }
 
-            if (font != null)
+        private static Font TryOsFont(string fontName, int size)
+        {
+            if (string.IsNullOrWhiteSpace(fontName))
             {
-                return font;
+                return null;
             }
 
             try
             {
-                return Resources.GetBuiltinResource<Font>("Arial.ttf");
+                return Font.CreateDynamicFontFromOSFont(fontName, size);
             }
             catch
             {

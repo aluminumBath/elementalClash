@@ -55,7 +55,7 @@ namespace Elementborn.Game
 
             MakeQuad("Cover", new Vector3(0f, 0f, 0f), new Vector3(6f, 6f, 1f), new Color(0.03f, 0.03f, 0.05f));
 
-            var font = TMP_Settings.defaultFontAsset;
+            var font = Elementborn.Game.ElementbornTmpFontUtility.GetDefaultFontAsset();
             if (font != null)
             {
                 var lg = new GameObject("Label");

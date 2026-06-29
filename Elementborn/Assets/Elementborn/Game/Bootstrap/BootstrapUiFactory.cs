@@ -125,7 +125,7 @@ namespace Elementborn.Game
             go.transform.SetParent(parent, false);
             Text text = go.AddComponent<Text>();
             text.text = value;
-            text.font = Elementborn.Game.ElementbornBuiltinFontUtility.GetDefaultFont();
+            Elementborn.Game.ElementbornBuiltinFontUtility.ApplyDefaultFont(text);
             text.fontSize = size;
             text.color = Color.white;
             RectTransform rt = go.GetComponent<RectTransform>();

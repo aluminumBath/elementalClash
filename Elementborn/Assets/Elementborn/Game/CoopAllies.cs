@@ -81,7 +81,7 @@ namespace Elementborn.Game
 
             // nameplate: TMP world text, asset-free like FloatingText (skip if no default font)
             TextMeshPro tmp = null;
-            var font = TMP_Settings.defaultFontAsset;
+            var font = Elementborn.Game.ElementbornTmpFontUtility.GetDefaultFontAsset();
             if (font != null)
             {
                 var label = new GameObject("Name");

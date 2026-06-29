@@ -155,3 +155,15 @@ Added `ElementbornUiPrefabFactory.CreateThemeAsset()` as a compatibility wrapper
 
 ### Unity 6 built-in font compatibility
 Replaced legacy `Arial.ttf` generated UI font calls with a Unity 6-safe default font helper using `LegacyRuntime.ttf`.
+
+
+## v62 additions
+
+### Story debug dashboard null-safety
+Hardened generated UI font assignment and dashboard setup so `Build Rounded Playable Scene` can continue without null-reference crashes from the Story Systems Debug Dashboard installer.
+
+
+## v63 additions
+
+### PlayMode UI null-safety
+Added a null-safe `PlayerAttunementHud` replacement and `ElementbornTmpFontUtility` to avoid `TMP_Settings.defaultFontAsset` crashes during PlayMode tests.

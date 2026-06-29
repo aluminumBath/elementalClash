@@ -12,7 +12,7 @@ namespace Elementborn.Game.Feel
     {
         public static void Spawn(Vector3 worldPos, string text, Color color, float fontSize, float baseScale)
         {
-            var font = TMP_Settings.defaultFontAsset;
+            var font = Elementborn.Game.ElementbornTmpFontUtility.GetDefaultFontAsset();
             if (font == null) return;
 
             var go = new GameObject("FloatingText");

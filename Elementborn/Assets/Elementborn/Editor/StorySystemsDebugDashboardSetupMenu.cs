@@ -45,8 +45,14 @@ namespace Elementborn.Game.EditorTools
 
             GameObject panel = Panel(canvas.transform, "Dashboard Panel", new Vector2(0.02f, 0.04f), new Vector2(0.62f, 0.92f), new Color(0.04f, 0.06f, 0.1f, 0.88f));
             GameObject textArea = Panel(panel.transform, "Text Area", new Vector2(0.02f, 0.03f), new Vector2(0.74f, 0.94f), new Color(0.09f, 0.11f, 0.16f, 0.7f));
-            Text text = textArea.AddComponent<Text>();
-            text.font = Elementborn.Game.ElementbornBuiltinFontUtility.GetDefaultFont();
+            Text text = textArea != null ? textArea.AddComponent<Text>() : null;
+            Elementborn.Game.ElementbornBuiltinFontUtility.ApplyDefaultFont(text);
+            if (text == null)
+            {
+                Debug.LogWarning("Story Systems Debug Dashboard text area could not be created; skipping dashboard text wiring.");
+                return;
+            }
+
             text.fontSize = 15;
             text.alignment = TextAnchor.UpperLeft;
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
@@ -145,17 +151,25 @@ narrative save paths
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            dashboard.Refresh();
+            if (dashboard != null)
+            {
+                dashboard.Refresh();
+            }
             Debug.Log("Installed Story Systems Debug Dashboard.");
         }
 
         private static GameObject Panel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Color color)
         {
-            GameObject go = new GameObject(name);
-            go.transform.SetParent(parent, false);
+            GameObject go = new GameObject(name, typeof(RectTransform));
+            if (parent != null)
+            {
+                go.transform.SetParent(parent, false);
+            }
+
             Image image = go.AddComponent<Image>();
             image.color = color;
-            RectTransform rect = go.GetComponent<RectTransform>();
+
+            RectTransform rect = EnsureRectTransform(go);
             rect.anchorMin = anchorMin;
             rect.anchorMax = anchorMax;
             rect.offsetMin = Vector2.zero;
@@ -163,24 +177,48 @@ narrative save paths
             return go;
         }
 
+        private static RectTransform EnsureRectTransform(GameObject go)
+        {
+            if (go == null)
+            {
+                return null;
+            }
+
+            RectTransform rect = go.GetComponent<RectTransform>();
+            if (rect == null)
+            {
+                rect = go.AddComponent<RectTransform>();
+            }
+
+            return rect;
+        }
+
         private static Button CreateButton(Transform parent, string name, string label, int row)
         {
-            GameObject go = new GameObject(name);
-            go.transform.SetParent(parent, false);
+            GameObject go = new GameObject(name, typeof(RectTransform));
+            if (parent != null)
+            {
+                go.transform.SetParent(parent, false);
+            }
             Image image = go.AddComponent<Image>();
             image.color = new Color(0.26f, 0.2f, 0.28f, 0.95f);
             Button button = go.AddComponent<Button>();
-            RectTransform rect = go.GetComponent<RectTransform>();
+            RectTransform rect = EnsureRectTransform(go);
             rect.anchorMin = new Vector2(0.08f, 1f);
             rect.anchorMax = new Vector2(0.92f, 1f);
             rect.pivot = new Vector2(0.5f, 1f);
             rect.sizeDelta = new Vector2(0f, 54f);
             rect.anchoredPosition = new Vector2(0f, -12f - row * 64f);
 
-            GameObject textGo = new GameObject("Label");
+            GameObject textGo = new GameObject("Label", typeof(RectTransform));
             textGo.transform.SetParent(go.transform, false);
             Text text = textGo.AddComponent<Text>();
-            text.font = Elementborn.Game.ElementbornBuiltinFontUtility.GetDefaultFont();
+            Elementborn.Game.ElementbornBuiltinFontUtility.ApplyDefaultFont(text);
+            if (text == null)
+            {
+                return button;
+            }
+
             text.fontSize = 15;
             text.alignment = TextAnchor.MiddleCenter;
             text.color = Color.white;
