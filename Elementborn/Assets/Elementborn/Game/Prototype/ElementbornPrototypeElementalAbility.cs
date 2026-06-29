@@ -19,6 +19,9 @@ namespace Elementborn.Game
         private float nextCastTime;
         private Camera playCamera;
 
+        public float CooldownRemaining => Mathf.Max(0f, nextCastTime - Time.time);
+        public float Cooldown01 => cooldownSeconds <= 0f ? 0f : Mathf.Clamp01(CooldownRemaining / cooldownSeconds);
+
         private void Update()
         {
             ElementbornPrototypeGameManager manager = ElementbornPrototypeGameManager.Instance;

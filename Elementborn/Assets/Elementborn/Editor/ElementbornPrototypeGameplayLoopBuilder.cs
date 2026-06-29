@@ -29,6 +29,8 @@ namespace Elementborn.Game.EditorTools
             CreateShard();
             CreateReturnPedestal();
             CreateTrainingDummy();
+            CreateHostileEnemy();
+            CreateElementalGates();
             CreateLandmarks();
             CreateInstructionSigns();
 
@@ -56,46 +58,19 @@ namespace Elementborn.Game.EditorTools
             Scene scene = EditorSceneManager.GetActiveScene();
 
             CreateLighting();
-            if (GameObject.Find("Elementborn Test Arena") == null)
-            {
-                CreateElementalArena();
-            }
+            if (GameObject.Find("Elementborn Test Arena") == null) CreateElementalArena();
 
             GameObject player = FindOrCreatePlayer();
-            if (Camera.main == null)
-            {
-                CreateCamera(player.transform);
-            }
+            if (Camera.main == null) CreateCamera(player.transform);
+            if (Object.FindAnyObjectByType<ElementbornPrototypeGameManager>() == null) CreateManager(player);
+            if (GameObject.Find("Ember Guide") == null) CreateGuideNpc();
+            if (GameObject.Find("Glowing Shard") == null) CreateShard();
+            if (GameObject.Find("Return Pedestal") == null) CreateReturnPedestal();
+            if (GameObject.Find("Training Dummy") == null) CreateTrainingDummy();
+            if (GameObject.Find("Training Hostile") == null) CreateHostileEnemy();
+            if (GameObject.Find("Fire Gate") == null) CreateElementalGates();
 
-            if (Object.FindAnyObjectByType<ElementbornPrototypeGameManager>() == null)
-            {
-                CreateManager(player);
-            }
-
-            if (GameObject.Find("Ember Guide") == null)
-            {
-                CreateGuideNpc();
-            }
-
-            if (GameObject.Find("Glowing Shard") == null)
-            {
-                CreateShard();
-            }
-
-            if (GameObject.Find("Return Pedestal") == null)
-            {
-                CreateReturnPedestal();
-            }
-
-            if (GameObject.Find("Training Dummy") == null)
-            {
-                CreateTrainingDummy();
-            }
-
-            if (scene.IsValid())
-            {
-                EditorSceneManager.MarkSceneDirty(scene);
-            }
+            if (scene.IsValid()) EditorSceneManager.MarkSceneDirty(scene);
 
             AssetDatabase.SaveAssets();
             Debug.Log("Installed Elementborn prototype gameplay loop in the open scene.");
@@ -103,17 +78,11 @@ namespace Elementborn.Game.EditorTools
 
         private static void EnsureFolder(string path)
         {
-            if (AssetDatabase.IsValidFolder(path))
-            {
-                return;
-            }
+            if (AssetDatabase.IsValidFolder(path)) return;
 
             string parent = System.IO.Path.GetDirectoryName(path).Replace("\\", "/");
             string name = System.IO.Path.GetFileName(path);
-            if (!AssetDatabase.IsValidFolder(parent))
-            {
-                EnsureFolder(parent);
-            }
+            if (!AssetDatabase.IsValidFolder(parent)) EnsureFolder(parent);
 
             AssetDatabase.CreateFolder(parent, name);
         }
@@ -171,12 +140,7 @@ namespace Elementborn.Game.EditorTools
         private static GameObject FindOrCreatePlayer()
         {
             ElementbornPrototypePlayerController existing = Object.FindAnyObjectByType<ElementbornPrototypePlayerController>();
-            if (existing != null)
-            {
-                return existing.gameObject;
-            }
-
-            return CreatePlayer();
+            return existing != null ? existing.gameObject : CreatePlayer();
         }
 
         private static GameObject CreatePlayer()
@@ -189,13 +153,16 @@ namespace Elementborn.Game.EditorTools
             characterController.radius = 0.35f;
             characterController.center = Vector3.zero;
 
+            ElementbornPrototypePlayerStats stats = player.AddComponent<ElementbornPrototypePlayerStats>();
+            stats.respawnPosition = new Vector3(0f, 1f, -8f);
+
             ElementbornPrototypePlayerController controller = player.AddComponent<ElementbornPrototypePlayerController>();
             controller.interactRange = 5.5f;
 
             ElementbornPrototypeElementalAbility ability = player.AddComponent<ElementbornPrototypeElementalAbility>();
             ability.currentElement = ElementbornPrototypeElementType.Fire;
 
-            ElementbornPrototypePlayerVisual visual = player.AddComponent<ElementbornPrototypePlayerVisual>();
+            player.AddComponent<ElementbornPrototypePlayerVisual>();
 
             TrySetTag(player, "Player");
             CreateStyledPlayerProxy(player.transform);
@@ -211,12 +178,7 @@ namespace Elementborn.Game.EditorTools
             body.transform.localPosition = Vector3.zero;
             body.transform.localScale = new Vector3(0.8f, 1f, 0.8f);
             SetMaterial(body, "Channeler Tunic Blue", new Color(0.12f, 0.25f, 0.55f));
-
-            Collider bodyCollider = body.GetComponent<Collider>();
-            if (bodyCollider != null)
-            {
-                Object.DestroyImmediate(bodyCollider);
-            }
+            DestroyCollider(body);
 
             GameObject sash = GameObject.CreatePrimitive(PrimitiveType.Cube);
             sash.name = "Elemental Sash";
@@ -224,11 +186,7 @@ namespace Elementborn.Game.EditorTools
             sash.transform.localPosition = new Vector3(0f, 0.25f, -0.42f);
             sash.transform.localScale = new Vector3(0.95f, 0.18f, 0.08f);
             SetMaterial(sash, "Fire Attunement Sash", ElementbornPrototypeVisualUtility.GetElementColor(ElementbornPrototypeElementType.Fire));
-            Collider sashCollider = sash.GetComponent<Collider>();
-            if (sashCollider != null)
-            {
-                Object.DestroyImmediate(sashCollider);
-            }
+            DestroyCollider(sash);
 
             GameObject head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             head.name = "Stylized Channeler Head";
@@ -236,11 +194,7 @@ namespace Elementborn.Game.EditorTools
             head.transform.localPosition = new Vector3(0f, 1.22f, 0f);
             head.transform.localScale = new Vector3(0.52f, 0.52f, 0.52f);
             SetMaterial(head, "Channeler Head Material", new Color(0.82f, 0.62f, 0.45f));
-            Collider headCollider = head.GetComponent<Collider>();
-            if (headCollider != null)
-            {
-                Object.DestroyImmediate(headCollider);
-            }
+            DestroyCollider(head);
         }
 
         private static void CreateCamera(Transform player)
@@ -319,9 +273,52 @@ namespace Elementborn.Game.EditorTools
             dummy.transform.position = new Vector3(9.5f, 1f, 6.5f);
             dummy.transform.localScale = new Vector3(0.95f, 1.2f, 0.95f);
             SetMaterial(dummy, "Training Dummy Charcoal", new Color(0.18f, 0.12f, 0.1f));
-
             dummy.AddComponent<ElementbornPrototypeDummyEnemy>();
             AddLabel(dummy.transform, "Training Dummy\nPress Q", new Vector3(0f, 2.7f, 0f));
+        }
+
+        private static void CreateHostileEnemy()
+        {
+            GameObject hostile = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            hostile.name = "Training Hostile";
+            hostile.transform.position = new Vector3(-9f, 1f, -4f);
+            hostile.transform.localScale = new Vector3(0.9f, 1.1f, 0.9f);
+            SetMaterial(hostile, "Hostile Red", new Color(0.42f, 0.08f, 0.08f));
+            hostile.AddComponent<ElementbornPrototypeHostileEnemy>();
+            AddLabel(hostile.transform, "Hostile\nDamages Player", new Vector3(0f, 2.7f, 0f));
+        }
+
+        private static void CreateElementalGates()
+        {
+            CreateGate("Fire Gate", new Vector3(0f, 1.8f, 14f), ElementbornPrototypeElementType.Fire);
+            CreateGate("Water Gate", new Vector3(-14f, 1.8f, 0f), ElementbornPrototypeElementType.Water);
+            CreateGate("Earth Gate", new Vector3(0f, 1.8f, -14f), ElementbornPrototypeElementType.Earth);
+            CreateGate("Air Gate", new Vector3(14f, 1.8f, 0f), ElementbornPrototypeElementType.Air);
+        }
+
+        private static void CreateGate(string name, Vector3 position, ElementbornPrototypeElementType element)
+        {
+            Color color = ElementbornPrototypeVisualUtility.GetElementColor(element);
+
+            GameObject left = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            left.name = name + " Left Pillar";
+            left.transform.position = position + new Vector3(-1.4f, 0f, 0f);
+            left.transform.localScale = new Vector3(0.4f, 3.6f, 0.4f);
+            SetMaterial(left, name + " Material", color);
+
+            GameObject right = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            right.name = name + " Right Pillar";
+            right.transform.position = position + new Vector3(1.4f, 0f, 0f);
+            right.transform.localScale = new Vector3(0.4f, 3.6f, 0.4f);
+            SetMaterial(right, name + " Material", color);
+
+            GameObject top = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            top.name = name;
+            top.transform.position = position + new Vector3(0f, 1.7f, 0f);
+            top.transform.localScale = new Vector3(3.2f, 0.35f, 0.45f);
+            SetMaterial(top, name + " Material", color);
+
+            AddLabel(top.transform, ElementbornPrototypeVisualUtility.GetElementName(element), new Vector3(0f, 1.2f, -0.35f));
         }
 
         private static void CreateLandmarks()
@@ -343,8 +340,8 @@ namespace Elementborn.Game.EditorTools
 
         private static void CreateInstructionSigns()
         {
-            CreateSign("Prototype Instructions", new Vector3(0f, 1.5f, -12f), "Talk > Collect > Return > Cast");
-            CreateSign("Controls Sign", new Vector3(-7f, 1.5f, -8f), "WASD + E + Q");
+            CreateSign("Prototype Instructions", new Vector3(0f, 1.5f, -12f), "Talk > Choose > Collect > Return > Cast");
+            CreateSign("Controls Sign", new Vector3(-7f, 1.5f, -8f), "WASD + E + Q\nShift stamina");
         }
 
         private static void CreateSign(string name, Vector3 position, string label)
@@ -386,15 +383,8 @@ namespace Elementborn.Game.EditorTools
         private static Material CreateMaterial(string name, Color color)
         {
             Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (shader == null)
-            {
-                shader = Shader.Find("HDRP/Lit");
-            }
-
-            if (shader == null)
-            {
-                shader = Shader.Find("Standard");
-            }
+            if (shader == null) shader = Shader.Find("HDRP/Lit");
+            if (shader == null) shader = Shader.Find("Standard");
 
             Material material = new Material(shader);
             material.name = name;
@@ -402,12 +392,18 @@ namespace Elementborn.Game.EditorTools
             return material;
         }
 
+        private static void DestroyCollider(GameObject go)
+        {
+            Collider collider = go != null ? go.GetComponent<Collider>() : null;
+            if (collider != null)
+            {
+                Object.DestroyImmediate(collider);
+            }
+        }
+
         private static void TrySetTag(GameObject go, string tagName)
         {
-            if (go == null)
-            {
-                return;
-            }
+            if (go == null) return;
 
             try
             {

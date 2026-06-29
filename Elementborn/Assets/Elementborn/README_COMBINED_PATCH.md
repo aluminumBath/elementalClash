@@ -294,3 +294,9 @@ Prevented accidental old completed-save auto-load, added explicit New Prototype/
 
 ### Dummy reset null-reference fix
 Made `ElementbornPrototypeDummyEnemy.ResetDummy()` safe in Edit Mode before `Awake()` runs by lazily caching renderers/colliders and defensively resetting dummy state from the editor repair menu.
+
+
+## v84 additions
+
+### Game-zone prototype upgrade
+Added player health/stamina/death/respawn, hostile enemy AI/damage, branch choice with Ember Guide, HUD health/stamina/cooldown indicators, and visible elemental gates around the central hub.

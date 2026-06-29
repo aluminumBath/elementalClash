@@ -87,10 +87,8 @@ namespace Elementborn.Game
                     continue;
                 }
 
-                ElementbornPrototypeDummyEnemy dummy = collider.GetComponentInParent<ElementbornPrototypeDummyEnemy>();
-                if (dummy != null)
+                if (TryHitDamageTarget(collider, hits[i].point))
                 {
-                    HitDummy(dummy, hits[i].point);
                     return true;
                 }
             }
@@ -109,10 +107,8 @@ namespace Elementborn.Game
                     continue;
                 }
 
-                ElementbornPrototypeDummyEnemy dummy = collider.GetComponentInParent<ElementbornPrototypeDummyEnemy>();
-                if (dummy != null)
+                if (TryHitDamageTarget(collider, position))
                 {
-                    HitDummy(dummy, position);
                     return true;
                 }
             }
@@ -140,11 +136,44 @@ namespace Elementborn.Game
                 return;
             }
 
-            ElementbornPrototypeDummyEnemy dummy = other.GetComponentInParent<ElementbornPrototypeDummyEnemy>();
+            TryHitDamageTarget(other, transform.position);
+        }
+
+        private bool TryHitDamageTarget(Collider collider, Vector3 impactPoint)
+        {
+            if (collider == null || hasHit)
+            {
+                return false;
+            }
+
+            ElementbornPrototypeDummyEnemy dummy = collider.GetComponentInParent<ElementbornPrototypeDummyEnemy>();
             if (dummy != null)
             {
-                HitDummy(dummy, transform.position);
+                HitDummy(dummy, impactPoint);
+                return true;
             }
+
+            ElementbornPrototypeHostileEnemy hostile = collider.GetComponentInParent<ElementbornPrototypeHostileEnemy>();
+            if (hostile != null)
+            {
+                HitHostile(hostile, impactPoint);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void HitHostile(ElementbornPrototypeHostileEnemy hostile, Vector3 impactPoint)
+        {
+            if (hostile == null || hasHit)
+            {
+                return;
+            }
+
+            hasHit = true;
+            hostile.TakeDamage(damage, element);
+            CreateImpact(impactPoint);
+            Destroy(gameObject);
         }
 
         private void EnsurePhysicsSetup()

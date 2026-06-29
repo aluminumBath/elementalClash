@@ -10,15 +10,6 @@ namespace Elementborn.Game
         Completed
     }
 
-    /// <summary>
-    /// Self-contained prototype loop:
-    /// New prototype -> choose element -> talk to NPC -> collect shard -> return shard -> test ability -> save/load.
-    ///
-    /// v82:
-    /// - No longer auto-loads an old completed PlayerPrefs save by default.
-    /// - Adds explicit New Prototype / Resume Saved paths.
-    /// - Resets shard/dummy scene state when starting fresh.
-    /// </summary>
     public sealed class ElementbornPrototypeGameManager : MonoBehaviour
     {
         public const string SaveKeyQuestState = "Elementborn.Prototype.QuestState";
@@ -26,6 +17,7 @@ namespace Elementborn.Game
         public const string SaveKeyPlayerY = "Elementborn.Prototype.PlayerY";
         public const string SaveKeyPlayerZ = "Elementborn.Prototype.PlayerZ";
         public const string SaveKeyElement = "Elementborn.Prototype.Element";
+        public const string SaveKeyPathChoice = "Elementborn.Prototype.PathChoice";
 
         public static ElementbornPrototypeGameManager Instance { get; private set; }
 
@@ -38,6 +30,7 @@ namespace Elementborn.Game
         public bool loadSavedStateOnAwake = false;
         public ElementbornPrototypeQuestState questState = ElementbornPrototypeQuestState.NotStarted;
         public ElementbornPrototypeElementType selectedElement = ElementbornPrototypeElementType.Fire;
+        public ElementbornPrototypePathChoice pathChoice = ElementbornPrototypePathChoice.None;
 
         [Header("UI")]
         public bool showHud = true;
@@ -48,6 +41,7 @@ namespace Elementborn.Game
         private string dialogueSpeaker = "";
         private string dialogueText = "";
         private float dialogueUntil;
+        private bool guideChoiceOpen;
 
         public bool HasStarted => !menuOpen;
 
@@ -83,6 +77,7 @@ namespace Elementborn.Game
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 menuOpen = !menuOpen;
+                guideChoiceOpen = false;
             }
 
             if (Input.GetKeyDown(KeyCode.F5))
@@ -112,10 +107,11 @@ namespace Elementborn.Game
         {
             ClearSavedState();
             questState = ElementbornPrototypeQuestState.NotStarted;
+            pathChoice = ElementbornPrototypePathChoice.None;
             ResetSceneRuntimeState(true);
             ApplySelectedElement();
             menuOpen = false;
-            ShowDialogue("Ember Guide", "Welcome, channeler. Speak with me, then recover the glowing shard.");
+            ShowDialogue("Ember Guide", "Welcome, channeler. Speak with me, then choose how you want to use your element.");
         }
 
         public void ResumeSavedPrototype()
@@ -158,6 +154,7 @@ namespace Elementborn.Game
             PlayerPrefs.DeleteKey(SaveKeyPlayerY);
             PlayerPrefs.DeleteKey(SaveKeyPlayerZ);
             PlayerPrefs.DeleteKey(SaveKeyElement);
+            PlayerPrefs.DeleteKey(SaveKeyPathChoice);
             PlayerPrefs.Save();
         }
 
@@ -165,6 +162,7 @@ namespace Elementborn.Game
         {
             PlayerPrefs.SetInt(SaveKeyQuestState, (int)questState);
             PlayerPrefs.SetInt(SaveKeyElement, (int)selectedElement);
+            PlayerPrefs.SetInt(SaveKeyPathChoice, (int)pathChoice);
 
             if (player != null)
             {
@@ -180,18 +178,18 @@ namespace Elementborn.Game
 
         public void LoadIfPresent(bool showMessage)
         {
-            if (PlayerPrefs.HasKey(SaveKeyQuestState))
-            {
-                questState = (ElementbornPrototypeQuestState)PlayerPrefs.GetInt(SaveKeyQuestState, 0);
-            }
-            else
-            {
-                questState = ElementbornPrototypeQuestState.NotStarted;
-            }
+            questState = PlayerPrefs.HasKey(SaveKeyQuestState)
+                ? (ElementbornPrototypeQuestState)PlayerPrefs.GetInt(SaveKeyQuestState, 0)
+                : ElementbornPrototypeQuestState.NotStarted;
 
             if (PlayerPrefs.HasKey(SaveKeyElement))
             {
                 selectedElement = (ElementbornPrototypeElementType)PlayerPrefs.GetInt(SaveKeyElement, 0);
+            }
+
+            if (PlayerPrefs.HasKey(SaveKeyPathChoice))
+            {
+                pathChoice = (ElementbornPrototypePathChoice)PlayerPrefs.GetInt(SaveKeyPathChoice, 0);
             }
 
             if (player != null &&
@@ -224,6 +222,12 @@ namespace Elementborn.Game
             if (resetPlayer && player != null)
             {
                 player.Teleport(new Vector3(0f, 1f, -8f));
+
+                ElementbornPrototypePlayerStats stats = player.GetComponent<ElementbornPrototypePlayerStats>();
+                if (stats != null)
+                {
+                    stats.HealToFull();
+                }
             }
 
             ElementbornPrototypeInteractable[] interactables =
@@ -256,9 +260,21 @@ namespace Elementborn.Game
                 }
             }
 
+            ElementbornPrototypeHostileEnemy[] hostiles =
+                FindObjectsByType<ElementbornPrototypeHostileEnemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            for (int i = 0; i < hostiles.Length; i++)
+            {
+                if (hostiles[i] != null)
+                {
+                    hostiles[i].ResetEnemy();
+                }
+            }
+
             dialogueText = "";
             dialogueSpeaker = "";
             dialogueUntil = 0f;
+            guideChoiceOpen = false;
         }
 
         private void ApplySceneForQuestState()
@@ -316,25 +332,45 @@ namespace Elementborn.Game
         {
             if (questState == ElementbornPrototypeQuestState.NotStarted)
             {
-                questState = ElementbornPrototypeQuestState.TalkedToGuide;
-                ShowDialogue("Ember Guide", "You feel the world answering your element. Recover the glowing shard near the basalt stones, then try your first channeling bolt with Q.");
-                ApplySceneForQuestState();
+                guideChoiceOpen = true;
+                ShowDialogue("Ember Guide", "Your element can unify people or dominate them. Choose how this prototype remembers your first stance.");
                 return;
             }
 
             if (questState == ElementbornPrototypeQuestState.TalkedToGuide)
             {
-                ShowDialogue("Ember Guide", "The shard is east of here. The training dummy is beyond it if you want to test your attunement.");
+                string stance = pathChoice == ElementbornPrototypePathChoice.Dominion
+                    ? "Power without restraint invites fear. Prove you can control it."
+                    : "Unity requires action, not slogans. Recover the shard and return it safely.";
+                ShowDialogue("Ember Guide", stance + " The shard is east of here.");
                 return;
             }
 
             if (questState == ElementbornPrototypeQuestState.CollectedShard)
             {
-                ShowDialogue("Ember Guide", "Take the shard to the return pedestal, then cast at the training dummy.");
+                ShowDialogue("Ember Guide", "Take the shard to the return pedestal, then test your channeling on the dummy or hostile.");
                 return;
             }
 
-            ShowDialogue("Ember Guide", "The prototype loop is complete. Start a New Prototype from the menu to replay it, or keep testing elemental bolts on the dummy.");
+            ShowDialogue("Ember Guide", "The prototype loop is complete. The next step is making the factions and choices matter more.");
+        }
+
+        public void ChoosePath(ElementbornPrototypePathChoice choice)
+        {
+            pathChoice = choice;
+            questState = ElementbornPrototypeQuestState.TalkedToGuide;
+            guideChoiceOpen = false;
+
+            if (choice == ElementbornPrototypePathChoice.Dominion)
+            {
+                ShowDialogue("Ember Guide", "Dominion chosen. Power can protect, but it can also corrupt. Recover the shard and prove discipline.");
+            }
+            else
+            {
+                ShowDialogue("Ember Guide", "Unifier chosen. Bring the shard back as a promise that elements can coexist.");
+            }
+
+            ApplySceneForQuestState();
         }
 
         private void HandleShardResource(ElementbornPrototypeInteractable interactable)
@@ -369,7 +405,7 @@ namespace Elementborn.Game
                 questState = ElementbornPrototypeQuestState.Completed;
                 ApplySceneForQuestState();
                 Save();
-                ShowMessage("Quest complete! Prototype loop saved. Press Q to test your elemental bolt on the dummy.");
+                ShowMessage("Quest complete! Prototype loop saved. Press Q to test your elemental bolt.");
                 return;
             }
 
@@ -384,6 +420,11 @@ namespace Elementborn.Game
 
         public string GetObjectiveText()
         {
+            if (guideChoiceOpen)
+            {
+                return "Objective: Choose Unifier or Dominion.";
+            }
+
             switch (questState)
             {
                 case ElementbornPrototypeQuestState.NotStarted:
@@ -393,7 +434,7 @@ namespace Elementborn.Game
                 case ElementbornPrototypeQuestState.CollectedShard:
                     return "Objective: Return the shard to the pedestal.";
                 case ElementbornPrototypeQuestState.Completed:
-                    return "Objective: Test your elemental bolt on the training dummy.";
+                    return "Objective: Test your elemental bolt on the dummy/hostile.";
                 default:
                     return "Objective: Unknown.";
             }
@@ -409,7 +450,7 @@ namespace Elementborn.Game
         {
             dialogueSpeaker = string.IsNullOrWhiteSpace(speaker) ? "Elementborn" : speaker;
             dialogueText = string.IsNullOrWhiteSpace(text) ? string.Empty : text;
-            dialogueUntil = Time.time + 7f;
+            dialogueUntil = Time.time + 8f;
             ShowMessage(dialogueSpeaker + ": " + dialogueText);
         }
 
@@ -438,6 +479,7 @@ namespace Elementborn.Game
             {
                 DrawHud();
                 DrawDialogue();
+                DrawGuideChoice();
             }
         }
 
@@ -453,73 +495,63 @@ namespace Elementborn.Game
 
             GUI.Label(new Rect(rect.x + 80, rect.y + 92, 440, 22), "Attunement: " + ElementbornPrototypeVisualUtility.GetElementName(selectedElement));
 
-            if (GUI.Button(new Rect(rect.x + 80, rect.y + 120, 100, 30), "Fire"))
-            {
-                SetElement(ElementbornPrototypeElementType.Fire);
-            }
+            if (GUI.Button(new Rect(rect.x + 80, rect.y + 120, 100, 30), "Fire")) SetElement(ElementbornPrototypeElementType.Fire);
+            if (GUI.Button(new Rect(rect.x + 190, rect.y + 120, 100, 30), "Water")) SetElement(ElementbornPrototypeElementType.Water);
+            if (GUI.Button(new Rect(rect.x + 300, rect.y + 120, 100, 30), "Earth")) SetElement(ElementbornPrototypeElementType.Earth);
+            if (GUI.Button(new Rect(rect.x + 410, rect.y + 120, 100, 30), "Air")) SetElement(ElementbornPrototypeElementType.Air);
 
-            if (GUI.Button(new Rect(rect.x + 190, rect.y + 120, 100, 30), "Water"))
-            {
-                SetElement(ElementbornPrototypeElementType.Water);
-            }
-
-            if (GUI.Button(new Rect(rect.x + 300, rect.y + 120, 100, 30), "Earth"))
-            {
-                SetElement(ElementbornPrototypeElementType.Earth);
-            }
-
-            if (GUI.Button(new Rect(rect.x + 410, rect.y + 120, 100, 30), "Air"))
-            {
-                SetElement(ElementbornPrototypeElementType.Air);
-            }
-
-            if (GUI.Button(new Rect(rect.x + 185, rect.y + 172, 230, 34), "New Prototype"))
-            {
-                StartNewPrototype();
-            }
-
-            if (GUI.Button(new Rect(rect.x + 185, rect.y + 214, 230, 34), "Resume Saved"))
-            {
-                ResumeSavedPrototype();
-            }
-
-            if (GUI.Button(new Rect(rect.x + 185, rect.y + 256, 230, 34), "Save Current"))
-            {
-                Save();
-            }
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 172, 230, 34), "New Prototype")) StartNewPrototype();
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 214, 230, 34), "Resume Saved")) ResumeSavedPrototype();
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 256, 230, 34), "Save Current")) Save();
 
             if (GUI.Button(new Rect(rect.x + 185, rect.y + 298, 230, 34), "Clear Save"))
             {
                 ClearSavedState();
                 questState = ElementbornPrototypeQuestState.NotStarted;
+                pathChoice = ElementbornPrototypePathChoice.None;
                 ResetSceneRuntimeState(true);
                 ShowMessage("Save cleared. Choose New Prototype.");
             }
 
-            if (GUI.Button(new Rect(rect.x + 185, rect.y + 340, 230, 34), "Start Without Loading"))
-            {
-                StartPrototype();
-            }
+            if (GUI.Button(new Rect(rect.x + 185, rect.y + 340, 230, 34), "Start Without Loading")) StartPrototype();
 
             GUI.Label(new Rect(rect.x + 24, rect.y + 392, width - 48, 22), "Esc menu | F5 save | F9 load | Q cast | 1-4 switch elements.");
         }
 
         private void DrawHud()
         {
-            Rect rect = new Rect(16, 16, 600, showDebugHelp ? 174 : 114);
+            ElementbornPrototypePlayerStats stats = player != null ? player.GetComponent<ElementbornPrototypePlayerStats>() : null;
+            ElementbornPrototypeElementalAbility ability = player != null ? player.GetComponent<ElementbornPrototypeElementalAbility>() : null;
+
+            Rect rect = new Rect(16, 16, 640, showDebugHelp ? 214 : 154);
             GUI.Box(rect, "Elementborn Prototype HUD");
-            GUI.Label(new Rect(28, 42, 560, 20), GetObjectiveText());
-            GUI.Label(new Rect(28, 64, 560, 20), "Attunement: " + ElementbornPrototypeVisualUtility.GetElementName(selectedElement) + " | Ability: Q");
+            GUI.Label(new Rect(28, 42, 600, 20), GetObjectiveText());
+            GUI.Label(new Rect(28, 64, 600, 20), "Attunement: " + ElementbornPrototypeVisualUtility.GetElementName(selectedElement) + " | Stance: " + pathChoice);
+
+            if (stats != null)
+            {
+                GUI.Label(new Rect(28, 88, 280, 20), "Health: " + Mathf.CeilToInt(stats.currentHealth) + "/" + Mathf.CeilToInt(stats.maxHealth));
+                GUI.HorizontalScrollbar(new Rect(120, 90, 170, 18), 0f, stats.Health01, 0f, 1f);
+
+                GUI.Label(new Rect(320, 88, 280, 20), "Stamina: " + Mathf.CeilToInt(stats.currentStamina) + "/" + Mathf.CeilToInt(stats.maxStamina));
+                GUI.HorizontalScrollbar(new Rect(425, 90, 170, 18), 0f, stats.Stamina01, 0f, 1f);
+            }
+
+            if (ability != null)
+            {
+                GUI.Label(new Rect(28, 112, 560, 20), "Ability: Q elemental bolt | Cooldown: " + ability.CooldownRemaining.ToString("0.0") + "s");
+                GUI.HorizontalScrollbar(new Rect(180, 114, 170, 18), 0f, 1f - ability.Cooldown01, 0f, 1f);
+            }
 
             if (Time.time < messageUntil && !string.IsNullOrWhiteSpace(message))
             {
-                GUI.Label(new Rect(28, 86, 560, 34), message);
+                GUI.Label(new Rect(28, 136, 590, 34), message);
             }
 
             if (showDebugHelp)
             {
-                GUI.Label(new Rect(28, 126, 560, 20), "Move: WASD / Arrows | Sprint: Shift | Jump: Space | Interact: E | Cast: Q");
-                GUI.Label(new Rect(28, 146, 560, 20), "Elements: 1 Fire, 2 Water, 3 Earth, 4 Air | Menu: Esc | Save: F5 | Load: F9");
+                GUI.Label(new Rect(28, 176, 600, 20), "Move: WASD / Arrows | Sprint uses stamina: Shift | Jump costs stamina: Space | Interact: E | Cast: Q");
+                GUI.Label(new Rect(28, 196, 600, 20), "Elements: 1 Fire, 2 Water, 3 Earth, 4 Air | Menu: Esc | Save: F5 | Load: F9");
             }
         }
 
@@ -530,11 +562,34 @@ namespace Elementborn.Game
                 return;
             }
 
-            const int width = 760;
-            const int height = 104;
+            const int width = 790;
+            const int height = 114;
             Rect rect = new Rect((Screen.width - width) / 2f, Screen.height - height - 36f, width, height);
             GUI.Box(rect, dialogueSpeaker);
-            GUI.Label(new Rect(rect.x + 24, rect.y + 36, width - 48, 54), dialogueText);
+            GUI.Label(new Rect(rect.x + 24, rect.y + 36, width - 48, 64), dialogueText);
+        }
+
+        private void DrawGuideChoice()
+        {
+            if (!guideChoiceOpen)
+            {
+                return;
+            }
+
+            const int width = 520;
+            const int height = 118;
+            Rect rect = new Rect((Screen.width - width) / 2f, Screen.height - 260f, width, height);
+            GUI.Box(rect, "Choose your first stance");
+
+            if (GUI.Button(new Rect(rect.x + 38, rect.y + 48, 200, 40), "Unifier"))
+            {
+                ChoosePath(ElementbornPrototypePathChoice.Unifier);
+            }
+
+            if (GUI.Button(new Rect(rect.x + 282, rect.y + 48, 200, 40), "Dominion"))
+            {
+                ChoosePath(ElementbornPrototypePathChoice.Dominion);
+            }
         }
     }
 }

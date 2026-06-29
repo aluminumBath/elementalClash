@@ -17,6 +17,7 @@ namespace Elementborn.Game.EditorTools
             PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyPlayerY);
             PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyPlayerZ);
             PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyElement);
+            PlayerPrefs.DeleteKey(ElementbornPrototypeGameManager.SaveKeyPathChoice);
             PlayerPrefs.Save();
 
             ElementbornPrototypeGameManager manager = Object.FindAnyObjectByType<ElementbornPrototypeGameManager>();
@@ -24,6 +25,7 @@ namespace Elementborn.Game.EditorTools
             {
                 Undo.RecordObject(manager, "Reset Prototype Manager State");
                 manager.questState = ElementbornPrototypeQuestState.NotStarted;
+                manager.pathChoice = ElementbornPrototypePathChoice.None;
                 manager.loadSavedStateOnAwake = false;
                 manager.ResetSceneRuntimeState(true);
                 EditorUtility.SetDirty(manager);
@@ -60,6 +62,28 @@ namespace Elementborn.Game.EditorTools
                 catch (System.Exception ex)
                 {
                     Debug.LogWarning("Elementborn could not reset prototype dummy '" + dummy.name + "': " + ex.Message);
+                }
+            }
+
+            ElementbornPrototypeHostileEnemy[] hostiles =
+                Object.FindObjectsByType<ElementbornPrototypeHostileEnemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < hostiles.Length; i++)
+            {
+                ElementbornPrototypeHostileEnemy hostile = hostiles[i];
+                if (hostile == null)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    hostile.ResetEnemy();
+                    EditorUtility.SetDirty(hostile);
+                    EditorUtility.SetDirty(hostile.gameObject);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("Elementborn could not reset prototype hostile '" + hostile.name + "': " + ex.Message);
                 }
             }
 

@@ -19,6 +19,7 @@ namespace Elementborn.Game
 
         private CharacterController controller;
         private Camera playCamera;
+        private ElementbornPrototypePlayerStats stats;
         private float verticalVelocity;
         private ElementbornPrototypeInteractable currentInteractable;
         private ElementbornPrototypeInteractable lastPromptedInteractable;
@@ -27,6 +28,8 @@ namespace Elementborn.Game
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
+            stats = GetComponent<ElementbornPrototypePlayerStats>();
+
             controller.height = 2f;
             controller.radius = 0.35f;
             controller.center = Vector3.zero;
@@ -39,6 +42,11 @@ namespace Elementborn.Game
         {
             ElementbornPrototypeGameManager manager = ElementbornPrototypeGameManager.Instance;
             if (manager != null && !manager.HasStarted)
+            {
+                return;
+            }
+
+            if (stats != null && stats.IsDead)
             {
                 return;
             }
@@ -100,12 +108,19 @@ namespace Elementborn.Game
                 move.Normalize();
             }
 
-            float speed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? sprintSpeed : walkSpeed;
+            bool wantsSprint = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            bool canSprint = wantsSprint && move.sqrMagnitude > 0.001f && (stats == null || stats.CanSprint());
+            float speed = canSprint ? sprintSpeed : walkSpeed;
+
+            if (canSprint && stats != null)
+            {
+                stats.ConsumeSprint(Time.deltaTime);
+            }
 
             if (controller.isGrounded || transform.position.y <= 1.02f)
             {
                 verticalVelocity = -0.5f;
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && (stats == null || stats.TrySpendStamina(stats.jumpCost)))
                 {
                     verticalVelocity = jumpSpeed;
                 }
@@ -188,7 +203,6 @@ namespace Elementborn.Game
                     continue;
                 }
 
-                // Prefer things in front of the camera/player, but do not require perfect aim.
                 Vector3 toTarget = interactable.transform.position - transform.position;
                 toTarget.y = 0f;
 
@@ -209,7 +223,6 @@ namespace Elementborn.Game
                 }
             }
 
-            // Physics fallback catches any future interactable prefabs that only expose colliders.
             Collider[] hits = Physics.OverlapSphere(transform.position + Vector3.up, interactRange, interactionMask, QueryTriggerInteraction.Collide);
             for (int i = 0; i < hits.Length; i++)
             {
