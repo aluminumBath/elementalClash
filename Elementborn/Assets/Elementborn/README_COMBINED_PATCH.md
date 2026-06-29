@@ -167,3 +167,28 @@ Hardened generated UI font assignment and dashboard setup so `Build Rounded Play
 
 ### PlayMode UI null-safety
 Added a null-safe `PlayerAttunementHud` replacement and `ElementbornTmpFontUtility` to avoid `TMP_Settings.defaultFontAsset` crashes during PlayMode tests.
+
+
+## v64 additions
+
+### PlayerAttunementHud singleton compatibility
+Restored `PlayerAttunementHud.Instance` for older local callers such as `PlayerInventory`, while keeping the v63 null-safe HUD implementation.
+
+
+## v65 additions
+
+### BoatController Unity 6 API migration
+Migrated `BoatController.cs` away from old Rigidbody APIs:
+- `velocity` -> `linearVelocity`
+- `drag` -> `linearDamping`
+
+This should remove the Unity API updater prompt for `Assets/Elementborn/Game/Boats/BoatController.cs`.
+
+
+## v66 additions
+
+### HUD save compatibility
+Restored `PlayerAttunementHud.CaptureInto(...)` and `PlayerAttunementHud.RestoreFrom(...)` for older local `PlayerInventory` save/restore calls.
+
+### BoatController local stale API safety
+The v66 apply script patches any remaining local `_rb.velocity` / `_rb.drag` references in `BoatController.cs` to Unity 6 APIs.

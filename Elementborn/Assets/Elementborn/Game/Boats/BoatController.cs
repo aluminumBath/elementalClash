@@ -50,7 +50,7 @@ namespace Elementborn.Game
         public bool SailRaised => sailRaised;
         public Transform PilotSeat => pilotSeat != null ? pilotSeat : transform;
         public float WaterY => waterY;
-        public Vector3 Velocity => _rb != null ? _rb.velocity : Vector3.zero;
+        public Vector3 Velocity => _rb != null ? _rb.linearVelocity : Vector3.zero;
         public float PlanarSpeed => PlanarVelocity().magnitude;
         public float NormalizedSpeed => Mathf.Clamp01(PlanarSpeed / Mathf.Max(0.1f, sailRaised ? maxSailSpeed : maxPaddleSpeed));
         public bool IsOnWaterSurface => IsOnWater();
@@ -65,7 +65,7 @@ namespace Elementborn.Game
             _rb = GetComponent<Rigidbody>();
             _rb.useGravity = true;
             _rb.interpolation = RigidbodyInterpolation.Interpolate;
-            _rb.drag = waterDrag;
+            _rb.linearDamping = waterDrag;
             ApplySailVisual(true);
         }
 
@@ -147,7 +147,7 @@ namespace Elementborn.Game
 
         private void ApplySailForces()
         {
-            _rb.drag = waterDrag;
+            _rb.linearDamping = waterDrag;
             Vector3 wind = WorldWindController.ActiveVelocity;
             Vector3 windDir = wind.sqrMagnitude > 0.001f ? wind.normalized : transform.forward;
             float alignment = Vector3.Dot(transform.forward, windDir); // 1 = wind from behind, -1 = headwind
@@ -173,7 +173,7 @@ namespace Elementborn.Game
             if (Mathf.Abs(_throttle) > 0.01f)
                 _rb.AddForce(transform.forward * (_throttle * accel), ForceMode.Acceleration);
 
-            _rb.drag = Mathf.Abs(_throttle) < 0.05f ? idleStopDrag : waterDrag;
+            _rb.linearDamping = Mathf.Abs(_throttle) < 0.05f ? idleStopDrag : waterDrag;
 
             if (_jumpQueued && IsOnWater())
                 _rb.AddForce(Vector3.up * jumpImpulse, ForceMode.VelocityChange);
@@ -192,7 +192,7 @@ namespace Elementborn.Game
             float displacement = waterY - transform.position.y;
             if (displacement > -waterSnapTolerance)
             {
-                float lift = displacement * buoyancySpring - _rb.velocity.y * buoyancyDamping;
+                float lift = displacement * buoyancySpring - _rb.linearVelocity.y * buoyancyDamping;
                 _rb.AddForce(Vector3.up * lift, ForceMode.Acceleration);
             }
         }
@@ -202,11 +202,11 @@ namespace Elementborn.Game
             Vector3 planar = PlanarVelocity();
             if (planar.magnitude <= maxSpeed) return;
             Vector3 clamped = planar.normalized * maxSpeed;
-            _rb.velocity = new Vector3(clamped.x, _rb.velocity.y, clamped.z);
+            _rb.linearVelocity = new Vector3(clamped.x, _rb.linearVelocity.y, clamped.z);
         }
 
-        private Vector3 PlanarVelocity() => _rb != null ? new Vector3(_rb.velocity.x, 0f, _rb.velocity.z) : Vector3.zero;
-        private bool IsOnWater() => Mathf.Abs(transform.position.y - waterY) <= waterSnapTolerance && (_rb == null || _rb.velocity.y <= 0.25f);
+        private Vector3 PlanarVelocity() => _rb != null ? new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z) : Vector3.zero;
+        private bool IsOnWater() => Mathf.Abs(transform.position.y - waterY) <= waterSnapTolerance && (_rb == null || _rb.linearVelocity.y <= 0.25f);
 
         private void ApplySailVisual(bool instant)
         {

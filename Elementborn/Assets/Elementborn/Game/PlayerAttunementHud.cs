@@ -12,6 +12,46 @@ namespace Elementborn.Game
     /// </summary>
     public sealed class PlayerAttunementHud : MonoBehaviour
     {
+        private static PlayerAttunementHud instance;
+
+        public static PlayerAttunementHud Instance
+        {
+            get
+            {
+                if (instance != null)
+                {
+                    return instance;
+                }
+
+                try
+                {
+                    instance = UnityEngine.Object.FindFirstObjectByType<PlayerAttunementHud>();
+                }
+                catch
+                {
+                    instance = null;
+                }
+
+                if (instance != null)
+                {
+                    return instance;
+                }
+
+                // Compatibility path for older callers such as PlayerInventory.
+                // If the HUD is requested before one exists, create a minimal safe HUD instead of returning null.
+                try
+                {
+                    GameObject go = new GameObject("PlayerAttunementHud");
+                    instance = go.AddComponent<PlayerAttunementHud>();
+                }
+                catch
+                {
+                    instance = null;
+                }
+
+                return instance;
+            }
+        }
         [SerializeField] private Text attunementLabel;
         [SerializeField] private Image attunementSwatch;
         [SerializeField] private CanvasGroup canvasGroup;
@@ -22,14 +62,32 @@ namespace Elementborn.Game
 
         private void Awake()
         {
+            if (instance == null || instance == this)
+            {
+                instance = this;
+            }
+
             EnsureUi();
             RefreshIfChanged(ReadCurrentAttunementValue());
         }
 
         private void OnEnable()
         {
+            if (instance == null || instance == this)
+            {
+                instance = this;
+            }
+
             EnsureUi();
             RefreshIfChanged(ReadCurrentAttunementValue());
+        }
+
+        private void OnDestroy()
+        {
+            if (instance == this)
+            {
+                instance = null;
+            }
         }
 
         private void Update()
@@ -73,6 +131,35 @@ namespace Elementborn.Game
                 canvasGroup.blocksRaycasts = false;
             }
         }
+
+
+// v66 compatibility for older PlayerInventory save code.
+// These methods intentionally accept params object[] so they compile against legacy
+// calls with zero, one, or multiple arguments, while remaining harmless if the supplied
+// save container shape is unknown.
+public void CaptureInto(params object[] targets)
+{
+    string value = string.IsNullOrWhiteSpace(lastDisplayValue) ? NormalizeAttunement(ReadCurrentAttunementValue()) : lastDisplayValue;
+    foreach (object target in targets ?? Array.Empty<object>())
+    {
+        WriteAttunementLikeMember(target, value);
+    }
+}
+
+public void RestoreFrom(params object[] sources)
+{
+    foreach (object source in sources ?? Array.Empty<object>())
+    {
+        object value = ReadAttunementLikeMember(source);
+        if (value != null)
+        {
+            RefreshIfChanged(value);
+            return;
+        }
+    }
+
+    RefreshIfChanged(ReadCurrentAttunementValue());
+}
 
         private void EnsureUi()
         {
@@ -243,6 +330,102 @@ namespace Elementborn.Game
 
             return null;
         }
+
+
+private static object ReadAttunementLikeMember(object target)
+{
+    return ReadMember(target, "Attunement")
+        ?? ReadMember(target, "CurrentAttunement")
+        ?? ReadMember(target, "ActiveAttunement")
+        ?? ReadMember(target, "Element")
+        ?? ReadMember(target, "CurrentElement")
+        ?? ReadMember(target, "ActiveElement")
+        ?? ReadMember(target, "attunement")
+        ?? ReadMember(target, "currentAttunement")
+        ?? ReadMember(target, "activeAttunement");
+}
+
+private static void WriteAttunementLikeMember(object target, string value)
+{
+    if (target == null)
+    {
+        return;
+    }
+
+    TryWriteMember(target, "Attunement", value);
+    TryWriteMember(target, "CurrentAttunement", value);
+    TryWriteMember(target, "ActiveAttunement", value);
+    TryWriteMember(target, "Element", value);
+    TryWriteMember(target, "CurrentElement", value);
+    TryWriteMember(target, "ActiveElement", value);
+    TryWriteMember(target, "attunement", value);
+    TryWriteMember(target, "currentAttunement", value);
+    TryWriteMember(target, "activeAttunement", value);
+}
+
+private static bool TryWriteMember(object target, string memberName, string value)
+{
+    if (target == null || string.IsNullOrWhiteSpace(memberName))
+    {
+        return false;
+    }
+
+    const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+    Type type = target.GetType();
+
+    try
+    {
+        PropertyInfo property = type.GetProperty(memberName, flags);
+        if (property != null && property.CanWrite && property.GetIndexParameters().Length == 0)
+        {
+            object converted = ConvertStringToMemberType(value, property.PropertyType);
+            property.SetValue(target, converted, null);
+            return true;
+        }
+
+        FieldInfo field = type.GetField(memberName, flags);
+        if (field != null && !field.IsInitOnly)
+        {
+            object converted = ConvertStringToMemberType(value, field.FieldType);
+            field.SetValue(target, converted);
+            return true;
+        }
+    }
+    catch
+    {
+        return false;
+    }
+
+    return false;
+}
+
+private static object ConvertStringToMemberType(string value, Type targetType)
+{
+    if (targetType == null || targetType == typeof(string))
+    {
+        return value;
+    }
+
+    Type nullableType = Nullable.GetUnderlyingType(targetType);
+    if (nullableType != null)
+    {
+        targetType = nullableType;
+    }
+
+    if (targetType.IsEnum)
+    {
+        try
+        {
+            return Enum.Parse(targetType, value, true);
+        }
+        catch
+        {
+            return Activator.CreateInstance(targetType);
+        }
+    }
+
+    return value;
+}
 
         private static string NormalizeAttunement(object value)
         {
