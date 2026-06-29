@@ -336,3 +336,15 @@ Copied generated PNG concept/reference assets into the Unity project and created
 
 ### Imported Meshy model + procedural animation
 Imported the attached Meshy FBX/textures and raw GLB, added procedural bone/root animation support, created imported model prefab builder menu, and replaced the visible hostile capsule with an imported model visual while preserving gameplay collision.
+
+
+## v91 additions
+
+### Generated asset library + scene decorator
+Added a curated generated-FBX extraction pipeline, catalog, prefab builder, scene decorator, and starter mappings to replace prototype placeholders with generated assets when available.
+
+
+## v92 additions
+
+### Safe generated asset pipeline
+Stopped automatic generated-model decoration, added generated-decoration cleanup, added safe opt-in decoration, and added corrupt generated image quarantine/sanitization.

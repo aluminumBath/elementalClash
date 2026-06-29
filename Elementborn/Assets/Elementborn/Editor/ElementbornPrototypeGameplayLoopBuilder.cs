@@ -39,7 +39,6 @@ namespace Elementborn.Game.EditorTools
             CreateLoreStones();
             CreateHubDressing();
             CreateAssetBackedVisuals();
-            CreateImportedModelShowcase();
             CreateLandmarks();
             CreateInstructionSigns();
 
@@ -85,7 +84,6 @@ namespace Elementborn.Game.EditorTools
             if (GameObject.Find("Lore Stone of Unity") == null) CreateLoreStones();
             if (GameObject.Find("Hub Market Stall A") == null) CreateHubDressing();
             if (GameObject.Find("Fire Capital Vista Board") == null) CreateAssetBackedVisuals();
-            if (GameObject.Find("Imported Meshy Axolotl Showcase") == null) CreateImportedModelShowcase();
 
             if (scene.IsValid()) EditorSceneManager.MarkSceneDirty(scene);
 
@@ -330,16 +328,7 @@ namespace Elementborn.Game.EditorTools
             hostile.transform.localScale = new Vector3(0.9f, 1.1f, 0.9f);
             SetMaterial(hostile, "Hostile Red", new Color(0.42f, 0.08f, 0.08f));
             hostile.AddComponent<ElementbornPrototypeHostileEnemy>();
-            HideRenderer(hostile);
-            AttachImportedModelVisual(
-                hostile.transform,
-                PinkEyeAxolotlFbxPath,
-                "Imported Axolotl Hostile Visual",
-                new Vector3(0f, -0.85f, 0f),
-                2.3f,
-                ElementbornPrototypeModelAnimationMode.Combat,
-                "Hostile creature visual backed by imported Meshy FBX.");
-            AddLabel(hostile.transform, "Axolotl Hostile\nDamages Player", new Vector3(0f, 2.7f, 0f));
+            AddLabel(hostile.transform, "Training Hostile\nDamages Player", new Vector3(0f, 2.7f, 0f));
             AddMarker(hostile, "⚔", ElementbornPrototypeMarkerKind.Combat, 3.6f);
             AddShoulderCloak(hostile.transform, new Color(0.25f, 0.02f, 0.02f));
         }
