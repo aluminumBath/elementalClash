@@ -264,3 +264,15 @@ Fixed the rescue capsule sinking by aligning `CharacterController.center` with t
 
 ### 3D text orientation fix
 Fixed mirrored/backwards `TextMesh` labels on generated scene signs and added a menu command to repair existing open-scene sign labels.
+
+
+## v79 additions
+
+### Prototype gameplay loop
+Added a self-contained prototype gameplay scene builder with main menu, HUD, player movement, camera follow, one NPC, one resource objective, one turn-in point, and save/load.
+
+
+## v80 additions
+
+### Reliable prototype interaction
+Made prototype interaction distance-based and forgiving, added automatic trigger-radius helpers to interactables, and added repair/report menu commands for existing generated scenes.

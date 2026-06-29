@@ -45,6 +45,11 @@ namespace Elementborn.Game
                 return;
             }
 
+            if (FindAnyObjectByType<ElementbornPrototypeGameManager>() != null)
+            {
+                return;
+            }
+
             EnsureInstalled();
         }
 
