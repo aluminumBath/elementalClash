@@ -192,3 +192,15 @@ Restored `PlayerAttunementHud.CaptureInto(...)` and `PlayerAttunementHud.Restore
 
 ### BoatController local stale API safety
 The v66 apply script patches any remaining local `_rb.velocity` / `_rb.drag` references in `BoatController.cs` to Unity 6 APIs.
+
+
+## v67 additions
+
+### Smoke-test restoration
+Added minimal EditMode and PlayMode smoke tests under `Assets/Tests/ElementbornSmoke/` so Unity Test Runner discovers real tests again after the older broken tests were removed/quarantined.
+
+
+## v68 additions
+
+### Smoke-test asmdef duplicate-reference fix
+Corrected the v67 smoke-test assembly definitions by removing explicit Test Runner references and relying on `optionalUnityReferences: ["TestAssemblies"]`, which prevents Unity Safe Mode duplicate-reference errors.

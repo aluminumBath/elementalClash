@@ -8,7 +8,7 @@ Story dashboard: True
 Left wrist admin UI: True
 Playtest harness: True
 Spawn points: 7
-Capital landmarks: 0
+Capital landmarks: 5
 ```
 
 ## Required next steps
