@@ -330,3 +330,9 @@ Added floating quest markers, objective compass, better primitive silhouettes, s
 
 ### Asset-backed visuals
 Copied generated PNG concept/reference assets into the Unity project and created textured in-world art boards around the prototype hub using those assets.
+
+
+## v90 additions
+
+### Imported Meshy model + procedural animation
+Imported the attached Meshy FBX/textures and raw GLB, added procedural bone/root animation support, created imported model prefab builder menu, and replaced the visible hostile capsule with an imported model visual while preserving gameplay collision.

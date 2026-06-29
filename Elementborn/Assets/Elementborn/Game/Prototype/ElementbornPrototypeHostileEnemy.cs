@@ -98,6 +98,11 @@ namespace Elementborn.Game
 
             currentHealth = Mathf.Max(0f, currentHealth - Mathf.Max(0f, amount));
             flashUntil = Time.time + 0.18f;
+            ElementbornPrototypeImportedModelAnimator visualAnimator = GetComponentInChildren<ElementbornPrototypeImportedModelAnimator>();
+            if (visualAnimator != null)
+            {
+                visualAnimator.PlayHitReact();
+            }
             UpdateHealthLabel();
 
             ElementbornPrototypeGameManager manager = ElementbornPrototypeGameManager.Instance;

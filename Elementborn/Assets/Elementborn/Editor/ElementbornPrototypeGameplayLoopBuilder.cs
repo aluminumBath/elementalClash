@@ -10,6 +10,7 @@ namespace Elementborn.Game.EditorTools
     public static class ElementbornPrototypeGameplayLoopBuilder
     {
         private const string ScenePath = "Assets/Elementborn/Generated/Scenes/Elementborn_Prototype_Gameplay.unity";
+        private const string PinkEyeAxolotlFbxPath = "Assets/Elementborn/Art/Models/MeshyImported/PinkEyeAxolotl/Meshy_AI_Pink_Eye_Axolotl_3D_M_0629191922_image-to-3d-texture.fbx";
 
         [MenuItem("Elementborn/Prototype/Build Prototype Gameplay Loop Scene")]
         public static void BuildPrototypeGameplayLoopScene()
@@ -38,6 +39,7 @@ namespace Elementborn.Game.EditorTools
             CreateLoreStones();
             CreateHubDressing();
             CreateAssetBackedVisuals();
+            CreateImportedModelShowcase();
             CreateLandmarks();
             CreateInstructionSigns();
 
@@ -83,6 +85,7 @@ namespace Elementborn.Game.EditorTools
             if (GameObject.Find("Lore Stone of Unity") == null) CreateLoreStones();
             if (GameObject.Find("Hub Market Stall A") == null) CreateHubDressing();
             if (GameObject.Find("Fire Capital Vista Board") == null) CreateAssetBackedVisuals();
+            if (GameObject.Find("Imported Meshy Axolotl Showcase") == null) CreateImportedModelShowcase();
 
             if (scene.IsValid()) EditorSceneManager.MarkSceneDirty(scene);
 
@@ -327,7 +330,16 @@ namespace Elementborn.Game.EditorTools
             hostile.transform.localScale = new Vector3(0.9f, 1.1f, 0.9f);
             SetMaterial(hostile, "Hostile Red", new Color(0.42f, 0.08f, 0.08f));
             hostile.AddComponent<ElementbornPrototypeHostileEnemy>();
-            AddLabel(hostile.transform, "Hostile\nDamages Player", new Vector3(0f, 2.7f, 0f));
+            HideRenderer(hostile);
+            AttachImportedModelVisual(
+                hostile.transform,
+                PinkEyeAxolotlFbxPath,
+                "Imported Axolotl Hostile Visual",
+                new Vector3(0f, -0.85f, 0f),
+                2.3f,
+                ElementbornPrototypeModelAnimationMode.Combat,
+                "Hostile creature visual backed by imported Meshy FBX.");
+            AddLabel(hostile.transform, "Axolotl Hostile\nDamages Player", new Vector3(0f, 2.7f, 0f));
             AddMarker(hostile, "⚔", ElementbornPrototypeMarkerKind.Combat, 3.6f);
             AddShoulderCloak(hostile.transform, new Color(0.25f, 0.02f, 0.02f));
         }
@@ -550,6 +562,144 @@ namespace Elementborn.Game.EditorTools
             CreateChildlessCube(name, position + new Vector3(0f, 1.4f, 0f), new Vector3(2.7f, 0.3f, 0.35f), color);
         }
 
+
+
+        private static void CreateImportedModelShowcase()
+        {
+            GameObject pedestal = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pedestal.name = "Imported Meshy Axolotl Showcase";
+            pedestal.transform.position = new Vector3(-11.2f, 0.45f, 6.8f);
+            pedestal.transform.localScale = new Vector3(1.4f, 0.45f, 1.4f);
+            SetMaterial(pedestal, "Imported Model Pedestal", new Color(0.1f, 0.22f, 0.34f));
+
+            AttachImportedModelVisual(
+                pedestal.transform,
+                PinkEyeAxolotlFbxPath,
+                "Imported Axolotl Showcase Visual",
+                new Vector3(0f, 0.25f, 0f),
+                2.2f,
+                ElementbornPrototypeModelAnimationMode.Swim,
+                "Showcase creature visual backed by imported Meshy FBX.");
+
+            ElementbornPrototypeInteractable interactable = pedestal.AddComponent<ElementbornPrototypeInteractable>();
+            interactable.kind = ElementbornPrototypeInteractableKind.LoreStone;
+            interactable.displayName = "Imported Meshy Model";
+            interactable.customText = "This is the first imported FBX creature asset in the prototype. It uses procedural bone/root animation as a bridge before authored clips.";
+            interactable.activationRadius = 4f;
+
+            AddLabel(pedestal.transform, "Imported\\nMeshy Model", new Vector3(0f, 2.6f, 0f));
+            AddMarker(pedestal, "3D", ElementbornPrototypeMarkerKind.Lore, 3.6f);
+        }
+
+        private static GameObject AttachImportedModelVisual(
+            Transform parent,
+            string assetPath,
+            string childName,
+            Vector3 localOffset,
+            float targetHeight,
+            ElementbornPrototypeModelAnimationMode animationMode,
+            string notes)
+        {
+            GameObject modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            if (modelAsset == null)
+            {
+                GameObject fallback = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                fallback.name = childName + " Fallback";
+                fallback.transform.SetParent(parent, false);
+                fallback.transform.localPosition = localOffset + Vector3.up * 1f;
+                fallback.transform.localScale = Vector3.one * 1.25f;
+                SetMaterial(fallback, childName + " Fallback Material", new Color(0.85f, 0.25f, 0.55f));
+                fallback.AddComponent<ElementbornPrototypeSpin>().bobAmplitude = 0.08f;
+                return fallback;
+            }
+
+            GameObject instance = PrefabUtility.InstantiatePrefab(modelAsset) as GameObject;
+            if (instance == null)
+            {
+                instance = Object.Instantiate(modelAsset);
+            }
+
+            instance.name = childName;
+            instance.transform.SetParent(parent, false);
+            instance.transform.localPosition = localOffset;
+            instance.transform.localRotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
+
+            NormalizeImportedModelScale(instance.transform, targetHeight, localOffset);
+
+            ElementbornPrototypeImportedModelAnimator animator = instance.GetComponent<ElementbornPrototypeImportedModelAnimator>();
+            if (animator == null)
+            {
+                animator = instance.AddComponent<ElementbornPrototypeImportedModelAnimator>();
+            }
+
+            animator.mode = animationMode;
+
+            ElementbornPrototypeImportedModelTag tag = instance.GetComponent<ElementbornPrototypeImportedModelTag>();
+            if (tag == null)
+            {
+                tag = instance.AddComponent<ElementbornPrototypeImportedModelTag>();
+            }
+
+            tag.sourceAssetPath = assetPath;
+            tag.modelRole = childName;
+            tag.notes = notes;
+
+            return instance;
+        }
+
+        private static void NormalizeImportedModelScale(Transform modelRoot, float targetHeight, Vector3 desiredLocalOffset)
+        {
+            if (modelRoot == null)
+            {
+                return;
+            }
+
+            Renderer[] renderers = modelRoot.GetComponentsInChildren<Renderer>(true);
+            if (renderers == null || renderers.Length == 0)
+            {
+                modelRoot.localScale = Vector3.one * 0.02f;
+                return;
+            }
+
+            Bounds bounds = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                {
+                    bounds.Encapsulate(renderers[i].bounds);
+                }
+            }
+
+            float height = Mathf.Max(0.001f, bounds.size.y);
+            float scale = Mathf.Clamp(targetHeight / height, 0.001f, 10f);
+            modelRoot.localScale = Vector3.one * scale;
+
+            // Recompute bounds after scale and center the model over the parent.
+            renderers = modelRoot.GetComponentsInChildren<Renderer>(true);
+            bounds = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                {
+                    bounds.Encapsulate(renderers[i].bounds);
+                }
+            }
+
+            Vector3 worldParent = modelRoot.parent != null ? modelRoot.parent.TransformPoint(desiredLocalOffset) : desiredLocalOffset;
+            Vector3 correction = worldParent - bounds.center;
+            correction.y += bounds.extents.y;
+            modelRoot.position += correction;
+        }
+
+        private static void HideRenderer(GameObject go)
+        {
+            Renderer renderer = go != null ? go.GetComponent<Renderer>() : null;
+            if (renderer != null)
+            {
+                renderer.enabled = false;
+            }
+        }
 
         private static void CreateAssetBackedVisuals()
         {
