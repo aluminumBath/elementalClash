@@ -46,6 +46,7 @@ namespace Elementborn.Game.EditorTools
             ElementbornRenderPipelineMaterialUtility.FixGeneratedMaterialsAssets();
             ElementbornRenderPipelineMaterialUtility.FixOpenSceneRenderers();
             ElementbornEventSystemUtility.EnsureSingleEventSystem(true, "playable scene builder");
+            ElementbornPlayableRescueController.EnsureInstalled();
 
             string path = $"{GeneratedSceneDir}/Elementborn_Playable_Test.unity";
             EditorSceneManager.SaveScene(scene, path);

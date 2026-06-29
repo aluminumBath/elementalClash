@@ -135,7 +135,8 @@ namespace Elementborn.Game.EditorTools
             GameObject textGo = new GameObject("Label");
             textGo.transform.SetParent(sign.transform, false);
             textGo.transform.localPosition = new Vector3(0f, 0f, -0.16f);
-            textGo.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            textGo.transform.localRotation = Quaternion.identity;
+            textGo.transform.localScale = Vector3.one;
             TextMesh mesh = textGo.AddComponent<TextMesh>();
             mesh.text = label;
             mesh.characterSize = 0.18f;

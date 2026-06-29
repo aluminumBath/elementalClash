@@ -246,3 +246,21 @@ Added a direct TagManager repair script, a Unity editor tag repair/report menu, 
 
 ### Tag repair menu compile fix
 Replaced the broken v74 `ElementbornTagRepairMenu.cs` log line with a compiler-safe implementation while preserving required-tag repair/report functionality.
+
+
+## v76 additions
+
+### Playable camera/movement rescue
+Added a runtime/editor safety layer that guarantees a visible ground plane, camera, capsule player, and WASD movement when the generated prototype scene lacks a usable player controller.
+
+
+## v77 additions
+
+### Rescue capsule grounding + temporary menu
+Fixed the rescue capsule sinking by aligning `CharacterController.center` with the visible capsule mesh and added a temporary prototype menu overlay with start/resume, recenter, and repair actions.
+
+
+## v78 additions
+
+### 3D text orientation fix
+Fixed mirrored/backwards `TextMesh` labels on generated scene signs and added a menu command to repair existing open-scene sign labels.
