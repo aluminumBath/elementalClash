@@ -21,12 +21,7 @@ namespace Elementborn.Game
             canvasObject.AddComponent<CanvasScaler>();
             canvasObject.AddComponent<GraphicRaycaster>();
 
-            if (ElementbornFindUtility.FindFirst<EventSystem>() == null)
-            {
-                GameObject eventSystem = new GameObject("EventSystem");
-                eventSystem.AddComponent<EventSystem>();
-                eventSystem.AddComponent<StandaloneInputModule>();
-            }
+            ElementbornEventSystemUtility.EnsureSingleEventSystem(true, "Bootstrap UI factory");
 
             BuildQuestHud(canvas.transform);
             BuildQuestPopup(canvas.transform);

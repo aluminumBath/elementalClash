@@ -62,11 +62,7 @@ namespace Elementborn.Game
 
         private void EnsureEventSystem()
         {
-            if (ElementbornFindUtility.FindFirst<EventSystem>() == null)
-            {
-                var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
-                es.transform.SetParent(transform, false);
-            }
+            ElementbornEventSystemUtility.EnsureSingleEventSystem(true, "WorldMapView");
         }
 
         private void Build()

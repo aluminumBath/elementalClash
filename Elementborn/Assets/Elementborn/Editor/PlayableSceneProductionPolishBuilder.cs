@@ -153,23 +153,11 @@ namespace Elementborn.Game.EditorTools
             }
         }
 
-        private static Material EnsureMaterial(string name, Color color)
-        {
-            string path = $"{MaterialDir}/{name}.mat";
-            Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (mat == null)
-            {
-                Shader shader = Shader.Find("Standard") ?? Shader.Find("Universal Render Pipeline/Lit");
-                mat = new Material(shader) { color = color };
-                AssetDatabase.CreateAsset(mat, path);
-            }
-            else
-            {
-                mat.color = color;
-                EditorUtility.SetDirty(mat);
-            }
-            return mat;
-        }
+private static Material EnsureMaterial(string name, Color color)
+{
+    string path = $"{MaterialDir}/{name}.mat";
+    return ElementbornRenderPipelineMaterialUtility.EnsureMaterial(path, color);
+}
     }
 }
 #endif

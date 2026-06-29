@@ -139,13 +139,7 @@ namespace Elementborn.Game.EditorTools
         [MenuItem("Elementborn/Unity Setup/Ensure EventSystem In Open Scene")]
         public static void EnsureEventSystemInOpenScene()
         {
-            if (ElementbornFindUtility.FindFirst<EventSystem>() != null)
-            {
-                return;
-            }
-
-            var go = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-            Undo.RegisterCreatedObjectUndo(go, "Create EventSystem");
+            ElementbornEventSystemUtility.EnsureSingleEventSystem(true, "Unity project setup wizard");
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 

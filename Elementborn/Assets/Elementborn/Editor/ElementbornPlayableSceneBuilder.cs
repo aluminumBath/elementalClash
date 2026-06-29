@@ -43,6 +43,10 @@ namespace Elementborn.Game.EditorTools
             CreateBoatTestSetup();
             CreateChecklistObject();
 
+            ElementbornRenderPipelineMaterialUtility.FixGeneratedMaterialsAssets();
+            ElementbornRenderPipelineMaterialUtility.FixOpenSceneRenderers();
+            ElementbornEventSystemUtility.EnsureSingleEventSystem(true, "playable scene builder");
+
             string path = $"{GeneratedSceneDir}/Elementborn_Playable_Test.unity";
             EditorSceneManager.SaveScene(scene, path);
             AssetDatabase.Refresh();
@@ -298,7 +302,7 @@ namespace Elementborn.Game.EditorTools
             var renderer = go.GetComponent<Renderer>();
             if (renderer != null)
             {
-                renderer.sharedMaterial = new Material(Shader.Find("Standard")) { color = color };
+                renderer.sharedMaterial = ElementbornRenderPipelineMaterialUtility.CreateRuntimeSafeMaterial(name + "_Material", color);
             }
             return go;
         }

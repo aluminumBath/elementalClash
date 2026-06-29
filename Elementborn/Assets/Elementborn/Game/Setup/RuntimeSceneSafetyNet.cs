@@ -57,15 +57,18 @@ namespace Elementborn.Game
 
         public void EnsureEventSystem()
         {
-            if (ElementbornFindUtility.FindFirst<EventSystem>() != null)
-            {
-                return;
-            }
+            int before = ElementbornEventSystemUtility.CountEventSystems(true);
+            EventSystem system = ElementbornEventSystemUtility.EnsureSingleEventSystem(true, "RuntimeSceneSafetyNet");
+            int after = ElementbornEventSystemUtility.CountEventSystems(true);
 
-            var go = new GameObject("EventSystem");
-            go.AddComponent<EventSystem>();
-            go.AddComponent<StandaloneInputModule>();
-            Log("Created fallback EventSystem.");
+            if (system != null && before == 0)
+            {
+                Log("Created fallback EventSystem.");
+            }
+            else if (before != after)
+            {
+                Log($"Repaired EventSystem count from {before} to {after}.");
+            }
         }
 
         public void EnsureMainCamera()

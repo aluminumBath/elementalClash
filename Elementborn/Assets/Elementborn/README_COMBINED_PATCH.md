@@ -204,3 +204,27 @@ Added minimal EditMode and PlayMode smoke tests under `Assets/Tests/ElementbornS
 
 ### Smoke-test asmdef duplicate-reference fix
 Corrected the v67 smoke-test assembly definitions by removing explicit Test Runner references and relying on `optionalUnityReferences: ["TestAssemblies"]`, which prevents Unity Safe Mode duplicate-reference errors.
+
+
+## v69 additions
+
+### Pink material / render pipeline shader repair
+Added `ElementbornRenderPipelineMaterialUtility` and patched generated scene/material builders so Elementborn no longer creates Built-in `Standard` materials in a URP/HDRP project. Use `Elementborn -> Visuals -> Fix Pink Materials Everywhere` on the currently open scene.
+
+
+## v70 additions
+
+### Timestamp normalization and TMP warning cleanup
+Added a timestamp-normalization apply script for future-dated source/test files and updated `ElementbornTmpFontUtility` to avoid creating TMP font assets from `LegacyRuntime`, which logged repeated font-face warnings.
+
+
+## v71 additions
+
+### Single EventSystem enforcement
+Added `ElementbornEventSystemUtility`, a runtime guard, and an editor repair menu to prevent duplicate EventSystems in generated/playable scenes. Patched known EventSystem creators to route through the centralized utility.
+
+
+## v72 additions
+
+### EventSystem.current safety
+Removed direct `EventSystem.current = ...` assignment from `ElementbornEventSystemUtility`. The utility now repairs/creates a single valid EventSystem with an input module and lets Unity select the current EventSystem naturally.

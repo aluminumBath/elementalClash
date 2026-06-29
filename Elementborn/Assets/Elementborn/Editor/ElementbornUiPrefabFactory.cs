@@ -257,12 +257,7 @@ public static ElementbornUiTheme CreateThemeAsset()
             scaler.referenceResolution = new Vector2(1920, 1080);
             go.AddComponent<GraphicRaycaster>();
 
-            if (Object.FindObjectOfType<EventSystem>() == null)
-            {
-                GameObject eventSystem = new GameObject("EventSystem");
-                eventSystem.AddComponent<EventSystem>();
-                eventSystem.AddComponent<StandaloneInputModule>();
-            }
+            ElementbornEventSystemUtility.EnsureSingleEventSystem(true, "UI prefab factory");
 
             return go;
         }
