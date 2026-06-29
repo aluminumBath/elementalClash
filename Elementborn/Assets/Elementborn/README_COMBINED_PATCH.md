@@ -228,3 +228,21 @@ Added `ElementbornEventSystemUtility`, a runtime guard, and an editor repair men
 
 ### EventSystem.current safety
 Removed direct `EventSystem.current = ...` assignment from `ElementbornEventSystemUtility`. The utility now repairs/creates a single valid EventSystem with an input module and lets Unity select the current EventSystem naturally.
+
+
+## v73 additions
+
+### Console / warning cleanup
+Added a narrow `Assets/csc.rsp` warning suppression file, removed TMP runtime font-asset creation warnings, disabled routine EventSystem repair logs, and stopped the story dashboard from auto-printing a large report to the Console.
+
+
+## v74 additions
+
+### Interactable tag repair
+Added a direct TagManager repair script, a Unity editor tag repair/report menu, and a safer `NpcWorldIntegrationManager.TryAssignTag(...)` implementation so missing tags do not create dozens of runtime errors.
+
+
+## v75 additions
+
+### Tag repair menu compile fix
+Replaced the broken v74 `ElementbornTagRepairMenu.cs` log line with a compiler-safe implementation while preserving required-tag repair/report functionality.

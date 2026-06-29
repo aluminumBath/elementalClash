@@ -17,6 +17,8 @@ namespace Elementborn.Game
     /// </summary>
     public static class ElementbornEventSystemUtility
     {
+        private const bool VerboseLogging = false;
+
         public static EventSystem EnsureSingleEventSystem(bool createIfMissing = true, string reason = null)
         {
             EventSystem[] systems = FindEventSystems();
@@ -28,7 +30,7 @@ namespace Elementborn.Game
                 keep = go.AddComponent<EventSystem>();
                 EnsureInputModule(keep);
 
-                if (!string.IsNullOrWhiteSpace(reason))
+                if (VerboseLogging && !string.IsNullOrWhiteSpace(reason))
                 {
                     Debug.Log($"[Elementborn] Created EventSystem ({reason}).");
                 }
@@ -181,7 +183,7 @@ namespace Elementborn.Game
                 removed++;
             }
 
-            if (removed > 0)
+            if (VerboseLogging && removed > 0)
             {
                 string suffix = string.IsNullOrWhiteSpace(reason) ? string.Empty : $" ({reason})";
                 Debug.Log($"[Elementborn] Removed/disabled {removed} duplicate EventSystem object(s){suffix}.");

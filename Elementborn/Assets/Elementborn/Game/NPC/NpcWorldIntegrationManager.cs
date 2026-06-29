@@ -1,5 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Elementborn.Core;
+#if UNITY_EDITOR
+using UnityEditorInternal;
+#endif
 
 namespace Elementborn.Game
 {
@@ -9,6 +13,7 @@ namespace Elementborn.Game
     /// </summary>
     public sealed class NpcWorldIntegrationManager : MonoBehaviour
     {
+        private static readonly HashSet<string> missingTagWarnings = new HashSet<string>();
         [SerializeField] private NpcWorldIntegrationManifest manifest;
         [SerializeField] private bool registerMarkersOnStart = true;
         [SerializeField] private bool addJournalEntriesOnStart = true;
@@ -158,14 +163,54 @@ namespace Elementborn.Game
 
         private void TryAssignTag(GameObject go, string tag)
         {
+            if (go == null || string.IsNullOrWhiteSpace(tag))
+            {
+                return;
+            }
+
+            if (!IsTagDefined(tag))
+            {
+                WarnMissingTagOnce(tag);
+                return;
+            }
+
             try
             {
                 go.tag = tag;
             }
             catch
             {
-                Debug.LogWarning($"Could not assign tag '{tag}'. Run Elementborn → Unity Setup → Ensure Tags and Layers.");
+                WarnMissingTagOnce(tag);
             }
+        }
+
+        private static bool IsTagDefined(string tag)
+        {
+#if UNITY_EDITOR
+            string[] tags = InternalEditorUtility.tags;
+            for (int i = 0; i < tags.Length; i++)
+            {
+                if (tags[i] == tag)
+                {
+                    return true;
+                }
+            }
+
+            return tag == "Untagged" || tag == "Respawn" || tag == "Finish" || tag == "EditorOnly" || tag == "MainCamera" || tag == "Player" || tag == "GameController";
+#else
+            return true;
+#endif
+        }
+
+        private static void WarnMissingTagOnce(string tag)
+        {
+            if (missingTagWarnings.Contains(tag))
+            {
+                return;
+            }
+
+            missingTagWarnings.Add(tag);
+            Debug.LogWarning($"Elementborn tag '{tag}' is missing. Run Elementborn → Unity Setup → Ensure Tags and Layers, or apply v74's TagManager repair script.");
         }
     }
 }

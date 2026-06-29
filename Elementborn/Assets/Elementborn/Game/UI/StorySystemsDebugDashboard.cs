@@ -6,7 +6,9 @@ namespace Elementborn.Game
 {
     public sealed class StorySystemsDebugDashboard : MonoBehaviour
     {
-        [SerializeField] private Text outputText;
+        
+        private const bool LogDashboardToConsole = false;
+[SerializeField] private Text outputText;
         [SerializeField] private bool refreshOnEnable = true;
         [SerializeField] private bool includeCapitalWorldState = true;
         [SerializeField] private bool includeGameplayLoop = true;
