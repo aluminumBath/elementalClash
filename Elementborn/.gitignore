@@ -14,3 +14,95 @@
 *.booproj
 *.suo
 *.DS_Store
+
+# -------------------------
+# Unity generated folders
+# -------------------------
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+
+# Unity crash / profiler / backup files
+sysinfo.txt
+*.stackdump
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity generated project files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+
+# Rider / Visual Studio / VS Code
+.vs/
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.DotSettings.user
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Unity Asset Store temporary files
+[Aa]ssets/AssetStoreTools*
+
+# -------------------------
+# Elementborn patch / debug artifacts
+# -------------------------
+Elementborn/DisabledLegacyTests/
+Elementborn/Assets/Elementborn/Generated/Reports/
+Elementborn/Assets/Elementborn/Generated/**/*.log
+Elementborn/Assets/Elementborn/Generated/**/*.tmp
+Elementborn/Assets/Elementborn/Generated/**/Debug*/
+Elementborn/Assets/Elementborn/Generated/**/Triage/
+
+# Runtime save/debug output if ever created inside repo
+Elementborn/test_readiness/
+Elementborn/social_groups/
+Elementborn/creature_orphanage_recovery/
+Elementborn/narrative_saves/
+Elementborn/save_data/
+
+# -------------------------
+# Large generated source/model pipeline outputs
+# Keep final Unity-ready assets if you need them,
+# but don't commit huge temporary ZIPs.
+# -------------------------
+*.7z
+*.rar
+*.zip
+
+# If you have specific generated Meshy/source folders:
+Elementborn/elementborn_3d_option3_pipeline/source_pngs/generated_assets/*.zip
+Elementborn/elementborn_3d_option3_pipeline/**/generated_assets/*.zip
+Elementborn/elementborn_3d_option3_pipeline/**/temp/
+Elementborn/elementborn_3d_option3_pipeline/**/cache/
+
+# -------------------------
+# Python/node helper clutter, if used
+# -------------------------
+__pycache__/
+*.pyc
+node_modules/
+.env
+.env.*
+!.env.example
