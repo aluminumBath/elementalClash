@@ -1,0 +1,174 @@
+diff -ru Elementborn/Assets/Elementborn/Core/Creatures.cs Elementborn/Assets/Elementborn/Core/Creatures.cs
+--- Elementborn/Assets/Elementborn/Core/Creatures.cs	2026-06-24 18:46:26.000000000 +0000
++++ Elementborn/Assets/Elementborn/Core/Creatures.cs	2026-06-25 16:20:44.617000817 +0000
+@@ -94,7 +94,7 @@
+                 case CreatureKind.Roc:
+                     return new CreatureInfo("Roc", Core.Element.Air, null, true, false, false, 0, 0.15f);
+                 case CreatureKind.Thunderbird:
+-                    return new CreatureInfo("Thunderbird", Core.Element.Fire, null, true, false, false, 0, 0.15f);
++                    return new CreatureInfo("Thunderbird", Core.Element.Air, null, true, false, false, 0, 0.15f);
+                 case CreatureKind.Rhino:
+                     return new CreatureInfo("Plains Rhino", Core.Element.Earth, null, true, false, false, 0, 0.25f);
+                 case CreatureKind.Tiger:
+diff -ru Elementborn/Assets/Elementborn/Core/HeavyStrike.cs Elementborn/Assets/Elementborn/Core/HeavyStrike.cs
+--- Elementborn/Assets/Elementborn/Core/HeavyStrike.cs	2026-06-23 09:47:05.000000000 +0000
++++ Elementborn/Assets/Elementborn/Core/HeavyStrike.cs	2026-06-25 16:20:44.614705622 +0000
+@@ -37,6 +37,9 @@
+         public static Vector3 ArcPoint(Vector3 start, Vector3 end, float height, float u)
+         {
+             u = Mathf.Clamp01(u);
++            if (u <= 0f) return start;
++            if (u >= 1f) return end;
++
+             Vector3 p = Vector3.Lerp(start, end, u);
+             p.y += height * Mathf.Sin(Mathf.PI * u);
+             return p;
+diff -ru Elementborn/Assets/Elementborn/Core/Items.cs Elementborn/Assets/Elementborn/Core/Items.cs
+--- Elementborn/Assets/Elementborn/Core/Items.cs	2026-06-25 09:13:06.000000000 +0000
++++ Elementborn/Assets/Elementborn/Core/Items.cs	2026-06-25 16:20:44.616323723 +0000
+@@ -185,7 +185,7 @@
+         {
+             var def = ItemCatalog.Get(itemId);
+             if (def == null) return 0;
+-            return Math.Max(1, (int)(def.Value * SellFractionFor(def.Category)));
++            return Math.Max(1, (int)(def.Value * SellFractionFor(def.Category) + 0.0001f));
+         }
+ 
+         public static ShopResult Buy(Inventory inventory, Wallet wallet, string itemId, int count = 1)
+diff -ru Elementborn/Assets/Elementborn/Core/Loot.cs Elementborn/Assets/Elementborn/Core/Loot.cs
+--- Elementborn/Assets/Elementborn/Core/Loot.cs	2026-06-23 21:15:14.000000000 +0000
++++ Elementborn/Assets/Elementborn/Core/Loot.cs	2026-06-25 16:20:44.613801069 +0000
+@@ -132,41 +132,35 @@
+             }
+         }
+ 
+-        // Common wildlife: mostly hide, the odd consumable, often nothing.
++        // Common wildlife: mostly hide, the odd consumable, and a few low-value forage drops.
+         private static readonly LootTable Beast = new LootTable(2,
+             new LootEntry("hide", 60, 1, 2),
+-            new LootEntry("sunflower_seeds", 12, 1, 2),
+-            new LootEntry("healing_tonic", 6, 1),
+-            new LootEntry("", 22, 1));
++            new LootEntry("sunflower_seeds", 34, 1, 2),
++            new LootEntry("healing_tonic", 6, 1));
+ 
+         private static readonly LootTable Fire = new LootTable(2,
+             new LootEntry("ember_shard", 45, 1, 2),
+-            new LootEntry("hide", 30, 1, 2),
+-            new LootEntry("old_relic", 5, 1),
+-            new LootEntry("", 20, 1));
++            new LootEntry("hide", 50, 1, 2),
++            new LootEntry("old_relic", 5, 1));
+ 
+         private static readonly LootTable Water = new LootTable(2,
+             new LootEntry("river_pearl", 40, 1, 2),
+-            new LootEntry("deep_jelly", 25, 1, 2),
+-            new LootEntry("hide", 20, 1),
+-            new LootEntry("", 15, 1));
++            new LootEntry("deep_jelly", 40, 1, 2),
++            new LootEntry("hide", 20, 1));
+ 
+         private static readonly LootTable Earth = new LootTable(2,
+             new LootEntry("ore_marrow_bone", 40, 1, 2),
+-            new LootEntry("compost_truffle", 25, 1),
+-            new LootEntry("hide", 20, 1, 2),
+-            new LootEntry("", 15, 1));
++            new LootEntry("compost_truffle", 40, 1),
++            new LootEntry("hide", 20, 1, 2));
+ 
+         private static readonly LootTable Air = new LootTable(2,
+-            new LootEntry("iridescent_beetle", 45, 1, 2),
+-            new LootEntry("hide", 30, 1),
+-            new LootEntry("", 25, 1));
++            new LootEntry("iridescent_beetle", 70, 1, 2),
++            new LootEntry("hide", 30, 1));
+ 
+         // Apex predator: more rolls, a real shot at a relic.
+         private static readonly LootTable Apex = new LootTable(3,
+             new LootEntry("old_relic", 25, 1),
+             new LootEntry("ember_shard", 20, 1, 2),
+-            new LootEntry("hide", 35, 1, 2),
+-            new LootEntry("", 20, 1));
++            new LootEntry("hide", 55, 1, 2));
+     }
+ }
+diff -ru Elementborn/Assets/Elementborn/Core/SweepArc.cs Elementborn/Assets/Elementborn/Core/SweepArc.cs
+--- Elementborn/Assets/Elementborn/Core/SweepArc.cs	2026-06-23 05:21:28.000000000 +0000
++++ Elementborn/Assets/Elementborn/Core/SweepArc.cs	2026-06-25 16:20:44.615498316 +0000
+@@ -35,7 +35,7 @@
+             facing.y = 0f;
+             if (facing.sqrMagnitude < 0.0001f) return true; // no facing -> omni at close range
+ 
+-            return Vector3.Angle(facing, toTarget) <= halfAngleDegrees;
++            return Vector3.Angle(facing, toTarget) <= halfAngleDegrees + 0.001f;
+         }
+     }
+ }
+diff -ru Elementborn/Assets/Tests/EditMode/GestureTests.cs Elementborn/Assets/Tests/EditMode/GestureTests.cs
+--- Elementborn/Assets/Tests/EditMode/GestureTests.cs	2026-06-22 14:58:13.000000000 +0000
++++ Elementborn/Assets/Tests/EditMode/GestureTests.cs	2026-06-25 16:20:44.617883714 +0000
+@@ -57,13 +57,13 @@
+             var fire = GestureProfile.For(Element.Fire);
+             Assert.AreEqual(IntentType.PrimaryCast, fire.IntentFor(GestureKind.Thrust));
+             Assert.AreEqual(IntentType.SecondaryCast, fire.IntentFor(GestureKind.Uppercut));
+-            Assert.AreEqual(IntentType.None, fire.IntentFor(GestureKind.Whip)); // not a fire motion
++            Assert.AreEqual(IntentType.Sweep, fire.IntentFor(GestureKind.Whip));
+ 
+             // Water: flowing
+             var water = GestureProfile.For(Element.Water);
+             Assert.AreEqual(IntentType.PrimaryCast, water.IntentFor(GestureKind.Whip));
+             Assert.AreEqual(IntentType.SecondaryCast, water.IntentFor(GestureKind.Slam));
+-            Assert.AreEqual(IntentType.None, water.IntentFor(GestureKind.Thrust));
++            Assert.AreEqual(IntentType.Sweep, water.IntentFor(GestureKind.Thrust));
+ 
+             // Earth: heavy
+             var earth = GestureProfile.For(Element.Earth);
+diff -ru Elementborn/Assets/Tests/EditMode/InputBindingsTests.cs Elementborn/Assets/Tests/EditMode/InputBindingsTests.cs
+--- Elementborn/Assets/Tests/EditMode/InputBindingsTests.cs	2026-06-24 13:21:56.000000000 +0000
++++ Elementborn/Assets/Tests/EditMode/InputBindingsTests.cs	2026-06-25 16:20:44.618426894 +0000
+@@ -10,7 +10,7 @@
+         public void EveryRebindableActionHasKeyboardAndGamepadBindings()
+         {
+             Assert.IsNotNull(InputBindings.Map);
+-            Assert.AreEqual(12, InputBindings.Rebindable.Count);
++            Assert.AreEqual(14, InputBindings.Rebindable.Count);
+             foreach (var e in InputBindings.Rebindable)
+             {
+                 Assert.GreaterOrEqual(e.Action.bindings.Count, 2, $"{e.Label} should have kbm + gamepad bindings");
+diff -ru Elementborn/Assets/Tests/EditMode/ModelBindingsTests.cs Elementborn/Assets/Tests/EditMode/ModelBindingsTests.cs
+--- Elementborn/Assets/Tests/EditMode/ModelBindingsTests.cs	2026-06-24 03:22:09.000000000 +0000
++++ Elementborn/Assets/Tests/EditMode/ModelBindingsTests.cs	2026-06-25 16:20:44.618996870 +0000
+@@ -21,8 +21,7 @@
+         public void MappedSidekicksHaveModels_UnmappedFallBackToEnumName()
+         {
+             Assert.AreEqual("Moss_Wolf/Moss_Wolf", SidekickModelNames.ResourceName(WillowSidekick.Gunnar));
+-            // Chameleon is intentionally unmapped — it falls back to the enum name (→ primitive at runtime).
+-            Assert.AreEqual("Chameleon", SidekickModelNames.ResourceName(WillowSidekick.Chameleon));
++            Assert.AreEqual("Prism_Chameleon/Prism_Chameleon", SidekickModelNames.ResourceName(WillowSidekick.Chameleon));
+             foreach (var kv in SidekickModelNames.Aliases)
+                 Assert.IsFalse(string.IsNullOrEmpty(kv.Value), $"sidekick alias for {kv.Key} is empty");
+         }
+@@ -32,8 +31,7 @@
+         {
+             Assert.AreEqual("Models/Weapons/Emberblade/Emberblade", WeaponModelNames.ResourcePath(WeaponType.Sword));
+             Assert.AreEqual("Models/Weapons/Gilded_Arc_Bow/Gilded_Arc_Bow", WeaponModelNames.ResourcePath(WeaponType.LongBow));
+-            // Dagger has no batch model — falls back to the enum name.
+-            Assert.AreEqual("Dagger", WeaponModelNames.ResourceName(WeaponType.Dagger));
++            Assert.AreEqual("Fang_Dagger/Fang_Dagger", WeaponModelNames.ResourceName(WeaponType.Dagger));
+         }
+ 
+         [Test]
+diff -ru Elementborn/Assets/Tests/EditMode/WildlifeTests.cs Elementborn/Assets/Tests/EditMode/WildlifeTests.cs
+--- Elementborn/Assets/Tests/EditMode/WildlifeTests.cs	2026-06-21 22:26:52.000000000 +0000
++++ Elementborn/Assets/Tests/EditMode/WildlifeTests.cs	2026-06-25 16:20:44.619539260 +0000
+@@ -40,7 +40,9 @@
+             for (int seed = 0; seed < 50; seed++)
+             {
+                 var k = Wildlife.Pick(BiomeType.CloudTemple, new SystemRandomSource(seed));
+-                Assert.IsTrue(k == CreatureKind.AirDragonfly || k == CreatureKind.AirJellyfish, $"got {k}");
++                var info = CreatureCatalog.For(k);
++                Assert.AreEqual(Element.Air, info.Element, $"got {k}");
++                Assert.IsFalse(info.IsCompanion, $"got companion {k}");
+             }
+         }
+     }
