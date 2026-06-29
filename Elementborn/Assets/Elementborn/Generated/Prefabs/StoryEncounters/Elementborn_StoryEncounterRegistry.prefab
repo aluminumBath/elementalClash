@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &153350396874262935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8402951063809791939}
+  - component: {fileID: 4864417837048253462}
+  - component: {fileID: 2228698950456017010}
+  m_Layer: 0
+  m_Name: Elementborn_StoryEncounterRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8402951063809791939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153350396874262935}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4864417837048253462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153350396874262935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8612b7aeb197f3045961cc27182315dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.StoryEncounterRegistry
+  encounters:
+  - {fileID: 11400000, guid: 28d23347e900b2d4ab6ba90d024dd770, type: 2}
+  - {fileID: 11400000, guid: 154e92e533fb33042ab881b33954e292, type: 2}
+  - {fileID: 11400000, guid: ea4930855ee39694bbbca8356fcf7282, type: 2}
+  - {fileID: 11400000, guid: 65bbec7cf6556974db3478163c3ad70d, type: 2}
+  - {fileID: 11400000, guid: c3e00ffc7f4840c4ea741bfae2a4f697, type: 2}
+  registerJournalAndMapOnStart: 1
+--- !u!114 &2228698950456017010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153350396874262935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f605a68aec09cad428029e083a2d3d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.StoryEncounterAdminCommandBridge
+  packController: {fileID: 0}
+  orphanage: {fileID: 0}
+  donowl: {fileID: 0}
+  judge: {fileID: 0}

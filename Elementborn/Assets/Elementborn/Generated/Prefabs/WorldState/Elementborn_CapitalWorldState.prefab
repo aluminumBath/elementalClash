@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2453716062351261825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2691861545509344253}
+  - component: {fileID: 906861682945151742}
+  - component: {fileID: 2751740932851735372}
+  m_Layer: 0
+  m_Name: Elementborn_CapitalWorldState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2691861545509344253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2453716062351261825}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &906861682945151742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2453716062351261825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6098ea75bc9b3364b928cbaa595e5d5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.CapitalWorldStateTracker
+  capitalDefinitions:
+  - {fileID: 11400000, guid: 3ef9e9c4aa7194045bc296f4c0151159, type: 2}
+  - {fileID: 11400000, guid: 894dd6b0ae5cb264da68ee1c3c057eee, type: 2}
+  - {fileID: 11400000, guid: 077e196bb99b6ee45a42cec360d8e129, type: 2}
+  - {fileID: 11400000, guid: 93f20559393e0b543ba1c81add6f21a9, type: 2}
+  - {fileID: 11400000, guid: 90b4177b244a4f4469ce6afc5378091b, type: 2}
+  - {fileID: 11400000, guid: fc915ca7050bbf34fa813ac45ce9d075, type: 2}
+  runtimeStates:
+  - CapitalId: 2
+    ControlStatus: 1
+    Stability: 79
+    Legitimacy: 75
+    Pressures:
+    - Type: 6
+      Value: 80
+      Notes: The Malachite-Gover family stabilizes the court.
+    - Type: 1
+      Value: 15
+      Notes: Public unrest is low.
+    - Type: 7
+      Value: 20
+      Notes: Tibidi's plant channeling may matter later.
+  - CapitalId: 3
+    ControlStatus: 0
+    Stability: 56
+    Legitimacy: 50
+    Pressures:
+    - Type: 1
+      Value: 35
+      Notes: Neighborhood flare-ups still occur while leadership remains undefined.
+    - Type: 7
+      Value: 40
+      Notes: Kelly tempers some conflicts, but fire politics still need rulers and
+        factions.
+  - CapitalId: 6
+    ControlStatus: 4
+    Stability: 28
+    Legitimacy: 25
+    Pressures:
+    - Type: 3
+      Value: 75
+      Notes: The black market is a defining force.
+    - Type: 4
+      Value: 70
+      Notes: The thieves guild has deep influence.
+    - Type: 12
+      Value: 60
+      Notes: Howlj and Larissa's secret could explode.
+  - CapitalId: 7
+    ControlStatus: 2
+    Stability: 47
+    Legitimacy: 45
+    Pressures:
+    - Type: 9
+      Value: 70
+      Notes: The Raucous Tide shapes local politics.
+    - Type: 10
+      Value: 35
+      Notes: Raid economics and reef trade collide.
+    - Type: 11
+      Value: 45
+      Notes: Villagers, pirates, and water channelers compete.
+  - CapitalId: 1
+    ControlStatus: 2
+    Stability: 49
+    Legitimacy: 45
+    Pressures:
+    - Type: 11
+      Value: 50
+      Notes: All factions want influence in the center.
+    - Type: 12
+      Value: 45
+      Notes: Cross-capital secrets move through neutral channels.
+  - CapitalId: 5
+    ControlStatus: 3
+    Stability: 26
+    Legitimacy: 30
+    Pressures:
+    - Type: 2
+      Value: 80
+      Notes: The capital is chaotic with religious fervor.
+    - Type: 5
+      Value: 30
+      Notes: The regime is powerful but not broadly legitimate.
+    - Type: 12
+      Value: 75
+      Notes: Sarah's past, Ruth's steam omen, and neighborhood tensions are volatile.
+  initializeOnAwake: 1
+  registerJournalAndMapOnStart: 1
+--- !u!114 &2751740932851735372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2453716062351261825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a306f2953ae09f479cdedf2fc23f1bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.CapitalWorldStateAdminCommandBridge

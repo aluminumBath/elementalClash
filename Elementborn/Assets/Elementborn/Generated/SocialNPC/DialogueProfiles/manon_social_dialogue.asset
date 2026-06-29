@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec543fc355662df44993874d116b8e2d, type: 3}
+  m_Name: manon_social_dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialNpcDialogueProfileDefinition
+  npcId: manon
+  displayName: Manon
+  npc: {fileID: 11400000, guid: 421dcf9c98578714bb2c9b51bf1d3254, type: 2}
+  summary: Very clean, very structured, and always trying to contain the chaos around
+    Rekr and Marie.
+  cues:
+  - CueId: greeting
+    TriggerKeyword: 
+    Line: Do not touch that. Or that. Or Rekr, unless you are wearing gloves.
+    JournalNote: Manon controls chaos through cleanliness.
+    QuestToStart: {fileID: 0}
+    Importance: 0
+  - CueId: rekr
+    TriggerKeyword: rekr
+    Line: I married him, not the ecosystem growing on his coat.
+    JournalNote: Manon is annoyed with Rekr but still responsible for him.
+    QuestToStart: {fileID: 11400000, guid: e47cd42f6b2974448814584e33df7225, type: 2}
+    Importance: 1
+  - CueId: clean
+    TriggerKeyword: clean
+    Line: Finally. Someone who understands civilization begins with a clean floor.
+    JournalNote: Manon can turn cleanup into a quest.
+    QuestToStart: {fileID: 0}
+    Importance: 2

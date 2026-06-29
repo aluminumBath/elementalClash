@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b1ee458d91e0f448a85b39b023eedf, type: 3}
+  m_Name: bubba_workshop_chain
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestChainDefinition
+  chainId: bubba_workshop_chain
+  displayName: Bubba's Workshop Troubles
+  primaryCapital: 6
+  primaryNpc: {fileID: 0}
+  autoStartOnEvent: 0
+  summary: A palace/workshop chain around Prince William 'Bubba', black-market prototypes,
+    and guild leverage.
+  stages:
+  - StageId: missing_bolt
+    Title: The Missing Bolt
+    Summary: Bubba's prototype bolt has slipped into black-market circulation.
+    Quest: {fileID: 11400000, guid: b0c31735727dd8a4c9ebc54c778c1d58, type: 2}
+    TriggeredByPoliticalEvent: {fileID: 11400000, guid: 73c974f45c9b88e4f85b3a9954af6485, type: 2}
+    AutoStartQuest: 1
+    AutoCompleteWhenQuestCompletes: 0
+    DefaultNextStageId: choose_bolt
+    OnStartConsequences: []
+    OnCompleteConsequences: []
+    Choices: []
+  - StageId: choose_bolt
+    Title: Return or Bargain
+    Summary: Decide whether to return the prototype or use it as leverage.
+    Quest: {fileID: 0}
+    TriggeredByPoliticalEvent: {fileID: 0}
+    AutoStartQuest: 1
+    AutoCompleteWhenQuestCompletes: 0
+    DefaultNextStageId: 
+    OnStartConsequences: []
+    OnCompleteConsequences: []
+    Choices:
+    - ChoiceId: return_to_bubba
+      DisplayText: Return it to Bubba
+      ChoiceType: 6
+      NextStageId: 
+      PlayerFacingResult: Bubba trusts the player, and court stability improves.
+      HiddenDirectorNotes: The player helps Bubba.
+      Consequences:
+      - ConsequenceType: 1
+        Capital: 6
+        PressureType: 6
+        Amount: 8
+        QuestToStart: {fileID: 0}
+        PoliticalEvent: {fileID: 0}
+        WindSecret: {fileID: 0}
+        MetalSecretNpc: {fileID: 0}
+        ShipId: 
+        JournalId: 
+        JournalTitle: 
+        Notes: The player helps Bubba.
+    - ChoiceId: trade_to_guild
+      DisplayText: Trade it to the thieves guild
+      ChoiceType: 5
+      NextStageId: 
+      PlayerFacingResult: The guild grows stronger, but Bubba learns a hard lesson.
+      HiddenDirectorNotes: The player empowers the guild.
+      Consequences:
+      - ConsequenceType: 1
+        Capital: 6
+        PressureType: 4
+        Amount: 10
+        QuestToStart: {fileID: 0}
+        PoliticalEvent: {fileID: 0}
+        WindSecret: {fileID: 0}
+        MetalSecretNpc: {fileID: 0}
+        ShipId: 
+        JournalId: 
+        JournalTitle: 
+        Notes: The player empowers the guild.

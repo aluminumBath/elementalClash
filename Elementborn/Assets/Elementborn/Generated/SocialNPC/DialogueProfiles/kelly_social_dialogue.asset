@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec543fc355662df44993874d116b8e2d, type: 3}
+  m_Name: kelly_social_dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialNpcDialogueProfileDefinition
+  npcId: kelly
+  displayName: Kelly
+  npc: {fileID: 11400000, guid: 3d376d858d462434ca7b7dacfcf4e9b6, type: 2}
+  summary: Her hair acts like a mood-indicator flame. Useful as both a friendly NPC
+    and a local trouble-response hook.
+  cues:
+  - CueId: greeting
+    TriggerKeyword: 
+    Line: My hair is gold, so nobody has annoyed me enough yet.
+    JournalNote: Kelly's moodflame shows how she feels.
+    QuestToStart: {fileID: 0}
+    Importance: 0
+  - CueId: protect
+    TriggerKeyword: protect
+    Line: Touch my neighbors and I become a local natural disaster.
+    JournalNote: Kelly fiercely protects friends and neighbors.
+    QuestToStart: {fileID: 11400000, guid: 42df05fc5bdc48647b6fccdcb81b77d7, type: 2}
+    Importance: 2
+  - CueId: mischief
+    TriggerKeyword: mischief
+    Line: Mercy is good. Mischief is also good. Balance matters.
+    JournalNote: Kelly has a mischievous side.
+    QuestToStart: {fileID: 0}
+    Importance: 1

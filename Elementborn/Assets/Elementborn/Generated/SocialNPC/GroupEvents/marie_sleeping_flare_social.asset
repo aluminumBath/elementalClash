@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c17b11ac844070c49827dc3344a16e6a, type: 3}
+  m_Name: marie_sleeping_flare_social
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialGroupEventDefinition
+  eventId: marie_sleeping_flare_social
+  displayName: Marie Falls Asleep On Fire Again
+  eventType: 3
+  group: {fileID: 11400000, guid: 8bed657772d7bf24b830d71542f6728d, type: 2}
+  questToStart: {fileID: 11400000, guid: 0b31642def33b534f9185170911c4f1f, type: 2}
+  pressureType: 1
+  pressureDelta: 5
+  createJournalEntry: 1
+  createMapMarker: 1
+  playerFacingSummary: Marie nods off and starts another small fire while insisting
+    everyone is overreacting.
+  directorNotes: Use as a repeatable local crisis.
+  involvedNpcIds: []

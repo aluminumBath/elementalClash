@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cdb2decf6b52d740a21c38386d59dc8, type: 3}
+  m_Name: raucous_tide_port_emergency
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.PoliticalWorldEventDefinition
+  eventId: raucous_tide_port_emergency
+  displayName: Raucous Tide Port Emergency
+  category: 7
+  primaryCapital: 7
+  worldPosition: {x: 266, y: 0, z: 340}
+  conditions:
+  - Capital: 7
+    PressureType: 9
+    MinimumValue: 65
+    RequireAtOrAbove: 1
+  consequences:
+  - PressureType: 9
+    PressureDelta: 7
+    StabilityDelta: -2
+    LegitimacyDelta: 0
+    Reason: The Raucous Tide drags a port dispute into a festival.
+  questToStart: {fileID: 0}
+  sound: 19
+  cooldownDays: 2
+  autoActivateWhenEligible: 0
+  createMapMarker: 1
+  playerFacingSummary: A Raucous Tide celebration risks turning into a port-wide
+    incident.
+  hiddenDirectorNotes: "A useful bridge between Ram\xF3n, Sarah, and regional politics."

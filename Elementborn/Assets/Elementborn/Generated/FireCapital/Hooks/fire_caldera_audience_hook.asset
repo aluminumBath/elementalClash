@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e44ff4632a91940a245ab40385ca82, type: 3}
+  m_Name: fire_caldera_audience_hook
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.FireCapitalCourtHookDefinition
+  hookId: fire_caldera_audience_hook
+  title: Caldera Throne Audience
+  hookType: 1
+  district: 1
+  primaryNpc: {fileID: 11400000, guid: 0aca195246957a7439ecb734909c7f7f, type: 2}
+  questToStart: {fileID: 11400000, guid: daa910dfc93651645aeb64fef6861ab5, type: 2}
+  worldPosition: {x: 520, y: 0, z: -210}
+  pressureType: 5
+  pressureDeltaOnStart: -2
+  stabilityDeltaOnResolve: 3
+  playerFacingSummary: The royal family receives the player inside the volcano citadel.
+  hiddenDirectorNotes: Introduces the court and turns the Fire Capital from placeholder
+    into a quest hub.

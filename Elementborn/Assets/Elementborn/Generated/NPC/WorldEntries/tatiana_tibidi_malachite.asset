@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: tatiana_tibidi_malachite
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: tatiana_tibidi_malachite
+  displayName: Princess Tatiana Malachite
+  role: 1
+  titleOrRank: Princess
+  region: Earth Capital
+  locationName: Palace Gardens
+  worldPosition: {x: 45, y: 0, z: 28}
+  aliases: Tibidi
+  primaryElement: Plant
+  secondaryElement: Earth
+  origin: Earth Capital
+  appearanceNotes: Young royal with lively expression and noble styling touched by
+    plant motifs.
+  personalityNotes: Bright, curious, and warm-hearted.
+  relationshipSummary: Daughter of Queen Alexis Malachite and Chrief Gover.
+  notes: Nicknamed Tibidi. Has strong plant channeling.
+  faction: 4
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Princess Tatiana Malachite.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: tatiana_tibidi_malachite_greeting.wav

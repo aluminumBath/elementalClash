@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: manon
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: manon
+  displayName: Manon
+  role: 8
+  titleOrRank: Steam Channeler Homemaker
+  region: Wind Capital
+  locationName: Lower Aerie Apartment
+  worldPosition: {x: 744, y: 21, z: 438}
+  aliases: Manon
+  primaryElement: Steam
+  secondaryElement: Air
+  origin: Wind Capital
+  appearanceNotes: Exceptionally clean steam channeler with neatly arranged clothes
+    and immaculate posture.
+  personalityNotes: Uptight, meticulous, annoyed, and intensely organized.
+  relationshipSummary: Married to Rekr Ap and frequently frustrated by his habits.
+    Socializes with Amy Whine and Marie Conflag.
+  notes: Very clean, very structured, and always trying to contain the chaos around
+    Rekr and Marie.
+  faction: 1
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Manon.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: manon_greeting.wav

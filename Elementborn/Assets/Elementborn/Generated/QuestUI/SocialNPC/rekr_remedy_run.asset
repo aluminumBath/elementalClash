@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: rekr_remedy_run
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: rekr_remedy_run
+  title: Rekr's Remedy Run
+  description: Rekr Ap is sickly, gross, and needs help before Manon runs out of
+    patience.
+  region: Social NPCs
+  giverName: Rekr Ap
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: check_rekr
+    Title: Check on Rekr
+    Description: Find out what is making Rekr worse today.
+    WorldPosition: {x: 742, y: 21, z: 436}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: find_remedy
+    Title: Find a tolerable remedy
+    Description: Collect something that might help a lava channeler living in the
+      Wind Capital.
+    WorldPosition: {x: 746, y: 21, z: 437}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: calm_manon
+    Title: Calm Manon
+    Description: Convince Manon this will not ruin the apartment again.
+    WorldPosition: {x: 744, y: 21, z: 438}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: rekr_remedy_run_reward
+    DisplayName: Neighborhood Trust
+    ItemId: 
+    Quantity: 0
+    Currency: 20
+    SkillPoints: 0
+    Icon: {fileID: 0}

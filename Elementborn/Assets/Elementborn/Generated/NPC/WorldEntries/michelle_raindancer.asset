@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: michelle_raindancer
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: michelle_raindancer
+  displayName: Michelle Raindancer
+  role: 2
+  titleOrRank: Blood Channeler Vizier
+  region: Wind Capital
+  locationName: Theocratic Rule Hall
+  worldPosition: {x: 730, y: 25, z: 418}
+  aliases: Michelle Raindancer
+  primaryElement: Blood
+  secondaryElement: 
+  origin: Unknown
+  appearanceNotes: Severe vizier with crimson rain-pattern robes and precise ritual
+    jewelry.
+  personalityNotes: Rule-bound, merciless, disciplined, and convinced order matters
+    more than mercy.
+  relationshipSummary: Serves as a harsh lieutenant/vizier within a capital power
+    structure.
+  notes: Blood channeler villain. She destroys anyone who breaks the rules.
+  faction: 13
+  defaultVoiceSound: 26
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Michelle Raindancer.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: michelle_raindancer_greeting.wav

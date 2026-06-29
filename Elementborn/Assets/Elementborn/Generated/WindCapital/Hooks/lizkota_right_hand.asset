@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c5bf1f13e7eff42922103bdb33b17b, type: 3}
+  m_Name: lizkota_right_hand
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.WindCapitalIntrigueHookDefinition
+  hookId: lizkota_right_hand
+  title: Lizkota's Quiet Hand
+  hookType: 2
+  district: 6
+  primaryNpc: {fileID: 11400000, guid: a8647ff0acfed334aaabbe148a4eb81c, type: 2}
+  secondaryNpc: {fileID: 11400000, guid: 7981d4ff7a86c3f4cb826f614ee22f53, type: 2}
+  quest: {fileID: 0}
+  worldPosition: {x: 724, y: 25, z: 424}
+  summary: Lizkota speaks softly, but guards move before Redbeard finishes a sentence.
+  secretTruth: Lizkota may be the true architect of the new religious order and the
+    one tracking exiles.
+  rumors:
+  - RumorId: rumor_lizkota_orders
+    DisplayText: A bell-tower guard says Lizkota never raises her voice twice.
+    HookType: 2
+    PubliclyKnown: 1
+    HiddenTruth: She uses coded prayer ribbons to move loyalists.
+  fervorDelta: 4
+  createsMapMarker: 1

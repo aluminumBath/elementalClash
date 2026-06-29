@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: ina_breezebell
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: ina_breezebell
+  displayName: Ina Breezebell
+  role: 10
+  titleOrRank: Lookout
+  region: Neritha Reefwood
+  locationName: Raucous Tide - Crow's Nest
+  worldPosition: {x: 266, y: 8, z: 341}
+  aliases: Breezebell
+  primaryElement: Air
+  secondaryElement: Water
+  origin: Coastal Wind Villages
+  appearanceNotes: Small, quick lookout with wind chimes braided into her scarf.
+  personalityNotes: Playful, observant, and impossible to sneak up on.
+  relationshipSummary: Sarah quietly mentors her in wind-reading without explaining
+    why she knows so much.
+  notes: Rings tiny bells before storms and before trouble.
+  faction: 9
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Ina Breezebell.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: ina_breezebell_greeting.wav

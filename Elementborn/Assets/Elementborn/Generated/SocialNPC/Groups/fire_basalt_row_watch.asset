@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cf1dac0dffa5b4290aa0d6cb986b36, type: 3}
+  m_Name: fire_basalt_row_watch
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialNpcGroupDefinition
+  groupId: fire_basalt_row_watch
+  displayName: Basalt Row Neighborhood Watch
+  primaryCapital: 3
+  groupCenter: {x: 526, y: 0, z: -198}
+  summary: Kelly protects Fire Capital neighbors while her flame-colored hair reveals
+    her mood.
+  members:
+  - Npc: {fileID: 11400000, guid: 3d376d858d462434ca7b7dacfcf4e9b6, type: 2}
+    UsualRole: moodflame protector
+    DefaultPosition: {x: 526, y: 0, z: -198}
+    AmbientBehavior: protects neighbors and enjoys mischievous justice
+  - Npc: {fileID: 11400000, guid: 05b2170adfc66774280f54c1f16271ab, type: 2}
+    UsualRole: visiting fire hazard
+    DefaultPosition: {x: 528, y: 0, z: -196}
+    AmbientBehavior: occasionally brings fire chaos back home
+  relationships: []

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: queen_alexis_malachite
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: queen_alexis_malachite
+  displayName: Queen Alexis Malachite
+  role: 1
+  titleOrRank: Queen of the Earth Capital
+  region: Earth Capital
+  locationName: Royal Palace
+  worldPosition: {x: 42, y: 0, z: 24}
+  aliases: Alexis
+  primaryElement: Earth
+  secondaryElement: 
+  origin: Earth Capital
+  appearanceNotes: Dark-skinned female; dignified royal bearing; earth-toned regalia
+    with malachite accents.
+  personalityNotes: Kind, intelligent, and respected as a wise leader.
+  relationshipSummary: Married to Chrief Gover; mother of Tatiana Tibidi.
+  notes: Earth element ruler of the earth capital.
+  faction: 4
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Queen Alexis Malachite.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: queen_alexis_malachite_greeting.wav

@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5573345394654153562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5983811684799425998}
+  - component: {fileID: 1917460198943610550}
+  - component: {fileID: 5286109798025490274}
+  - component: {fileID: 5232503171548554282}
+  - component: {fileID: 8318831724743385619}
+  m_Layer: 0
+  m_Name: Elementborn_MetalCapitalRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5983811684799425998
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5573345394654153562}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1917460198943610550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5573345394654153562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c6c5b48e0ab9a469f27bac62af25e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.MetalCapitalRegistry
+  contacts:
+  - {fileID: 11400000, guid: 57a5d9e8fb2a93347ad7904eeddcfa2c, type: 2}
+  - {fileID: 11400000, guid: bc1c657be653f914da80906d601a40a2, type: 2}
+  - {fileID: 11400000, guid: cedb9eca5205cdd47bb9775d8020dddb, type: 2}
+  intrigueHooks:
+  - {fileID: 11400000, guid: 73dd5dfe6fd570b47a45fe8e1a705c6b, type: 2}
+  - {fileID: 11400000, guid: a24b07066c2c4c54a96ebc83f7a5dd73, type: 2}
+  - {fileID: 11400000, guid: b9077711c3716b149884519a68b40742, type: 2}
+  registerJournalEntriesOnStart: 1
+  registerMapMarkersOnStart: 1
+--- !u!114 &5286109798025490274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5573345394654153562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1487f05d2ce1e124f87bad721adc06d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ThievesGuildReputationTracker
+  reputation: 0
+  standing: 0
+--- !u!114 &5232503171548554282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5573345394654153562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2932e56de73ae347bec4f873849bad6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.HiddenChannelerSecretTracker
+  discoveredSecretNpcIds: []
+--- !u!114 &8318831724743385619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5573345394654153562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a0b085760e73c044950916028702ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.MetalCapitalAdminCommandBridge

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: manon_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: Manon
+  Role: 'Steam Channeler Homemaker in Wind Capital. Role: Civilian.'
+  Personality: Uptight, meticulous, annoyed, and intensely organized.
+  LocalKnowledge: I am usually found at Lower Aerie Apartment in Wind Capital. Married
+    to Rekr Ap and frequently frustrated by his habits. Socializes with Amy Whine
+    and Marie Conflag.
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: Greetings. I am Manon.
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Steam, with a trace of Air.
+  - Keyword: family
+    Response: Married to Rekr Ap and frequently frustrated by his habits. Socializes
+      with Amy Whine and Marie Conflag.
+  - Keyword: where
+    Response: You can find me at Lower Aerie Apartment in Wind Capital.
+  - Keyword: capital
+    Response: The Wind Capital is strong because its people endure, learn, and build
+      together.

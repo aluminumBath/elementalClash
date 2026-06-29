@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7592702965448855068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1456676500284223691}
+  - component: {fileID: 3765907130491034287}
+  - component: {fileID: 1090163854431452408}
+  - component: {fileID: 5129950437926749909}
+  m_Layer: 0
+  m_Name: Elementborn_SocialGroupRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1456676500284223691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592702965448855068}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3765907130491034287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592702965448855068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a409db3b99763b46b0fa3f4a80a4f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialGroupRegistry
+  groups:
+  - {fileID: 11400000, guid: 1d9d86bb6251afc46a5fcfb0bf08a9aa, type: 2}
+  - {fileID: 11400000, guid: 8bed657772d7bf24b830d71542f6728d, type: 2}
+  events:
+  - {fileID: 11400000, guid: d8f7bb3a477370d48a3105157e4d1ac3, type: 2}
+  - {fileID: 11400000, guid: 9e093536645c140429ff628750f0e7ca, type: 2}
+  - {fileID: 11400000, guid: d6c4665fa297c5c4f91942512725eefb, type: 2}
+  - {fileID: 11400000, guid: db22a90867bf45f48b5b9c0f9c825de9, type: 2}
+  - {fileID: 11400000, guid: e15a60ffeef61e24a9d3c1056aa099c7, type: 2}
+  - {fileID: 11400000, guid: 922857026e72c554db002e6460e7961f, type: 2}
+  runtimeRecords: []
+  registerJournalAndMapOnStart: 1
+--- !u!114 &1090163854431452408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592702965448855068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4ff8771a49d304ca21fdb2a18856cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialGroupScheduleDirector
+  groupId: wind_lower_terrace_circle
+  rotatingEventIds:
+  - wind_lower_hangout
+  - marie_sleeping_flare_social
+  - amy_rumor_drift_social
+  - johna_pipe_counsel_social
+  - manon_cleanup_crisis_social
+  intervalSeconds: 60
+  autoRotate: 0
+--- !u!114 &5129950437926749909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592702965448855068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49329ca3ea9bc5347b05c854b1303c7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialGroupAdminCommandBridge
+  scheduleDirector: {fileID: 0}

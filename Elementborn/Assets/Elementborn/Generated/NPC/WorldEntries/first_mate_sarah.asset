@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: first_mate_sarah
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: first_mate_sarah
+  displayName: First Mate Sarah
+  role: 9
+  titleOrRank: First Mate
+  region: Neritha Reefwood
+  locationName: Raucous Tide - Main Deck
+  worldPosition: {x: 268, y: 0, z: 342}
+  aliases: Sarah
+  primaryElement: Air
+  secondaryElement: 
+  origin: Wind Capital
+  appearanceNotes: Wind-channeling first mate with composed posture and practical
+    pirate gear touched by subtle wind-capital design.
+  personalityNotes: Intelligent, deeply empathic, guarded, and unwilling to discuss
+    her past.
+  relationshipSummary: "First mate to Captain Ram\xF3n. From the Wind Capital, but
+    keeps it secret; only Ram\xF3n knows what happened."
+  notes: She refuses to talk about her past. The crew respects her because she can
+    read a room before a storm breaks. Her secret may connect to the Wind Capital
+    theocracy and the old leaders it overthrew.
+  faction: 9
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am First Mate Sarah.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: first_mate_sarah_greeting.wav

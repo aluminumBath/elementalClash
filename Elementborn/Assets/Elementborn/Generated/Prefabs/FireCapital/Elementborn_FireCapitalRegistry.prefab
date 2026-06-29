@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6575089125066097339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7066575719093048126}
+  - component: {fileID: 4191666500899130141}
+  - component: {fileID: 876392690060822746}
+  - component: {fileID: 8813387770533800588}
+  m_Layer: 0
+  m_Name: Elementborn_FireCapitalRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7066575719093048126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6575089125066097339}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4191666500899130141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6575089125066097339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ebd55c038cab34a84e256d8cfbe943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.FireCapitalRegistry
+  hooks:
+  - {fileID: 11400000, guid: 6a85da095054fbc4f88477ea459236c0, type: 2}
+  - {fileID: 11400000, guid: be87d114edbd33949a180953077506fd, type: 2}
+  - {fileID: 11400000, guid: 290624a9fc28e804ebd0bdab061a1dc7, type: 2}
+  - {fileID: 11400000, guid: 895491006db15c442abe0dc7171f81b8, type: 2}
+  - {fileID: 11400000, guid: 9a3bdd62903a03a4eac94a9ad0236563, type: 2}
+  records: []
+  registerJournalAndMapOnStart: 1
+--- !u!114 &876392690060822746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6575089125066097339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3006a1743bf0ce49bc07ab854a02bfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.FireCapitalVolcanoHazardController
+  pressurePerPulse: 3
+  pulseIntervalSeconds: 45
+  pulseAutomatically: 0
+--- !u!114 &8813387770533800588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6575089125066097339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b94088cef6c8041b790119b4a9654a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.FireCapitalAdminCommandBridge
+  volcano: {fileID: 0}

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: lyra_glassfire_mediation
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: lyra_glassfire_mediation
+  title: Lyra's Glassfire Mediation
+  description: Princess Lyra asks the player to calm a dispute before court rumor
+    turns into factional pressure.
+  region: Fire Capital
+  giverName: Princess Lyra Cindervale
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: meet_lyra
+    Title: Meet Princess Lyra
+    Description: Find Lyra on the Glassfire Balcony.
+    WorldPosition: {x: 514, y: 0, z: -216}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: speak_talia
+    Title: Hear the market side
+    Description: Ask Talia what the commoners fear.
+    WorldPosition: {x: 518, y: 0, z: -226}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: speak_calda
+    Title: Hear the shrine side
+    Description: Ask Sister Calda what old vows require.
+    WorldPosition: {x: 512, y: 0, z: -202}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: lyra_glassfire_mediation_reward
+    DisplayName: Fire Capital trust
+    ItemId: 
+    Quantity: 1
+    Currency: 30
+    SkillPoints: 1
+    Icon: {fileID: 0}

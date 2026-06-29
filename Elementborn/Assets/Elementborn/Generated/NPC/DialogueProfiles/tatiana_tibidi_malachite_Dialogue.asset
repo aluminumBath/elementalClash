@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: tatiana_tibidi_malachite_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: Princess Tatiana Malachite
+  Role: 'Princess in Earth Capital. Role: RoyalFamily.'
+  Personality: Bright, curious, and warm-hearted.
+  LocalKnowledge: I am usually found at Palace Gardens in Earth Capital. Daughter
+    of Queen Alexis Malachite and Chrief Gover.
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: Hi! Most people call me Tibidi. The garden listens better than some grown-ups
+    do.
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Plant, with a trace of Earth.
+  - Keyword: family
+    Response: Daughter of Queen Alexis Malachite and Chrief Gover.
+  - Keyword: where
+    Response: You can find me at Palace Gardens in Earth Capital.
+  - Keyword: capital
+    Response: The Earth Capital is strong because its people endure, learn, and build
+      together.

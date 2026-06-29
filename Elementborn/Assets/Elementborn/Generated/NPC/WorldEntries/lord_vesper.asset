@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: lord_vesper
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: lord_vesper
+  displayName: Lord Vesper
+  role: 2
+  titleOrRank: Cult Patron
+  region: Fire Region
+  locationName: Black Basalt Keep
+  worldPosition: {x: 520, y: 0, z: 190}
+  aliases: 
+  primaryElement: Fire
+  secondaryElement: Shadow
+  origin: Ashen Reach
+  appearanceNotes: Sharp features and dark ceremonial clothing.
+  personalityNotes: Cold and manipulative.
+  relationshipSummary: Connected to hidden cult networks.
+  notes: Placeholder villain NPC entry.
+  faction: 7
+  defaultVoiceSound: 26
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Lord Vesper.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: lord_vesper_greeting.wav

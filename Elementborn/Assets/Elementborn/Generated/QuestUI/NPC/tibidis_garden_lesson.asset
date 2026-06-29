@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: tibidis_garden_lesson
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: tibidis_garden_lesson
+  title: Tibidi's Garden Lesson
+  description: Princess Tatiana, nicknamed Tibidi, can teach the player how strong
+    plant channeling grows from patience and care.
+  region: Earth Capital
+  giverName: Princess Tatiana Malachite
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: find_tibidi
+    Title: Find Tibidi in the Palace Gardens
+    Description: Look for Princess Tatiana in the gardens near the palace.
+    WorldPosition: {x: 45, y: 0, z: 28}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: observe_plants
+    Title: Observe the channeling plants
+    Description: Study how Tibidi guides plant growth without forcing it.
+    WorldPosition: {x: 48, y: 0, z: 30}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: tibidis_garden_lesson_reputation
+    DisplayName: Earth Capital trust
+    ItemId: 
+    Quantity: 1
+    Currency: 25
+    SkillPoints: 0
+    Icon: {fileID: 0}

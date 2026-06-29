@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6cb9458ff4dcc64c93999e3981e0ba2, type: 3}
+  m_Name: fire_sleeping_flare
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.CapitalPressureEventDefinition
+  eventId: fire_sleeping_flare
+  displayName: Marie's Sleeping Flare
+  targetCapital: 3
+  pressureChanges:
+  - PressureType: 1
+    Delta: 6
+    Reason: Marie Conflag nods off and sets something ablaze again.
+  - PressureType: 7
+    Delta: 2
+    Reason: Cleanup crews grumble about careless fire channeling.
+  stabilityDelta: -2
+  legitimacyDelta: -1
+  journalText: Marie's Sleeping Flare changed the political pressure in FireCapital.
+  notifyPlayer: 1

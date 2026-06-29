@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: eloc
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: eloc
+  displayName: Eloc
+  role: 8
+  titleOrRank: Creature Orphanage Keeper
+  region: Neritha Reefwood
+  locationName: Crab-Sign Creature Orphanage
+  worldPosition: {x: 214, y: 0, z: 286}
+  aliases: Eloc
+  primaryElement: None
+  secondaryElement: 
+  origin: Neritha Reefwood
+  appearanceNotes: Kind environmental caretaker with crab-symbol satchel and mischievous
+    smile.
+  personalityNotes: Hilarious, affectionate, patient, and deeply connected to creatures.
+  relationshipSummary: Runs the creature orphanage with Ella. They clearly love each
+    other.
+  notes: Friendly non-channeler. Heals creatures the player brings to the orphanage.
+  faction: 8
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Eloc.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: eloc_greeting.wav

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: earth_royal_audience
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: earth_royal_audience
+  title: Audience with the Malachite Court
+  description: Meet Queen Alexis Malachite and Chrief Gover to learn how the earth
+    capital balances strength, diplomacy, and elemental unity.
+  region: Earth Capital
+  giverName: Queen Alexis Malachite
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: meet_queen_alexis
+    Title: Speak with Queen Alexis
+    Description: Find Queen Alexis Malachite in the Royal Palace.
+    WorldPosition: {x: 42, y: 0, z: 24}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: meet_chrief_gover
+    Title: Speak with Chrief Gover
+    Description: Speak with Chrief Gover about Neritha Reefwood and the earth capital
+      alliance.
+    WorldPosition: {x: 40, y: 0, z: 22}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: earth_royal_audience_reputation
+    DisplayName: Earth Capital trust
+    ItemId: 
+    Quantity: 1
+    Currency: 25
+    SkillPoints: 0
+    Icon: {fileID: 0}

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58161b537e4f16c438df7efa7d534c4f, type: 3}
+  m_Name: oskar_underbridge
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.MetalCapitalContactDefinition
+  contactId: oskar_underbridge
+  displayName: Oskar Underbridge
+  contactType: 2
+  district: 6
+  worldPosition: {x: 598, y: 0, z: 116}
+  npc: {fileID: 0}
+  description: A careful fence who appraises stolen components and never says where
+    they came from.
+  secret: Oskar knows who first moved Bubba's missing prototype.
+  listings:
+  - ListingId: bubba_prototype_hint
+    DisplayName: Prototype Bolt Rumor
+    ItemId: rumor_bubba_bolt
+    Quantity: 1
+    Price: 35
+    RiskLevel: 0
+    Rumor: A palace bolt came through the wrong door.
+    Consequence: May unlock Bubba's workshop quest shortcut.

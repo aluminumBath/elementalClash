@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9c7353633a8134d97d5779b2b208ec, type: 3}
+  m_Name: donowl_sleepy_owl
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.StoryEncounterDefinition
+  encounterId: donowl_sleepy_owl
+  displayName: Donowl, the Drowsy Owl Monster
+  threatType: 1
+  relatedCapital: 1
+  primaryNpc: {fileID: 11400000, guid: 7c54310caa2befb439d1fdf3ba513cad, type: 2}
+  secondaryNpc: {fileID: 0}
+  worldPosition: {x: 18, y: 0, z: 44}
+  playerFacingSummary: Donowl is a very strong but confused owl monster who falls
+    asleep and gets distracted at terrible times.
+  mechanicsNotes: Use DistractedSleeperMonsterController to make Donowl sleep/distract
+    during encounters.
+  directorNotes: Comedic villain encounter with real combat danger.

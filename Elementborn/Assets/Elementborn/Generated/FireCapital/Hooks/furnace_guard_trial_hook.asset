@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e44ff4632a91940a245ab40385ca82, type: 3}
+  m_Name: furnace_guard_trial_hook
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.FireCapitalCourtHookDefinition
+  hookId: furnace_guard_trial_hook
+  title: Furnace Guard Trial
+  hookType: 3
+  district: 7
+  primaryNpc: {fileID: 11400000, guid: 002207c1ccce8b74cb045d1ce98b3eb2, type: 2}
+  questToStart: {fileID: 11400000, guid: e4ccbca0a553cf0469e3056a4b9b0e6e, type: 2}
+  worldPosition: {x: 532, y: 0, z: -212}
+  pressureType: 7
+  pressureDeltaOnStart: 4
+  stabilityDeltaOnResolve: 5
+  playerFacingSummary: Captain Vaela tests whether the player can defend civilians
+    without worsening panic.
+  hiddenDirectorNotes: A light combat/defense tutorial hook.

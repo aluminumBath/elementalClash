@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: johna_rold
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: johna_rold
+  displayName: Johna Rold
+  role: 5
+  titleOrRank: Pipe-Smoking Advisor
+  region: Wind Capital
+  locationName: Pipewalk Overlook
+  worldPosition: {x: 752, y: 26, z: 430}
+  aliases: Johna
+  primaryElement: Air
+  secondaryElement: 
+  origin: Wind Capital
+  appearanceNotes: Sickly air channeler with kind eyes, a weathered pipe, and layered
+    shawls against the chill.
+  personalityNotes: Kind, reflective, sickly, and generous with advice.
+  relationshipSummary: A respected local listener and informal counselor for nearby
+    residents.
+  notes: Frequently seen smoking a pipe and offering advice. Good candidate for rumor
+    routing, side quests, and neighborhood guidance.
+  faction: 5
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Johna Rold.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: johna_rold_greeting.wav

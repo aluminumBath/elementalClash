@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: kelly
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: kelly
+  displayName: Kelly
+  role: 5
+  titleOrRank: Protective Lava Channeler
+  region: Fire Capital
+  locationName: Basalt Row
+  worldPosition: {x: 526, y: 0, z: -198}
+  aliases: Kelly
+  primaryElement: Lava
+  secondaryElement: Fire
+  origin: Fire Capital
+  appearanceNotes: Lava channeler whose hair burns in colors that shift with her
+    mood.
+  personalityNotes: Kind, fiercely protective, lightly mischievous, and deeply loyal
+    to friends and neighbors.
+  relationshipSummary: Acts as a neighborhood protector and potential ally for local
+    residents.
+  notes: Her hair acts like a mood-indicator flame. Useful as both a friendly NPC
+    and a local trouble-response hook.
+  faction: 3
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Kelly.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: kelly_greeting.wav

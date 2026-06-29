@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: larissa_hidden_metal
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: larissa_hidden_metal
+  title: The Metal in Larissa's Silence
+  description: Howlj hates channelers, but his wife Larissa is secretly a metal channeler.
+    Discover the truth without putting her in danger.
+  region: Metal Capital
+  giverName: Larissa
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: listen_to_howlj
+    Title: Listen to Howlj's accusations
+    Description: Hear what Howlj says about channelers.
+    WorldPosition: {x: 590, y: 0, z: 118}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: speak_with_larissa
+    Title: Speak privately with Larissa
+    Description: Find a way to talk without Howlj overhearing.
+    WorldPosition: {x: 592, y: 0, z: 120}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: protect_the_secret
+    Title: Protect or expose the secret
+    Description: Choose whether Larissa's channeling remains hidden.
+    WorldPosition: {x: 592, y: 0, z: 120}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: larissa_hidden_metal_reward
+    DisplayName: Metal Capital Standing
+    ItemId: 
+    Quantity: 0
+    Currency: 50
+    SkillPoints: 0
+    Icon: {fileID: 0}

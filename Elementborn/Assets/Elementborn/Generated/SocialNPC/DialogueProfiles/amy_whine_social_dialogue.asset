@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec543fc355662df44993874d116b8e2d, type: 3}
+  m_Name: amy_whine_social_dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialNpcDialogueProfileDefinition
+  npcId: amy_whine
+  displayName: Amy Whine
+  npc: {fileID: 11400000, guid: 58b26a7a0dea4654d8aebafec1a4b132, type: 2}
+  summary: Not a channeler, but part of the same social cluster. Often helps conversation
+    drift in unexpected directions.
+  cues:
+  - CueId: greeting
+    TriggerKeyword: 
+    Line: I was following Marie, then a bird, then maybe a rumor?
+    JournalNote: Amy drifts into useful information by accident.
+    QuestToStart: {fileID: 0}
+    Importance: 0
+  - CueId: rumor
+    TriggerKeyword: rumor
+    Line: Someone said something important. I remember because I forgot why it mattered.
+    JournalNote: Amy can accidentally surface clues.
+    QuestToStart: {fileID: 11400000, guid: 0bec97312f68173438b9262135da8037, type: 2}
+    Importance: 1
+  - CueId: friends
+    TriggerKeyword: friends
+    Line: I just go where everyone else goes. It usually becomes interesting.
+    JournalNote: Amy keeps the social group moving.
+    QuestToStart: {fileID: 0}
+    Importance: 0

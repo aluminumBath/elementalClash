@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cdb2decf6b52d740a21c38386d59dc8, type: 3}
+  m_Name: earth_court_stabilizes
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.PoliticalWorldEventDefinition
+  eventId: earth_court_stabilizes
+  displayName: Malachite Court Stabilizes
+  category: 8
+  primaryCapital: 2
+  worldPosition: {x: 42, y: 0, z: 24}
+  conditions:
+  - Capital: 2
+    PressureType: 6
+    MinimumValue: 60
+    RequireAtOrAbove: 1
+  consequences:
+  - PressureType: 1
+    PressureDelta: -8
+    StabilityDelta: 5
+    LegitimacyDelta: 5
+    Reason: Alexis and Chrief calm the court.
+  questToStart: {fileID: 0}
+  sound: 5
+  cooldownDays: 2
+  autoActivateWhenEligible: 0
+  createMapMarker: 1
+  playerFacingSummary: The Malachite court holds a stabilizing audience.
+  hiddenDirectorNotes: A positive counterweight to other capitals collapsing into
+    pressure.

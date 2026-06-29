@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: johna_pipe_counsel
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: johna_pipe_counsel
+  title: Johna's Pipe Counsel
+  description: Johna Rold offers kind, smoke-wreathed advice that can calm the Wind
+    Capital lower terraces.
+  region: Social NPCs
+  giverName: Johna Rold
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: sit_with_johna
+    Title: Sit with Johna
+    Description: Listen to Johna's advice while smoke curls into the sky.
+    WorldPosition: {x: 752, y: 26, z: 430}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: carry_advice
+    Title: Carry advice to the neighbors
+    Description: Repeat Johna's counsel to someone who needs it.
+    WorldPosition: {x: 748, y: 22, z: 440}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: ease_tension
+    Title: Ease the tension
+    Description: Help the neighborhood settle before rumor becomes panic.
+    WorldPosition: {x: 752, y: 26, z: 430}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: johna_pipe_counsel_reward
+    DisplayName: Neighborhood Trust
+    ItemId: 
+    Quantity: 0
+    Currency: 20
+    SkillPoints: 0
+    Icon: {fileID: 0}

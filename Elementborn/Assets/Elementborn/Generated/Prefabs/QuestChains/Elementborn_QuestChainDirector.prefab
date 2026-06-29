@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8568815247984702565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4314780331628662323}
+  - component: {fileID: 8374754621098667786}
+  - component: {fileID: 7897306872324171092}
+  m_Layer: 0
+  m_Name: Elementborn_QuestChainDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4314780331628662323
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8568815247984702565}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8374754621098667786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8568815247984702565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6383d296addf2de4bb0168d94ab88d81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestChainDirector
+  questChains:
+  - {fileID: 11400000, guid: d42e31cb820cd5443b87d8598e967d52, type: 2}
+  - {fileID: 11400000, guid: 9e64ab1332dc7b949ad244e81856b5e9, type: 2}
+  - {fileID: 11400000, guid: 59990dccd50cca8408d1528237c82197, type: 2}
+  - {fileID: 11400000, guid: 99ce993676754334cb2f1a434346c783, type: 2}
+  - {fileID: 11400000, guid: 3584d73e6cbbf444cbd0b7489ecd2475, type: 2}
+  - {fileID: 11400000, guid: b0ec1d932cbe3804fb508585d1653f65, type: 2}
+  - {fileID: 11400000, guid: f2e19076040740442b6c87dc77f8bd74, type: 2}
+  - {fileID: 11400000, guid: a24bf7463b5b35143832e36decbd69a6, type: 2}
+  - {fileID: 11400000, guid: 633c11bdcdd69d54b95e6973cff5a85a, type: 2}
+  runtimeRecords: []
+  listenToPoliticalEvents: 1
+--- !u!114 &7897306872324171092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8568815247984702565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7fb3dd5baa775545adb50de155ebfa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestChainAdminCommandBridge

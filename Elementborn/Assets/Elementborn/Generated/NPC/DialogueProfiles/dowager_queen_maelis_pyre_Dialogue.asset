@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: dowager_queen_maelis_pyre_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: Dowager Queen Maelis Pyre
+  Role: 'Dowager Queen in Fire Capital. Role: RoyalFamily.'
+  Personality: Sharp-tongued, deeply loyal, theatrical, and unexpectedly warm with
+    younger family members.
+  LocalKnowledge: I am usually found at Old Hearth Library in Fire Capital. Aunt
+    and mentor to Queen Seraphine; grand-aunt to Kaelen and Lyra; keeps Oren honest
+    and trains the family to respect the city's history.
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: Every ruler thinks they command the mountain. The wise ones learn they
+    merely bargain with it.
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Fire.
+  - Keyword: family
+    Response: Aunt and mentor to Queen Seraphine; grand-aunt to Kaelen and Lyra;
+      keeps Oren honest and trains the family to respect the city's history.
+  - Keyword: where
+    Response: You can find me at Old Hearth Library in Fire Capital.
+  - Keyword: capital
+    Response: The Fire Capital is strong because its people endure, learn, and build
+      together.

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7435a6608070a6a42810dc862be5682f, type: 3}
+  m_Name: WindCapital
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.CapitalWorldStateDefinition
+  capitalId: 5
+  displayName: Wind Capital
+  rulingFaction: 13
+  controlStatus: 3
+  worldPosition: {x: 720, y: 25, z: 420}
+  summary: High Priest Redbeard and Priestess Lizkota rule after a recent theocratic
+    usurpation, while locals like Rekr, Manon, Johna, Amy, and Marie keep the lower
+    terraces alive with rumor, smoke, and domestic chaos.
+  startingPressures:
+  - Type: 2
+    Value: 80
+    Notes: The capital is chaotic with religious fervor.
+  - Type: 5
+    Value: 30
+    Notes: The regime is powerful but not broadly legitimate.
+  - Type: 12
+    Value: 75
+    Notes: Sarah's past, Ruth's steam omen, and neighborhood tensions are volatile.
+  npcInfluences: []

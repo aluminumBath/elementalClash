@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e44ff4632a91940a245ab40385ca82, type: 3}
+  m_Name: maelis_ash_memory_hook
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.FireCapitalCourtHookDefinition
+  hookId: maelis_ash_memory_hook
+  title: Maelis and the Ash Memory
+  hookType: 5
+  district: 5
+  primaryNpc: {fileID: 11400000, guid: 7414e4eabf291264092e134c6441f4ee, type: 2}
+  questToStart: {fileID: 11400000, guid: 07ce7c2259956c84ab85bfedbbb01943, type: 2}
+  worldPosition: {x: 510, y: 0, z: -208}
+  pressureType: 12
+  pressureDeltaOnStart: -3
+  stabilityDeltaOnResolve: 4
+  playerFacingSummary: Maelis reveals that old eruption records may explain present
+    volcanic danger.
+  hiddenDirectorNotes: History/lore hook that can foreshadow a Fire Capital boss
+    or disaster.

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: amy_whine
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: amy_whine
+  displayName: Amy Whine
+  role: 8
+  titleOrRank: Airheaded Friend
+  region: Wind Capital
+  locationName: Tea-Balcony Hearth
+  worldPosition: {x: 750, y: 22, z: 442}
+  aliases: Amy
+  primaryElement: None
+  secondaryElement: 
+  origin: Wind Capital
+  appearanceNotes: Pleasantly dressed non-channeler with absentminded expression
+    and relaxed posture.
+  personalityNotes: Airheaded, easygoing, agreeable, and happy to go with the flow.
+  relationshipSummary: Frequently hangs out with Marie Conflag, Rekr Ap, and Manon.
+  notes: Not a channeler, but part of the same social cluster. Often helps conversation
+    drift in unexpected directions.
+  faction: 1
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Amy Whine.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: amy_whine_greeting.wav

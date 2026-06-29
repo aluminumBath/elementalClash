@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: maribel_tideglass
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: maribel_tideglass
+  displayName: Maribel Tideglass
+  role: 10
+  titleOrRank: Quartermaster
+  region: Neritha Reefwood
+  locationName: Raucous Tide - Quartermaster Stores
+  worldPosition: {x: 262, y: 0, z: 335}
+  aliases: Mari
+  primaryElement: Water
+  secondaryElement: Metal
+  origin: Neritha Reef
+  appearanceNotes: Sharp-eyed quartermaster with shell jewelry, ledger belts, and
+    polished brass keys.
+  personalityNotes: Clever, practical, and delighted by a profitable mess.
+  relationshipSummary: Keeps the Raucous Tide stocked and quietly knows what every
+    crew member owes.
+  notes: Controls the prize ledger and party supplies. She can turn stolen cargo
+    into a feast before sunset.
+  faction: 9
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Maribel Tideglass.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: maribel_tideglass_greeting.wav

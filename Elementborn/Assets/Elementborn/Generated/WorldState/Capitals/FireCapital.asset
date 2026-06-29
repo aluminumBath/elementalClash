@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7435a6608070a6a42810dc862be5682f, type: 3}
+  m_Name: FireCapital
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.CapitalWorldStateDefinition
+  capitalId: 3
+  displayName: Fire Capital
+  rulingFaction: 3
+  controlStatus: 0
+  worldPosition: {x: 520, y: 0, z: -210}
+  summary: The Fire Capital still needs named rulers and broad pressure hooks, but
+    locals like Kelly and visiting fire-channelers like Marie already create plenty
+    of neighborhood drama.
+  startingPressures:
+  - Type: 1
+    Value: 35
+    Notes: Neighborhood flare-ups still occur while leadership remains undefined.
+  - Type: 7
+    Value: 40
+    Notes: Kelly tempers some conflicts, but fire politics still need rulers and
+      factions.
+  npcInfluences: []

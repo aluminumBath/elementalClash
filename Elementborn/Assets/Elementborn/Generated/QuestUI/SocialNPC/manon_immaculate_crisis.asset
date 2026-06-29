@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: manon_immaculate_crisis
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: manon_immaculate_crisis
+  title: Manon's Immaculate Crisis
+  description: Manon needs help restoring order after Rekr and Marie create a domestic
+    disaster.
+  region: Social NPCs
+  giverName: Manon
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: inspect_mess
+    Title: Inspect the mess
+    Description: Work out whether Rekr, Marie, or both caused the current disaster.
+    WorldPosition: {x: 744, y: 21, z: 438}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: clean_hazards
+    Title: Clean the hazards
+    Description: Remove soot, spilled remedy, and suspicious warm stains.
+    WorldPosition: {x: 745, y: 21, z: 438}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: restore_order
+    Title: Restore order
+    Description: Help Manon regain control before she starts organizing everyone
+      alphabetically.
+    WorldPosition: {x: 744, y: 21, z: 438}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: manon_immaculate_crisis_reward
+    DisplayName: Neighborhood Trust
+    ItemId: 
+    Quantity: 0
+    Currency: 20
+    SkillPoints: 0
+    Icon: {fileID: 0}

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: luz_pearlstep
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: luz_pearlstep
+  displayName: Luz Pearlstep
+  role: 10
+  titleOrRank: Ship Musician
+  region: Neritha Reefwood
+  locationName: Raucous Tide - Party Deck
+  worldPosition: {x: 272, y: 0, z: 340}
+  aliases: Pearlstep
+  primaryElement: Water
+  secondaryElement: Light
+  origin: Neritha Reef
+  appearanceNotes: Dancer-musician with pearl buttons, sea-glass bracelets, and a
+    battered concertina.
+  personalityNotes: Joyful, sly, and emotionally perceptive.
+  relationshipSummary: Turns every victory into a lavish shipboard celebration.
+  notes: Knows the songs that make enemies surrender and friends tell secrets.
+  faction: 9
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Luz Pearlstep.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: luz_pearlstep_greeting.wav

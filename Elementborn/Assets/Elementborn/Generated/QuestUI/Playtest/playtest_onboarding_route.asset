@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: playtest_onboarding_route
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: playtest_onboarding_route
+  title: Elementborn Playtest Route
+  description: A first-run playtest quest that walks testers through the core generated
+    systems.
+  region: Playtest
+  giverName: Elementborn Test Harness
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: visit_fire_capital
+    Title: Visit the Fire Capital
+    Description: Go to the volcano citadel and trigger the Fire Capital intro hook.
+    WorldPosition: {x: -70, y: 1, z: -58}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: use_admin_panel
+    Title: Open the wrist admin panel
+    Description: Press F8 and try a dropdown action or cheat code.
+    WorldPosition: {x: 0, y: 1, z: -8}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: visit_orphanage
+    Title: Visit the creature orphanage
+    Description: Teleport or walk to the Crab-Sign Creature Orphanage and admit a
+      demo creature.
+    WorldPosition: {x: -8, y: 1, z: -13}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: test_wolf_pack
+    Title: Test the wolf pack
+    Description: Teleport to Romilus and Madrangea's pack and try respawn/resolve
+      flows.
+    WorldPosition: {x: 22, y: 1, z: -18}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: write_readiness_report
+    Title: Write the readiness report
+    Description: Use the Playtest Harness report button to generate a readiness markdown
+      file.
+    WorldPosition: {x: 0, y: 1, z: 10}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: playtest_onboarding_reward
+    DisplayName: Test Readiness Confidence
+    ItemId: 
+    Quantity: 1
+    Currency: 0
+    SkillPoints: 0
+    Icon: {fileID: 0}

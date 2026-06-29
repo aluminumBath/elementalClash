@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: tomas_brightknife
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: tomas_brightknife
+  displayName: Tomas Brightknife
+  role: 10
+  titleOrRank: Boarding Lead
+  region: Neritha Reefwood
+  locationName: Raucous Tide - Boarding Rails
+  worldPosition: {x: 270, y: 0, z: 346}
+  aliases: Brightknife
+  primaryElement: Water
+  secondaryElement: 
+  origin: Neritha Reef
+  appearanceNotes: Laughing reef pirate with bright sash, curved blade, and scarred
+    knuckles.
+  personalityNotes: Boisterous, loyal, impulsive, and always first over the rail.
+  relationshipSummary: "Ram\xF3n trusts him to make noise when a fight needs chaos."
+  notes: Leads boarding parties and starts half the victory songs.
+  faction: 9
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Tomas Brightknife.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: tomas_brightknife_greeting.wav

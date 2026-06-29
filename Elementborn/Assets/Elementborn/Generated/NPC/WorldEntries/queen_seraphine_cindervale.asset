@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: queen_seraphine_cindervale
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: queen_seraphine_cindervale
+  displayName: Queen Seraphine Cindervale
+  role: 1
+  titleOrRank: Queen of the Fire Capital
+  region: Fire Capital
+  locationName: Caldera Throne
+  worldPosition: {x: 520, y: 0, z: -210}
+  aliases: Seraphine
+  primaryElement: Fire
+  secondaryElement: Lava
+  origin: Fire Capital
+  appearanceNotes: Regal fire-channeler queen in dark basalt regalia with molten-gold
+    trim and a crown shaped like curling flame.
+  personalityNotes: Measured, formidable, maternal, and politically shrewd.
+  relationshipSummary: Married to Prince-Consort Oren Ashmantle; mother of Crown
+    Prince Kaelen and Princess Lyra; niece of Dowager Queen Maelis.
+  notes: Rules from a palace built into the lip of the volcano and tries to keep
+    passion from turning into chaos.
+  faction: 3
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Queen Seraphine Cindervale.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: queen_seraphine_cindervale_greeting.wav

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: crown_prince_kaelen_cindervale_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: Crown Prince Kaelen Cindervale
+  Role: 'Crown Prince in Fire Capital. Role: RoyalFamily.'
+  Personality: Bold, idealistic, eager to prove himself, and impulsively heroic.
+  LocalKnowledge: I am usually found at Ashwing Terrace in Fire Capital. Eldest child
+    and heir of Seraphine and Oren; older brother of Lyra; deeply influenced by his
+    great-aunt Maelis's stories of past eruptions.
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: If you are looking for the future of the Fire Capital, I intend to be
+    worthy of it.
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Fire, with a trace of Air.
+  - Keyword: family
+    Response: Eldest child and heir of Seraphine and Oren; older brother of Lyra;
+      deeply influenced by his great-aunt Maelis's stories of past eruptions.
+  - Keyword: where
+    Response: You can find me at Ashwing Terrace in Fire Capital.
+  - Keyword: capital
+    Response: The Fire Capital is strong because its people endure, learn, and build
+      together.

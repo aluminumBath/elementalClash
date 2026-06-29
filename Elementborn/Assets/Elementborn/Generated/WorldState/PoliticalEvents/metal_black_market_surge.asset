@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cdb2decf6b52d740a21c38386d59dc8, type: 3}
+  m_Name: metal_black_market_surge
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.PoliticalWorldEventDefinition
+  eventId: metal_black_market_surge
+  displayName: Black-Market Surge
+  category: 6
+  primaryCapital: 6
+  worldPosition: {x: 602, y: 0, z: 122}
+  conditions:
+  - Capital: 6
+    PressureType: 3
+    MinimumValue: 70
+    RequireAtOrAbove: 1
+  consequences:
+  - PressureType: 4
+    PressureDelta: 8
+    StabilityDelta: -3
+    LegitimacyDelta: -2
+    Reason: The market floods with forbidden metalwork.
+  questToStart: {fileID: 0}
+  sound: 3
+  cooldownDays: 2
+  autoActivateWhenEligible: 0
+  createMapMarker: 1
+  playerFacingSummary: Black-market activity in the Metal Capital intensifies.
+  hiddenDirectorNotes: Can expose Bubba's prototype, Larissa's secret, or a thieves
+    guild debt chain.

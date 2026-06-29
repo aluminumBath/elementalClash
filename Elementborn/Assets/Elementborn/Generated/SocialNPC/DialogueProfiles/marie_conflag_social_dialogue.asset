@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec543fc355662df44993874d116b8e2d, type: 3}
+  m_Name: marie_conflag_social_dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialNpcDialogueProfileDefinition
+  npcId: marie_conflag
+  displayName: Marie Conflag
+  npc: {fileID: 11400000, guid: 05b2170adfc66774280f54c1f16271ab, type: 2}
+  summary: Frequently falls asleep and accidentally lights things on fire, creating
+    comic but dangerous scenes.
+  cues:
+  - CueId: greeting
+    TriggerKeyword: 
+    Line: Is that smoke from me? How flattering.
+    JournalNote: Marie is vain, sleepy, and dangerously casual with fire.
+    QuestToStart: {fileID: 0}
+    Importance: 0
+  - CueId: fire
+    TriggerKeyword: fire
+    Line: Oh relax, darling. It was barely a blaze.
+    JournalNote: Marie often needs help putting out accidental fires.
+    QuestToStart: {fileID: 11400000, guid: 0b31642def33b534f9185170911c4f1f, type: 2}
+    Importance: 2
+  - CueId: flirt
+    TriggerKeyword: flirt
+    Line: Send in someone handsome with a bucket.
+    JournalNote: Marie flirts through crisis.
+    QuestToStart: {fileID: 0}
+    Importance: 0

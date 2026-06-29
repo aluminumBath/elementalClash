@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: the_chaotic_aerie
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: the_chaotic_aerie
+  title: The Chaotic Aerie
+  description: High Priest Redbeard and Priestess Lizkota rule a recently usurped
+    Wind Capital, while infant Ruth's steam channeling is being treated as a divine
+    omen.
+  region: Wind Capital
+  giverName: High Priest Redbeard
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: enter_cathedral
+    Title: Enter the High Aerie Cathedral
+    Description: Witness the fervor surrounding Redbeard's new rule.
+    WorldPosition: {x: 720, y: 25, z: 420}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: hear_lizkota
+    Title: Hear Lizkota's quiet orders
+    Description: Lizkota may be the strategist behind the new theocracy.
+    WorldPosition: {x: 724, y: 25, z: 424}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: learn_about_ruth
+    Title: Learn why Ruth matters
+    Description: The infant's steam channeling is fueling the capital's religious
+      chaos.
+    WorldPosition: {x: 726, y: 25, z: 426}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: the_chaotic_aerie_reward
+    DisplayName: Wind Capital Insight
+    ItemId: 
+    Quantity: 0
+    Currency: 40
+    SkillPoints: 0
+    Icon: {fileID: 0}

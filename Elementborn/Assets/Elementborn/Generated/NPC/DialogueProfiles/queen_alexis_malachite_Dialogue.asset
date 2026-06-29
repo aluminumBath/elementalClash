@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: queen_alexis_malachite_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: Queen Alexis Malachite
+  Role: 'Queen of the Earth Capital in Earth Capital. Role: RoyalFamily.'
+  Personality: Kind, intelligent, and respected as a wise leader.
+  LocalKnowledge: I am usually found at Royal Palace in Earth Capital. Married to
+    Chrief Gover; mother of Tatiana Tibidi.
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: Welcome to the earth capital. Strength means very little without wisdom
+    and kindness.
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Earth.
+  - Keyword: family
+    Response: Married to Chrief Gover; mother of Tatiana Tibidi.
+  - Keyword: where
+    Response: You can find me at Royal Palace in Earth Capital.
+  - Keyword: capital
+    Response: The Earth Capital is strong because its people endure, learn, and build
+      together.

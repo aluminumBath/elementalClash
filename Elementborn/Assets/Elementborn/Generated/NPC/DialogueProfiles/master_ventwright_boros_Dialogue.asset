@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: master_ventwright_boros_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: Master Ventwright Boros
+  Role: 'Volcano Engineer in Fire Capital. Role: QuestGiver.'
+  Personality: Gruff, brilliant, sleep-deprived, and secretly sentimental.
+  LocalKnowledge: I am usually found at Emergency Ventworks in Fire Capital. Reports
+    to Queen Seraphine during volcanic emergencies and trades techniques with Metal
+    Capital engineers.
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: Greetings. I am Master Ventwright Boros.
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Steam, with a trace of Metal.
+  - Keyword: family
+    Response: Reports to Queen Seraphine during volcanic emergencies and trades techniques
+      with Metal Capital engineers.
+  - Keyword: where
+    Response: You can find me at Emergency Ventworks in Fire Capital.
+  - Keyword: capital
+    Response: The Fire Capital is strong because its people endure, learn, and build
+      together.

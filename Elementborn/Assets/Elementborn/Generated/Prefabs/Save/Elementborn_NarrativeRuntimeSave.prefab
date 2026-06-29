@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1218906954785722774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2203226930645705164}
+  - component: {fileID: 2590855722466240836}
+  - component: {fileID: 8974587667616744947}
+  - component: {fileID: 3069837818878600293}
+  - component: {fileID: 6151747610883844318}
+  - component: {fileID: 3386135925007975320}
+  - component: {fileID: 4978116511872058099}
+  m_Layer: 0
+  m_Name: Elementborn_NarrativeRuntimeSave
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2203226930645705164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218906954785722774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2590855722466240836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218906954785722774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716b61cd2d9eea74497b5c16d599ea3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NarrativeRuntimeSaveBridge
+  currentSlot: 0
+  capitalWorldState: {fileID: 0}
+  politicalWorldEvents: {fileID: 0}
+  questChains: {fileID: 0}
+  creatureOrphanageRecovery: {fileID: 0}
+  autoLoadOnStart: 0
+  autoSaveOnApplicationPause: 1
+  autoSaveOnApplicationQuit: 1
+--- !u!114 &8974587667616744947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218906954785722774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f6908eeb779da4888af0afa90d6af1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.CapitalWorldStateSaveBridge
+  currentSlot: 0
+  autoLoadOnStart: 0
+  autoSaveOnApplicationPause: 1
+  autoSaveOnApplicationQuit: 1
+  registerJournalAndMapAfterLoad: 1
+--- !u!114 &3069837818878600293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218906954785722774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f96205e325def734aa9b4eeb2a62b4c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.PoliticalWorldEventDirectorSaveBridge
+  currentSlot: 0
+  autoLoadOnStart: 0
+  autoSaveOnApplicationPause: 1
+  autoSaveOnApplicationQuit: 1
+  evaluateAfterLoad: 1
+--- !u!114 &6151747610883844318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218906954785722774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 737acd0ad139817479d2b06c8359b189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestChainSaveBridge
+  currentSlot: 0
+  autoLoadOnStart: 0
+  autoSaveOnApplicationPause: 1
+  autoSaveOnApplicationQuit: 1
+--- !u!114 &3386135925007975320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218906954785722774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d6491b3fb20414bb7ba9a02dc80c48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.CreatureOrphanageRecoverySaveBridge
+  currentSlot: 0
+  autoLoadOnStart: 0
+  autoSaveOnApplicationPause: 1
+  autoSaveOnApplicationQuit: 1
+--- !u!114 &4978116511872058099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218906954785722774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae258acb1103b8349b4ee111aca07a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NarrativeRuntimeSaveAdminCommandBridge
+  saveBridge: {fileID: 0}

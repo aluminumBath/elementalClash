@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: king_randy
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: king_randy
+  displayName: King Randy
+  role: 1
+  titleOrRank: King of the Metal Capital
+  region: Metal Capital
+  locationName: Chrome Court
+  worldPosition: {x: 613, y: 0, z: 132}
+  aliases: Randy
+  primaryElement: Metal
+  secondaryElement: 
+  origin: Metal Capital
+  appearanceNotes: Metal-channeler king with an easy grin, heavy rings, and a casual
+    royal coat.
+  personalityNotes: Laid-back, clever, permissive, and fond of letting problems solve
+    themselves.
+  relationshipSummary: Married to Queen Rhonda; father of Prince William aka Bubba.
+  notes: Known for a laissez-faire attitude toward the city's black market and thieves
+    guild.
+  faction: 12
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am King Randy.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: king_randy_greeting.wav

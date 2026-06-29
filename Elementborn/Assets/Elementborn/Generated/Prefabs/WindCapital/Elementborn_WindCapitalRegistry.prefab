@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7304176972503990193
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3844613493075341400}
+  - component: {fileID: 4146187545381231277}
+  - component: {fileID: 422775397225869352}
+  - component: {fileID: 3725314960547316561}
+  - component: {fileID: 8761477057965233820}
+  - component: {fileID: 7424139895937537500}
+  m_Layer: 0
+  m_Name: Elementborn_WindCapitalRegistry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3844613493075341400
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304176972503990193}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4146187545381231277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304176972503990193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e20d8dab860d4ce41bdd2649b080ec17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.WindCapitalRegistry
+  hooks:
+  - {fileID: 11400000, guid: 983ddb01194d7da45b9c7de5cf9ef015, type: 2}
+  - {fileID: 11400000, guid: 9445a270cbf957d439d9b428af19fee0, type: 2}
+  - {fileID: 11400000, guid: b452298764b9b7048bdf1e7331c63201, type: 2}
+  - {fileID: 11400000, guid: 4715d9029c171054fae96345fa45c537, type: 2}
+  registerJournalEntriesOnStart: 1
+  registerMapMarkersOnStart: 1
+--- !u!114 &422775397225869352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304176972503990193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96d7b5bc05efb54e81d6e2bbfaf055a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ReligiousFervorTracker
+  fervor: 65
+  state: 3
+--- !u!114 &3725314960547316561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304176972503990193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87e4699e623ccd043bbccf8b7f2103b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.WindCapitalSecretTracker
+  discoveredHooks: []
+  sarahPastKnown: 0
+  oldLeadersTruthKnown: 0
+  ruthSteamOmenKnown: 0
+--- !u!114 &8761477057965233820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304176972503990193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8937b73ca77b3344998c6b9a26d4a004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.WindCapitalAdminCommandBridge
+--- !u!114 &7424139895937537500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304176972503990193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d29f03f455ba964fa650bec60659074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SarahPastQuestBridge
+  sarah: {fileID: 11400000, guid: 684297d2bd963c941a4d034abc319f3b, type: 2}
+  ramon: {fileID: 11400000, guid: a8839b54cd9390746b0a1b65a2f4ccfa, type: 2}
+  quest: {fileID: 11400000, guid: 060d1c2da6013e743a5757949ad0d271, type: 2}
+  prompt: Ask about Sarah's past

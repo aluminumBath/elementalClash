@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: romilus
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: romilus
+  displayName: Romilus
+  role: 2
+  titleOrRank: Wolf Pack Alpha
+  region: Neutral Wilds
+  locationName: Wolf Patrol Grounds
+  worldPosition: {x: -260, y: 0, z: 310}
+  aliases: Romilus
+  primaryElement: None
+  secondaryElement: 
+  origin: Wild Patrol Grounds
+  appearanceNotes: Large wolf-like alpha creature with battle-scarred hide and commanding
+    posture.
+  personalityNotes: Cunning, relentless, territorial, and pack-focused.
+  relationshipSummary: Mate of Madrangea and co-leader of the villain wolf pack.
+  notes: The pack respawns unless Romilus and Madrangea are both defeated within
+    five minutes.
+  faction: 7
+  defaultVoiceSound: 26
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Romilus.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: romilus_greeting.wav

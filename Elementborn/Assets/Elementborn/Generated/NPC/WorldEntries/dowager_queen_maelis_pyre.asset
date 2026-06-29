@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: dowager_queen_maelis_pyre
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: dowager_queen_maelis_pyre
+  displayName: Dowager Queen Maelis Pyre
+  role: 1
+  titleOrRank: Dowager Queen
+  region: Fire Capital
+  locationName: Old Hearth Library
+  worldPosition: {x: 510, y: 0, z: -208}
+  aliases: Maelis
+  primaryElement: Fire
+  secondaryElement: 
+  origin: Fire Capital
+  appearanceNotes: Older matriarch with silver-streaked hair, volcanic-glass cane,
+    and black-and-crimson robes set with old royal medals.
+  personalityNotes: Sharp-tongued, deeply loyal, theatrical, and unexpectedly warm
+    with younger family members.
+  relationshipSummary: Aunt and mentor to Queen Seraphine; grand-aunt to Kaelen and
+    Lyra; keeps Oren honest and trains the family to respect the city's history.
+  notes: Serves as keeper of memory, court historian, and the emotional anchor of
+    the fire royal household.
+  faction: 3
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Dowager Queen Maelis Pyre.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: dowager_queen_maelis_pyre_greeting.wav

@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: sarah_wind_silence
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: sarah_wind_silence
+  title: The Wind Sarah Won't Name
+  description: "Sarah refuses to speak of the Wind Capital. Ram\xF3n knows the truth,
+    and the new theocracy may be the reason she fled."
+  region: Wind Capital
+  giverName: First Mate Sarah
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: ask_ramon
+    Title: "Ask Ram\xF3n what he knows"
+    Description: "Ram\xF3n knows what happened to Sarah, but he may not betray her
+      trust easily."
+    WorldPosition: {x: 265, y: 0, z: 338}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: speak_to_sarah
+    Title: Speak with Sarah after the deck quiets
+    Description: Sarah may only answer if the player has earned her trust.
+    WorldPosition: {x: 268, y: 0, z: 342}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: follow_the_wind_rumor
+    Title: Follow the rumor to the Wind Capital
+    Description: A pilgrim recognizes Sarah's old wind-reading technique.
+    WorldPosition: {x: 715, y: 22, z: 410}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: sarah_wind_silence_reward
+    DisplayName: Wind Capital Insight
+    ItemId: 
+    Quantity: 0
+    Currency: 40
+    SkillPoints: 0
+    Icon: {fileID: 0}

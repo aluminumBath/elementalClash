@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58161b537e4f16c438df7efa7d534c4f, type: 3}
+  m_Name: velvet_pin
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.MetalCapitalContactDefinition
+  contactId: velvet_pin
+  displayName: The Velvet Pin
+  contactType: 3
+  district: 3
+  worldPosition: {x: 594, y: 0, z: 110}
+  npc: {fileID: 0}
+  description: A masked guild handler who speaks in party invitations and debt ledgers.
+  secret: The Velvet Pin knows the guild is testing whether Bubba can be manipulated.
+  listings:
+  - ListingId: guild_favor
+    DisplayName: Guild Favor
+    ItemId: guild_favor
+    Quantity: 1
+    Price: 200
+    RiskLevel: 3
+    Rumor: A favor buys silence, not loyalty.
+    Consequence: Debt to the guild may come due later.

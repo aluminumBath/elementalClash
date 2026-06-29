@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: infant_ruth
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: infant_ruth
+  displayName: Ruth
+  role: 1
+  titleOrRank: Infant Heir
+  region: Wind Capital
+  locationName: High Aerie Nursery
+  worldPosition: {x: 726, y: 25, z: 426}
+  aliases: Ruth
+  primaryElement: Steam
+  secondaryElement: Air
+  origin: Wind Capital
+  appearanceNotes: Infant wrapped in soft white-and-gold swaddling cloths; faint
+    warm mist gathers around her when she cries.
+  personalityNotes: Too young to judge, but already treated as a living omen by the
+    faithful.
+  relationshipSummary: Daughter of Redbeard and Lizkota. Her steam channeling is
+    being interpreted as a divine sign.
+  notes: An infant steam channeler whose existence fuels the capital's religious
+    fervor and political instability.
+  faction: 13
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Ruth.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: infant_ruth_greeting.wav

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c5bf1f13e7eff42922103bdb33b17b, type: 3}
+  m_Name: redbeard_usurpation
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.WindCapitalIntrigueHookDefinition
+  hookId: redbeard_usurpation
+  title: Redbeard's Usurpation
+  hookType: 2
+  district: 1
+  primaryNpc: {fileID: 11400000, guid: 7981d4ff7a86c3f4cb826f614ee22f53, type: 2}
+  secondaryNpc: {fileID: 11400000, guid: a8647ff0acfed334aaabbe148a4eb81c, type: 2}
+  quest: {fileID: 11400000, guid: 5bd2c0f212363a4499727a10564f5b44, type: 2}
+  worldPosition: {x: 720, y: 25, z: 420}
+  summary: Redbeard's sermons hold the capital together and tear it apart at the
+    same time.
+  secretTruth: The theocracy's rise was not bloodless. Several old leaders vanished
+    into exile, prison, or hidden sanctuary.
+  rumors:
+  - RumorId: rumor_redbeard_sermon
+    DisplayText: The faithful chant Redbeard's name until the skybridges hum.
+    HookType: 2
+    PubliclyKnown: 1
+    HiddenTruth: The chants may be amplified by controlled air-channeling.
+  fervorDelta: 10
+  createsMapMarker: 1

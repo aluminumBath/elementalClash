@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: captain_vaela_furnaceguard
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: captain_vaela_furnaceguard
+  displayName: Captain Vaela Furnaceguard
+  role: 3
+  titleOrRank: Captain of the Furnace Guard
+  region: Fire Capital
+  locationName: Furnace Guard Barracks
+  worldPosition: {x: 532, y: 0, z: -212}
+  aliases: Vaela
+  primaryElement: Fire
+  secondaryElement: Earth
+  origin: Fire Capital
+  appearanceNotes: Scarred captain with basalt-scale armor and a disciplined military
+    bearing.
+  personalityNotes: Blunt, protective, practical, and suspicious of theatrical heroics.
+  relationshipSummary: Serves Prince-Consort Oren and trains Crown Prince Kaelen.
+  notes: Anchors the Furnace Guard Trial and city defense drills.
+  faction: 3
+  defaultVoiceSound: 27
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Captain Vaela Furnaceguard.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: captain_vaela_furnaceguard_greeting.wav

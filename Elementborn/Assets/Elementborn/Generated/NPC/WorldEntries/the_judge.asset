@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: the_judge
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: the_judge
+  displayName: The Judge
+  role: 2
+  titleOrRank: Neon Pink Dragon Judge
+  region: Steam Territory
+  locationName: Steam-Bright Perch
+  worldPosition: {x: 490, y: 20, z: 260}
+  aliases: Judge
+  primaryElement: Steam
+  secondaryElement: 
+  origin: Unknown
+  appearanceNotes: Neon pink dragon with glowing steam vents and lightning-like vocal
+    cracks.
+  personalityNotes: Harsh, territorial, protective, judgmental, and imposing.
+  relationshipSummary: Protects her area ruthlessly and considers trespass a crime.
+  notes: Steam channeler. Her voice cracks like thunder.
+  faction: 7
+  defaultVoiceSound: 26
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am The Judge.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: the_judge_greeting.wav

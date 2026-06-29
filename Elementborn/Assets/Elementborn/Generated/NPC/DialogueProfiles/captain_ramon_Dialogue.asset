@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: captain_ramon_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: "Captain Ram\xF3n"
+  Role: 'Pirate Captain in Neritha Reefwood. Role: Pirate.'
+  Personality: Intelligent, mischievous, charismatic, and always watching for an
+    angle.
+  LocalKnowledge: "I am usually found at Raucous Tide - Captain's Quarters in Neritha
+    Reefwood. Captain and confidant of First Mate Sarah. Only Ram\xF3n knows what
+    happened in Sarah's past."
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: "Greetings. I am Captain Ram\xF3n."
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Water.
+  - Keyword: family
+    Response: "Captain and confidant of First Mate Sarah. Only Ram\xF3n knows what
+      happened in Sarah's past."
+  - Keyword: where
+    Response: You can find me at Raucous Tide - Captain's Quarters in Neritha Reefwood.
+  - Keyword: capital
+    Response: The Neritha Reefwood is strong because its people endure, learn, and
+      build together.

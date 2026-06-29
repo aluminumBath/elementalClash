@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58161b537e4f16c438df7efa7d534c4f, type: 3}
+  m_Name: mira_coinveil
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.MetalCapitalContactDefinition
+  contactId: mira_coinveil
+  displayName: Mira Coinveil
+  contactType: 1
+  district: 2
+  worldPosition: {x: 602, y: 0, z: 122}
+  npc: {fileID: 0}
+  description: A cheerful vendor who sells tools, rumors, and things that definitely
+    fell off a wagon.
+  secret: Mira quietly passes names to the thieves guild when buyers ask for forbidden
+    metalwork.
+  listings:
+  - ListingId: mirrored_lockpick
+    DisplayName: Mirrored Lockpick Set
+    ItemId: metal_lockpick_set
+    Quantity: 1
+    Price: 85
+    RiskLevel: 1
+    Rumor: Said to open court workshop cabinets.
+    Consequence: Buying it may attract guild attention.
+  - ListingId: black_gear_charm
+    DisplayName: Black Gear Charm
+    ItemId: black_gear_charm
+    Quantity: 1
+    Price: 120
+    RiskLevel: 2
+    Rumor: A charm used by guild messengers.
+    Consequence: Wearing it may invite a test from thieves.

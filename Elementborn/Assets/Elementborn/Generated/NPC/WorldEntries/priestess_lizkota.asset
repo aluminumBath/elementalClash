@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: priestess_lizkota
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: priestess_lizkota
+  displayName: Priestess Lizkota
+  role: 1
+  titleOrRank: Right-Hand Priestess
+  region: Wind Capital
+  locationName: High Aerie Cathedral
+  worldPosition: {x: 724, y: 25, z: 424}
+  aliases: Lizkota
+  primaryElement: Air
+  secondaryElement: 
+  origin: Wind Capital
+  appearanceNotes: Severe and elegant air-channeler priestess with silver-blue vestments
+    and prayer ribbons.
+  personalityNotes: Intelligent, disciplined, politically sharp, and intensely protective
+    of her family.
+  relationshipSummary: Wife and right hand of High Priest Redbeard; mother of infant
+    Ruth.
+  notes: The public sees her as the calm voice beside Redbeard, but she is often
+    the sharper strategist behind the theocracy.
+  faction: 13
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Priestess Lizkota.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: priestess_lizkota_greeting.wav

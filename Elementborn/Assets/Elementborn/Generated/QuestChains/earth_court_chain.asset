@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b1ee458d91e0f448a85b39b023eedf, type: 3}
+  m_Name: earth_court_chain
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestChainDefinition
+  chainId: earth_court_chain
+  displayName: The Malachite Court
+  primaryCapital: 2
+  primaryNpc: {fileID: 0}
+  autoStartOnEvent: 0
+  summary: A stabilizing court chain for Queen Alexis, Chrief Gover, and Tibidi.
+  stages:
+  - StageId: audience
+    Title: Audience with the Malachite Court
+    Summary: Meet the kind and intelligent leaders of the Earth Capital.
+    Quest: {fileID: 0}
+    TriggeredByPoliticalEvent: {fileID: 11400000, guid: a8d8197ed0b5e9c4286dbfc423731a96, type: 2}
+    AutoStartQuest: 1
+    AutoCompleteWhenQuestCompletes: 0
+    DefaultNextStageId: 
+    OnStartConsequences: []
+    OnCompleteConsequences: []
+    Choices:
+    - ChoiceId: support_tibidi
+      DisplayText: Encourage Tibidi's plant channeling
+      ChoiceType: 6
+      NextStageId: 
+      PlayerFacingResult: The court becomes more open to mixed element inheritance.
+      HiddenDirectorNotes: The player supports Tibidi.
+      Consequences:
+      - ConsequenceType: 1
+        Capital: 2
+        PressureType: 7
+        Amount: -6
+        QuestToStart: {fileID: 0}
+        PoliticalEvent: {fileID: 0}
+        WindSecret: {fileID: 0}
+        MetalSecretNpc: {fileID: 0}
+        ShipId: 
+        JournalId: 
+        JournalTitle: 
+        Notes: The player supports Tibidi.

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: madrangea
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: madrangea
+  displayName: Madrangea
+  role: 2
+  titleOrRank: Wolf Pack Matriarch
+  region: Neutral Wilds
+  locationName: Wolf Patrol Grounds
+  worldPosition: {x: -264, y: 0, z: 314}
+  aliases: Madrangea
+  primaryElement: None
+  secondaryElement: 
+  origin: Wild Patrol Grounds
+  appearanceNotes: Lean wolf-like matriarch with pale markings and cold intelligent
+    eyes.
+  personalityNotes: Strategic, protective of the pack, patient, and dangerous.
+  relationshipSummary: Mate of Romilus and co-leader of the villain wolf pack.
+  notes: The pack respawns unless both leaders are defeated within five minutes.
+  faction: 7
+  defaultVoiceSound: 26
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Madrangea.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: madrangea_greeting.wav

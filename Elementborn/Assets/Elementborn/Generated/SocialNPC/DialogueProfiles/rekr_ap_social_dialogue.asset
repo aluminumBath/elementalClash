@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec543fc355662df44993874d116b8e2d, type: 3}
+  m_Name: rekr_ap_social_dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialNpcDialogueProfileDefinition
+  npcId: rekr_ap
+  displayName: Rekr Ap
+  npc: {fileID: 11400000, guid: c487bdd48809e874bbd677b19aa75e21, type: 2}
+  summary: Lives in the air capital despite being a lava channeler. He is often ill
+    and leaves disorder in his wake.
+  cues:
+  - CueId: greeting
+    TriggerKeyword: 
+    Line: If the room smells like hot pennies and bad soup, that is probably me.
+    JournalNote: Rekr is sickly and embarrassed, but not entirely helpless.
+    QuestToStart: {fileID: 0}
+    Importance: 0
+  - CueId: remedy
+    TriggerKeyword: remedy
+    Line: Tell Manon I took it. Actually, wait. Tell her I almost took it.
+    JournalNote: Rekr needs a remedy and a little dignity.
+    QuestToStart: {fileID: 11400000, guid: 1d9663606a18c0e47b7b37ccde05bc75, type: 2}
+    Importance: 2
+  - CueId: manon
+    TriggerKeyword: manon
+    Line: She is annoyed because she loves me. Probably. Mostly.
+    JournalNote: Rekr knows Manon is frustrated but still devoted.
+    QuestToStart: {fileID: 0}
+    Importance: 1

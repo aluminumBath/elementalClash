@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: chrief_gover
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: chrief_gover
+  displayName: Chrief Gover
+  role: 1
+  titleOrRank: Chief Consort
+  region: Earth Capital
+  locationName: Royal Palace
+  worldPosition: {x: 40, y: 0, z: 22}
+  aliases: 
+  primaryElement: Water
+  secondaryElement: Plant
+  origin: Neritha Reefwood
+  appearanceNotes: Hispanic-looking male; regal but approachable presence; attire
+    blending reef-born details with earth-capital court fashion.
+  personalityNotes: Kind, intelligent, and steady under pressure.
+  relationshipSummary: Married to Queen Alexis Malachite; father of Tatiana Tibidi.
+  notes: Water element with a minuscule plant element. Hails from Neritha Reefwood
+    and now helps lead the earth capital.
+  faction: 4
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Chrief Gover.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: chrief_gover_greeting.wav

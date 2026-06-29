@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: rekr_ap
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: rekr_ap
+  displayName: Rekr Ap
+  role: 8
+  titleOrRank: Sickly Lava Channeler
+  region: Wind Capital
+  locationName: Lower Aerie Apartment
+  worldPosition: {x: 742, y: 21, z: 436}
+  aliases: Rekr
+  primaryElement: Lava
+  secondaryElement: 
+  origin: Wind Capital
+  appearanceNotes: Sickly, unkempt lava channeler with soot-stained clothes, tired
+    eyes, and a generally grimy presence.
+  personalityNotes: Weary, slightly gross, stubborn, and strangely sociable in short
+    bursts.
+  relationshipSummary: Married to Manon. Regularly spends time with Manon, Marie
+    Conflag, and Amy Whine.
+  notes: Lives in the air capital despite being a lava channeler. He is often ill
+    and leaves disorder in his wake.
+  faction: 3
+  defaultVoiceSound: 24
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Rekr Ap.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: rekr_ap_greeting.wav

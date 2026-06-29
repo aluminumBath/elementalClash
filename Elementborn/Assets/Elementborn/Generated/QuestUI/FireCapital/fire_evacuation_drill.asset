@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: fire_evacuation_drill
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: fire_evacuation_drill
+  title: The Caldera Evacuation Drill
+  description: Master Ventwright Boros and Nix Ashrunner need help testing evacuation
+    routes before the volcano surges.
+  region: Fire Capital
+  giverName: Master Ventwright Boros
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: meet_boros
+    Title: Meet Boros at the ventworks
+    Description: Find the volcano engineer near the emergency valves.
+    WorldPosition: {x: 508, y: 0, z: -224}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: warn_market
+    Title: Warn the Lava Market
+    Description: Tell Talia Embermarket to prepare supplies.
+    WorldPosition: {x: 518, y: 0, z: -226}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: run_route
+    Title: Run the outer evacuation route
+    Description: Follow Nix Ashrunner's route out of the danger zone.
+    WorldPosition: {x: 500, y: 0, z: -236}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: fire_evacuation_drill_reward
+    DisplayName: Fire Capital trust
+    ItemId: 
+    Quantity: 1
+    Currency: 30
+    SkillPoints: 1
+    Icon: {fileID: 0}

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: prince_consort_oren_ashmantle
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: prince_consort_oren_ashmantle
+  displayName: Prince-Consort Oren Ashmantle
+  role: 1
+  titleOrRank: Prince-Consort and Master of the Furnace Guard
+  region: Fire Capital
+  locationName: Ember Hall
+  worldPosition: {x: 524, y: 0, z: -214}
+  aliases: Oren
+  primaryElement: Fire
+  secondaryElement: Metal
+  origin: Fire Capital
+  appearanceNotes: Broad-shouldered royal strategist with ember-red cloak, forge-bright
+    pauldrons, and a voice like banked coals.
+  personalityNotes: Protective, disciplined, patient, and quietly affectionate.
+  relationshipSummary: Husband to Queen Seraphine; father of Kaelen and Lyra; trusted
+    by the Furnace Guard and respected by Maelis.
+  notes: Coordinates the capital's defenses, evacuation drills, and the guard that
+    protects the palace approaches.
+  faction: 3
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Prince-Consort Oren Ashmantle.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: prince_consort_oren_ashmantle_greeting.wav

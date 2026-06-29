@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: kelly_moodflame_watch
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: kelly_moodflame_watch
+  title: Kelly's Moodflame Watch
+  description: Kelly's flame-colored hair reveals her mood while she protects friends
+    and neighbors.
+  region: Social NPCs
+  giverName: Kelly
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: read_mood
+    Title: Read Kelly's moodflame
+    Description: Learn how Kelly's hair color reveals what is really happening.
+    WorldPosition: {x: 526, y: 0, z: -198}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: help_neighbor
+    Title: Help a neighbor
+    Description: Join Kelly as she protects someone nearby.
+    WorldPosition: {x: 528, y: 0, z: -198}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: mischief_or_mercy
+    Title: Choose mischief or mercy
+    Description: Decide how Kelly should handle the troublemaker.
+    WorldPosition: {x: 526, y: 0, z: -198}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: kelly_moodflame_watch_reward
+    DisplayName: Neighborhood Trust
+    ItemId: 
+    Quantity: 0
+    Currency: 20
+    SkillPoints: 0
+    Icon: {fileID: 0}

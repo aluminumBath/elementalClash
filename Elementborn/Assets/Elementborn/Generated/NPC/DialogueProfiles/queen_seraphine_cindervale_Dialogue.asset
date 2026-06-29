@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b05ffcfd727c2c4794f71eaa4954ab5, type: 3}
+  m_Name: queen_seraphine_cindervale_Dialogue
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcConversationProfile
+  NpcName: Queen Seraphine Cindervale
+  Role: 'Queen of the Fire Capital in Fire Capital. Role: RoyalFamily.'
+  Personality: Measured, formidable, maternal, and politically shrewd.
+  LocalKnowledge: I am usually found at Caldera Throne in Fire Capital. Married to
+    Prince-Consort Oren Ashmantle; mother of Crown Prince Kaelen and Princess Lyra;
+    niece of Dowager Queen Maelis.
+  Boundaries: Do not reveal hidden plot secrets unless the player has earned them
+    through quests.
+  Greeting: Welcome to the Fire Capital. A calm heart governs flame better than rage
+    ever could.
+  UnknownResponse: That is not something I can speak on yet, but the city has many
+    stories for those who listen.
+  KeywordResponses:
+  - Keyword: element
+    Response: My element is Fire, with a trace of Lava.
+  - Keyword: family
+    Response: Married to Prince-Consort Oren Ashmantle; mother of Crown Prince Kaelen
+      and Princess Lyra; niece of Dowager Queen Maelis.
+  - Keyword: where
+    Response: You can find me at Caldera Throne in Fire Capital.
+  - Keyword: capital
+    Response: The Fire Capital is strong because its people endure, learn, and build
+      together.

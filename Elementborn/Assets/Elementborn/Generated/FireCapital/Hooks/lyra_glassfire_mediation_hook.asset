@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e44ff4632a91940a245ab40385ca82, type: 3}
+  m_Name: lyra_glassfire_mediation_hook
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.FireCapitalCourtHookDefinition
+  hookId: lyra_glassfire_mediation_hook
+  title: Lyra's Glassfire Mediation
+  hookType: 4
+  district: 4
+  primaryNpc: {fileID: 11400000, guid: fe6b1ce651610b54daa5c39ce43fc8a3, type: 2}
+  questToStart: {fileID: 11400000, guid: 9aaf850f6094c63489911e4345f14027, type: 2}
+  worldPosition: {x: 514, y: 0, z: -216}
+  pressureType: 1
+  pressureDeltaOnStart: -2
+  stabilityDeltaOnResolve: 5
+  playerFacingSummary: Lyra turns a court dispute into a chance for the player to
+    build trust.
+  hiddenDirectorNotes: A non-combat social quest that connects palace, shrine, and
+    market.

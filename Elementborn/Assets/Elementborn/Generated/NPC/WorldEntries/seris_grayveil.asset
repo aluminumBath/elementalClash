@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: seris_grayveil
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: seris_grayveil
+  displayName: Seris Grayveil
+  role: 2
+  titleOrRank: Spy Master
+  region: Neutral Central City
+  locationName: Old Aqueducts
+  worldPosition: {x: 24, y: 0, z: -18}
+  aliases: 
+  primaryElement: Water
+  secondaryElement: Shadow
+  origin: Canal Warrens
+  appearanceNotes: Subtle attire and a watchful gaze.
+  personalityNotes: Calculating and patient.
+  relationshipSummary: Broker of secrets.
+  notes: Placeholder villain NPC entry.
+  faction: 7
+  defaultVoiceSound: 26
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Seris Grayveil.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: seris_grayveil_greeting.wav

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: prince_william_bubba
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: prince_william_bubba
+  displayName: Prince William
+  role: 1
+  titleOrRank: Prince of the Metal Capital
+  region: Metal Capital
+  locationName: Chrome Court Workshops
+  worldPosition: {x: 618, y: 0, z: 136}
+  aliases: Bubba
+  primaryElement: Metal
+  secondaryElement: 
+  origin: Metal Capital
+  appearanceNotes: Young prince with workshop stains on noble clothing and heavy
+    metal bangles.
+  personalityNotes: Friendly, energetic, and more practical than formal.
+  relationshipSummary: Son of Queen Rhonda and King Randy.
+  notes: Known as Bubba. He grew up around the black market, the thieves guild, and
+    the court workshops.
+  faction: 12
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Prince William.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: prince_william_bubba_greeting.wav

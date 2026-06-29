@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b1ee458d91e0f448a85b39b023eedf, type: 3}
+  m_Name: raucous_tide_chain
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestChainDefinition
+  chainId: raucous_tide_chain
+  displayName: Raucous Tide Revels
+  primaryCapital: 7
+  primaryNpc: {fileID: 0}
+  autoStartOnEvent: 0
+  summary: "A quest chain for Ram\xF3n, Sarah, the crew, and their lavish post-raid
+    celebrations."
+  stages:
+  - StageId: afterparty
+    Title: The Afterparty
+    Summary: Join the Raucous Tide's celebration and listen for secrets.
+    Quest: {fileID: 0}
+    TriggeredByPoliticalEvent: {fileID: 11400000, guid: db600a9a1bb357f4da5cdaaec66b9c05, type: 2}
+    AutoStartQuest: 1
+    AutoCompleteWhenQuestCompletes: 0
+    DefaultNextStageId: morning_after
+    OnStartConsequences: []
+    OnCompleteConsequences: []
+    Choices: []
+  - StageId: morning_after
+    Title: The Morning After
+    Summary: Sort out consequences after the party turns into a political problem.
+    Quest: {fileID: 0}
+    TriggeredByPoliticalEvent: {fileID: 0}
+    AutoStartQuest: 1
+    AutoCompleteWhenQuestCompletes: 0
+    DefaultNextStageId: 
+    OnStartConsequences: []
+    OnCompleteConsequences: []
+    Choices:
+    - ChoiceId: cover_for_crew
+      DisplayText: Cover for the crew
+      ChoiceType: 7
+      NextStageId: 
+      PlayerFacingResult: "Pirate activity rises, but Ram\xF3n owes the player."
+      HiddenDirectorNotes: The player covers for the Raucous Tide.
+      Consequences:
+      - ConsequenceType: 1
+        Capital: 7
+        PressureType: 9
+        Amount: 8
+        QuestToStart: {fileID: 0}
+        PoliticalEvent: {fileID: 0}
+        WindSecret: {fileID: 0}
+        MetalSecretNpc: {fileID: 0}
+        ShipId: 
+        JournalId: 
+        JournalTitle: 
+        Notes: The player covers for the Raucous Tide.
+    - ChoiceId: calm_the_port
+      DisplayText: Calm the port
+      ChoiceType: 1
+      NextStageId: 
+      PlayerFacingResult: Neritha Reefwood stabilizes, but the crew thinks the player
+        is less fun.
+      HiddenDirectorNotes: The player defuses the port incident.
+      Consequences:
+      - ConsequenceType: 1
+        Capital: 7
+        PressureType: 1
+        Amount: -8
+        QuestToStart: {fileID: 0}
+        PoliticalEvent: {fileID: 0}
+        WindSecret: {fileID: 0}
+        MetalSecretNpc: {fileID: 0}
+        ShipId: 
+        JournalId: 
+        JournalTitle: 
+        Notes: The player defuses the port incident.

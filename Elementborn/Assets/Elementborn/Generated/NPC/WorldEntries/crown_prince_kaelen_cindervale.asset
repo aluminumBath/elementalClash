@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635af814f14b3e34aad5c3292217cf35, type: 3}
+  m_Name: crown_prince_kaelen_cindervale
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcWorldEntryDefinition
+  npcId: crown_prince_kaelen_cindervale
+  displayName: Crown Prince Kaelen Cindervale
+  role: 1
+  titleOrRank: Crown Prince
+  region: Fire Capital
+  locationName: Ashwing Terrace
+  worldPosition: {x: 530, y: 0, z: -206}
+  aliases: Kaelen
+  primaryElement: Fire
+  secondaryElement: Air
+  origin: Fire Capital
+  appearanceNotes: Athletic young heir wearing light ceremonial armor with ash-gray
+    feather motifs and a training spear.
+  personalityNotes: Bold, idealistic, eager to prove himself, and impulsively heroic.
+  relationshipSummary: Eldest child and heir of Seraphine and Oren; older brother
+    of Lyra; deeply influenced by his great-aunt Maelis's stories of past eruptions.
+  notes: Often seen on the ramparts or training grounds, trying to earn the loyalty
+    of soldiers and commoners alike.
+  faction: 3
+  defaultVoiceSound: 25
+  voiceLines:
+  - LineType: 0
+    Subtitle: Greetings. I am Crown Prince Kaelen Cindervale.
+    PlaceholderClip: {fileID: 0}
+    FutureVoiceActorClipName: crown_prince_kaelen_cindervale_greeting.wav

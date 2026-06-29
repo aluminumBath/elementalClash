@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e04bfbb9ad02543b573b9898fb542f, type: 3}
+  m_Name: bubba_workshop_errand
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.QuestUiDefinition
+  questId: bubba_workshop_errand
+  title: Bubba's Black-Market Bolt
+  description: Prince William, better known as Bubba, needs help finding a missing
+    prototype bolt before the thieves guild sells it back to the palace.
+  region: Metal Capital
+  giverName: Prince William
+  autoTrack: 1
+  icon: {fileID: 0}
+  objectives:
+  - ObjectiveId: meet_bubba
+    Title: Meet Bubba in the court workshops
+    Description: Ask Bubba what went missing.
+    WorldPosition: {x: 618, y: 0, z: 136}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: visit_market
+    Title: Visit the black market
+    Description: Look for a vendor moving rare metal components.
+    WorldPosition: {x: 602, y: 0, z: 122}
+    CreateWaypoint: 1
+    Required: 1
+  - ObjectiveId: decide_return_or_trade
+    Title: Decide what to do with the bolt
+    Description: Return it to Bubba or use it as leverage with the thieves guild.
+    WorldPosition: {x: 610, y: 0, z: 128}
+    CreateWaypoint: 1
+    Required: 1
+  rewards:
+  - RewardId: bubba_workshop_errand_reward
+    DisplayName: Metal Capital Standing
+    ItemId: 
+    Quantity: 0
+    Currency: 50
+    SkillPoints: 0
+    Icon: {fileID: 0}

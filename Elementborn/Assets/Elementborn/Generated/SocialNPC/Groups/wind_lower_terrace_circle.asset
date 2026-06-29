@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cf1dac0dffa5b4290aa0d6cb986b36, type: 3}
+  m_Name: wind_lower_terrace_circle
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.SocialNpcGroupDefinition
+  groupId: wind_lower_terrace_circle
+  displayName: Wind Lower Terrace Social Circle
+  primaryCapital: 5
+  groupCenter: {x: 746, y: 22, z: 438}
+  summary: Rekr, Manon, Marie, Amy, and Johna form a messy, funny, rumor-rich lower-terrace
+    social circle.
+  members:
+  - Npc: {fileID: 11400000, guid: c487bdd48809e874bbd677b19aa75e21, type: 2}
+    UsualRole: sickly lava-channeler husband
+    DefaultPosition: {x: 742, y: 21, z: 436}
+    AmbientBehavior: coughs lava-smoke and tries to avoid medicine
+  - Npc: {fileID: 11400000, guid: 421dcf9c98578714bb2c9b51bf1d3254, type: 2}
+    UsualRole: cleanliness enforcer
+    DefaultPosition: {x: 744, y: 21, z: 438}
+    AmbientBehavior: restores order with terrifying precision
+  - Npc: {fileID: 11400000, guid: 05b2170adfc66774280f54c1f16271ab, type: 2}
+    UsualRole: sleepy fire hazard
+    DefaultPosition: {x: 748, y: 22, z: 440}
+    AmbientBehavior: flirts, dozes, and accidentally lights things
+  - Npc: {fileID: 11400000, guid: 58b26a7a0dea4654d8aebafec1a4b132, type: 2}
+    UsualRole: rumor drifter
+    DefaultPosition: {x: 750, y: 22, z: 442}
+    AmbientBehavior: wanders through conversations and accidentally hears useful
+      clues
+  - Npc: {fileID: 11400000, guid: 09316ac7438f364448b2b988cef02d14, type: 2}
+    UsualRole: pipe-smoking advisor
+    DefaultPosition: {x: 752, y: 26, z: 430}
+    AmbientBehavior: quietly gives advice that steadies people
+  relationships: []
