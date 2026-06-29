@@ -324,3 +324,9 @@ Increased HUD/dialogue message durations, enlarged message/dialogue UI, added a 
 
 ### Visual identity + markers + compass
 Added floating quest markers, objective compass, better primitive silhouettes, spinning/bobbing pickups, first relic reward state, and more readable world-object guidance.
+
+
+## v89 additions
+
+### Asset-backed visuals
+Copied generated PNG concept/reference assets into the Unity project and created textured in-world art boards around the prototype hub using those assets.

@@ -748,6 +748,7 @@ namespace Elementborn.Game
                 "- Chests Opened: " + chestsOpened + "\n" +
                 "- Zone Level: " + zoneLevel + "\n" +
                 "- Relic: " + (hasPrototypeRelic ? "Prototype Convergence Relic" : "None") + "\n\n" +
+                "Prototype asset boards are now placed around the hub as the first pass away from blocky placeholders.\n\n" +
                 "Current loop:\n" +
                 "1. Talk to Ember Guide\n" +
                 "2. Choose Unifier or Dominion\n" +

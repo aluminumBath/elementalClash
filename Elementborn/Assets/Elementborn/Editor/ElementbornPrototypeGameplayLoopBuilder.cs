@@ -37,6 +37,7 @@ namespace Elementborn.Game.EditorTools
             CreateLootChests();
             CreateLoreStones();
             CreateHubDressing();
+            CreateAssetBackedVisuals();
             CreateLandmarks();
             CreateInstructionSigns();
 
@@ -81,6 +82,7 @@ namespace Elementborn.Game.EditorTools
             if (GameObject.Find("Convergence Reward Chest") == null) CreateLootChests();
             if (GameObject.Find("Lore Stone of Unity") == null) CreateLoreStones();
             if (GameObject.Find("Hub Market Stall A") == null) CreateHubDressing();
+            if (GameObject.Find("Fire Capital Vista Board") == null) CreateAssetBackedVisuals();
 
             if (scene.IsValid()) EditorSceneManager.MarkSceneDirty(scene);
 
@@ -546,6 +548,194 @@ namespace Elementborn.Game.EditorTools
             CreateChildlessCube(name + " Left", position + new Vector3(-1.2f, 0f, 0f), new Vector3(0.3f, 2.8f, 0.3f), color);
             CreateChildlessCube(name + " Right", position + new Vector3(1.2f, 0f, 0f), new Vector3(0.3f, 2.8f, 0.3f), color);
             CreateChildlessCube(name, position + new Vector3(0f, 1.4f, 0f), new Vector3(2.7f, 0.3f, 0.35f), color);
+        }
+
+
+        private static void CreateAssetBackedVisuals()
+        {
+            CreateAssetBillboard(
+                "Fire Capital Vista Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/volcanic_fortress_in_fiery_colors.png",
+                new Vector3(11.5f, 2.4f, 12.2f),
+                Quaternion.Euler(0f, 225f, 0f),
+                new Vector2(4.8f, 3.2f),
+                "Fire Capital Vista",
+                ElementbornPrototypeMarkerKind.Lore,
+                false);
+
+            CreateAssetBillboard(
+                "Social NPC Roster Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/social_npcs_character_lineup_illustration.png",
+                new Vector3(-6.8f, 2.2f, 5.8f),
+                Quaternion.Euler(0f, 145f, 0f),
+                new Vector2(4.2f, 2.7f),
+                "NPC Roster",
+                ElementbornPrototypeMarkerKind.Talk,
+                false);
+
+            CreateAssetBillboard(
+                "Spell Training Icon Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/fantasy_spell_and_combat_icons_chart.png",
+                new Vector3(6.4f, 2.2f, 5.8f),
+                Quaternion.Euler(0f, 215f, 0f),
+                new Vector2(4.0f, 2.7f),
+                "Spell Icons",
+                ElementbornPrototypeMarkerKind.Objective,
+                false);
+
+            CreateAssetBillboard(
+                "Quest Gear Reward Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/fantasy_quest_and_equipment_icons_ui.png",
+                new Vector3(4.6f, 2.1f, -5.8f),
+                Quaternion.Euler(0f, 325f, 0f),
+                new Vector2(3.8f, 2.6f),
+                "Quest Gear",
+                ElementbornPrototypeMarkerKind.Loot,
+                false);
+
+            CreateAssetBillboard(
+                "Map Marker Reference Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/stylized_game_map_marker_assets_sheet.png",
+                new Vector3(-4.8f, 2.1f, -5.8f),
+                Quaternion.Euler(0f, 35f, 0f),
+                new Vector2(3.8f, 2.6f),
+                "Map Markers",
+                ElementbornPrototypeMarkerKind.Lore,
+                false);
+
+            CreateAssetBillboard(
+                "Game Asset Design Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/stylized_game_asset_design_sheet.png",
+                new Vector3(12.4f, 2.1f, -3.6f),
+                Quaternion.Euler(0f, 270f, 0f),
+                new Vector2(3.8f, 2.6f),
+                "Asset Sheet",
+                ElementbornPrototypeMarkerKind.Lore,
+                false);
+
+            CreateAssetBillboard(
+                "UI Style Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/fantasy_ui_design_reference_poster.png",
+                new Vector3(-12.4f, 2.1f, 3.6f),
+                Quaternion.Euler(0f, 90f, 0f),
+                new Vector2(3.8f, 2.6f),
+                "UI Style",
+                ElementbornPrototypeMarkerKind.Lore,
+                false);
+
+            CreateAssetBillboard(
+                "Boss Icon Board",
+                "Assets/Elementborn/Art/Concept/WindwakerReplacement/fantasy_boss_icon_reference_sheet.png",
+                new Vector3(-11.8f, 2.1f, -9.8f),
+                Quaternion.Euler(0f, 45f, 0f),
+                new Vector2(3.7f, 2.5f),
+                "Boss Icons",
+                ElementbornPrototypeMarkerKind.Combat,
+                false);
+        }
+
+        private static GameObject CreateAssetBillboard(
+            string name,
+            string texturePath,
+            Vector3 position,
+            Quaternion rotation,
+            Vector2 size,
+            string labelText,
+            ElementbornPrototypeMarkerKind markerKind,
+            bool faceCamera)
+        {
+            GameObject root = new GameObject(name);
+            root.transform.position = position;
+            root.transform.rotation = rotation;
+
+            GameObject board = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            board.name = name + " Image";
+            board.transform.SetParent(root.transform, false);
+            board.transform.localPosition = Vector3.zero;
+            board.transform.localRotation = Quaternion.identity;
+            board.transform.localScale = new Vector3(size.x, size.y, 1f);
+
+            Renderer renderer = board.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.sharedMaterial = CreateTextureMaterial(name + " Material", texturePath, new Color(0.18f, 0.16f, 0.22f));
+            }
+
+            Collider collider = board.GetComponent<Collider>();
+            if (collider != null)
+            {
+                Object.DestroyImmediate(collider);
+            }
+
+            GameObject frame = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            frame.name = name + " Backing";
+            frame.transform.SetParent(root.transform, false);
+            frame.transform.localPosition = new Vector3(0f, 0f, 0.05f);
+            frame.transform.localRotation = Quaternion.identity;
+            frame.transform.localScale = new Vector3(size.x + 0.24f, size.y + 0.24f, 0.08f);
+            SetMaterial(frame, name + " Frame Material", new Color(0.12f, 0.08f, 0.05f));
+
+            // Move backing behind the quad after material assignment. Negative z is behind the image plane.
+            frame.transform.localPosition = new Vector3(0f, 0f, 0.08f);
+
+            AddLabel(root.transform, labelText, new Vector3(0f, -size.y * 0.58f, 0f));
+            AddMarker(root, "ART", markerKind, size.y * 0.65f + 1.0f);
+
+            ElementbornPrototypeBillboardFacing facing = root.AddComponent<ElementbornPrototypeBillboardFacing>();
+            facing.faceCamera = faceCamera;
+            facing.onlyYaw = true;
+
+            return root;
+        }
+
+        private static Material CreateTextureMaterial(string name, string texturePath, Color fallbackColor)
+        {
+            Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
+            if (texture == null)
+            {
+                return CreateMaterial(name + " Fallback", fallbackColor);
+            }
+
+            Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null)
+            {
+                shader = Shader.Find("Unlit/Texture");
+            }
+
+            if (shader == null)
+            {
+                shader = Shader.Find("Sprites/Default");
+            }
+
+            if (shader == null)
+            {
+                return CreateMaterial(name + " Fallback", fallbackColor);
+            }
+
+            Material material = new Material(shader);
+            material.name = name;
+
+            if (material.HasProperty("_BaseMap"))
+            {
+                material.SetTexture("_BaseMap", texture);
+            }
+
+            if (material.HasProperty("_MainTex"))
+            {
+                material.SetTexture("_MainTex", texture);
+            }
+
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", Color.white);
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", Color.white);
+            }
+
+            return material;
         }
 
         private static void CreateLandmarks()
