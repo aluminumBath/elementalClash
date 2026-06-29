@@ -108,6 +108,8 @@ namespace Elementborn.Core
             // coastal -> islands, then beaches
             var coastal = remaining.OrderBy(i => Edge(positions[i]));
             Take(coastal, Per(7), BiomeType.Island);
+            // A single giant reef-island: coral has grown into a forest above the sea.
+            Take(remaining.Where(i => !assigned[i]).OrderBy(i => Edge(positions[i])), 1, BiomeType.CoralReefForest);
             Take(remaining.Where(i => !assigned[i]).OrderBy(i => Edge(positions[i])), Per(8), BiomeType.Beach);
 
             // most inland -> volcanoes, then deserts
@@ -201,6 +203,7 @@ namespace Elementborn.Core
             BiomeType.Marsh        => new List<PoiType> { PoiType.Village, PoiType.Landmark },
             BiomeType.Beach        => new List<PoiType> { PoiType.Dock, PoiType.Village },
             BiomeType.Island       => new List<PoiType> { PoiType.Dock, PoiType.Landmark, PoiType.WeaponCache },
+            BiomeType.CoralReefForest => new List<PoiType> { PoiType.Dock, PoiType.Village, PoiType.Shrine, PoiType.Landmark },
             BiomeType.Mountains    => new List<PoiType> { PoiType.Camp, PoiType.Dungeon },
             _                      => new List<PoiType> { PoiType.Village, PoiType.Camp }
         };
@@ -289,6 +292,7 @@ namespace Elementborn.Core
                 [BiomeType.CloudTemple]  = L("Skyhold", "Cloudreach", "Aetherperch", "the Nimbus Cloister", "Stratovault", "Windcrown"),
                 [BiomeType.Volcano]      = L("Cinderpeak", "Emberfall", "Ashmaw", "the Vorth Caldera", "Pyrecrown", "Smokereach"),
                 [BiomeType.Island]       = L("Saltmere Isle", "Gull's Rest", "Tidewatch", "Coralhold", "Marrow Cay", "the Sunder Isles"),
+                [BiomeType.CoralReefForest] = L("Neritha Reefwood"),
                 [BiomeType.Beach]        = L("Gullshore", "Pale Strand", "Driftwen", "Seabright Cove", "Foamreach"),
                 [BiomeType.Desert]       = L("Sunscar", "Dunmarch", "the Glasslands", "Parchwaste", "Khaldune", "the Amber Reach"),
                 [BiomeType.Swamp]        = L("Mirewood", "Blackfen", "Sloughmere", "the Drownreach", "Gloombog"),
@@ -301,12 +305,12 @@ namespace Elementborn.Core
             private static Dictionary<PoiType, List<string>> BuildPoiPools() => new Dictionary<PoiType, List<string>>
             {
                 [PoiType.City]       = L("Eastgate", "Millcross", "Stonewick", "Harrow's End", "Fairstead"),
-                [PoiType.Village]    = L("Oakhollow", "Redferry", "Thistledown", "Marrowby", "Coldbrook", "Hently", "Ashby", "Wend's Cross"),
+                [PoiType.Village]    = L("Oakhollow", "Redferry", "Thistledown", "Marrowby", "Coldbrook", "Hently", "Ashby", "Wend's Cross", "Nacre Village", "Pearlroot Haven"),
                 [PoiType.Temple]     = L("the Quiet Temple", "Ember Sanctum", "the Tidal Temple", "Windward Temple", "the Old Sanctum"),
-                [PoiType.Shrine]     = L("Wind Shrine", "the Sunken Shrine", "Ashen Shrine", "the Glade Shrine", "Stone Shrine", "Tideward Shrine"),
+                [PoiType.Shrine]     = L("Wind Shrine", "the Sunken Shrine", "Ashen Shrine", "the Glade Shrine", "Stone Shrine", "Tideward Shrine", "the Tideglass Shrine"),
                 [PoiType.Dungeon]    = L("the Sunken Vault", "Gravecrawl", "the Black Warren", "Ruin of Talreth", "the Deepliar", "Hollowdeep"),
                 [PoiType.Market]     = L("the Grand Bazaar", "Trade Row", "the Night Market"),
-                [PoiType.Landmark]   = L("the Standing Stones", "the Broken Arch", "the Watchspire", "the Weeping Statue", "the Old Beacon"),
+                [PoiType.Landmark]   = L("the Standing Stones", "the Broken Arch", "the Watchspire", "the Weeping Statue", "the Old Beacon", "the Coral Canopy", "the Reefwood Crown"),
                 [PoiType.Dock]       = L("the Wharf", "Tidedock", "the Salt Quay", "Anchorhold"),
                 [PoiType.Camp]       = L("a bandit camp", "a hunters' camp", "a war camp", "an outlaw roost", "a raider hold"),
                 [PoiType.Arena]      = L("the Proving Grounds", "the Grand Arena"),

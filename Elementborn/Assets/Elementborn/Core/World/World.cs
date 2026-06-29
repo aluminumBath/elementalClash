@@ -17,6 +17,7 @@ namespace Elementborn.Core
         ForestTemple,
         Volcano,
         Island,
+        CoralReefForest,
         CloudTemple
     }
 

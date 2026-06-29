@@ -1,0 +1,3 @@
+npcId,displayName,role,titleOrRank,region,locationName,x,y,z,primaryElement,secondaryElement,aliases,origin,appearanceNotes,personalityNotes,relationshipSummary,faction,notes
+queen_aurelia,Queen Aurelia,RoyalFamily,Queen,Neutral Central City,High Palace,0,0,0,Light,,Aurelia the Bright,Sun Court,"Tall and graceful with luminous ceremonial attire.","Poised and compassionate.","Mother of Prince Caelen.",NeutralCity,"Placeholder royal family NPC entry."
+prince_caelen,Prince Caelen,RoyalFamily,Prince,Neutral Central City,High Palace Gardens,8,0,12,Air,,Caelen,Sun Court,"Young noble with refined bearing.","Curious and diplomatic.","Son of Queen Aurelia.",NeutralCity,"Placeholder royal family NPC entry."

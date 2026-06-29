@@ -108,6 +108,7 @@ namespace Elementborn.Core
                 case BiomeType.Volcano: return CreatureKind.Phoenix;
                 case BiomeType.Beach:
                 case BiomeType.Island:
+                case BiomeType.CoralReefForest:
                 case BiomeType.Swamp:
                 case BiomeType.Marsh: return CreatureKind.WaterCat;
                 case BiomeType.Mountains: return r < 0.5 ? CreatureKind.IceCat : CreatureKind.Spider;

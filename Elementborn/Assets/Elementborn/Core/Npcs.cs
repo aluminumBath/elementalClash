@@ -84,7 +84,7 @@ namespace Elementborn.Core
                         "Tame gently, keep them fed and rested, and train with patience. Mistreat a creature in my city and I will take it from you and bar you for a day — you'll start its taming over.");
 
                 case GuideNpcId.Parfa:
-                    return new GuideNpcInfo(id, "Parfa Itchonga", NpcRole.Locator,
+                    return new GuideNpcInfo(id, "Kram Itchonga", NpcRole.Locator,
                         Element.Fire, SubArt.Magmacraft,
                         "the forge-town of Cinderhold, by the volcano", BiomeType.Volcano,
                         "green hair flecked with red",

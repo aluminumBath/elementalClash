@@ -3,99 +3,179 @@ using Elementborn.Core;
 
 namespace Elementborn.Game
 {
-    /// <summary>An in-world entrance to an instanced destination (a cave, aerie, sunken gate, temple, or spring).
-    /// Stepping near it discovers it (a one-time toast); standing in range offers an Interact to enter. The
-    /// instanced-interior loader is wired into <see cref="Enter"/> in the next pass — for now entering surfaces the
-    /// site's lore. Built from <see cref="ToonPalette"/>-tinted primitives so it needs no assets. Placed by
-    /// <see cref="WorldSpawnPlacer"/> on a region whose biome fits the site.</summary>
-    public sealed class SiteEntrance : MonoBehaviour, IInteractable
+    /// <summary>
+    /// Safe site entrance bridge. This replaces older scaffold versions that depended on removed SiteInfo signatures.
+    /// </summary>
+    public sealed class SiteEntrance : MonoBehaviour
     {
-        [SerializeField] private float discoverRange = 9f;
-        [SerializeField] private float interactRange = 4.5f;
+        [SerializeField] private SiteInteriorController targetInterior;
+        [SerializeField] private string siteId = "";
+        [SerializeField] private string displayName = "Site";
+        [TextArea]
+        [SerializeField] private string summary = "";
+        [SerializeField] private bool useThisPositionAsFallbackExit = true;
+        [SerializeField] private bool enterOnPlayerTrigger = false;
 
-        private SiteInfo _info;
-        private string _id;
-        private bool _discovered;
-
-        public void Configure(SiteKind kind, string id)
+        public void Configure(string id, string title, string body)
         {
-            _info = SiteCatalog.For(kind);
-            _id = id;
-            BuildMarker();
+            siteId = id ?? siteId;
+            displayName = string.IsNullOrWhiteSpace(title) ? displayName : title;
+            summary = body ?? summary;
         }
 
-        private void OnEnable() { InputBindings.Enable(); InteractionArbiter.Register(this); }
-        private void OnDisable() => InteractionArbiter.Unregister(this);
-
-        public bool TryGetInteraction(Vector3 playerPosition, out Interaction interaction)
+        public void Configure(string id, string title, string body, SiteInteriorController target)
         {
-            interaction = Interaction.None;
-            float d = Vector3.Distance(playerPosition, transform.position);
+            Configure(id, title, body);
+            targetInterior = target;
+        }
 
-            if (!_discovered && d <= discoverRange)
+        // v56 compatibility overload for older WorldSpawnPlacer scripts.
+        public void Configure(string id, SiteInteriorController target)
+        {
+            siteId = id ?? siteId;
+            targetInterior = target;
+        }
+
+        // v57 exact compatibility overload for WorldSpawnPlacer: Configure(SiteKind, string).
+        public void Configure(Elementborn.Core.SiteKind kind, string idOrTitle)
+        {
+            siteId = string.IsNullOrWhiteSpace(idOrTitle) ? kind.ToString() : idOrTitle;
+            displayName = string.IsNullOrWhiteSpace(idOrTitle) ? kind.ToString() : idOrTitle;
+            if (string.IsNullOrWhiteSpace(summary))
             {
-                _discovered = true;
-                GameHud.Instance?.Toast("Discovered \u2014 " + _info.DisplayName);
-                AudioController.Instance?.Confirm();
+                summary = kind.ToString();
+            }
+        }
+
+        // v57 broad compatibility overload for older local world setup scripts.
+        public void Configure(object kindOrDefinition, string idOrTitle)
+        {
+            ApplySiteLikeObject(kindOrDefinition);
+
+            if (!string.IsNullOrWhiteSpace(idOrTitle))
+            {
+                siteId = idOrTitle;
+                if (string.IsNullOrWhiteSpace(displayName) || displayName == "Site")
+                {
+                    displayName = idOrTitle;
+                }
             }
 
-            if (d > interactRange) return false;
-            interaction = new Interaction(d, 0, "Enter " + _info.DisplayName, Enter);
-            return true;
+            if (string.IsNullOrWhiteSpace(summary) && kindOrDefinition != null)
+            {
+                summary = kindOrDefinition.ToString();
+            }
         }
 
-        // Open the instanced interior this entrance leads to; the player returns here on leaving.
-        private void Enter()
+        // v56 compatibility overload for older WorldSpawnPlacer scripts that pass a site definition object.
+        public void Configure(object siteDefinition, SiteInteriorController target)
         {
-            if (SiteInteriorController.Instance != null)
-                SiteInteriorController.Instance.Enter(_info, transform.position + Vector3.up * 1f);
-            else
-                GameHud.Instance?.Toast(_info.Lore);
+            ApplySiteLikeObject(siteDefinition);
+            targetInterior = target;
         }
 
-        private void BuildMarker()
+        // v56 compatibility overload for older generators that pass an exit position.
+        public void Configure(object siteDefinition, Vector3 fallbackExit)
         {
-            Color tint = Accent(_info.Kind);
+            ApplySiteLikeObject(siteDefinition);
+            useThisPositionAsFallbackExit = false;
+            if (targetInterior == null)
+            {
+                targetInterior = SiteInteriorController.Ensure();
+            }
 
-            // A simple portal: two pillars + a lintel, with a glowing orb in the gateway.
-            Pillar(new Vector3(-1.1f, 1.4f, 0f), tint);
-            Pillar(new Vector3(1.1f, 1.4f, 0f), tint);
-            var lintel = Block(PrimitiveType.Cube, new Vector3(2.8f, 0.5f, 0.7f), new Vector3(0f, 2.9f, 0f), tint);
-            lintel.name = "Lintel";
-
-            var orb = Block(PrimitiveType.Sphere, Vector3.one * 0.9f, new Vector3(0f, 1.6f, 0f), tint);
-            orb.name = "Gateheart";
-            var mr = orb.GetComponent<MeshRenderer>();
-            if (mr != null) mr.sharedMaterial = ToonPalette.Tinted(tint); // already tinted; kept explicit for the glow
+            targetInterior.Configure(siteId, displayName, summary, fallbackExit);
         }
 
-        private void Pillar(Vector3 localPos, Color tint)
+        public void Enter(GameObject actor)
         {
-            var p = Block(PrimitiveType.Cube, new Vector3(0.6f, 2.8f, 0.7f), localPos, tint);
-            p.name = "Pillar";
+            var interior = targetInterior != null ? targetInterior : SiteInteriorController.Ensure();
+            Vector3 fallbackExit = useThisPositionAsFallbackExit ? transform.position : Vector3.zero;
+            interior.Configure(siteId, displayName, summary, fallbackExit);
+            interior.Enter(actor);
         }
 
-        private GameObject Block(PrimitiveType prim, Vector3 scale, Vector3 localPos, Color tint)
+        public void Enter()
         {
-            var go = GameObject.CreatePrimitive(prim);
-            go.transform.SetParent(transform, false);
-            go.transform.localScale = scale;
-            go.transform.localPosition = localPos;
-            var col = go.GetComponent<Collider>();
-            if (col != null) Destroy(col); // discovery/interaction is distance-based; don't block the player
-            var mr = go.GetComponent<MeshRenderer>();
-            if (mr != null) mr.sharedMaterial = ToonPalette.Tinted(tint);
-            return go;
+            Enter((GameObject)null);
         }
 
-        private static Color Accent(SiteKind kind) => kind switch
+        public void Interact(GameObject actor)
         {
-            SiteKind.CaveMouth => new Color(0.40f, 0.34f, 0.30f),      // dark stone
-            SiteKind.Aerie => new Color(0.78f, 0.90f, 1.00f),         // pale sky
-            SiteKind.SunkenEntrance => new Color(0.20f, 0.42f, 0.72f), // deep blue
-            SiteKind.TempleDoor => new Color(0.82f, 0.74f, 0.45f),    // weathered gold
-            SiteKind.Spring => new Color(0.45f, 0.72f, 0.50f),        // mossy green
-            _ => new Color(0.7f, 0.7f, 0.7f),
-        };
+            Enter(actor);
+        }
+
+
+        private void ApplySiteLikeObject(object value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            string id = ReadStringMember(value, "SiteId")
+                ?? ReadStringMember(value, "Id")
+                ?? ReadStringMember(value, "Key")
+                ?? ReadStringMember(value, "Name");
+            string title = ReadStringMember(value, "DisplayName")
+                ?? ReadStringMember(value, "Title")
+                ?? ReadStringMember(value, "Name");
+            string body = ReadStringMember(value, "Summary")
+                ?? ReadStringMember(value, "Description")
+                ?? ReadStringMember(value, "Body");
+
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                siteId = id;
+            }
+
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                displayName = title;
+            }
+
+            if (!string.IsNullOrWhiteSpace(body))
+            {
+                summary = body;
+            }
+        }
+
+        private static string ReadStringMember(object value, string memberName)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(memberName))
+            {
+                return null;
+            }
+
+            const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            var type = value.GetType();
+
+            var property = type.GetProperty(memberName, flags);
+            if (property != null && property.PropertyType == typeof(string))
+            {
+                return property.GetValue(value) as string;
+            }
+
+            var field = type.GetField(memberName, flags);
+            if (field != null && field.FieldType == typeof(string))
+            {
+                return field.GetValue(value) as string;
+            }
+
+            return null;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!enterOnPlayerTrigger || other == null)
+            {
+                return;
+            }
+
+            if (other.CompareTag("Player"))
+            {
+                Enter(other.gameObject);
+            }
+        }
     }
 }

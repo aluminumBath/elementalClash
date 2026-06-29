@@ -22,6 +22,7 @@ namespace Elementborn.Core
                 case BiomeType.Marsh:        return new Color32(110, 120,  85, 255);
                 case BiomeType.Beach:        return new Color32(225, 210, 160, 255);
                 case BiomeType.Island:       return new Color32(100, 160,  90, 255);
+                case BiomeType.CoralReefForest: return new Color32(120, 205, 180, 255);
                 case BiomeType.CloudTemple:  return new Color32(180, 190, 205, 255);
                 default:                     return new Color32(110, 165,  75, 255);
             }

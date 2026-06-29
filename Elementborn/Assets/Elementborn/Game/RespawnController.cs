@@ -14,7 +14,7 @@ namespace Elementborn.Game
         [SerializeField] private PlayerCombatController combat;
         [SerializeField] private Behaviour rigMovement;
         [SerializeField] private Transform spawnPoint;
-        [SerializeField] private float respawnDelay = 3f;
+        [SerializeField] private float respawnDelay = 10f;
 
         private Vector3 _spawnPos;
         private Quaternion _spawnRot;

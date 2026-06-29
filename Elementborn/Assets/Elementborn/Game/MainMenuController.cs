@@ -56,6 +56,7 @@ namespace Elementborn.Game
                 OverlayUi.Body(content, "(No saved journey yet)", 16, new Color(0.62f, 0.62f, 0.68f));
             }
 
+            UiTheme.Button(content, "Save Slots", () => SaveSlotController.EnsureInstance().Show(), 540, 62);
             UiTheme.Button(content, "Settings", () => _onSettings?.Invoke(), 540, 62);
             UiTheme.Button(content, "Quit", () => _onQuit?.Invoke(), 540, 62);
 

@@ -29,7 +29,7 @@ namespace Elementborn.Game
 
         private void Start()
         {
-            if (worldSource == null) worldSource = FindObjectOfType<WorldMapController>();
+            if (worldSource == null) worldSource = ElementbornFindUtility.FindFirst<WorldMapController>();
             EnsureEventSystem();
             Build();
             if (worldSource != null)
@@ -51,6 +51,7 @@ namespace Elementborn.Game
             BiomeType.Volcano      => new Color(0.85f, 0.25f, 0.15f),
             BiomeType.Desert       => new Color(0.90f, 0.78f, 0.45f),
             BiomeType.Island       => new Color(0.30f, 0.75f, 0.70f),
+            BiomeType.CoralReefForest => new Color(0.45f, 0.95f, 0.82f),
             BiomeType.Beach        => new Color(0.95f, 0.90f, 0.65f),
             BiomeType.Swamp        => new Color(0.35f, 0.45f, 0.25f),
             BiomeType.Marsh        => new Color(0.45f, 0.55f, 0.35f),
@@ -61,7 +62,7 @@ namespace Elementborn.Game
 
         private void EnsureEventSystem()
         {
-            if (FindObjectOfType<EventSystem>() == null)
+            if (ElementbornFindUtility.FindFirst<EventSystem>() == null)
             {
                 var es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
                 es.transform.SetParent(transform, false);

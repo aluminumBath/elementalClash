@@ -110,6 +110,7 @@ namespace Elementborn.Core
                 case BiomeType.Volcano: return Element.Fire;
                 case BiomeType.Beach:
                 case BiomeType.Island:
+                case BiomeType.CoralReefForest:
                 case BiomeType.Swamp:
                 case BiomeType.Marsh: return Element.Water;
                 case BiomeType.Desert:

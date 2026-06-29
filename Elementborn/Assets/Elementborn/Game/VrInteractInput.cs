@@ -1,26 +1,39 @@
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace Elementborn.Game
 {
     /// <summary>
-    /// VR Interact. A press of the right-hand <b>grip</b> fires the current interaction through the shared
-    /// <see cref="InteractionArbiter"/> — the same path the desktop Interact key uses, so talking to NPCs, picking
-    /// up / activating, mounting, taming, and the leyline-rift / checkpoint prompts all work from the headset.
-    /// Reads the controller with the legacy XR input API (matching <c>VrInputProvider</c> / comfort locomotion);
-    /// the bootstrap VR rig adds one.
+    /// Minimal VR/editor interaction bridge. Does not depend on XR packages, so it compiles in desktop-only projects.
+    /// Wire TriggerInteract from XR input events later; keyboard fallback helps editor testing.
     /// </summary>
     public sealed class VrInteractInput : MonoBehaviour
     {
-        [SerializeField] private XRNode hand = XRNode.RightHand;
-        private bool _prev;
+        [SerializeField] private Transform interactorTransform;
+        [SerializeField] private KeyCode editorFallbackKey = KeyCode.E;
+        [SerializeField] private bool enableEditorKeyboardFallback = true;
 
         private void Update()
         {
-            var d = InputDevices.GetDeviceAtXRNode(hand);
-            bool now = d.isValid && d.TryGetFeatureValue(CommonUsages.gripButton, out bool grip) && grip;
-            if (now && !_prev) InteractionArbiter.SignalInteract(); // rising edge
-            _prev = now;
+            if (enableEditorKeyboardFallback && Input.GetKeyDown(editorFallbackKey))
+            {
+                TriggerInteract();
+            }
+        }
+
+        public void TriggerInteract()
+        {
+            if (interactorTransform != null)
+            {
+                InteractionArbiter.SignalInteract(interactorTransform);
+                return;
+            }
+
+            InteractionArbiter.SignalInteract(transform);
+        }
+
+        public void SetInteractorTransform(Transform value)
+        {
+            interactorTransform = value;
         }
     }
 }

@@ -1,85 +1,176 @@
 using UnityEngine;
-using Elementborn.Core;
 
 namespace Elementborn.Game
 {
     /// <summary>
-    /// The world-object interactable: mount/dismount a vehicle or creature, tame a weakened creature, claim a
-    /// house plot, or open a merchant — whichever is nearest in reach. It no longer reads input or sets the prompt
-    /// itself; it offers its best world action to the <see cref="InteractionArbiter"/> (which it adds to the rig
-    /// automatically), so it can't clash with NPCs, sidekicks, or plant control. Put this on the player rig.
+    /// Canonical v50 player interaction detector.
     /// </summary>
-    public sealed class PlayerInteractor : MonoBehaviour, IInteractable
+    public sealed class PlayerInteractor : MonoBehaviour
     {
-        [SerializeField] private float reach = 3f;
+        [Header("Detection")]
+        [SerializeField] private Camera sourceCamera;
+        [SerializeField] private Transform sourceTransform;
+        [SerializeField] private float range = 3f;
+        [SerializeField] private LayerMask interactableLayers = ~0;
+        [SerializeField] private bool useRaycast = true;
+        [SerializeField] private KeyCode interactKey = KeyCode.E;
 
-        private MountController _riding;
+        [Header("Prompt")]
+        [SerializeField] private InteractablePromptView promptView;
+
+        private IInteractable current;
+        private GameObject currentObject;
+        private float holdTimer;
+
+        private void Reset()
+        {
+            sourceCamera = Camera.main;
+            sourceTransform = sourceCamera != null ? sourceCamera.transform : transform;
+        }
 
         private void Awake()
         {
-            if (GetComponent<InteractionArbiter>() == null) gameObject.AddComponent<InteractionArbiter>();
+            if (sourceCamera == null)
+            {
+                sourceCamera = Camera.main;
+            }
+
+            if (sourceTransform == null)
+            {
+                sourceTransform = sourceCamera != null ? sourceCamera.transform : transform;
+            }
         }
 
-        private void OnEnable() { InputBindings.Enable(); InteractionArbiter.Register(this); }
-        private void OnDisable() => InteractionArbiter.Unregister(this);
-
-        public bool TryGetInteraction(Vector3 playerPosition, out Interaction interaction)
+        private void Update()
         {
-            interaction = Interaction.None;
+            RefreshCurrentInteractable();
+            RefreshPrompt();
+            HandleInput();
+        }
 
-            if (_riding != null)
+        private void RefreshCurrentInteractable()
+        {
+            current = null;
+            currentObject = null;
+
+            if (useRaycast)
             {
-                interaction = new Interaction(0f, 10, "Dismount", () => { _riding.Dismount(); _riding = null; });
-                return true;
+                Vector3 origin = sourceTransform != null ? sourceTransform.position : transform.position;
+                Vector3 direction = sourceTransform != null ? sourceTransform.forward : transform.forward;
+
+                if (Physics.Raycast(origin, direction, out RaycastHit hit, range, interactableLayers, QueryTriggerInteraction.Collide))
+                {
+                    TrySetCurrent(hit.collider);
+                }
+
+                return;
             }
 
-            float best = reach * reach;
-            System.Action act = null;
-            string verb = null;
-            Vector3 p = playerPosition;
+            Collider[] hits = Physics.OverlapSphere(transform.position, range, interactableLayers, QueryTriggerInteraction.Collide);
+            float bestDistance = float.MaxValue;
 
-            foreach (var col in Physics.OverlapSphere(p, reach))
+            foreach (Collider hit in hits)
             {
-                if (col.transform.root == transform.root) continue; // ignore self
-
-                var mount = col.GetComponentInParent<MountController>();
-                if (mount != null && !mount.IsRidden)
+                if (hit == null)
                 {
-                    float d = (mount.transform.position - p).sqrMagnitude;
-                    if (d < best) { best = d; var m = mount; verb = "Ride"; act = () => { m.Mount(gameObject); _riding = m; }; }
+                    continue;
                 }
 
-                var tameable = col.GetComponentInParent<Tameable>();
-                if (tameable != null)
+                IInteractable candidate = hit.GetComponentInParent<IInteractable>();
+                if (candidate == null || !InteractableCompatibility.CanInteract(candidate, gameObject))
                 {
-                    float d = (tameable.transform.position - p).sqrMagnitude;
-                    if (d < best)
-                    {
-                        best = d;
-                        var t = tameable;
-                        verb = t.CanTame(out _) ? $"Tame {CreatureCatalog.For(t.Kind).Name}" : "Tame";
-                        act = () => { var o = t.TryTame(); GameHud.Instance?.Toast(o.Reason); };
-                    }
+                    continue;
                 }
 
-                var plot = col.GetComponentInParent<HousePlot>();
-                if (plot != null && !plot.Owned)
+                float distance = Vector3.Distance(transform.position, hit.transform.position);
+                if (distance < bestDistance)
                 {
-                    float d = (plot.transform.position - p).sqrMagnitude;
-                    if (d < best) { best = d; var h = plot; verb = "Claim home"; act = () => { bool ok = h.TryClaim(); GameHud.Instance?.Toast(ok ? "Home claimed" : "Couldn't claim it"); }; }
-                }
-
-                var merchant = col.GetComponentInParent<Merchant>();
-                if (merchant != null)
-                {
-                    float d = (merchant.transform.position - p).sqrMagnitude;
-                    if (d < best) { best = d; var mc = merchant; verb = "Shop"; act = () => mc.Open(); }
+                    bestDistance = distance;
+                    current = candidate;
+                    currentObject = hit.gameObject;
                 }
             }
+        }
 
-            if (act == null || verb == null) return false;
-            interaction = new Interaction(Mathf.Sqrt(best), 5, verb, act);
-            return true;
+        private void TrySetCurrent(Collider col)
+        {
+            IInteractable candidate = col != null ? col.GetComponentInParent<IInteractable>() : null;
+            if (candidate == null || !InteractableCompatibility.CanInteract(candidate, gameObject))
+            {
+                return;
+            }
+
+            current = candidate;
+            currentObject = col.gameObject;
+        }
+
+        private void RefreshPrompt()
+        {
+            if (promptView == null)
+            {
+                return;
+            }
+
+            if (current == null)
+            {
+                promptView.Hide();
+                return;
+            }
+
+            promptView.Show(InteractableCompatibility.GetPrompt(current, gameObject));
+        }
+
+        private void HandleInput()
+        {
+            if (current == null)
+            {
+                holdTimer = 0f;
+                return;
+            }
+
+            InteractionPromptData prompt = InteractableCompatibility.GetPrompt(current, gameObject);
+
+            if (!prompt.RequiresHold)
+            {
+                if (Input.GetKeyDown(interactKey))
+                {
+                    InteractableCompatibility.Interact(current, gameObject);
+                }
+
+                holdTimer = 0f;
+                return;
+            }
+
+            if (Input.GetKey(interactKey))
+            {
+                holdTimer += Time.deltaTime;
+                promptView?.SetHoldProgress(Mathf.Clamp01(holdTimer / Mathf.Max(0.01f, prompt.HoldSeconds)));
+
+                if (holdTimer >= prompt.HoldSeconds)
+                {
+                    InteractableCompatibility.Interact(current, gameObject);
+                    holdTimer = 0f;
+                }
+            }
+            else
+            {
+                holdTimer = 0f;
+                promptView?.SetHoldProgress(0f);
+            }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.cyan;
+            if (useRaycast)
+            {
+                Transform src = sourceTransform != null ? sourceTransform : transform;
+                Gizmos.DrawLine(src.position, src.position + src.forward * range);
+            }
+            else
+            {
+                Gizmos.DrawWireSphere(transform.position, range);
+            }
         }
     }
 }

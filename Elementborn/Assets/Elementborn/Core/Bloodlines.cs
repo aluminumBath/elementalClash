@@ -69,7 +69,7 @@ namespace Elementborn.Core
             {
                 case BloodlineId.Pyre:
                     return new BloodlineInfo(id, "Pyre", new[] { Element.Fire }, SubArt.None,
-                        "Fire channeling carried in the blood.", "Parfa Itchonga");
+                        "Fire channeling carried in the blood.", "Kram Itchonga");
                 case BloodlineId.Tide:
                     return new BloodlineInfo(id, "Tide", new[] { Element.Water }, SubArt.None,
                         "Water channeling carried in the blood.", "");

@@ -15,6 +15,7 @@ namespace Elementborn.Core
                     return r < 0.6 ? CreatureKind.FireDragon : CreatureKind.EarthMole;
                 case BiomeType.Beach:
                 case BiomeType.Island:
+                case BiomeType.CoralReefForest:
                     if (r < 0.28) return CreatureKind.WaterDragon;
                     if (r < 0.5) return CreatureKind.Mermaid;
                     if (r < 0.72) return CreatureKind.Crab;

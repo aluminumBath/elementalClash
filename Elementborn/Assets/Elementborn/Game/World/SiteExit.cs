@@ -1,23 +1,110 @@
 using UnityEngine;
+using Elementborn.Core;
 
 namespace Elementborn.Game
 {
-    /// <summary>The way out of a site interior — Interact to return to the open world. Spawned inside the pocket
-    /// room by <see cref="SiteInteriorController"/>; it offers its prompt through the shared interaction arbiter.</summary>
-    public sealed class SiteExit : MonoBehaviour, IInteractable
+    /// <summary>
+    /// Safe site exit bridge for prototype interiors.
+    /// </summary>
+    public sealed class SiteExit : MonoBehaviour
     {
-        [SerializeField] private float interactRange = 3.5f;
+        [SerializeField] private SiteInteriorController targetInterior;
+        [SerializeField] private string siteId = "";
+        [SerializeField] private bool exitOnPlayerTrigger = false;
 
-        private void OnEnable() { InputBindings.Enable(); InteractionArbiter.Register(this); }
-        private void OnDisable() => InteractionArbiter.Unregister(this);
-
-        public bool TryGetInteraction(Vector3 playerPosition, out Interaction interaction)
+        public void Configure(string id, SiteInteriorController target)
         {
-            interaction = Interaction.None;
-            float d = Vector3.Distance(playerPosition, transform.position);
-            if (d > interactRange) return false;
-            interaction = new Interaction(d, 0, "Leave", () => SiteInteriorController.Instance?.Exit());
-            return true;
+            siteId = id ?? siteId;
+            targetInterior = target;
+        }
+
+        // v57 exact compatibility overload for WorldSpawnPlacer-style Configure(SiteKind, string).
+        public void Configure(Elementborn.Core.SiteKind kind, string id)
+        {
+            siteId = string.IsNullOrWhiteSpace(id) ? kind.ToString() : id;
+        }
+
+        // v57 broad compatibility overload for older local world setup scripts.
+        public void Configure(object kindOrDefinition, string id)
+        {
+            string extracted = ReadStringMember(kindOrDefinition, "SiteId")
+                ?? ReadStringMember(kindOrDefinition, "Id")
+                ?? ReadStringMember(kindOrDefinition, "Key")
+                ?? ReadStringMember(kindOrDefinition, "Name");
+            siteId = !string.IsNullOrWhiteSpace(id)
+                ? id
+                : (!string.IsNullOrWhiteSpace(extracted) ? extracted : siteId);
+        }
+
+        // v56 compatibility overload for older WorldSpawnPlacer scripts.
+        public void Configure(object siteDefinition, SiteInteriorController target)
+        {
+            siteId = ReadStringMember(siteDefinition, "SiteId")
+                ?? ReadStringMember(siteDefinition, "Id")
+                ?? ReadStringMember(siteDefinition, "Key")
+                ?? ReadStringMember(siteDefinition, "Name")
+                ?? siteId;
+            targetInterior = target;
+        }
+
+        private static string ReadStringMember(object value, string memberName)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(memberName))
+            {
+                return null;
+            }
+
+            const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            var type = value.GetType();
+
+            var property = type.GetProperty(memberName, flags);
+            if (property != null && property.PropertyType == typeof(string))
+            {
+                return property.GetValue(value) as string;
+            }
+
+            var field = type.GetField(memberName, flags);
+            if (field != null && field.FieldType == typeof(string))
+            {
+                return field.GetValue(value) as string;
+            }
+
+            return null;
+        }
+
+        public void Exit(GameObject actor)
+        {
+            var interior = targetInterior != null ? targetInterior : SiteInteriorController.Ensure();
+            if (!string.IsNullOrWhiteSpace(siteId))
+            {
+                interior.Exit(siteId, actor);
+                return;
+            }
+
+            interior.Exit(actor);
+        }
+
+        public void Exit()
+        {
+            Exit((GameObject)null);
+        }
+
+        public void Interact(GameObject actor)
+        {
+            Exit(actor);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!exitOnPlayerTrigger || other == null)
+            {
+                return;
+            }
+
+            if (other.CompareTag("Player"))
+            {
+                Exit(other.gameObject);
+            }
         }
     }
 }

@@ -1,104 +1,196 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace Elementborn.Game
 {
-    /// <summary>One offered interaction: how far, how important, the prompt verb, and what to do.</summary>
+    /// <summary>
+    /// Compatibility interaction result used by older scaffold interactables.
+    /// Newer prompt-based interactables can use BaseInteractable/PlayerInteractor directly.
+    /// </summary>
     public readonly struct Interaction
     {
         public readonly float Distance;
         public readonly int Priority;
-        public readonly string Verb;
-        public readonly System.Action Act;
+        public readonly string Label;
+        public readonly Action Callback;
 
-        public Interaction(float distance, int priority, string verb, System.Action act)
+        public Interaction(float distance, int priority, string label, Action callback)
         {
-            Distance = distance; Priority = priority; Verb = verb; Act = act;
+            Distance = distance;
+            Priority = priority;
+            Label = label ?? "";
+            Callback = callback;
         }
 
-        public bool IsValid => Act != null && !string.IsNullOrEmpty(Verb);
-        public static readonly Interaction None = default;
-    }
+        public bool IsValid => Callback != null;
 
-    /// <summary>A thing the player can interact with. Given the player's position, it reports whether it currently
-    /// offers an interaction (and its distance/verb/action). The <see cref="InteractionArbiter"/> does the input
-    /// and prompt; implementers never poll Interact or touch the HUD themselves.</summary>
-    public interface IInteractable
-    {
-        bool TryGetInteraction(Vector3 playerPosition, out Interaction interaction);
+        public void Execute()
+        {
+            Callback?.Invoke();
+        }
+
+        public static Interaction None => new Interaction(float.PositiveInfinity, int.MinValue, "", null);
     }
 
     /// <summary>
-    /// The single owner of the Interact button and the interaction prompt. Each frame it asks every registered
-    /// <see cref="IInteractable"/> for an offer, picks the best (highest priority, ties to nearest), shows one
-    /// prompt, and routes one press — so overlapping interactables no longer multi-fire or fight over the HUD.
-    /// Lives on the player rig (<see cref="PlayerInteractor"/> adds one automatically).
+    /// v51 canonical arbiter. It intentionally does NOT define IInteractable.
+    /// IInteractable lives in Game/Interaction/IInteractable.cs as a marker interface.
     /// </summary>
-    public sealed class InteractionArbiter : MonoBehaviour
+    public static class InteractionArbiter
     {
-        private static readonly List<IInteractable> Registered = new List<IInteractable>();
+        private static readonly HashSet<IInteractable> Registered = new HashSet<IInteractable>();
 
         public static void Register(IInteractable interactable)
         {
-            if (interactable != null && !Registered.Contains(interactable)) Registered.Add(interactable);
-        }
-
-        public static void Unregister(IInteractable interactable) => Registered.Remove(interactable);
-
-        // A non-keyboard interact source (e.g. a VR grip) can request that the current best interaction fire this
-        // frame, routing through the same selection/prompt logic the desktop Interact key uses.
-        private static bool _signal;
-        public static void SignalInteract() => _signal = true;
-
-        [SerializeField] private Transform player;
-
-        private readonly List<Interaction> _offers = new List<Interaction>();
-
-        private void Awake() { if (player == null) player = transform; }
-        private void OnEnable() => InputBindings.Enable();
-
-        private void Update()
-        {
-            Vector3 p = player != null ? player.position : transform.position;
-
-            _offers.Clear();
-            for (int i = 0; i < Registered.Count; i++)
+            if (interactable != null)
             {
-                var interactable = Registered[i];
-                if (interactable == null) continue;
-                if (interactable.TryGetInteraction(p, out var offer) && offer.IsValid) _offers.Add(offer);
-            }
-
-            var best = PickBest(_offers);
-            bool fire = InputBindings.Interact.WasPressedThisFrame() || _signal;
-            _signal = false; // consumed every frame, whether or not an interaction is offered
-            if (best.IsValid)
-            {
-                GameHud.Instance?.SetPrompt(InputBindings.Interact, best.Verb);
-                if (fire) best.Act();
-            }
-            else
-            {
-                GameHud.Instance?.SetPrompt("");
+                Registered.Add(interactable);
             }
         }
 
-        /// <summary>Pure selection: highest priority wins; ties break to the nearest. Unit-tested.</summary>
-        public static Interaction PickBest(IReadOnlyList<Interaction> offers)
+        public static void Unregister(IInteractable interactable)
         {
-            Interaction best = Interaction.None;
-            bool has = false;
-            for (int i = 0; i < offers.Count; i++)
+            if (interactable != null)
             {
-                var o = offers[i];
-                if (!o.IsValid) continue;
-                if (!has || o.Priority > best.Priority ||
-                    (o.Priority == best.Priority && o.Distance < best.Distance))
+                Registered.Remove(interactable);
+            }
+        }
+
+        public static bool TryGetBestInteraction(Vector3 playerPosition, out Interaction best)
+        {
+            best = Interaction.None;
+            bool found = false;
+
+            foreach (IInteractable interactable in Registered)
+            {
+                if (TryGetInteractionFrom(interactable, playerPosition, out Interaction candidate) && candidate.IsValid)
                 {
-                    best = o; has = true;
+                    if (!found || candidate.Priority > best.Priority || 
+                        (candidate.Priority == best.Priority && candidate.Distance < best.Distance))
+                    {
+                        best = candidate;
+                        found = true;
+                    }
                 }
             }
-            return best;
+
+            return found;
+        }
+
+
+        // v52 compatibility entry points used by older keyboard/VR input scripts.
+        public static bool SignalInteract()
+        {
+            GameObject player = FindPlayer();
+            if (player != null)
+            {
+                return SignalInteract(player.transform.position);
+            }
+
+            Camera camera = Camera.main;
+            if (camera != null)
+            {
+                return SignalInteract(camera.transform.position);
+            }
+
+            return false;
+        }
+
+        public static bool SignalInteract(GameObject interactor)
+        {
+            if (interactor == null)
+            {
+                return SignalInteract();
+            }
+
+            return SignalInteract(interactor.transform.position);
+        }
+
+        public static bool SignalInteract(Transform interactor)
+        {
+            if (interactor == null)
+            {
+                return SignalInteract();
+            }
+
+            return SignalInteract(interactor.position);
+        }
+
+        public static bool SignalInteract(Vector3 playerPosition)
+        {
+            return TryInteractClosest(playerPosition);
+        }
+
+        private static GameObject FindPlayer()
+        {
+            try
+            {
+                GameObject tagged = GameObject.FindGameObjectWithTag("Player");
+                if (tagged != null)
+                {
+                    return tagged;
+                }
+            }
+            catch { }
+
+            return GameObject.Find("Player Test Rig");
+        }
+
+        public static bool TryInteractClosest(Vector3 playerPosition)
+        {
+            if (TryGetBestInteraction(playerPosition, out Interaction interaction))
+            {
+                interaction.Execute();
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryGetInteractionFrom(IInteractable interactable, Vector3 playerPosition, out Interaction interaction)
+        {
+            interaction = Interaction.None;
+            if (interactable == null)
+            {
+                return false;
+            }
+
+            MethodInfo method = interactable.GetType().GetMethod(
+                "TryGetInteraction",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                new[] { typeof(Vector3), typeof(Interaction).MakeByRefType() },
+                null);
+
+            if (method == null)
+            {
+                return false;
+            }
+
+            object[] args = { playerPosition, Interaction.None };
+            bool result = false;
+            try
+            {
+                object raw = method.Invoke(interactable, args);
+                if (raw is bool ok)
+                {
+                    result = ok;
+                }
+
+                if (args.Length > 1 && args[1] is Interaction found)
+                {
+                    interaction = found;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("InteractionArbiter failed to query " + interactable.GetType().Name + ": " + ex.Message);
+                return false;
+            }
+
+            return result;
         }
     }
 }

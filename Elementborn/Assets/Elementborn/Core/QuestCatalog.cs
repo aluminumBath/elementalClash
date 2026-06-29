@@ -34,14 +34,14 @@ namespace Elementborn.Core
 
                 new QuestDefinition(
                     "parfa_errand", "Word to Kiana",
-                    "Parfa needs word carried to Kiana — and wants to know you can earn your keep on the way.",
+                    "Kram needs word carried to Kiana — and wants to know you can earn your keep on the way.",
                     GuideNpcId.Parfa.ToString(),
                     new List<QuestObjective>
                     {
                         new QuestObjective(ObjectiveKind.TalkToNpc, GuideNpcId.Kiana.ToString(), 1, "Speak with Kiana"),
                         new QuestObjective(ObjectiveKind.CollectCurrency, Currency.Silver.ToString(), 30, "Gather 30 silver"),
                     },
-                    new QuestReward(Currency.Emerald, 1, "Parfa grins. \"Knew you had it in you.\"")),
+                    new QuestReward(Currency.Emerald, 1, "Kram grins. \"Knew you had it in you.\"")),
 
                 new QuestDefinition(
                     "willow_pelts", "Pelts for the Tanner",
@@ -88,23 +88,23 @@ namespace Elementborn.Core
 
                 new QuestDefinition(
                     "parfa_first_craft", "First Craft",
-                    "Parfa swears by making your own kit. \"Turn that loot into something useful.\"",
+                    "Kram swears by making your own kit. \"Turn that loot into something useful.\"",
                     GuideNpcId.Parfa.ToString(),
                     new List<QuestObjective>
                     {
                         new QuestObjective(ObjectiveKind.CraftItem, "", 1, "Craft any item (press B)"),
                     },
-                    new QuestReward(Currency.Silver, 60, "Parfa claps you on the back. \"A maker now.\"")),
+                    new QuestReward(Currency.Silver, 60, "Kram claps you on the back. \"A maker now.\"")),
 
                 new QuestDefinition(
                     "parfa_gear_up", "Gear Up",
-                    "With something crafted, Parfa won't send you out soft. \"Put it on before you go.\"",
+                    "With something crafted, Kram won't send you out soft. \"Put it on before you go.\"",
                     GuideNpcId.Parfa.ToString(),
                     new List<QuestObjective>
                     {
                         new QuestObjective(ObjectiveKind.EquipItem, "", 1, "Equip a piece of gear (press V)"),
                     },
-                    new QuestReward(Currency.Silver, 60, "Parfa looks you over. \"Better.\""),
+                    new QuestReward(Currency.Silver, 60, "Kram looks you over. \"Better.\""),
                     new List<string> { "parfa_first_craft" }),
             };
         }

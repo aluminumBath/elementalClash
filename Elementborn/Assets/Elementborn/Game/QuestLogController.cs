@@ -69,7 +69,7 @@ namespace Elementborn.Game
             var tracked = log != null ? log.Tracked() : null;
             if (tracked == null || tracked.Count == 0)
             {
-                OverlayUi.Body(_content, "No active quests. Talk to Willow, Kiana, or Parfa to pick one up.", 20);
+                OverlayUi.Body(_content, "No active quests. Talk to Willow, Kiana, or Kram to pick one up.", 20);
                 return;
             }
 

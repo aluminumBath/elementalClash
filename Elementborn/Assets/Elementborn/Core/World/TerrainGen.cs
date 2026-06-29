@@ -30,6 +30,7 @@ namespace Elementborn.Core
             BiomeType.Marsh        => new BiomeTerrainProfile(0.15f, 0.02f, 0.00f),
             BiomeType.Beach        => new BiomeTerrainProfile(0.11f, 0.02f, 0.00f), // just above sea
             BiomeType.Island       => new BiomeTerrainProfile(0.30f, 0.06f, 0.15f),
+            BiomeType.CoralReefForest => new BiomeTerrainProfile(0.26f, 0.09f, 0.12f), // raised coral shelves
             BiomeType.CloudTemple  => new BiomeTerrainProfile(0.70f, 0.05f, 0.10f), // high plateau
             _                      => new BiomeTerrainProfile(0.30f, 0.03f, 0.00f)
         };

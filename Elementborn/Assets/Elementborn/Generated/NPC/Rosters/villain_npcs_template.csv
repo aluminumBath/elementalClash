@@ -1,0 +1,3 @@
+npcId,displayName,role,titleOrRank,region,locationName,x,y,z,primaryElement,secondaryElement,aliases,origin,appearanceNotes,personalityNotes,relationshipSummary,faction,notes
+lord_vesper,Lord Vesper,Villain,Cult Patron,Fire Region,Black Basalt Keep,520,0,190,Fire,Shadow,,Ashen Reach,"Sharp features and dark ceremonial clothing.","Cold and manipulative.","Connected to hidden cult networks.",ElementSupremacists,"Placeholder villain NPC entry."
+seris_grayveil,Seris Grayveil,Villain,Spy Master,Neutral Central City,Old Aqueducts,24,0,-18,Water,Shadow,,Canal Warrens,"Subtle attire and a watchful gaze.","Calculating and patient.","Broker of secrets.",ElementSupremacists,"Placeholder villain NPC entry."

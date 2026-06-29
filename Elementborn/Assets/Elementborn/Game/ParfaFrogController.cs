@@ -4,9 +4,9 @@ using Elementborn.Core;
 namespace Elementborn.Game
 {
     /// <summary>
-    /// Parfa's two frogs argue air vs water forever. The trick to make them agree: show up embodying <em>both</em>
+    /// Kram's two frogs argue air vs water forever. The trick to make them agree: show up embodying <em>both</em>
     /// — a player whose loadout holds Air and Water is common ground they can't squabble with. Pull it off and
-    /// Parfa pays a <see cref="Currency.Diamond"/>, once. Put on the frogs object near Parfa. Offers its
+    /// Kram pays a <see cref="Currency.Diamond"/>, once. Put on the frogs object near Kram. Offers its
     /// interaction through the <see cref="InteractionArbiter"/>.
     /// </summary>
     public sealed class ParfaFrogController : MonoBehaviour, IInteractable
@@ -84,7 +84,7 @@ namespace Elementborn.Game
             if (!_accord.Reconcile()) return;
             PlayerInventory.Instance?.AddCurrency(Currency.Diamond, 1);
             _accord.MarkRewardGiven();
-            Debug.Log("[Parfa] You got those two to agree?! Astonishing. Here — a diamond. You've earned it.");
+            Debug.Log("[Kram] You got those two to agree?! Astonishing. Here — a diamond. You've earned it.");
         }
     }
 }

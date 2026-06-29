@@ -19,6 +19,7 @@ namespace Elementborn.Core
                     return new[] { WeatherKind.HeatHaze };
                 case BiomeType.Beach:
                 case BiomeType.Island:
+                case BiomeType.CoralReefForest:
                 case BiomeType.Swamp:
                 case BiomeType.Marsh:
                     return new[] { WeatherKind.Rain, WeatherKind.Hurricane };
