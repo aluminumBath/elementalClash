@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5311845138555981909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7002983228068767475}
+  - component: {fileID: 1149474772018899428}
+  - component: {fileID: 1551206904933907211}
+  - component: {fileID: 890723112767965461}
+  m_Layer: 0
+  m_Name: Thunderbird
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7002983228068767475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5311845138555981909}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9010229569141235015}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1149474772018899428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5311845138555981909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e08ceaf8aebee34986b09e3f6040033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelAnimator
+  mode: 2
+  bobAmplitude: 0.04
+  bobSpeed: 1.8
+  yawAmplitude: 3.5
+  pitchAmplitude: 2.5
+  rollAmplitude: 2.5
+  boneWiggleDegrees: 7.5
+  boneWaveSpeed: 2.6
+  maxAnimatedBones: 48
+--- !u!114 &1551206904933907211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5311845138555981909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d619c9bd22d4644483a7549b4008ad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelTag
+  sourceAssetPath: Assets/Elementborn/Art/Models/MeshyImported/AutoImported/Thunderbird/Meshy_AI_Thunderbird_0623230810_image-to-3d-texture_fbx/Thunderbird_0623230810_texture.fbx
+  modelRole: Creature/Air
+  notes: 'Thunderbird: Air boss/showcase'
+--- !u!114 &890723112767965461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5311845138555981909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1954330b906c0ed41822008091fcb50d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeGeneratedAssetSlot
+  slotName: Thunderbird
+  preferredPrefabName: Thunderbird
+  role: Creature
+  element: Air
+  visualApplied: 1
+--- !u!1001 &8827193204464892588
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7002983228068767475}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00019849278
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0708448
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.00013860175
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+      propertyPath: m_Name
+      value: Model
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+--- !u!4 &9010229569141235015 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0d6ab0597c26cb44eabaf178e1ada46c, type: 3}
+  m_PrefabInstance: {fileID: 8827193204464892588}
+  m_PrefabAsset: {fileID: 0}

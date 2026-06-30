@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &73646239536343650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8356100475065603642}
+  - component: {fileID: 2868081388132027954}
+  - component: {fileID: 7178651820665280580}
+  - component: {fileID: 3796794422474396051}
+  m_Layer: 0
+  m_Name: AzureArcPortal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8356100475065603642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73646239536343650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1331436955794981757}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2868081388132027954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73646239536343650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e08ceaf8aebee34986b09e3f6040033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelAnimator
+  mode: 0
+  bobAmplitude: 0.04
+  bobSpeed: 1.8
+  yawAmplitude: 3.5
+  pitchAmplitude: 2.5
+  rollAmplitude: 2.5
+  boneWiggleDegrees: 3
+  boneWaveSpeed: 2.6
+  maxAnimatedBones: 48
+--- !u!114 &7178651820665280580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73646239536343650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d619c9bd22d4644483a7549b4008ad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelTag
+  sourceAssetPath: Assets/Elementborn/Art/Models/MeshyImported/AutoImported/AzureArcPortal/Meshy_AI_Azure_Arc_Portal_0623201507_texture_fbx/Azure_Arc_Portal_0623201507_texture.fbx
+  modelRole: Prop/Water
+  notes: 'Azure Arc Portal: Water gate decoration'
+--- !u!114 &3796794422474396051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73646239536343650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1954330b906c0ed41822008091fcb50d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeGeneratedAssetSlot
+  slotName: Azure Arc Portal
+  preferredPrefabName: AzureArcPortal
+  role: Prop
+  element: Water
+  visualApplied: 1
+--- !u!1001 &1580921412741342358
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8356100475065603642}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00025489833
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.14548099
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.00022189692
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+      propertyPath: m_Name
+      value: Model
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+--- !u!4 &1331436955794981757 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e191efae3a74f5e4ea37e16c36af49e4, type: 3}
+  m_PrefabInstance: {fileID: 1580921412741342358}
+  m_PrefabAsset: {fileID: 0}

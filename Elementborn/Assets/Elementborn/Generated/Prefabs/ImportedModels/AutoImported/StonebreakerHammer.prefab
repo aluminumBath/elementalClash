@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8798221064113415380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6968779494559335685}
+  - component: {fileID: 389603239126012457}
+  - component: {fileID: 4554465150256667490}
+  - component: {fileID: 3093137514101552256}
+  m_Layer: 0
+  m_Name: StonebreakerHammer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6968779494559335685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798221064113415380}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7448651629149935342}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &389603239126012457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798221064113415380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e08ceaf8aebee34986b09e3f6040033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelAnimator
+  mode: 2
+  bobAmplitude: 0.08
+  bobSpeed: 1.8
+  yawAmplitude: 3.5
+  pitchAmplitude: 2.5
+  rollAmplitude: 2.5
+  boneWiggleDegrees: 3
+  boneWaveSpeed: 2.6
+  maxAnimatedBones: 48
+--- !u!114 &4554465150256667490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798221064113415380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d619c9bd22d4644483a7549b4008ad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelTag
+  sourceAssetPath: Assets/Elementborn/Art/Models/MeshyImported/AutoImported/StonebreakerHammer/Meshy_AI_Stonebreaker_Hammer_3_0624145246_image-to-3d-texture_fbx/Stonebreaker_Hammer_3_0624145246_texture.fbx
+  modelRole: Weapon/Earth
+  notes: 'Stonebreaker Hammer: Earth weapon reward'
+--- !u!114 &3093137514101552256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798221064113415380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1954330b906c0ed41822008091fcb50d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeGeneratedAssetSlot
+  slotName: Stonebreaker Hammer
+  preferredPrefabName: StonebreakerHammer
+  role: Weapon
+  element: Earth
+  visualApplied: 1
+--- !u!1001 &6977294409534583045
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6968779494559335685}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00032549724
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.041121796
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.00010529533
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+      propertyPath: m_Name
+      value: Model
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+--- !u!4 &7448651629149935342 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c7006791971a7da4d91f25ecf6f3e0db, type: 3}
+  m_PrefabInstance: {fileID: 6977294409534583045}
+  m_PrefabAsset: {fileID: 0}

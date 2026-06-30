@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8125969106229251406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8547106682540060687}
+  - component: {fileID: 2294626781338760686}
+  - component: {fileID: 7794072296549856375}
+  - component: {fileID: 2531236523629520826}
+  m_Layer: 0
+  m_Name: HealingTonic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8547106682540060687
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125969106229251406}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5177082358255684823}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2294626781338760686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125969106229251406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e08ceaf8aebee34986b09e3f6040033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelAnimator
+  mode: 2
+  bobAmplitude: 0.08
+  bobSpeed: 1.8
+  yawAmplitude: 3.5
+  pitchAmplitude: 2.5
+  rollAmplitude: 2.5
+  boneWiggleDegrees: 3
+  boneWaveSpeed: 2.6
+  maxAnimatedBones: 48
+--- !u!114 &7794072296549856375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125969106229251406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d619c9bd22d4644483a7549b4008ad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeImportedModelTag
+  sourceAssetPath: Assets/Elementborn/Art/Models/MeshyImported/AutoImported/HealingTonic/Meshy_AI_Healing_Tonic_3D_0624150054_image-to-3d-texture_fbx/Healing_Tonic_3D_texture.fbx
+  modelRole: Item/Water
+  notes: 'Healing Tonic: Healing shrine visual'
+--- !u!114 &2531236523629520826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125969106229251406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1954330b906c0ed41822008091fcb50d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.ElementbornPrototypeGeneratedAssetSlot
+  slotName: Healing Tonic
+  preferredPrefabName: HealingTonic
+  role: Item
+  element: Water
+  visualApplied: 1
+--- !u!1001 &4634777432387808060
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8547106682540060687}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00018829945
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.14834818
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.00020010397
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+      propertyPath: m_Name
+      value: Model
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+--- !u!4 &5177082358255684823 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 91c1ead97053e5b45bc26831c1835976, type: 3}
+  m_PrefabInstance: {fileID: 4634777432387808060}
+  m_PrefabAsset: {fileID: 0}
