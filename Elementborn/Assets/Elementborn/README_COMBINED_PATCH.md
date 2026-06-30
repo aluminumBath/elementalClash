@@ -348,3 +348,50 @@ Added a curated generated-FBX extraction pipeline, catalog, prefab builder, scen
 
 ### Safe generated asset pipeline
 Stopped automatic generated-model decoration, added generated-decoration cleanup, added safe opt-in decoration, and added corrupt generated image quarantine/sanitization.
+
+
+## v93 additions
+
+### Art direction / non-blocky hub pass
+Removed oversized debug-like boards/signs from scene build, shrank quest markers, added a clean scene-polisher menu, and added stylized non-cube elemental dressing for the hub.
+
+
+## v94 additions
+
+### Fuzzy generated asset matching + assignment window
+Added renamed-file support for generated Meshy assets, fuzzy extractor/matcher, folder repair menu, and an in-Unity generated asset assignment window for placing or attaching one model at a time.
+
+
+## v95 additions
+
+### Assignment window compile fix
+Added missing `using UnityEditor.SceneManagement;` to `ElementbornGeneratedAssetAssignmentWindow.cs`.
+
+
+## v96 additions
+
+### Generated visual presets
+Added preset-based generated asset placement, a visual presets editor window, report/dry-run style availability checks, and safer cleanup markers for preset-applied models.
+
+
+## v97 additions
+
+### Generated asset review + approval workflow
+Added asset review window, review gallery, approval/rejection database, and approval-only visual preset mode so generated models must be reviewed before presets use them.
+
+
+## v98 additions
+
+### Clean fantasy hub rebuild
+Added a stronger cleanup/rebuild pass that removes debug text and preview clutter, softens the colored test arena, restyles paths/actors/gates, and builds a cleaner procedural fantasy hub as the base visual layer.
+
+
+## v99 additions
+
+### Reachability + specific treasure chest visuals
+Added decorative-collider cleanup so the player can reach objects again, plus a specific TreasureChest_0623200731 prefab builder and menu to apply that visual to every chest while preserving interactions.
+
+
+## v100 additions
+
+Exact chest/channeler player visual installer with safe fallback behavior.
