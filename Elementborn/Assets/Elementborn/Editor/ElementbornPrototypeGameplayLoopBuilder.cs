@@ -38,12 +38,12 @@ namespace Elementborn.Game.EditorTools
             CreateLootChests();
             CreateLoreStones();
             CreateHubDressing();
-            CreateAssetBackedVisuals();
             CreateLandmarks();
-            CreateInstructionSigns();
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            ElementbornPrototypeCleanFantasyHubBuilder.RebuildCleanFantasyHubLook(false);
+            EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
             Debug.Log("Built Elementborn prototype gameplay loop scene: " + ScenePath);
         }
 
@@ -83,10 +83,10 @@ namespace Elementborn.Game.EditorTools
             if (GameObject.Find("Convergence Reward Chest") == null) CreateLootChests();
             if (GameObject.Find("Lore Stone of Unity") == null) CreateLoreStones();
             if (GameObject.Find("Hub Market Stall A") == null) CreateHubDressing();
-            if (GameObject.Find("Fire Capital Vista Board") == null) CreateAssetBackedVisuals();
 
             if (scene.IsValid()) EditorSceneManager.MarkSceneDirty(scene);
 
+            ElementbornPrototypeCleanFantasyHubBuilder.RebuildCleanFantasyHubLook(false);
             AssetDatabase.SaveAssets();
             Debug.Log("Installed Elementborn prototype gameplay loop in the open scene.");
         }

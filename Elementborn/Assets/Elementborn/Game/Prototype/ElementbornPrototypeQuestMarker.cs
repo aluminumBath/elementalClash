@@ -19,7 +19,7 @@ namespace Elementborn.Game
         public ElementbornPrototypeMarkerKind kind = ElementbornPrototypeMarkerKind.Objective;
         public string markerText = "!";
         public Vector3 localOffset = new Vector3(0f, 2.8f, 0f);
-        public float bobAmplitude = 0.12f;
+        public float bobAmplitude = 0.06f;
         public float bobSpeed = 2.2f;
         public bool faceCamera = true;
 
@@ -88,7 +88,7 @@ namespace Elementborn.Game
                 labelGo.transform.SetParent(markerRoot, false);
                 labelGo.transform.localPosition = Vector3.zero;
                 labelGo.transform.localRotation = Quaternion.identity;
-                labelGo.transform.localScale = Vector3.one * 0.38f;
+                labelGo.transform.localScale = Vector3.one * 0.11f;
 
                 label = labelGo.GetComponent<TextMesh>();
                 if (label == null)
@@ -98,8 +98,8 @@ namespace Elementborn.Game
 
                 label.anchor = TextAnchor.MiddleCenter;
                 label.alignment = TextAlignment.Center;
-                label.fontSize = 72;
-                label.characterSize = 0.42f;
+                label.fontSize = 48;
+                label.characterSize = 0.22f;
             }
 
             ApplyVisuals();
@@ -112,7 +112,13 @@ namespace Elementborn.Game
                 return;
             }
 
-            label.text = string.IsNullOrWhiteSpace(markerText) ? "!" : markerText;
+            string text = string.IsNullOrWhiteSpace(markerText) ? "!" : markerText;
+            if (text == "ART")
+            {
+                text = "✦";
+            }
+
+            label.text = text;
             label.color = GetMarkerColor(kind);
         }
 
