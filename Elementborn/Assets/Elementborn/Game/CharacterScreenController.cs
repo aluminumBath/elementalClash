@@ -101,7 +101,7 @@ namespace Elementborn.Game
                 if (perks.CanRank(def.Id))
                 {
                     var id = def.Id;
-                    UiTheme.Button(_content, "Spend a point on " + def.Name, () => pc.SpendPerk(id), 380, 44);
+                    UiTheme.Button(_content, Localization.T("character.spendPoint") + def.Name, () => pc.SpendPerk(id), 380, 44);
                 }
             }
         }

@@ -131,6 +131,8 @@ namespace Elementborn.Game
             En("home.storage", "Open Storage  —  deposit & withdraw");
             En("home.stable", "Open Stable  —  house your creatures");
             En("home.storageTitle", "Home Storage");
+            En("summon.freeDaily", "Free daily summon  ★");
+            En("character.spendPoint", "Spend a point on ");
 
             // Sample second locale (Spanish). Partial is fine — anything missing falls back to English.
             Es("menu.paused", "PAUSA");
@@ -199,6 +201,8 @@ namespace Elementborn.Game
             Es("home.storage", "Abrir Almacén  —  depositar y retirar");
             Es("home.stable", "Abrir Establo  —  aloja tus criaturas");
             Es("home.storageTitle", "Almacén del hogar");
+            Es("summon.freeDaily", "Invocación diaria gratis  ★");
+            Es("character.spendPoint", "Gastar un punto en ");
         }
     }
 }

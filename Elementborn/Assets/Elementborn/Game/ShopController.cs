@@ -167,7 +167,7 @@ namespace Elementborn.Game
             listGo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             _list = listGo.transform;
 
-            var close = UiTheme.Button(panel.transform, "Close", Close, 240, 56);
+            var close = UiTheme.Button(panel.transform, Localization.T("ui.closeShort"), Close, 240, 56);
             close.GetComponent<Image>().color = CloseColor;
             var crt = (RectTransform)close.transform;
             crt.anchorMin = crt.anchorMax = crt.pivot = new Vector2(0.5f, 0f);

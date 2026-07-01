@@ -1,30 +1,30 @@
-name: Acquire Unity activation file
+name: Unity license — how to activate (Personal)
 
-# One-time helper for a Personal (free) Unity license — no serial needed.
-# Run it manually (Actions tab -> this workflow -> "Run workflow"), download the
-# "Manual Activation File" artifact (a Unity_v6000.5.0f1.alf), then:
-#   1. Go to https://license.unity3d.com/manual and sign in with your Unity ID.
-#   2. Upload the .alf; on the license-type screen pick "Unity Personal Edition"
-#      (answer the revenue/usage question) — this does NOT ask for a serial.
-#   3. Download the resulting .ulf, open it in a text editor, copy ALL of it, and
-#      paste it into the repo secret UNITY_LICENSE (Settings -> Secrets and variables -> Actions).
-# Also add UNITY_EMAIL and UNITY_PASSWORD secrets. Then tests.yml can run.
-# Personal licenses expire periodically; re-run this + re-exchange to refresh UNITY_LICENSE.
+# GameCI v4 no longer uses an activation-file workflow (the old .alf action is deprecated).
+# For a free Personal license you activate LOCALLY in Unity Hub, which creates a .ulf file, then
+# paste that file into the UNITY_LICENSE secret. No .alf, no license.unity3d.com, no serial.
+#
+# Steps:
+#   1. Unity Hub > Preferences (gear) > Licenses > Add > "Get a free personal license".
+#      (You must click Add and finish — otherwise the .ulf is not written.)
+#   2. Open the generated license file:
+#        Windows: C:\ProgramData\Unity\Unity_lic.ulf   (ProgramData is hidden — paste the path in Explorer)
+#        macOS:   /Library/Application Support/Unity/Unity_lic.ulf
+#        Linux:   ~/.local/share/unity3d/Unity/Unity_lic.ulf
+#   3. GitHub > repo > Settings > Secrets and variables > Actions, add:
+#        UNITY_LICENSE  = the full contents of Unity_lic.ulf
+#        UNITY_EMAIL    = your Unity account email
+#        UNITY_PASSWORD = your Unity account password
+#   4. tests.yml already consumes those. This file is just a reminder and can be deleted.
+# Docs: https://game.ci/docs/github/activation
 
 on:
   workflow_dispatch:
 
 jobs:
-  activation:
-    name: Request .alf
+  info:
     runs-on: ubuntu-latest
     steps:
-      - uses: game-ci/unity-request-activation-file@v2
-        id: getManualLicenseFile
-        with:
-          unityVersion: 6000.5.0f1
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Manual Activation File
-          path: ${{ steps.getManualLicenseFile.outputs.filePath }}
+      - run: |
+          echo "Activate a free Personal license in Unity Hub (Preferences > Licenses > Add > Get a free personal license),"
+          echo "then paste C:\\ProgramData\\Unity\\Unity_lic.ulf into the UNITY_LICENSE secret. See https://game.ci/docs/github/activation"

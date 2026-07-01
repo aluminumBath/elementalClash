@@ -67,7 +67,7 @@ namespace Elementborn.Game
             // Daily free summon (always the standard banner, independent of the selection below).
             if (sc.DailyAvailable)
             {
-                UiTheme.Button(_content, "Free daily summon  \u2605", DoDaily, 700, 48);
+                UiTheme.Button(_content, Localization.T("summon.freeDaily"), DoDaily, 700, 48);
                 OverlayUi.Body(_content, $"Day {sc.PendingStreakDay()} streak  \u00b7  +{sc.PendingStreakReward()} Sigils", 14, Dim);
             }
             else
