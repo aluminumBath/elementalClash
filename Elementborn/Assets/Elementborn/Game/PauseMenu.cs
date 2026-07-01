@@ -23,6 +23,16 @@ namespace Elementborn.Game
 
         private void OnDestroy() { if (Instance == this) Instance = null; }
 
+        private void OnEnable() { Localization.LocaleChanged += OnLocaleChanged; }
+        private void OnDisable() { Localization.LocaleChanged -= OnLocaleChanged; }
+
+        private void OnLocaleChanged()
+        {
+            if (!IsPaused || _panel == null) return; // re-render the open pause panel in the new language
+            Destroy(_panel);
+            BuildPanel();
+        }
+
         private void Update()
         {
             var kb = Keyboard.current;
@@ -37,7 +47,11 @@ namespace Elementborn.Game
             Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            BuildPanel();
+        }
 
+        private void BuildPanel()
+        {
             var panel = OverlayUi.Panel("PauseCanvas", Localization.T("menu.paused"), 240, new Vector2(520, 520), Resume);
             _panel = panel.canvas.gameObject;
             var c = panel.content;

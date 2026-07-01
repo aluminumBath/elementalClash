@@ -36,6 +36,9 @@ namespace Elementborn.Game
             ModelLibrary.Attach(NpcModelNames.ResourcePath(id), gameObject, "Npc");
         }
 
+        /// <summary>Set which guide this is at runtime (used by the spawners) before Start binds the model.</summary>
+        public void Configure(GuideNpcId newId) { id = newId; _info = NpcCatalog.For(newId); }
+
         private void OnEnable() { InputBindings.Enable(); InteractionArbiter.Register(this); }
         private void OnDisable() => InteractionArbiter.Unregister(this);
 

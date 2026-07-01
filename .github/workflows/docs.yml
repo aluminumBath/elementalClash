@@ -2,8 +2,8 @@ name: Docs
 
 on:
   push:
-    branches: [ main ]
-    paths: [ 'docs/**', 'README.md', '.github/workflows/docs.yml' ]
+    branches: [ master, main ]
+    paths: [ 'Elementborn/docs/**', 'Elementborn/README.md', '.github/workflows/docs.yml' ]
   workflow_dispatch:
 
 # One-time repo setup: Settings -> Pages -> Source = "GitHub Actions".
@@ -15,6 +15,10 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: Elementborn
 
 jobs:
   publish:
@@ -30,13 +34,12 @@ jobs:
           mkdir -p _site
           cp README.md _site/index.md
           cp -r docs/* _site/
-          # Minimal Jekyll config so GitHub Pages renders the Markdown as HTML.
           printf 'title: Elementborn\ntheme: jekyll-theme-cayman\n' > _site/_config.yml
 
       - uses: actions/configure-pages@v5
       - uses: actions/jekyll-build-pages@v1
         with:
-          source: ./_site
+          source: ./Elementborn/_site
           destination: ./_site_build
       - uses: actions/upload-pages-artifact@v3
         with:

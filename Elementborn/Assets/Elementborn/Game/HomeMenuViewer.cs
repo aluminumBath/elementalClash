@@ -41,7 +41,7 @@ namespace Elementborn.Game
 
         private void Build()
         {
-            var p = OverlayUi.Panel("HomeCanvas", "Home", 58, new Vector2(740, 800), Hide);
+            var p = OverlayUi.Panel("HomeCanvas", Localization.T("ui.title.home"), 58, new Vector2(740, 800), Hide);
             _canvas = p.canvas;
             _content = p.content;
         }
@@ -85,17 +85,17 @@ namespace Elementborn.Game
             switch (a)
             {
                 case HomeAddition.Workshop:
-                    UiTheme.Button(_content, "Open Workshop  —  Crafting", OpenCrafting, 660, 44); break;
+                    UiTheme.Button(_content, Localization.T("home.workshop"), OpenCrafting, 660, 44); break;
                 case HomeAddition.EnchantingTable:
-                    UiTheme.Button(_content, "Open Enchanting Table  —  Equipment", OpenEquipment, 660, 44); break;
+                    UiTheme.Button(_content, Localization.T("home.enchanting"), OpenEquipment, 660, 44); break;
                 case HomeAddition.Wardrobe:
-                    UiTheme.Button(_content, "Open Wardrobe  —  change your look", OpenWardrobe, 660, 44); break;
+                    UiTheme.Button(_content, Localization.T("home.wardrobe"), OpenWardrobe, 660, 44); break;
                 case HomeAddition.Garden:
                     UiTheme.Button(_content, "Harvest Garden  (" + inv.Garden.Ready + " silver ready)", DoHarvest, 660, 44); break;
                 case HomeAddition.Storage:
-                    UiTheme.Button(_content, "Open Storage  —  deposit & withdraw", () => { _mode = Mode.Storage; Rebuild(); }, 660, 44); break;
+                    UiTheme.Button(_content, Localization.T("home.storage"), () => { _mode = Mode.Storage; Rebuild(); }, 660, 44); break;
                 case HomeAddition.Stable:
-                    UiTheme.Button(_content, "Open Stable  —  house your creatures", () => { _mode = Mode.Stable; Rebuild(); }, 660, 44); break;
+                    UiTheme.Button(_content, Localization.T("home.stable"), () => { _mode = Mode.Stable; Rebuild(); }, 660, 44); break;
             }
         }
 
@@ -112,8 +112,8 @@ namespace Elementborn.Game
         // step 1; nothing is auto-moved or deleted. ----
         private void RebuildStorage()
         {
-            UiTheme.Button(_content, "< Back", BackToMain, 200, 40);
-            OverlayUi.Header(_content, "Home Storage");
+            UiTheme.Button(_content, Localization.T("ui.back"), BackToMain, 200, 40);
+            OverlayUi.Header(_content, Localization.T("home.storageTitle"));
 
             var storage = HomeStationsController.Instance != null ? HomeStationsController.Instance.Storage : null;
             if (storage == null) { OverlayUi.Body(_content, "Storage unavailable.", 18); return; }

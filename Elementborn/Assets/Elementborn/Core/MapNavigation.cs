@@ -16,13 +16,52 @@ namespace Elementborn.Core
         { Id = id; Kind = kind; World = world; Label = label; }
     }
 
-    /// <summary>A leyline rift: a fast-travel node you can warp between once discovered.</summary>
+    /// <summary>Portal tiers: capital hubs (the elemental capital pools you portal <i>from</i>) versus the city
+    /// portals they route <i>to</i>.</summary>
+    public enum PortalTier { City, Capital }
+
+    /// <summary>A leyline rift / elemental portal: a fast-travel node you can warp between once discovered. A portal
+    /// carries an element (null for the elementless Confluence gate and the neutral crossings) and a tier, so a
+    /// capital pool can list the discovered <b>city</b> portals of its own element.</summary>
     public readonly struct LeylineRift
     {
         public readonly string Id;
         public readonly string Name;
         public readonly Vector3 World;
-        public LeylineRift(string id, string name, Vector3 world) { Id = id; Name = name; World = world; }
+        public readonly Element? Elem;   // the portal's element (null = elementless gate/crossing)
+        public readonly PortalTier Tier; // capital hub vs city portal
+
+        public LeylineRift(string id, string name, Vector3 world)
+            : this(id, name, world, null, PortalTier.City) { }
+
+        public LeylineRift(string id, string name, Vector3 world, Element? elem, PortalTier tier)
+        { Id = id; Name = name; World = world; Elem = elem; Tier = tier; }
+    }
+
+    /// <summary>How an elemental portal reads on the themed map and in-world: a glow colour and a look hint. Water
+    /// portals are glassy ponds that glow teal; fire a molten rift; earth a mossy stone arch; air a shimmering
+    /// updraft; the elementless Confluence gate a prismatic ring.</summary>
+    public readonly struct PortalStyle
+    {
+        public readonly Color Glow;
+        public readonly string Look;
+        public PortalStyle(Color glow, string look) { Glow = glow; Look = look; }
+    }
+
+    public static class PortalTheme
+    {
+        public static PortalStyle For(Element? element)
+        {
+            if (element == null) return new PortalStyle(new Color(0.80f, 0.72f, 1f), "a prismatic Confluence ring");
+            switch (element.Value)
+            {
+                case Element.Water: return new PortalStyle(new Color(0.16f, 0.85f, 0.78f), "a glassy pond that glows teal");
+                case Element.Fire:  return new PortalStyle(new Color(1f, 0.50f, 0.16f), "a molten rift ringed in embers");
+                case Element.Earth: return new PortalStyle(new Color(0.50f, 0.80f, 0.35f), "a mossy stone arch");
+                case Element.Air:   return new PortalStyle(new Color(0.72f, 0.95f, 1f), "a shimmering updraft");
+                default:            return new PortalStyle(Color.white, "a portal");
+            }
+        }
     }
 
     /// <summary>
@@ -43,6 +82,22 @@ namespace Elementborn.Core
 
         /// <summary>You can only warp to a rift that exists and has been discovered.</summary>
         public bool CanTravelTo(string riftId) => _rifts.ContainsKey(riftId) && _discovered.Contains(riftId);
+
+        /// <summary>The discovered <b>city</b> portals of an element — the destinations a player may pick from that
+        /// element's capital pool (capitals themselves are not travel targets from the pool). Ordered by name.</summary>
+        public List<LeylineRift> DiscoveredCitiesOfElement(Element element)
+        {
+            var list = new List<LeylineRift>();
+            foreach (var r in _rifts.Values)
+                if (r.Tier == PortalTier.City && r.Elem == element && _discovered.Contains(r.Id)) list.Add(r);
+            list.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
+            return list;
+        }
+
+        /// <summary>Whether a capital pool of <paramref name="element"/> may portal to <paramref name="destId"/>:
+        /// the destination must be a discovered city portal of the same element.</summary>
+        public bool CanRouteFromCapital(Element element, string destId)
+            => _rifts.TryGetValue(destId, out var r) && r.Tier == PortalTier.City && r.Elem == element && _discovered.Contains(destId);
 
         public IReadOnlyCollection<LeylineRift> All => _rifts.Values;
 

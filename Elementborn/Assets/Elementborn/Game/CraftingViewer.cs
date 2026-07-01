@@ -34,7 +34,7 @@ namespace Elementborn.Game
 
         private void Build()
         {
-            var p = OverlayUi.Panel("CraftingCanvas", "Crafting", 56, new Vector2(740, 720), Hide);
+            var p = OverlayUi.Panel("CraftingCanvas", Localization.T("ui.title.crafting"), 56, new Vector2(740, 720), Hide);
             _canvas = p.canvas;
             _content = p.content;
         }

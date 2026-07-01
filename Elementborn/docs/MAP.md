@@ -10,6 +10,37 @@ A `LeylineRift` is a fast-travel node at a world position. The `FastTravelNetwor
 lets you **warp to ones you've discovered** (stepped on / activated): `Discover(id)`, `CanTravelTo(id)`,
 `Discovered()`, and `NearestDiscovered(pos)` for "warp to closest". Discovery is savable and never un-sets.
 
+## Elemental portals (capital pools)
+
+Rifts are now **elemental portals**: a `LeylineRift` carries an `Element` (null for the neutral Confluence gate and
+crossings) and a `PortalTier` — `Capital` (the elemental capital hubs) or `City`. `PortalTheme.For(element)` gives
+each its look and glow colour: **water = a glassy pond that glows teal**, fire a molten rift, earth a mossy arch,
+air a shimmering updraft, and the neutral gate a prismatic ring.
+
+The routing is **discovery-gated and element-scoped**: you discover a city portal by visiting it, and from an
+elemental **capital pool** you may travel only to the **discovered city portals of that same element** — capitals
+themselves are hubs, not destinations from a pool. The rules are pure Core:
+`FastTravelNetwork.DiscoveredCitiesOfElement(element)` and `CanRouteFromCapital(element, destId)`, unit-tested in
+`PortalNetworkTests`. `WorldMapLayout` tags the four capitals (Stonereach/Earth, Gale Roost/Air, Tidewatch/Water,
+Ember Bastion/Fire) and adds eight discoverable city portals (two per element).
+
+In-world: `LeylineRiftObject` tints its meshes with the portal's `PortalTheme` colour and **brightens when
+discovered**; a **capital** portal's Interact opens the **`PortalPoolController`** — an overlay listing that
+element's discovered city portals as glowing, tap-to-travel buttons (warp via `MapState.WarpToRift`). A city or
+neutral portal's Interact still opens the leyline map.
+
+### The portal-pool map room
+
+`PortalPoolRoom` builds the map as a **shimmering shallow pool you stand inside**: the overworld map is painted on
+the pool floor, a translucent toon-water surface (the `Elementborn/ToonWater` shader) shimmers over it, and every
+portal stands as a glowing **`PortalNode`** in the water at its map position (projected via `Minimap.WorldToNormalized`).
+You **walk up and Interact to step through** — no map UI, because you're standing on the map. Discovered nodes glow
+in their `PortalTheme` colour and warp you to that portal's world location (`MapState.WarpToRift`); undiscovered ones
+stay dim and just hint you must find them first — so **everything discovered is reachable from the pool**. A large
+inverted **water globe** plus a **reflection probe** give the "suspended inside a sphere of water, looking out" look.
+Drop the component where the player stands and Play. Water transparency, the globe's inside-out cull, bespoke node
+meshes, and VR scale are shader/inspector tuning; the layout, discovery glow, and travel are wired.
+
 ## Locating people
 
 - **Yourself — always.** `Locator.Self(localId, worldPos)` returns your marker unconditionally.

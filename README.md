@@ -1,5 +1,9 @@
 # Elementborn — Unity VR scaffold
 
+[![Tests](https://github.com/aluminumBath/elementalClash/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/aluminumBath/elementalClash/actions/workflows/tests.yml)
+[![Release](https://github.com/aluminumBath/elementalClash/actions/workflows/release.yml/badge.svg)](https://github.com/aluminumBath/elementalClash/actions/workflows/release.yml)
+[![codecov](https://codecov.io/gh/aluminumBath/elementalClash/branch/master/graph/badge.svg)](https://codecov.io/gh/aluminumBath/elementalClash)
+
 A cross-platform elemental-combat game for **Meta Quest (standalone)**, **PCVR**, and **flat
 first-person PC** from one Unity 6 (URP) codebase — fast elemental combat, a gacha-style
 character roll, and a cel-shaded look.

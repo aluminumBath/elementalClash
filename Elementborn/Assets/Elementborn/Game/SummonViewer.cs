@@ -45,7 +45,7 @@ namespace Elementborn.Game
 
         private void Build()
         {
-            var p = OverlayUi.Panel("SummonCanvas", "Summon Beacon", 56, new Vector2(760, 860), Hide);
+            var p = OverlayUi.Panel("SummonCanvas", Localization.T("ui.title.summon"), 56, new Vector2(760, 860), Hide);
             _canvas = p.canvas;
             _content = p.content;
         }

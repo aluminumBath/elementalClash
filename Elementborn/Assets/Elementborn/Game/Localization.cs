@@ -98,6 +98,40 @@ namespace Elementborn.Game
             // HUD currency abbreviations.
             En("hud.dia", "Dia"); En("hud.sap", "Sap"); En("hud.eme", "Eme"); En("hud.rub", "Rub"); En("hud.sil", "Sil");
 
+            // Shared UI chrome (every OverlayUi panel).
+            En("ui.close", "Close (Esc)");
+
+            // Overlay titles.
+            En("ui.title.inventory", "Inventory");
+            En("ui.title.crafting", "Crafting");
+            En("ui.title.equipment", "Equipment");
+            En("ui.title.wardrobe", "Wardrobe");
+            En("ui.title.home", "Home");
+            En("ui.title.achievements", "Achievements");
+            En("ui.title.character", "Character");
+            En("ui.title.quests", "Quests");
+            En("ui.title.summon", "Summon Beacon");
+
+            // Settings screen.
+            En("settings.master", "Master volume");
+            En("settings.music", "Music volume");
+            En("settings.sfx", "SFX volume");
+            En("settings.sensitivity", "Mouse sensitivity");
+            En("settings.fov", "Field of view");
+            En("settings.invertY", "Invert look (Y)");
+            En("settings.vignette", "Comfort vignette (VR)");
+            En("settings.controls", "Controls…");
+            En("ui.closeShort", "Close");
+            En("ui.back", "< Back");
+
+            // Home menu.
+            En("home.workshop", "Open Workshop  —  Crafting");
+            En("home.enchanting", "Open Enchanting Table  —  Equipment");
+            En("home.wardrobe", "Open Wardrobe  —  change your look");
+            En("home.storage", "Open Storage  —  deposit & withdraw");
+            En("home.stable", "Open Stable  —  house your creatures");
+            En("home.storageTitle", "Home Storage");
+
             // Sample second locale (Spanish). Partial is fine — anything missing falls back to English.
             Es("menu.paused", "PAUSA");
             Es("menu.resume", "Reanudar");
@@ -135,6 +169,36 @@ namespace Elementborn.Game
             Es("credits.thanks", "Gracias por jugar.");
 
             Es("hud.dia", "Dia"); Es("hud.sap", "Zaf"); Es("hud.eme", "Esm"); Es("hud.rub", "Rub"); Es("hud.sil", "Pla");
+
+            Es("ui.close", "Cerrar (Esc)");
+
+            Es("ui.title.inventory", "Inventario");
+            Es("ui.title.crafting", "Fabricación");
+            Es("ui.title.equipment", "Equipo");
+            Es("ui.title.wardrobe", "Vestuario");
+            Es("ui.title.home", "Hogar");
+            Es("ui.title.achievements", "Logros");
+            Es("ui.title.character", "Personaje");
+            Es("ui.title.quests", "Misiones");
+            Es("ui.title.summon", "Faro de Invocación");
+
+            Es("settings.master", "Volumen general");
+            Es("settings.music", "Volumen de música");
+            Es("settings.sfx", "Volumen de efectos");
+            Es("settings.sensitivity", "Sensibilidad del ratón");
+            Es("settings.fov", "Campo de visión");
+            Es("settings.invertY", "Invertir vista (Y)");
+            Es("settings.vignette", "Viñeta de confort (RV)");
+            Es("settings.controls", "Controles…");
+            Es("ui.closeShort", "Cerrar");
+            Es("ui.back", "< Atrás");
+
+            Es("home.workshop", "Abrir Taller  —  Fabricación");
+            Es("home.enchanting", "Abrir Mesa de Encantamiento  —  Equipo");
+            Es("home.wardrobe", "Abrir Vestuario  —  cambia tu aspecto");
+            Es("home.storage", "Abrir Almacén  —  depositar y retirar");
+            Es("home.stable", "Abrir Establo  —  aloja tus criaturas");
+            Es("home.storageTitle", "Almacén del hogar");
         }
     }
 }

@@ -22,12 +22,23 @@ namespace Elementborn.Core
         public static IReadOnlyList<LeylineRift> Rifts { get; } = new List<LeylineRift>
         {
             new LeylineRift("crystal",   "Confluence Crystal", new Vector3(   0f, 0f,    0f)),
-            new LeylineRift("stone",     "Stonereach",         new Vector3(-160f, 0f,  150f)), // Earth, NW
-            new LeylineRift("gale",      "Gale Roost",         new Vector3( 160f, 0f,  150f)), // Air, NE
-            new LeylineRift("tide",      "Tidewatch",          new Vector3(-160f, 0f, -150f)), // Water, SW
-            new LeylineRift("ember",     "Ember Bastion",      new Vector3( 160f, 0f, -150f)), // Fire, SE
+            // Elemental capitals — the portal hubs (their pools route to that element's discovered city portals).
+            new LeylineRift("stone",     "Stonereach",         new Vector3(-160f, 0f,  150f), Element.Earth, PortalTier.Capital),
+            new LeylineRift("gale",      "Gale Roost",         new Vector3( 160f, 0f,  150f), Element.Air,   PortalTier.Capital),
+            new LeylineRift("tide",      "Tidewatch",          new Vector3(-160f, 0f, -150f), Element.Water, PortalTier.Capital),
+            new LeylineRift("ember",     "Ember Bastion",      new Vector3( 160f, 0f, -150f), Element.Fire,  PortalTier.Capital),
             new LeylineRift("skybridge", "Sky Bridge",         new Vector3(   0f, 0f,  110f)),
             new LeylineRift("verdant",   "Verdant Crossing",   new Vector3(   0f, 0f,  -70f)),
+
+            // City portals — discovered by visiting, then reachable from their element's capital pool.
+            new LeylineRift("earth_ridgehold",  "Ridgehold",        new Vector3(-205f, 0f,  120f), Element.Earth, PortalTier.City),
+            new LeylineRift("earth_looming",    "Loam Hollow",      new Vector3(-120f, 0f,  205f), Element.Earth, PortalTier.City),
+            new LeylineRift("air_cirrus",       "Cirrus Landing",   new Vector3( 205f, 0f,  120f), Element.Air,   PortalTier.City),
+            new LeylineRift("air_zephyr",       "Zephyr Terrace",   new Vector3( 120f, 0f,  205f), Element.Air,   PortalTier.City),
+            new LeylineRift("water_reefwood",   "Neritha Reefwood", new Vector3(-210f, 0f, -110f), Element.Water, PortalTier.City),
+            new LeylineRift("water_saltglass",  "Saltglass Cove",   new Vector3(-120f, 0f, -210f), Element.Water, PortalTier.City),
+            new LeylineRift("fire_cinderhold",  "Cinderhold",       new Vector3( 210f, 0f, -110f), Element.Fire,  PortalTier.City),
+            new LeylineRift("fire_ashmarket",   "Ash Market",       new Vector3( 120f, 0f, -210f), Element.Fire,  PortalTier.City),
         };
 
         /// <summary>A fresh fast-travel network with every canonical rift registered (none discovered yet).</summary>

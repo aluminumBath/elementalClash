@@ -32,7 +32,7 @@ namespace Elementborn.Game
                 tr.sizeDelta = new Vector2(-200, 52); tr.anchoredPosition = new Vector2(28, -14);
             }
 
-            var close = UiTheme.Button(root.transform, "Close (Esc)", onClose, 150, 42);
+            var close = UiTheme.Button(root.transform, Localization.T("ui.close"), onClose, 150, 42);
             var cr = UiTheme.Rect(close.gameObject);
             cr.anchorMin = cr.anchorMax = new Vector2(1f, 1f); cr.pivot = new Vector2(1f, 1f);
             cr.anchoredPosition = new Vector2(-18, -14);

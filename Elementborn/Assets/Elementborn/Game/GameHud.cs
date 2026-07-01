@@ -113,8 +113,8 @@ namespace Elementborn.Game
         }
 
         private static string Format(Wallet w) =>
-            $"Dia {w.CountOf(Currency.Diamond)}   Sap {w.CountOf(Currency.Sapphire)}   " +
-            $"Eme {w.CountOf(Currency.Emerald)}   Rub {w.CountOf(Currency.Ruby)}   Sil {w.CountOf(Currency.Silver)}";
+            $"{Localization.T("hud.dia")} {w.CountOf(Currency.Diamond)}   {Localization.T("hud.sap")} {w.CountOf(Currency.Sapphire)}   " +
+            $"{Localization.T("hud.eme")} {w.CountOf(Currency.Emerald)}   {Localization.T("hud.rub")} {w.CountOf(Currency.Ruby)}   {Localization.T("hud.sil")} {w.CountOf(Currency.Silver)}";
 
         private void Build()
         {

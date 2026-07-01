@@ -27,6 +27,30 @@ All notable changes to Elementborn are recorded here. The format follows
   hard-coded English — full string migration to `Localization.T` is a separate pass.)
 
 ### Added
+- **The royal houses.** A new `RoyalCatalog` (Core) + `RoyalNpcController` (Interact → "Speak") adds the central
+  human Crown that the roster was missing: aging **King Ronald** and prim **Queen Renee** of the Neutral Central
+  City, whose metal-blooded children married into the steam house of **Windwyrm** (Jaemys, Samara, young Conrad)
+  and the earth/plant house of **Flowers** (Kelly, Jaadeb, heir JB). Ronald's daughter **Ella** eloped with the
+  gardener **Eloc** to keep the Crab-Sign Creature Orphanage that **Deb the Sphinx** guards — and Ronald keeps a
+  statue of Deb in his throne room. Ten characters, data-driven with family ties and voices; drop a
+  `RoyalNpcController` to place any of them. Queen Renee's own children come later.
+- **In-world portal visuals + capital pools.** `LeylineRiftObject` now tints/emissive-glows each portal with its
+  `PortalTheme` colour (water teal, fire ember, earth moss, air updraft) and brightens on discovery. A **capital**
+  portal's Interact opens the new **`PortalPoolController`** — an overlay listing that element's discovered city
+  portals as glowing, tap-to-travel buttons (warps via `MapState.WarpToRift`).
+- **Element portal fast-travel (discovery-gated).** `LeylineRift` is now an elemental portal carrying an `Element`
+  and a `PortalTier` (capital hub vs city). A capital pool routes only to the **discovered city portals of its own
+  element** — `FastTravelNetwork.DiscoveredCitiesOfElement` / `CanRouteFromCapital` — and `PortalTheme` gives each
+  element its look (water = a glassy pond that glows teal, fire a molten rift, earth a mossy arch, air a shimmering
+  updraft). `WorldMapLayout` tags the four capitals and adds eight discoverable city portals. Pure Core with EditMode
+  tests (`PortalNetworkTests`). In-world portal visuals and the capital-pool destination picker are the Unity-side pass.
+- **Deb, the orphanage sphinx.** A new `GuideNpcId.Deb` (CreatureKeeper) in `NpcCatalog`: a sassy, kind, kooky winged
+  sphinx who fiercely guards the Crab-Sign Creature Orphanage. Data-driven like the other guides; drop a
+  `GuideNpcController` with `id = Deb` at the orphanage to place her (model falls back to the primitive until art is bound).
+- **Menus/HUD localized.** The main menu, its How-to-Play/Credits/Quit overlays, the pause menu, and the HUD currency
+  labels now route through `Localization.T`, with `en`/`es` keys seeded. The menu and pause screen re-render on
+  `LocaleChanged`, and the HUD relabels live — so the admin language toggle visibly switches everything that's migrated.
+  (Most other in-game strings are still hard-coded English — a broader migration remains.)
 - **Title background, input sprite, and a model import fixer.** Added a stylized `menu_bg` (dusk low-poly ridges
   with the four element light columns) and an `input` field sprite to `Resources/ElementbornUI/`; the main menu
   uses `menu_bg` in place of its code gradient. New editor tools under `Elementborn/Model Fix/*` enable Bake Axis

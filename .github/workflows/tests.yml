@@ -1,0 +1,65 @@
+name: Tests
+
+# Runs from the repo root; the Unity project lives in Elementborn/.
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+defaults:
+  run:
+    working-directory: Elementborn
+
+jobs:
+  guard:
+    name: IP guard + structural validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: IP / trademark guard
+        run: sh tools/ip-guard.sh
+      - name: Structural validation
+        run: sh tools/validate.sh
+
+  test:
+    name: EditMode + PlayMode (+ coverage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/cache@v4
+        with:
+          path: Elementborn/Library
+          key: Library-${{ hashFiles('Elementborn/Assets/**', 'Elementborn/Packages/**', 'Elementborn/ProjectSettings/**') }}
+          restore-keys: Library-
+
+      - uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: Elementborn
+          testMode: all
+          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+Elementborn.*'
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          artifactsPath: Elementborn/test-results
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: Elementborn/test-results
+
+      # Publishes coverage so the README Codecov badge resolves. Needs a CODECOV_TOKEN secret.
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: Elementborn/CodeCoverage
+          flags: unittests
+          fail_ci_if_error: false

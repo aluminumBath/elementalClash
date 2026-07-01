@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+defaults:
+  run:
+    working-directory: Elementborn
+
 jobs:
   release:
     name: Package & publish

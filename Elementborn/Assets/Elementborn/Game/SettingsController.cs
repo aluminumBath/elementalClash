@@ -101,28 +101,28 @@ namespace Elementborn.Game
             vlg.childForceExpandWidth = true; vlg.childForceExpandHeight = false;
 
             var s = SettingsStore.Current;
-            UiTheme.Slider(content.transform, "Master volume", s.masterVolume, 0f, 1f,
+            UiTheme.Slider(content.transform, Localization.T("settings.master"), s.masterVolume, 0f, 1f,
                 v => { s.masterVolume = v; SettingsStore.SaveAndApply(); });
-            UiTheme.Slider(content.transform, "Music volume", s.musicVolume, 0f, 1f,
+            UiTheme.Slider(content.transform, Localization.T("settings.music"), s.musicVolume, 0f, 1f,
                 v => { s.musicVolume = v; SettingsStore.SaveAndApply(); });
-            UiTheme.Slider(content.transform, "SFX volume", s.sfxVolume, 0f, 1f,
+            UiTheme.Slider(content.transform, Localization.T("settings.sfx"), s.sfxVolume, 0f, 1f,
                 v => { s.sfxVolume = v; SettingsStore.SaveAndApply(); });
-            UiTheme.Slider(content.transform, "Mouse sensitivity", s.mouseSensitivity, 0.1f, 5f,
+            UiTheme.Slider(content.transform, Localization.T("settings.sensitivity"), s.mouseSensitivity, 0.1f, 5f,
                 v => { s.mouseSensitivity = v; SettingsStore.SaveAndApply(); });
-            UiTheme.Slider(content.transform, "Field of view", s.fieldOfView, 50f, 100f,
+            UiTheme.Slider(content.transform, Localization.T("settings.fov"), s.fieldOfView, 50f, 100f,
                 v => { s.fieldOfView = v; SettingsStore.SaveAndApply(); });
-            UiTheme.Toggle(content.transform, "Invert look (Y)", s.invertY,
+            UiTheme.Toggle(content.transform, Localization.T("settings.invertY"), s.invertY,
                 v => { s.invertY = v; SettingsStore.SaveAndApply(); });
-            UiTheme.Toggle(content.transform, "Comfort vignette (VR)", s.comfortVignette,
+            UiTheme.Toggle(content.transform, Localization.T("settings.vignette"), s.comfortVignette,
                 v => { s.comfortVignette = v; SettingsStore.SaveAndApply(); });
 
-            var controls = UiTheme.Button(panel.transform, "Controls…",
+            var controls = UiTheme.Button(panel.transform, Localization.T("settings.controls"),
                 () => { Close(); RebindController.EnsureInstance().Show(); }, 240, 48);
             var conr = (RectTransform)controls.transform;
             conr.anchorMin = conr.anchorMax = new Vector2(0.5f, 0f);
             conr.anchoredPosition = new Vector2(0, 100);
 
-            var close = UiTheme.Button(panel.transform, "Close", Close, 200, 52);
+            var close = UiTheme.Button(panel.transform, Localization.T("ui.closeShort"), Close, 200, 52);
             var br = (RectTransform)close.transform;
             br.anchorMin = br.anchorMax = new Vector2(0.5f, 0f);
             br.anchoredPosition = new Vector2(0, 40);

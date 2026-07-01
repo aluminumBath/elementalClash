@@ -19,7 +19,7 @@ namespace Elementborn.Game
 
         private void Awake()
         {
-            var p = OverlayUi.Panel("QuestLogCanvas", "Quests", 55, new Vector2(820, 620), Hide);
+            var p = OverlayUi.Panel("QuestLogCanvas", Localization.T("ui.title.quests"), 55, new Vector2(820, 620), Hide);
             _canvas = p.canvas; _content = p.content;
             Hide();
         }

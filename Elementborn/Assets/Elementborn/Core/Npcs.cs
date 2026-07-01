@@ -1,6 +1,6 @@
 namespace Elementborn.Core
 {
-    public enum GuideNpcId { Willow, Kiana, Parfa }
+    public enum GuideNpcId { Willow, Kiana, Parfa, Deb }
 
     /// <summary>Willow's menagerie. Feeding each of them (its own food) over a couple of days earns a hidden-ability hint.</summary>
     public enum WillowSidekick { Gunnar, Parrot, Blobfish, Mushroom, Chameleon }
@@ -91,6 +91,15 @@ namespace Elementborn.Core
                         "two bickering frogs, one of air and one of water, that orbit his head",
                         "Looking for something — or someone? I know where most things are.",
                         "Tell me what you seek and I'll point you to it. I also buy surplus goods, if you're selling.");
+
+                case GuideNpcId.Deb:
+                    return new GuideNpcInfo(id, "Deb", NpcRole.CreatureKeeper,
+                        Element.Air, SubArt.None,
+                        "the Crab-Sign Creature Orphanage in Neritha Reefwood", BiomeType.Beach,
+                        "a great winged sphinx — lioness body, folded eagle wings, and moon-pale eyes that miss nothing",
+                        "a rotating pride of orphaned creatures she has decided are 'hers now'",
+                        "Well, well. Two legs, no tail, and you strolled right up to MY orphanage. Bold. I like bold — don't touch anything.",
+                        "Every lost, hurt, or unwanted creature under this roof is mine to guard, and I have claws and opinions in equal measure. Bring me one that needs help and I'll purr. Harm one and — well, I never forget a face. Or a grudge. Or where I left my third-favorite riddle.");
 
                 default:
                     return new GuideNpcInfo(GuideNpcId.Willow, "Willow M. Hyst", NpcRole.CreatureFinder,

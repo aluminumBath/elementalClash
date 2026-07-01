@@ -33,7 +33,7 @@ namespace Elementborn.Game
 
         private void Build()
         {
-            var p = OverlayUi.Panel("EquipmentCanvas", "Equipment", 56, new Vector2(740, 720), Hide);
+            var p = OverlayUi.Panel("EquipmentCanvas", Localization.T("ui.title.equipment"), 56, new Vector2(740, 720), Hide);
             _canvas = p.canvas;
             _content = p.content;
         }
