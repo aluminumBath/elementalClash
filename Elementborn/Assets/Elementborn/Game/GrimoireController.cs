@@ -8,8 +8,8 @@ using Elementborn.Core;
 namespace Elementborn.Game
 {
     /// <summary>
-    /// The Grimoire (default key G): a discovery-driven tome with three tabbed sections — Bestiary, Attacks and
-    /// Bloodlines — themed after a maroon-and-gold book. Every entry stays "???" until the player does the thing
+    /// The Grimoire (default key G): a discovery-driven tome with four tabbed sections — Bestiary, Attacks,
+    /// Bloodlines and Locations — themed after a maroon-and-gold book. Every entry stays "???" until the player does the thing
     /// that reveals it (sights / defeats / tames a creature, casts an attack, carries or meets a bloodline), and a
     /// tier never downgrades. Holds the live <see cref="GrimoireProgress"/>, subscribes to the gameplay events on
     /// <see cref="QuestEvents"/> that fill it in, and persists through <see cref="PlayerInventory"/>. The bootstrap
@@ -82,6 +82,11 @@ namespace Elementborn.Game
         private void OnSighted(string kind) { if (Enum.TryParse(kind, out CreatureKind k) && _progress.RecordSighting(k)) Refresh(); }
         private void OnDefeated(string kind) { if (Enum.TryParse(kind, out CreatureKind k) && _progress.RecordDefeat(k)) Refresh(); }
         private void OnTamed(string kind) { if (Enum.TryParse(kind, out CreatureKind k) && _progress.RecordTame(k)) Refresh(); }
+
+        // Location discovery, called by LandmarkPortal as the player nears / enters a hidden landmark (never downgrades).
+        public void NoteLocationHeard(Landmark landmark)    { if (_progress.RecordLocationHeard(landmark)) Refresh(); }
+        public void NoteLocationFound(Landmark landmark)    { if (_progress.RecordLocationFound(landmark)) Refresh(); }
+        public void NoteLocationExplored(Landmark landmark) { if (_progress.RecordLocationExplored(landmark)) Refresh(); }
 
         private void OnCast(string element, string intent)
         {
@@ -182,6 +187,7 @@ namespace Elementborn.Game
             AddTab(tabs.transform, GrimoireSection.Bestiary, "Bestiary");
             AddTab(tabs.transform, GrimoireSection.Attacks, "Attacks");
             AddTab(tabs.transform, GrimoireSection.Bloodlines, "Bloodlines");
+            AddTab(tabs.transform, GrimoireSection.Locations, "Locations");
 
             _countLabel = UiTheme.Label(root.transform, "", 20, Gold, TextAnchor.MiddleRight);
             var clr = _countLabel.Rect;

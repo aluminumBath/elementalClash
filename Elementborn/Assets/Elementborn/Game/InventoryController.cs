@@ -76,6 +76,11 @@ namespace Elementborn.Game
             var dmg = tagged != null ? tagged.GetComponentInParent<Damageable>() : null;
             if (effect.Heal > 0 && dmg != null && dmg.Health != null) dmg.Health.Heal(effect.Heal);
             if (effect.RefillStamina) StaminaController.Instance?.Refill();
+            if (effect.WaterBreathingSeconds > 0f && tagged != null)
+            {
+                var uw = tagged.GetComponentInParent<UnderwaterController>();
+                if (uw != null) uw.GrantWaterBreathing(effect.WaterBreathingSeconds);
+            }
 
             GameHud.Instance?.Toast("Used " + (ItemCatalog.Get(itemId)?.Name ?? itemId));
             AudioController.Instance?.Confirm();

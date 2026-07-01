@@ -19,6 +19,51 @@ All notable changes to Elementborn are recorded here. The format follows
   region nodes receive clicks.
 
 ### Added
+- **Hidden landmarks — portals + placement (Slice F).** New `LandmarkPortal` (a `BaseInteractable`) is the physical
+  entrance to a hidden landmark: on interact it reads the player's real approach — altitude above sea level, depth
+  below the surface, Flight sub-art, underwater breathing (Water Channeler or an active Tideglass boon), and any
+  recognition relic (Stormwarden's Token / Keelwood Splinter) — into a `LandmarkApproach`, runs it through
+  `LandmarkAccessGate`, toasts the gate's reason, and records discovery. Discovery is progressive: reaching the
+  threshold reveals the rumour (Glimpsed via `GrimoireController.NoteLocationHeard`), a successful entry reveals the
+  place (Known) and marks it explored (Mastered). `LandmarkPortalPlacer` spawns an interactable marker for each of
+  the four at authored positions (Thalen'Veyr's sits high for the storm-eye descent) so they exist in-world without
+  hand-authoring; a smoke test asserts both Game types compile. Real interiors and prefab art are the next slice.
+- **Hidden landmarks — NPC roster (Slice E).** New pure-Core `LandmarkNpcCatalog` seeds the 16 key characters of the
+  four landmarks, each mapped onto our disciplines: Thalen'Veyr's Verdant Council (Gaius Valmora/Air, Wel Vana/Verdancy,
+  Aliefirl Kaida, Varrandur Sunvein/Fire), the siren gatekeeper Morga and the vampire antagonist Jude/SanguineGrip; the
+  Ashwind genie lords Zephra (Air/Flight), Khalim Tidebinder (Water) and Sultan Ashkar (Fire/Magmacraft) plus Old Diver
+  Mira; Ilyrath's Headmaster Alaric Blackthorn, Veyra Shard-Sight, High Prism Keeper Solenne, Arch-Calmer Thalen Mirawen
+  (Steamcraft) and the bound source Astraeth; and the Tidecaller bubblewright Naia. Each entry carries name, title, home
+  landmark, alignment, mapped Element/SubArt and whether they Channel — ready for the dialogue/quest/spawn layers.
+- **Hidden landmarks — access gate (Slice D).** New pure-Core `LandmarkAccessGate` encodes each landmark's entry
+  rules as testable logic: Thalen'Veyr admits only a flier dropping through the storm's eye (≥120 m up) or a diver
+  rising from the crushing deep (≥60 m down) — a recognition relic (Stormwarden's Token / Keelwood Splinter) halves
+  those; the Ashwind cave-portal and Ilyrath waterfall-portal need only the player at the threshold; the Tidecaller
+  tubes drop into deep water, so a non-water-breather is turned back until they drink a Tideglass Draught. It takes a
+  `LandmarkApproach` (height/depth/flight/water-breathing/threshold/token) and returns an `AccessResult` with a
+  player-facing reason. A reflection smoke test covers the new surface (landmark enum, gate, boon, Grimoire Locations,
+  Tideglass consumable). The physical entrances/portals that feed this gate and record discovery are the next slice.
+- **Hidden landmarks — Grimoire discovery (Slice C).** The Grimoire gains a fourth **Locations** tab. Each of the
+  four hidden landmarks is a discovery-driven entry sourced from `LandmarkCatalog`: a rumour at Glimpsed, what the
+  place is at Known, and how it's reached plus its deepest secret at Mastered. All start "???" (hidden). New
+  `GrimoireProgress.RecordLocationHeard/Found/Explored(Landmark)` hooks are ready for the entrance/portal slice to
+  call when a landmark is rumoured, found, and entered.
+- **Hidden landmarks — foundation + first items (Slices A–B).** Began adapting three source modules into the
+  world as four hidden, named mega-locations. New pure-Core `Landmark` catalog (`Core/Landmarks.cs`) registers
+  **Thalen'Veyr** (the storm-shrouded isle; reached only from far above the storm's eye or the crushing deep),
+  **Ashwind Atoll** (the tri-elemental Djinn/Marid/Ifrit caldera; entered by a portal in a lava cave), **Ilyrath**
+  (the Prism City, reached through a waterfall-portal), and the **Tidecaller Village** (a floating village over a
+  bubble-city, the water-breathing jumping-off point for the sunken cities), each with its access mechanic encoded
+  on the existing `SiteDomain` vocabulary. A temporary underwater-breathing boon (`WaterBreathingBoon` in
+  `Core/Underwater.cs`) lets a non-water Channeler breathe below the surface for a while: the new **Tideglass
+  Draught** consumable grants it (wired through `ConsumableEffect.WaterBreathingSeconds` →
+  `UnderwaterController.GrantWaterBreathing`, treated like water-breathing for air but not for swim speed), and four
+  themed relic items (Keelwood Splinter, Stormwarden's Token, Prism Shard, Bottled Updraft) join the catalog. NPCs,
+  interiors, world placement and Grimoire discovery follow in later slices.
+- **Editor: model-audit tool.** `Elementborn > Model Audit > Scan Models For Issues` scans imported models and
+  reports which are missing materials (empty/white, or magenta under URP) and which look mis-rotated (bounds deeper
+  than tall — the lying-flat import case), and lists which `CreatureKind`s have no model in Resources (so still show
+  the primitive placeholder). Read-only; leaves the flagged assets selected in the Project window.
 - **Inventory merge — step 4: one item pool.** Every active reader/writer of the legacy `PlayerInventory.Items`
   bag now goes through `PlayerInventoryTracker`. `PlayerInventory.AddItem` delegates to the Tracker (keeping the
   collection quest event + pickup sound), a new `PlayerInventoryTracker.EntriesById()` lets the id-based UIs

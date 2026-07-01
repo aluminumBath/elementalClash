@@ -2,12 +2,19 @@ using System.Collections.Generic;
 
 namespace Elementborn.Core
 {
-    /// <summary>What using a consumable does: an amount of health to heal, and whether it refills stamina.</summary>
+    /// <summary>What using a consumable does: an amount of health to heal, whether it refills stamina, and how
+    /// many seconds of temporary underwater breathing it grants (0 for none).</summary>
     public readonly struct ConsumableEffect
     {
         public readonly int Heal;
         public readonly bool RefillStamina;
-        public ConsumableEffect(int heal, bool refillStamina) { Heal = heal; RefillStamina = refillStamina; }
+        public readonly float WaterBreathingSeconds;
+        public ConsumableEffect(int heal, bool refillStamina, float waterBreathingSeconds = 0f)
+        {
+            Heal = heal;
+            RefillStamina = refillStamina;
+            WaterBreathingSeconds = waterBreathingSeconds;
+        }
     }
 
     /// <summary>
@@ -22,6 +29,7 @@ namespace Elementborn.Core
             { "healing_tonic",   new ConsumableEffect(40, false) },
             { "stamina_draught", new ConsumableEffect(0, true) },
             { "elixir_of_vigor", new ConsumableEffect(70, true) },
+            { "tideglass_draught", new ConsumableEffect(0, false, 45f) },
         };
 
         public static bool IsConsumable(string itemId) => itemId != null && Effects.ContainsKey(itemId);

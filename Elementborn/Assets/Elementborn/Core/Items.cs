@@ -86,6 +86,13 @@ namespace Elementborn.Core
             Add(new ItemDef("earth_arrow", "Earth Arrow", "An arrowhead that carries an Earth bite.", ItemCategory.Material, 3));
             Add(new ItemDef("air_arrow", "Air Arrow", "An arrowhead that carries an Air bite.", ItemCategory.Material, 3));
 
+            // Hidden-landmark items (Slice B). The draught is wired in Consumables; the rest are relic/flavour for now.
+            Add(new ItemDef("tideglass_draught", "Tideglass Draught", "A phial of Tidecaller bubble-glass; drink to breathe water for a short while.", ItemCategory.Consumable, 35));
+            Add(new ItemDef("keelwood_splinter", "Keelwood Splinter", "A sliver from a hull that once passed the Veil of Tempests; it remembers the way to Thalen'Veyr.", ItemCategory.Treasure, 55));
+            Add(new ItemDef("stormwardens_token", "Stormwarden's Token", "A storm-etched token the Keepers give to those the Veil should recognise.", ItemCategory.Treasure, 45));
+            Add(new ItemDef("prism_shard", "Prism Shard", "A shard of Ilyrath prism-glass holding a sliver of stored daylight.", ItemCategory.Treasure, 40));
+            Add(new ItemDef("bottled_updraft", "Bottled Updraft", "A stoppered gust from the Caldera Spire; the Djinn trade them like coin.", ItemCategory.Treasure, 30));
+
             return d;
         }
     }

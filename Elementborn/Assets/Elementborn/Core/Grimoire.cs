@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Elementborn.Core
 {
-    public enum GrimoireSection { Bestiary, Attacks, Bloodlines }
+    public enum GrimoireSection { Bestiary, Attacks, Bloodlines, Locations }
 
     /// <summary>How fully an entry has been discovered. Higher tiers reveal more of it.</summary>
     public enum DiscoveryTier { Unknown = 0, Glimpsed = 1, Known = 2, Mastered = 3 }
@@ -104,6 +104,9 @@ namespace Elementborn.Core
         public bool RecordCast(Element element, IntentType intent) => Discover(GrimoireSection.Attacks, GrimoireCatalog.AttackId(element, intent), DiscoveryTier.Known);
         public bool RecordBloodlineSeen(BloodlineId bloodline)    => Discover(GrimoireSection.Bloodlines, bloodline.ToString(), DiscoveryTier.Glimpsed);
         public bool RecordBloodlineStudied(BloodlineId bloodline) => Discover(GrimoireSection.Bloodlines, bloodline.ToString(), DiscoveryTier.Mastered);
+        public bool RecordLocationHeard(Landmark landmark)    => Discover(GrimoireSection.Locations, landmark.ToString(), DiscoveryTier.Glimpsed);
+        public bool RecordLocationFound(Landmark landmark)    => Discover(GrimoireSection.Locations, landmark.ToString(), DiscoveryTier.Known);
+        public bool RecordLocationExplored(Landmark landmark) => Discover(GrimoireSection.Locations, landmark.ToString(), DiscoveryTier.Mastered);
 
         // --- persistence ---
         public IReadOnlyDictionary<string, int> ToSave()
@@ -146,6 +149,7 @@ namespace Elementborn.Core
                 case GrimoireSection.Bestiary: return Bestiary();
                 case GrimoireSection.Attacks: return Attacks();
                 case GrimoireSection.Bloodlines: return BloodlineEntries();
+                case GrimoireSection.Locations: return Locations();
                 default: return new List<GrimoireEntry>();
             }
         }
@@ -194,6 +198,47 @@ namespace Elementborn.Core
                     string.IsNullOrEmpty(b.Notable) ? "" : "Known bearer: " + b.Notable));
             }
             return list;
+        }
+
+        /// <summary>The hidden landmarks as grimoire entries: a rumour at Glimpsed, what the place is at Known, and
+        /// how it is reached plus its deepest secret at Mastered. Text is sourced from <see cref="LandmarkCatalog"/>.</summary>
+        public static IReadOnlyList<GrimoireEntry> Locations()
+        {
+            var list = new List<GrimoireEntry>();
+            foreach (var landmark in LandmarkCatalog.All)
+            {
+                var info = LandmarkCatalog.For(landmark);
+                list.Add(new GrimoireEntry(GrimoireSection.Locations, landmark.ToString(),
+                    info.DisplayName,
+                    info.Subtitle + ". " + LocationRumor(landmark),
+                    info.Lore,
+                    info.AccessHint + " " + LocationSecret(landmark)));
+            }
+            return list;
+        }
+
+        private static string LocationRumor(Landmark landmark)
+        {
+            switch (landmark)
+            {
+                case Landmark.ThalenVeyr: return "It sits on no chart, and those who reach it are made to forget the way back.";
+                case Landmark.AshwindAtoll: return "A smoke on the horizon that never drifts, and a song in three voices carried on the wind.";
+                case Landmark.Ilyrath: return "They say a city of rainlight hides where a great falls meets the cliffs.";
+                case Landmark.TidecallerVillage: return "A village of floats drifts the open sea, and folk climb down into the water and do not drown.";
+                default: return "";
+            }
+        }
+
+        private static string LocationSecret(Landmark landmark)
+        {
+            switch (landmark)
+            {
+                case Landmark.ThalenVeyr: return "Beneath its roots the sealed shadow-gates wait, and a hunter stalks the old bloodlines for the sleeping power in their veins.";
+                case Landmark.AshwindAtoll: return "The volcano is no mere mountain but a young elemental learning to speak; the genies' endless feud is its cradle.";
+                case Landmark.Ilyrath: return "The prisms are not gifts but chains, and behind the falls a bound source stirs as the seventh, colourless chain fails.";
+                case Landmark.TidecallerVillage: return "The tubes and the palace are Marid-made; the deepest routes open only to those the tide has learned to trust.";
+                default: return "";
+            }
         }
 
         private static string Readable(IntentType intent)

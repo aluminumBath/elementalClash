@@ -43,6 +43,7 @@ namespace Elementborn.Game
 
         private Damageable _self;
         private float _suffocate;
+        private readonly WaterBreathingBoon _breathBoon = new WaterBreathingBoon();
         private bool _captured;
         private bool _fog0;
         private Color _fogC0;
@@ -57,6 +58,12 @@ namespace Elementborn.Game
 
         /// <summary>Force a hold-breath for a duration (e.g. an octopus grab); refreshes if already suffocating.</summary>
         public void Suffocate(float seconds) => _suffocate = Mathf.Max(_suffocate, seconds);
+
+        /// <summary>Grant a temporary underwater-breathing boon (e.g. a Tideglass Draught); extends if already active.</summary>
+        public void GrantWaterBreathing(float seconds) => _breathBoon.Grant(seconds);
+
+        /// <summary>True while a temporary water-breathing boon is running.</summary>
+        public bool HasWaterBreathingBoon => _breathBoon.IsActive;
 
         private void Start()
         {
@@ -75,9 +82,12 @@ namespace Elementborn.Game
             bool inBubble = BubbleVolume.Contains(transform.position);
             bool inIce = IceTrap.Contains(transform.position);
 
-            // Breathing: at the surface, in a bubble, or you're a water user — unless ice traps a non-water user.
-            IsBreathing = !IsSubmerged || inBubble || IsWaterUser;
-            if (inIce && !IsWaterUser) IsBreathing = false;
+            _breathBoon.Tick(dt);
+            // Breathing: at the surface, in a bubble, a water user, or holding a temporary water-breathing boon —
+            // unless ice traps a non-breather. A held-breath grip below (Suffocate) still overrides everything.
+            bool waterBreather = IsWaterUser || _breathBoon.IsActive;
+            IsBreathing = !IsSubmerged || inBubble || waterBreather;
+            if (inIce && !waterBreather) IsBreathing = false;
             if (_suffocate > 0f) { _suffocate -= dt; IsBreathing = false; } // an octopus grip drowns even water users
 
             Air.Tick(dt, IsBreathing);

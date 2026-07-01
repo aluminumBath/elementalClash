@@ -12,7 +12,7 @@ Nothing below is missing *code* for the current design; it's the work that lives
   day/night, the HUD, interaction prompts, saving, the shop, and the defend/dash polish.
 - Cel/toon shaders (lit + a vertex-color toggle, sky, water, comfort vignette) and the low-poly
   **mesh-terrain** generator + builder.
-- 25 EditMode test files + PlayMode tests and a GameCI workflow.
+- 26 EditMode test files + PlayMode tests and a GameCI workflow.
 - Docs: this file, `INDEX.md`, `README.md`, `GETTING_STARTED.md`, `DEPLOYMENT.md`, `ART_GUIDE.md`,
   `PALETTE.md`, `UI_SPRITES.md`.
 
