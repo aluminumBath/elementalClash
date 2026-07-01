@@ -3,7 +3,12 @@ guid: 4b490f8ab37bd2241bc16fb24a70df11
 ModelImporter:
   serializedVersion: 24501
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 08ca52fdbf415f440aab247b4341cc16, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -51,7 +56,7 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
-    bakeAxisConversion: 0
+    bakeAxisConversion: 1
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
