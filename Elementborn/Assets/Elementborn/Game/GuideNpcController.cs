@@ -55,7 +55,7 @@ namespace Elementborn.Game
         {
             if (string.IsNullOrEmpty(_info.Name)) _info = NpcCatalog.For(id);
             QuestEvents.RaiseTalkedToNpc(id.ToString());
-            string line = $"{_info.Greeting} {ServiceLine()}";
+            string line = $"{Loc.T(_info.Greeting)} {Loc.T(ServiceLine())}";
             Spoke?.Invoke(line);
             DialogueController.Instance?.Open(id.ToString(), _info.Name, line);
             Debug.Log($"[{_info.Name}] {line}");

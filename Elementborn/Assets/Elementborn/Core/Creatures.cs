@@ -21,7 +21,8 @@ namespace Elementborn.Core
     /// <summary>Static data for a creature: theme, who may own it, and how it's acquired.</summary>
     public readonly struct CreatureInfo
     {
-        public readonly string Name;
+        private readonly string _name;
+        public string Name => Loc.T(_name);        // localized on read; English is the fallback key
         public readonly Element? Element;          // thematic element
         public readonly Element? RequiredElement;  // a user must channel this to own/use it (null = anyone)
         public readonly bool Rideable;             // large enough to ride
@@ -33,7 +34,7 @@ namespace Elementborn.Core
         public CreatureInfo(string name, Element? element, Element? requiredElement, bool rideable,
             bool isCompanion, bool purchasable, long price, float tameChance)
         {
-            Name = name;
+            _name = name;
             Element = element;
             RequiredElement = requiredElement;
             Rideable = rideable;

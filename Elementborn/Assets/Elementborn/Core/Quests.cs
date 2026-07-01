@@ -36,18 +36,21 @@ namespace Elementborn.Core
     public sealed class QuestDefinition
     {
         public string Id { get; }
-        public string Title { get; }
-        public string Summary { get; }
+        public string Title => Loc.T(_title);       // localized on read; English is the fallback key
+        public string Summary => Loc.T(_summary);
         public string GiverNpcId { get; }   // GuideNpcId.ToString()
         public IReadOnlyList<QuestObjective> Objectives { get; }
         public QuestReward Reward { get; }
         public IReadOnlyList<string> Prerequisites { get; }   // quest ids that must be Completed first (empty = none)
 
+        private readonly string _title;
+        private readonly string _summary;
+
         public QuestDefinition(string id, string title, string summary, string giverNpcId,
                                IReadOnlyList<QuestObjective> objectives, QuestReward reward,
                                IReadOnlyList<string> prerequisites = null)
         {
-            Id = id; Title = title; Summary = summary; GiverNpcId = giverNpcId;
+            Id = id; _title = title; _summary = summary; GiverNpcId = giverNpcId;
             Objectives = objectives; Reward = reward;
             Prerequisites = prerequisites ?? Array.Empty<string>();
         }
