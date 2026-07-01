@@ -19,6 +19,27 @@ All notable changes to Elementborn are recorded here. The format follows
   region nodes receive clicks.
 
 ### Added
+- **Real UI sprites wired in.** Salvaged the hand-made UI art (`panel`, `btn_normal` + button states,
+  `hud_*`, `gem_*`, `map_*`, `overlay_dim`) into `Resources/ElementbornUI/` with proper Sprite import metas
+  (9-slice borders on the panel/button/frame sprites). `UiTheme` auto-loads `panel` and `btn_normal`, so every
+  code-built panel and button — including the redesigned main menu — now renders on the real art instead of
+  flat colours. Borders/pivots may need a pass in the Sprite Editor.
+- **Main menu redesign.** The title screen is rebuilt on its own world-space canvas with a gradient
+  backdrop, a centred ELEMENTBORN wordmark over a four-element (Fire/Water/Earth/Air) accent bar, and a
+  fade-in. Actions are prioritised: with a saved journey **Continue** leads and shows a one-line save summary
+  (character · level · date); otherwise **New Game** leads. Buttons gained real hover/press colour states, a
+  muted **Quit** that asks to confirm, keyboard/controller selection on the primary action, and a version
+  footer from `Application.version`. Still built through `UiTheme`, so installed `ElementbornUI` sprites
+  (optional `menu_bg`/`panel`/`btn_normal`), the project TMP font, and the UI click sounds are used
+  automatically, falling back to flat colours when none are installed.
+- **Unit tests for effectiveness + progression math.** New EditMode suite `CoreMatchupAndProgressionTests`
+  covers shipped Core logic that had no tests in the active tree: the `ElementMatchup` effectiveness cycle
+  (Fire ▶ Earth ▶ Air ▶ Water — strong 1.5 / weak 0.6 / neutral 1.0, both directions and self-neutral), the
+  `AbilityUnlocks` ladder (Sweep@2, Heavy@4, Secondary/Signature@6, an always-on starter kit, and multi-level
+  `NewlyUnlocked` jumps), `Progression` XP/level/health rollover and save-clamping, `PerkState` ranking /
+  point-spend / max-rank cap and its aggregated Toughness/Scholar/Fortune effects, and the `Balance` XP-dial
+  identity + scale guards. Reflection-based like the existing smoke test, so the test assembly stays
+  dependency-free (it can't reference Assembly-CSharp directly).
 - **Hidden landmarks — portals + placement (Slice F).** New `LandmarkPortal` (a `BaseInteractable`) is the physical
   entrance to a hidden landmark: on interact it reads the player's real approach — altitude above sea level, depth
   below the surface, Flight sub-art, underwater breathing (Water Channeler or an active Tideglass boon), and any
