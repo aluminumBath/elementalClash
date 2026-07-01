@@ -59,7 +59,7 @@ namespace Elementborn.Game.Social
         // ---- local actions (the demo partner mirrors lock/confirm) ----
         private void OfferItemDelta(string id, int delta)
         {
-            int held = Inv != null ? Inv.Items.Count(id) : 0;
+            int held = PlayerInventoryTracker.CountItemId(id);
             int now = Mathf.Clamp(_session.OfferA.Lines.TryGetValue(id, out var v) ? v + delta : delta, 0, held);
             _session.SetOffer(LocalId, id, now);
             Refresh();
@@ -105,7 +105,7 @@ namespace Elementborn.Game.Social
         private static void Give(PlayerInventory inv, string key, int amount)
         {
             if (key.StartsWith(CoinPrefix)) { if (TryCoin(key, out var c)) inv.AddCurrency(c, -Mathf.Min(amount, inv.Wallet.CountOf(c))); }
-            else inv.Items.Remove(key, amount);
+            else PlayerInventoryTracker.RemoveItemId(key, amount);
         }
 
         private static void Receive(PlayerInventory inv, string key, int amount)
@@ -157,7 +157,7 @@ namespace Elementborn.Game.Social
                 var inv = Inv;
                 if (inv != null)
                 {
-                    foreach (var e in inv.Items.Entries())
+                    foreach (var e in PlayerInventoryTracker.EntriesById())
                     {
                         string id = e.Key;
                         UiTheme.Button(_content, "+ " + Label(id) + " (have " + e.Value + ")", () => OfferItemDelta(id, 1), 300, 42);

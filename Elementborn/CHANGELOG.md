@@ -7,6 +7,12 @@ All notable changes to Elementborn are recorded here. The format follows
 ## [Unreleased]
 
 ### Added
+- **Inventory merge — step 4: one item pool.** Every active reader/writer of the legacy `PlayerInventory.Items`
+  bag now goes through `PlayerInventoryTracker`. `PlayerInventory.AddItem` delegates to the Tracker (keeping the
+  collection quest event + pickup sound), a new `PlayerInventoryTracker.EntriesById()` lets the id-based UIs
+  enumerate it, and crafting, equipment, the bow's ammo, consumable use, sidekick feeding, and trade all read
+  and spend from the Tracker. `ShopController` (superseded, unwired) and the `HomeMenuViewer` legacy-drain panel
+  are intentionally left; save/load migration is step 5. See `docs/INVENTORY_MIGRATION.md`.
 - **Inventory merge — step 3: migrated items show catalog names.** `InventoryItemStack.DisplayName` now
   falls back to the authored `ItemCatalog` name when a stack has no `InventoryItemDefinition`, so legacy items
   moved into the Tracker read as "Iron Helm" instead of "iron_helm" — zero new assets, name still sourced from

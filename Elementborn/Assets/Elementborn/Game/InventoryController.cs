@@ -54,16 +54,13 @@ namespace Elementborn.Game
 
         private void Hook()
         {
-            if (_hooked) return;
-            var inv = PlayerInventory.Instance;
-            if (inv != null) { inv.Items.Changed += Refresh; _hooked = true; }
+            // Inventory lives in the Tracker now; its change signal is a serialized UnityEvent, not a C# event,
+            // so the panel refreshes on open and after each use rather than subscribing. Kept for call symmetry.
+            _hooked = true;
         }
 
         private void Unhook()
         {
-            if (!_hooked) return;
-            var inv = PlayerInventory.Instance;
-            if (inv != null) inv.Items.Changed -= Refresh;
             _hooked = false;
         }
 
@@ -72,9 +69,8 @@ namespace Elementborn.Game
         private void Use(string itemId)
         {
             if (!Consumables.TryGet(itemId, out var effect)) return;
-            var pi = PlayerInventory.Instance;
-            if (pi == null || !pi.Items.Has(itemId, 1)) return;
-            pi.Items.Remove(itemId, 1);
+            if (!PlayerInventoryTracker.HasItemId(itemId, 1)) return;
+            PlayerInventoryTracker.RemoveItemId(itemId, 1);
 
             var tagged = GameObject.FindGameObjectWithTag("Player");
             var dmg = tagged != null ? tagged.GetComponentInParent<Damageable>() : null;
@@ -91,9 +87,8 @@ namespace Elementborn.Game
             if (_content == null) return;
             OverlayUi.Clear(_content);
 
-            var inv = PlayerInventory.Instance;
-            var entries = inv != null ? inv.Items.Entries() : null;
-            if (entries == null || entries.Count == 0)
+            var entries = PlayerInventoryTracker.EntriesById();
+            if (entries.Count == 0)
             {
                 OverlayUi.Body(_content, "Empty. Defeat creatures for drops, or buy from a merchant.", 20);
                 return;

@@ -93,16 +93,14 @@ namespace Elementborn.Game
             if (weaponHolder != null && weaponHolder.HasWeapon
                 && weaponHolder.Current.Type == WeaponType.LongBow && outcome.Kind == OutcomeKind.Projectile)
             {
-                var quiver = PlayerInventory.Instance;
                 string arrow = null;
-                if (quiver != null)
-                    foreach (var id in Ammo.All) if (quiver.Items.Has(id)) { arrow = id; break; }
+                foreach (var id in Ammo.All) if (PlayerInventoryTracker.HasItemId(id)) { arrow = id; break; }
                 if (arrow == null)
                 {
                     GameHud.Instance?.Toast("Out of arrows.");
                     return;
                 }
-                quiver.Items.Remove(arrow, 1);
+                PlayerInventoryTracker.RemoveItemId(arrow, 1);
                 Element? arrowElement = Ammo.ElementOf(arrow);
                 if (arrowElement.HasValue) outcome = outcome.WithElement(arrowElement.Value);
             }

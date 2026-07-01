@@ -71,9 +71,7 @@ namespace Elementborn.Game
 
             OverlayUi.Header(_content, "Gear in your bag");
             bool any = false;
-            var pi = PlayerInventory.Instance;
-            if (pi != null)
-                foreach (var e in pi.Items.Entries())
+            foreach (var e in PlayerInventoryTracker.EntriesById())
                 {
                     if (!GearCatalog.TryGet(e.Key, out var g)) continue;
                     if (loadout != null && loadout.IsEquipped(e.Key)) continue; // already worn

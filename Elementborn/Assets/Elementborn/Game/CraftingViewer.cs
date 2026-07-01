@@ -59,8 +59,7 @@ namespace Elementborn.Game
         private static Dictionary<string, int> Snapshot()
         {
             var have = new Dictionary<string, int>();
-            var pi = PlayerInventory.Instance;
-            if (pi != null) foreach (var e in pi.Items.Entries()) have[e.Key] = e.Value;
+            foreach (var e in PlayerInventoryTracker.EntriesById()) have[e.Key] = e.Value;
             return have;
         }
 
@@ -90,7 +89,7 @@ namespace Elementborn.Game
                 return;
             }
 
-            foreach (var ing in r.Inputs) pi.Items.Remove(ing.ItemId, ing.Count);
+            foreach (var ing in r.Inputs) PlayerInventoryTracker.RemoveItemId(ing.ItemId, ing.Count);
             pi.AddItem(r.OutputItemId, r.OutputCount); // grants + counts toward the Collector achievement
             QuestEvents.RaiseItemCrafted(r.OutputItemId);
 

@@ -31,8 +31,7 @@ namespace Elementborn.Game
         public bool Equip(string itemId)
         {
             if (!GearCatalog.IsGear(itemId)) return false;
-            var pi = PlayerInventory.Instance;
-            if (pi != null && !pi.Items.Has(itemId, 1)) return false; // must possess it to wear it
+            if (!PlayerInventoryTracker.HasItemId(itemId, 1)) return false; // must possess it to wear it
             if (!_loadout.Equip(itemId)) return false;
             ProgressionController.Instance?.RefreshBonus();
             QuestEvents.RaiseItemEquipped(itemId);

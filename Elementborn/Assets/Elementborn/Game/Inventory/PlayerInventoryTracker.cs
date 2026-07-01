@@ -88,6 +88,20 @@ namespace Elementborn.Game
             return Ensure().Count(itemId);
         }
 
+        /// <summary>Every distinct item id the player holds, with totals summed across stacks. Lets the older
+        /// id-based UIs (crafting, equipment, inventory, trade) read this Tracker as their single source of truth.</summary>
+        public static IReadOnlyList<KeyValuePair<string, int>> EntriesById()
+        {
+            var totals = new Dictionary<string, int>();
+            foreach (var stack in Ensure().Stacks)
+            {
+                if (stack == null || stack.IsEmpty) continue;
+                totals.TryGetValue(stack.ResolvedItemId, out int current);
+                totals[stack.ResolvedItemId] = current + stack.Quantity;
+            }
+            return new List<KeyValuePair<string, int>>(totals);
+        }
+
         public static void AddCurrency(int amount)
         {
             Ensure().ModifyCurrency(amount);

@@ -33,9 +33,8 @@ namespace Elementborn.Game
 
         public void Feed(WillowSidekick sidekick)
         {
-            var inv = PlayerInventory.Instance;
             string foodId = ItemCatalog.FoodFor(sidekick);
-            if (inv == null || !inv.Items.Remove(foodId))
+            if (!PlayerInventoryTracker.RemoveItemId(foodId, 1).Success)
             {
                 var def = ItemCatalog.Get(foodId);
                 GameHud.Instance?.Toast("You need " + (def != null ? def.Name : "the right food") +

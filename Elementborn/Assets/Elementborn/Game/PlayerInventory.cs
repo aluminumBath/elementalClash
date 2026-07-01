@@ -59,7 +59,10 @@ namespace Elementborn.Game
 
         public void AddItem(string itemId, int count = 1)
         {
-            Items.Add(itemId, count);
+            // Unified inventory: items live in the Tracker now. The legacy Items bag is no longer written to
+            // (kept only until the save migration in the next step). Quest + audio hooks are preserved so every
+            // caller (crafting output, creature drops, world pickups, trade) still fires collection events.
+            PlayerInventoryTracker.AddItemId(itemId, count);
             QuestEvents.RaiseItemCollected(itemId, count);
             AudioController.Instance?.Pickup();
         }
