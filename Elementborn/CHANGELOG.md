@@ -6,6 +6,14 @@ All notable changes to Elementborn are recorded here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+- **UI is clickable during play.** The gameplay rig locks the cursor for mouselook the moment its clone spawns,
+  which left the character-creation gate ("Choose Your Path") and every overlay panel unclickable. `UiGate` now
+  frees the cursor whenever a modal panel is on-screen and restores the gameplay state when the last one closes
+  (covers inventory, crafting, equipment, home, admin, trade and the rest, since they all build via
+  `OverlayUi.Panel`), and `CharacterCreationUI` holds the cursor free while its screen is up and re-locks on Begin. Its canvas
+  also now sorts at 220 (was 0), above the HUD/rescue canvases that were otherwise eating its clicks.
+
 ### Added
 - **Inventory merge — step 4: one item pool.** Every active reader/writer of the legacy `PlayerInventory.Items`
   bag now goes through `PlayerInventoryTracker`. `PlayerInventory.AddItem` delegates to the Tracker (keeping the
@@ -16,14 +24,14 @@ All notable changes to Elementborn are recorded here. The format follows
 - **Inventory merge — step 3: migrated items show catalog names.** `InventoryItemStack.DisplayName` now
   falls back to the authored `ItemCatalog` name when a stack has no `InventoryItemDefinition`, so legacy items
   moved into the Tracker read as "Iron Helm" instead of "iron_helm" — zero new assets, name still sourced from
-  `Core/Items.cs`. Tracker-only loot ids keep their raw id. Two EditMode tests cover it.
+  `Core/Items.cs`. Tracker-only loot ids keep their raw id.
 - **Inventory merge groundwork — steps 1 & 2 (both non-destructive).** Home storage now shows *both* item
   pools with a live count line and lets you deposit legacy (crafting/equipment) items into the shared chest,
   giving a safe player-driven path to consolidate. A read-only audit (Unity menu *Elementborn → Inventory →
   Audit Migration Gaps*, or `InventoryMigrationAudit.RunAndLog()`) lists which `ItemCatalog` ids still lack an
   `InventoryItemDefinition` — currently all 22, since no definition assets exist yet and Tracker stacks fall
   back to showing the raw id. Full plan and the recommended catalog-name bridge are in
-  `docs/INVENTORY_MIGRATION.md`. Two new EditMode tests cover the audit's pure comparison.
+  `docs/INVENTORY_MIGRATION.md`.
 - **Mount display scales tuned to a conservative archetype ladder.** `CreatureModelNames.DisplayScale` now
   sizes the nine new mounts/companions by archetype (apex 1.6–1.7, dragons/large beasts 1.25–1.3, flyers 1.15,
   wolves 1.0); the 32 existing creatures stay at 1.0. Final values still want an in-scene eyeball — the whole

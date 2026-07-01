@@ -50,12 +50,26 @@ namespace Elementborn.Game
                           "interactor to make it clickable in-headset.");
         }
 
+        private void Update()
+        {
+            // The gameplay rig locks the cursor for mouselook the instant its clone spawns; while this screen is
+            // up we must keep it free so the buttons stay clickable. Re-assert every frame so spawn order can't trap us.
+            if (_canvas != null && _canvas.gameObject.activeSelf)
+            {
+                if (Cursor.lockState != CursorLockMode.None) Cursor.lockState = CursorLockMode.None;
+                if (!Cursor.visible) Cursor.visible = true;
+            }
+        }
+
         // --- construction ----------------------------------------------------------
         private void BuildCanvas(bool vr)
         {
             var canvasGo = new GameObject("CreationCanvas");
             canvasGo.transform.SetParent(transform, false);
             _canvas = canvasGo.AddComponent<Canvas>();
+            // Sit above every HUD/overlay canvas (overlays sort at 56+, the main menu at 220) so the panel's
+            // GraphicRaycaster wins the click. Without this the canvas defaults to 0 and HUD canvases eat the raycast.
+            _canvas.sortingOrder = 220;
             canvasGo.AddComponent<GraphicRaycaster>();
 
             if (vr)
@@ -140,6 +154,9 @@ namespace Elementborn.Game
         private void Complete()
         {
             _canvas.gameObject.SetActive(false);
+            // Hand the cursor back to gameplay mouselook. EnterMap re-locks too; this just avoids a free-cursor frame.
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             OnComplete.Invoke();
         }
 

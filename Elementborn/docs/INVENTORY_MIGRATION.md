@@ -48,7 +48,7 @@ Chose option B: `InventoryItemStack.DisplayName` now falls back to `ItemCatalog.
 has no definition, so every migrated legacy id reads as "Iron Helm" instead of "iron_helm" with **zero** asset
 authoring — the name stays sourced from the single authored list in `Core/Items.cs`. Ids with no catalog entry
 (Tracker-only loot) keep their raw id, so nothing else changes. Definitions can still be added later for items
-that want a custom icon or stack size. Covered by two EditMode tests.
+that want a custom icon or stack size.
 
 (The alternative — hand-authoring 22 `InventoryItemDefinition` assets — was rejected as redundant given the
 shared id space.)
