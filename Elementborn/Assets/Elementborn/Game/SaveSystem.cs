@@ -24,6 +24,9 @@ namespace Elementborn.Game
         public float houseX;
         public float houseY;
         public float houseZ;
+        public List<string> houseAdditions = new List<string>();
+        public string wardrobeLook = "";
+        public double gardenAccrued = 0;
 
         public string playerElement = "";
         public bool isConfluence;

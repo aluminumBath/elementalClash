@@ -1,4 +1,5 @@
 using UnityEngine;
+using Elementborn.Core;
 
 namespace Elementborn.Game
 {
@@ -18,6 +19,13 @@ namespace Elementborn.Game
         {
             var inv = PlayerInventory.Instance;
             if (inv == null || Owned) return false;
+
+            int level = ProgressionController.Instance != null ? ProgressionController.Instance.Progression.Level : 1;
+            if (!Homestead.CanClaim(level))
+            {
+                GameHud.Instance?.Toast("Reach level " + HomesteadCatalog.RequiredLevelToClaim + " to claim a home.");
+                return false;
+            }
 
             if (!inv.TryClaimHouse(transform.position, price, out _)) return false;
             Owned = true;

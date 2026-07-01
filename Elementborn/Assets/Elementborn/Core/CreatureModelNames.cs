@@ -59,6 +59,16 @@ namespace Elementborn.Core
             { CreatureKind.Rhino,            "Boulder_Rhino/Boulder_Rhino" },
             { CreatureKind.Tiger,            "Tigris_Prowler/Tigris_Prowler" },
             { CreatureKind.Skyotter,         "Skyotter/Skyotter" },
+            // New purchasable mounts (elemental spread) — assets currently under Models/Unmapped/ until a clean import.
+            { CreatureKind.BoneBehemoth,     "Bonebound_Behemoth/Bonebound_Behemoth" },
+            { CreatureKind.AncientStag,      "Ancient_Stag/Ancient_Stag" },
+            { CreatureKind.CoralLeviathan,   "Coral_Whale_Monster/Coral_Whale_Monster" },
+            { CreatureKind.EmberKite,        "Embercrest_Kitebeast/Embercrest_Kitebeast" },
+            { CreatureKind.AzureKnight,      "Azurewing_Knight/Azurewing_Knight" },
+            { CreatureKind.EarthDragon,      "Emerald_Dragon/Emerald_Dragon" },
+            { CreatureKind.AirDragon,        "Blue_Dragon/Blue_Dragon" },
+            { CreatureKind.StormWolf,        "Storm_Shadow_Wolf/Storm_Shadow_Wolf" },
+            { CreatureKind.VoltWolf,         "Lightning_Dark_Wolf/Lightning_Dark_Wolf" },
         };
 
         /// <summary>The bare file name (no path, no extension) of a kind's model prefab.</summary>
@@ -67,5 +77,37 @@ namespace Elementborn.Core
 
         /// <summary>The full Resources path passed to <c>Resources.Load</c> for a kind's model.</summary>
         public static string ResourcePath(CreatureKind kind) => ResourceRoot + ResourceName(kind);
+
+        /// <summary>Resources paths to try (in order) for a kind's model: the canonical Creatures path first, then
+        /// the as-imported Models/Unmapped/ location, so newly-added assets resolve before a clean re-import.</summary>
+        public static string[] CandidatePaths(CreatureKind kind)
+        {
+            string name = ResourceName(kind);
+            return new[] { ResourceRoot + name, "Models/Unmapped/" + name };
+        }
+
+        /// <summary>A per-kind display-size multiplier applied to the attached model. 1.0 for everything by default
+        /// (no change to the 32 existing creatures); the newest mounts get tuned starting sizes so an apex reads big
+        /// and a wolf reads small. These are starting values — easy to nudge once you see them in-scene.</summary>
+        public static float DisplayScale(CreatureKind kind)
+        {
+            switch (kind)
+            {
+                // Apex — clearly the largest things you'll meet.
+                case CreatureKind.CoralLeviathan: return 1.7f;
+                case CreatureKind.BoneBehemoth:   return 1.6f;
+                // Dragons & large mounts — bigger than a person, not towering.
+                case CreatureKind.EarthDragon:    return 1.3f;
+                case CreatureKind.AirDragon:      return 1.3f;
+                case CreatureKind.AncientStag:    return 1.25f;
+                // Flyers — a touch larger so wings read.
+                case CreatureKind.EmberKite:      return 1.15f;
+                case CreatureKind.AzureKnight:    return 1.15f;
+                // Wolf companions — roughly person-height.
+                case CreatureKind.StormWolf:
+                case CreatureKind.VoltWolf:       return 1.0f;
+                default:                          return 1.0f;
+            }
+        }
     }
 }

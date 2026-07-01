@@ -58,6 +58,15 @@ namespace Elementborn.Core
                 case CreatureKind.Skimfin:     return new CreatureCombatStats(140f, 8.0f, 22f);
                 case CreatureKind.Gillcloak:   return new CreatureCombatStats(180f, 5.5f, 24f);
                 case CreatureKind.Tidewarden:  return new CreatureCombatStats(600f, 5.0f, 44f);
+                case CreatureKind.BoneBehemoth:   return new CreatureCombatStats(420f, 3.5f, 34f);
+                case CreatureKind.AncientStag:    return new CreatureCombatStats(130f, 5.5f, 14f);
+                case CreatureKind.CoralLeviathan: return new CreatureCombatStats(520f, 4.5f, 38f);
+                case CreatureKind.EmberKite:      return new CreatureCombatStats(150f, 6.5f, 18f);
+                case CreatureKind.AzureKnight:    return new CreatureCombatStats(220f, 6.0f, 26f);
+                case CreatureKind.EarthDragon:    return new CreatureCombatStats(340f, 4.8f, 27f);
+                case CreatureKind.AirDragon:      return new CreatureCombatStats(300f, 5.5f, 24f);
+                case CreatureKind.StormWolf:      return new CreatureCombatStats(110f, 5.5f, 16f);
+                case CreatureKind.VoltWolf:       return new CreatureCombatStats(115f, 6.0f, 17f);
 
                 default: return new CreatureCombatStats(60f, 4.0f, 10f);
             }

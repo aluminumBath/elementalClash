@@ -58,8 +58,40 @@ namespace Elementborn.Game
 
             UiTheme.Button(content, "Save Slots", () => SaveSlotController.EnsureInstance().Show(), 540, 62);
             UiTheme.Button(content, "Settings", () => _onSettings?.Invoke(), 540, 62);
+            UiTheme.Button(content, "How to Play", ShowHowToPlay, 540, 62);
+            UiTheme.Button(content, "Credits", ShowCredits, 540, 62);
             UiTheme.Button(content, "Quit", () => _onQuit?.Invoke(), 540, 62);
 
+            AudioController.Instance?.Confirm();
+        }
+
+        private void ShowHowToPlay() => ShowOverlay("HowToPlayCanvas", "How to Play", c =>
+        {
+            OverlayUi.Body(c, "Channel the four elements — Fire, Water, Earth, Air — to mend the Convergence.", 18);
+            OverlayUi.Header(c, "Controls");
+            OverlayUi.Body(c, "Move: WASD / left stick      Look: mouse / right stick", 16);
+            OverlayUi.Body(c, "Channel & attack: hand triggers (mouse buttons on flat)", 16);
+            OverlayUi.Body(c, "Equipment: V      Crafting: B      Summon Beacon: U", 16);
+            OverlayUi.Body(c, "Wardrobe: J      Home: H      Map: M      Achievements: K", 16);
+            OverlayUi.Body(c, "Close any panel: Esc", 16);
+        });
+
+        private void ShowCredits() => ShowOverlay("CreditsCanvas", "Credits", c =>
+        {
+            OverlayUi.Header(c, "ELEMENTBORN");
+            OverlayUi.Body(c, "An original elemental-combat RPG.", 18);
+            OverlayUi.Body(c, "Design & Development by Steele.", 16);
+            OverlayUi.Body(c, "Built with Unity 6 and the Universal Render Pipeline.", 16);
+            OverlayUi.Body(c, "Thank you for playing.", 16);
+        });
+
+        // A stacked overlay with its own Close button; closing destroys just this overlay's canvas.
+        private void ShowOverlay(string canvasName, string title, System.Action<Transform> fill)
+        {
+            Canvas cv = null;
+            var p = OverlayUi.Panel(canvasName, title, 230, new Vector2(640, 720), () => { if (cv != null) Destroy(cv.gameObject); });
+            cv = p.canvas;
+            fill(p.content);
             AudioController.Instance?.Confirm();
         }
     }

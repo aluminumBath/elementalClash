@@ -12,7 +12,10 @@ namespace Elementborn.Core
         // Exotic apex creatures — rare, hard to tame, in tough locations (original designs)
         Ridgewing, Glidewisp, Skytyrant, Goldkoi, Direstalker, Skimfin, Gillcloak, Tidewarden,
         // Emergent hybrids — born as the elemental borders weaken (story)
-        Skyotter
+        Skyotter,
+        // New purchasable mounts (elemental spread)
+        BoneBehemoth, AncientStag, CoralLeviathan, EmberKite, AzureKnight,
+        EarthDragon, AirDragon, StormWolf, VoltWolf
     }
 
     /// <summary>Static data for a creature: theme, who may own it, and how it's acquired.</summary>
@@ -119,6 +122,26 @@ namespace Elementborn.Core
                     return new CreatureInfo("Tidewarden", Core.Element.Water, null, true, false, false, 0, 0.06f);
                 case CreatureKind.Skyotter:    // playful water/air storm-hybrid; swims and flies, rideable
                     return new CreatureInfo("Skyotter", Core.Element.Air, null, true, false, false, 0, 0.12f);
+
+                case CreatureKind.BoneBehemoth:   // earth apex; armored colossus, rideable
+                    return new CreatureInfo("Bonebound Behemoth", Core.Element.Earth, Core.Element.Earth, true, false, true, 4000, 0.18f);
+                case CreatureKind.AncientStag:    // earth/nature; gentle forest mount
+                    return new CreatureInfo("Ancient Stag", Core.Element.Earth, null, true, false, true, 900, 0.45f);
+                case CreatureKind.CoralLeviathan: // water apex; reef leviathan, rideable
+                    return new CreatureInfo("Coral Leviathan", Core.Element.Water, Core.Element.Water, true, false, true, 4500, 0.18f);
+                case CreatureKind.EmberKite:      // fire flyer; crest-winged kitebeast
+                    return new CreatureInfo("Embercrest Kitebeast", Core.Element.Fire, Core.Element.Fire, true, false, true, 1800, 0.32f);
+                case CreatureKind.AzureKnight:    // air flyer; azure-winged knight
+                    return new CreatureInfo("Azurewing Knight", Core.Element.Air, Core.Element.Air, true, false, true, 2200, 0.30f);
+
+                case CreatureKind.EarthDragon:    // earth apex; completes the dragon set
+                    return new CreatureInfo("Earth Dragon", Core.Element.Earth, Core.Element.Earth, true, false, true, 5000, 0.20f);
+                case CreatureKind.AirDragon:      // air apex; completes the dragon set
+                    return new CreatureInfo("Air Dragon", Core.Element.Air, Core.Element.Air, true, false, true, 5000, 0.20f);
+                case CreatureKind.StormWolf:      // air companion; gust-pack hunter
+                    return new CreatureInfo("Storm Wolf", Core.Element.Air, null, false, true, false, 0, 0.24f);
+                case CreatureKind.VoltWolf:       // air companion; lightning-fanged
+                    return new CreatureInfo("Voltfang Wolf", Core.Element.Air, null, false, true, false, 0, 0.24f);
 
                 default:
                     return new CreatureInfo("Unknown", null, null, false, false, false, 0, 0.5f);

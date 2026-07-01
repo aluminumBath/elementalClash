@@ -395,3 +395,21 @@ Added decorative-collider cleanup so the player can reach objects again, plus a 
 ## v100 additions
 
 Exact chest/channeler player visual installer with safe fallback behavior.
+
+
+## v101 additions
+
+### Stable player + chest visual recovery
+Added guaranteed visible procedural chests, exact model diagnostics, channeler/axolotl player import attempts, and guaranteed procedural robed player fallback.
+
+
+## v102 additions
+
+### Safe visual recovery from repo analysis
+Overwrote risky V99/V100 model installer menus with safe wrappers, added V102 stable recovery menus, forced visible procedural chest recovery, and guaranteed channeler/robed player fallback.
+
+
+## v103 additions
+
+### PowerShell label-colon hotfix
+Fixed `$Label:` parser errors in exact chest/channeler extraction scripts by changing to `${Label}:`.

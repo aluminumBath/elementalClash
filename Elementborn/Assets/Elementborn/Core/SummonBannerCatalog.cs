@@ -14,14 +14,16 @@ namespace Elementborn.Core
         private static readonly CreatureKind[] LegendaryPool =
         {
             CreatureKind.Phoenix, CreatureKind.FireDragon, CreatureKind.WaterDragon,
-            CreatureKind.Skytyrant, CreatureKind.Tidewarden, CreatureKind.Direstalker
+            CreatureKind.Skytyrant, CreatureKind.Tidewarden, CreatureKind.Direstalker,
+            CreatureKind.EarthDragon, CreatureKind.AirDragon
         };
 
         // Strong companions and high-end mounts.
         private static readonly CreatureKind[] EpicPool =
         {
             CreatureKind.IceCat, CreatureKind.ElectricSquirrel, CreatureKind.Roc, CreatureKind.Thunderbird,
-            CreatureKind.Ridgewing, CreatureKind.Goldkoi, CreatureKind.Gillcloak, CreatureKind.Skimfin
+            CreatureKind.Ridgewing, CreatureKind.Goldkoi, CreatureKind.Gillcloak, CreatureKind.Skimfin,
+            CreatureKind.BoneBehemoth, CreatureKind.CoralLeviathan
         };
 
         // Everyday helpers and mounts.
@@ -29,7 +31,8 @@ namespace Elementborn.Core
         {
             CreatureKind.Spider, CreatureKind.WaterCat, CreatureKind.Dog, CreatureKind.EarthMole,
             CreatureKind.AirDragonfly, CreatureKind.AirJellyfish, CreatureKind.Horse, CreatureKind.Rhino,
-            CreatureKind.Glidewisp
+            CreatureKind.Glidewisp,
+            CreatureKind.StormWolf, CreatureKind.VoltWolf
         };
 
         /// <summary>The stable id for the rotating featured slot. Pity and the lost-50/50 guarantee persist under

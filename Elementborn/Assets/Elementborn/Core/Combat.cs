@@ -90,6 +90,10 @@ namespace Elementborn.Core
         public AbilityOutcome Scaled(float multiplier) =>
             new AbilityOutcome(Kind, Element, Variant, Direction, Damage * multiplier, Speed, Status, Knockback * multiplier, Charge);
 
+        /// <summary>A copy carrying a specific element (an elemental arrowhead riding a longbow shot).</summary>
+        public AbilityOutcome WithElement(Element element) =>
+            new AbilityOutcome(Kind, element, Variant, Direction, Damage, Speed, Status, Knockback, Charge);
+
         public bool IsEmpty => Kind == OutcomeKind.None;
 
         public static AbilityOutcome Empty => new AbilityOutcome(

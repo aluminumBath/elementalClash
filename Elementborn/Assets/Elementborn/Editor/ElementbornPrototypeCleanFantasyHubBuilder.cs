@@ -43,8 +43,8 @@ namespace Elementborn.Game.EditorTools
             BuildVillageDressing(root.transform);
             BuildAtmosphere(root.transform);
 
-            ElementbornPrototypeReachabilityAndChestVisualFixer.RepairReachability(false);
-            ElementbornPrototypeSpecificModelInstaller.RestoreVisibleFallbackChests(false);
+            ElementbornPrototypeV102SafeVisualRecovery.RepairMovementBlockers(false);
+            ElementbornPrototypeV102SafeVisualRecovery.ForceVisibleChests(false);
 
             if (save)
             {

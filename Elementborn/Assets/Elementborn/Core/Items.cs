@@ -80,6 +80,11 @@ namespace Elementborn.Core
             Add(new ItemDef("sturdy_boots", "Sturdy Boots", "Reinforced marching boots.", ItemCategory.Material, 24));
             Add(new ItemDef("elixir_of_vigor", "Elixir of Vigor", "Restores body and stamina at once.", ItemCategory.Consumable, 60));
             Add(new ItemDef("elemental_charm", "Elemental Charm", "A charm humming with all four elements.", ItemCategory.Treasure, 140));
+            Add(new ItemDef("arrow", "Arrow", "Fletched ammunition for a longbow.", ItemCategory.Material, 1));
+            Add(new ItemDef("fire_arrow", "Fire Arrow", "An arrowhead that carries a Fire bite.", ItemCategory.Material, 3));
+            Add(new ItemDef("water_arrow", "Water Arrow", "An arrowhead that carries a Water bite.", ItemCategory.Material, 3));
+            Add(new ItemDef("earth_arrow", "Earth Arrow", "An arrowhead that carries an Earth bite.", ItemCategory.Material, 3));
+            Add(new ItemDef("air_arrow", "Air Arrow", "An arrowhead that carries an Air bite.", ItemCategory.Material, 3));
 
             return d;
         }

@@ -23,7 +23,12 @@ namespace Elementborn.Game
             if (_cache.TryGetValue(kind, out var prefab)) return prefab;
             if (_missing.Contains(kind)) return null;
 
-            prefab = Resources.Load<GameObject>(CreatureModelNames.ResourcePath(kind));
+            prefab = null;
+            foreach (var path in CreatureModelNames.CandidatePaths(kind))
+            {
+                prefab = Resources.Load<GameObject>(path);
+                if (prefab != null) break;
+            }
             if (prefab != null) _cache[kind] = prefab;
             else _missing.Add(kind);
             return prefab;
@@ -54,6 +59,7 @@ namespace Elementborn.Game
             var model = Object.Instantiate(prefab, host.transform);
             model.transform.localPosition = Vector3.zero;
             model.transform.localRotation = Quaternion.identity;
+            model.transform.localScale = Vector3.one * CreatureModelNames.DisplayScale(kind);
             model.name = AttachedPrefix + kind;
 
             if (placeholder != null)

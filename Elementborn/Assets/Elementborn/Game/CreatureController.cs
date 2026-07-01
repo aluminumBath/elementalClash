@@ -104,6 +104,8 @@ namespace Elementborn.Game
             if (_faction != null) _faction.Configure(Faction.Neutral, _element); // peaceful until provoked
             if (_self != null) _self.SetMaxHealth(_stats.MaxHealth);
             if (_self != null && _element.HasValue) _self.SetAffinity(_element.Value); // elemental matchup
+            if (kind == CreatureKind.Phoenix && GetComponent<PhoenixDeathBurst>() == null)
+                gameObject.AddComponent<PhoenixDeathBurst>(); // fire blast + ash + timed reform on death
         }
 
         private void Update()

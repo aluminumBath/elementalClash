@@ -11,7 +11,11 @@ namespace Elementborn.Game
         public int Quantity = 1;
 
         public string ResolvedItemId => Definition != null ? Definition.ItemId : ItemId;
-        public string DisplayName => Definition != null ? Definition.DisplayName : ResolvedItemId;
+        // No definition? Fall back to the authored catalog name (Core/Items.cs) so migrated legacy items read as
+        // "Iron Helm" instead of "iron_helm". Ids with no catalog entry (Tracker-only loot) keep the raw id.
+        public string DisplayName => Definition != null
+            ? Definition.DisplayName
+            : (Elementborn.Core.ItemCatalog.Get(ResolvedItemId)?.Name ?? ResolvedItemId);
         public int MaxStack => Definition != null ? Definition.MaxStack : 99;
         public bool IsEmpty => Quantity <= 0 || string.IsNullOrWhiteSpace(ResolvedItemId);
 

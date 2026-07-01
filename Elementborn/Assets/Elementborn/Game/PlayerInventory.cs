@@ -26,6 +26,9 @@ namespace Elementborn.Game
 
         public bool HasHouse { get; private set; }
         public Vector3 HouseLocation { get; private set; }
+        public Homestead Home { get; } = new Homestead();
+        public Wardrobe Wardrobe { get; } = new Wardrobe();
+        public HomeGarden Garden { get; } = new HomeGarden();
 
         private readonly Dictionary<CreatureKind, int> _lures = new Dictionary<CreatureKind, int>();
         private readonly HashSet<CreatureKind> _owned = new HashSet<CreatureKind>();
@@ -180,6 +183,8 @@ namespace Elementborn.Game
                 sapphire = Wallet.CountOf(Currency.Sapphire),
                 diamond = Wallet.CountOf(Currency.Diamond),
                 hasHouse = HasHouse,
+                wardrobeLook = Wardrobe.Save(),
+                gardenAccrued = Garden.Save(),
                 houseX = HouseLocation.x,
                 houseY = HouseLocation.y,
                 houseZ = HouseLocation.z,
@@ -192,6 +197,7 @@ namespace Elementborn.Game
             foreach (var kv in _lures) { d.lureKinds.Add(kv.Key.ToString()); d.lureCounts.Add(kv.Value); }
             foreach (var k in _owned) d.ownedKinds.Add(k.ToString());
             foreach (var v in _ownedVehicles) d.ownedVehicles.Add(v.ToString());
+            foreach (var a in Home.SaveAdditions()) d.houseAdditions.Add(a);
             if (Loadout != null)
             {
                 foreach (var el in Loadout.Elements) d.loadoutElements.Add(el.ToString());
@@ -241,6 +247,9 @@ namespace Elementborn.Game
 
             HasHouse = d.hasHouse;
             HouseLocation = new Vector3(d.houseX, d.houseY, d.houseZ);
+            Home.Restore(d.houseAdditions);
+            Wardrobe.Restore(d.wardrobeLook);
+            Garden.Restore(d.gardenAccrued);
 
             PlayerElement = !string.IsNullOrEmpty(d.playerElement) && System.Enum.TryParse(d.playerElement, out Element e)
                 ? (Element?)e : null;

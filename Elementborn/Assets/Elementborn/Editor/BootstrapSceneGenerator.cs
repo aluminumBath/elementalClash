@@ -103,6 +103,11 @@ namespace Elementborn.EditorTools
             Add(platform, "PerformanceHud");
             Add(platform, "PauseMenu");
             Add(platform, "LoadingScreen");
+            // Home: build/use stations (press H) + ticks the Garden.
+            var home = new GameObject("Home");
+            Add(home, "HousingController");
+            Add(home, "HomeStationsController");
+            Add(home, "HomeMenuViewer");
 
             // Social overlay (press J in play mode): notifications / friends / chat / feedback / moderation.
             var social = new GameObject("Social");
@@ -153,6 +158,11 @@ namespace Elementborn.EditorTools
             var equipment = new GameObject("Equipment");
             Add(equipment, "EquipmentController");
             Add(equipment, "EquipmentViewer");
+
+            // Wardrobe (press K): cosmetic Channeler looks, unlocked by level — appearance only, never your element.
+            var wardrobe = new GameObject("Wardrobe");
+            Add(wardrobe, "WardrobeController");
+            Add(wardrobe, "WardrobeViewer");
 
             // Summon Beacon (press U): currency-gated gacha — spend Sigils to roll companions & mounts into the
             // roster, dust duplicates into Motes, claim a featured creature with Motes.

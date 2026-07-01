@@ -90,6 +90,14 @@ namespace Elementborn.Core
                     return new CompanionProfile(Element.Earth, AbilityVariant.Standard, StatusKind.None, 0f, 0f,
                         DamageImmunity.None, true, false, false);
 
+                case CreatureKind.StormWolf: // air attacks (gusts that slow), fast blink-dash
+                    return new CompanionProfile(Element.Air, AbilityVariant.Standard, StatusKind.Slow, 0.4f, 1.5f,
+                        DamageImmunity.None, true, false, false);
+
+                case CreatureKind.VoltWolf: // air/lightning attacks (stun), fast blink-dash
+                    return new CompanionProfile(Element.Air, AbilityVariant.Lightning, StatusKind.Stun, 1f, 0.5f,
+                        DamageImmunity.None, true, false, false);
+
                 default:
                     return new CompanionProfile(Element.Earth, AbilityVariant.Standard, StatusKind.None, 0f, 0f,
                         DamageImmunity.None, false, false, false);

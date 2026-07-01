@@ -1,0 +1,1870 @@
+diff --git a/Elementborn/Assets/Elementborn/Core/Ammo.cs b/Elementborn/Assets/Elementborn/Core/Ammo.cs
+new file mode 100644
+index 0000000..7066144
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Core/Ammo.cs
+@@ -0,0 +1,28 @@
++namespace Elementborn.Core
++{
++    /// <summary>
++    /// Arrow ammunition: maps each arrow item id to the element its shot carries. Plain arrows are physical (null);
++    /// elemental arrowheads carry their element into the projectile so the matchup (<see cref="ElementMatchup"/>)
++    /// against a target's affinity applies. UnityEngine-free and unit-tested.
++    /// </summary>
++    public static class Ammo
++    {
++        public const string Plain = "arrow";
++
++        /// <summary>The element an arrow's shot carries, or null for a plain (physical) arrow.</summary>
++        public static Element? ElementOf(string arrowId)
++        {
++            switch (arrowId)
++            {
++                case "fire_arrow":  return Element.Fire;
++                case "water_arrow": return Element.Water;
++                case "earth_arrow": return Element.Earth;
++                case "air_arrow":   return Element.Air;
++                default:            return null; // "arrow" and anything unrecognized: physical
++            }
++        }
++
++        /// <summary>Every arrow id the bow can spend, elemental first so an attuned shot is preferred over a plain one.</summary>
++        public static readonly string[] All = { "fire_arrow", "water_arrow", "earth_arrow", "air_arrow", Plain };
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Core/Blast.cs b/Elementborn/Assets/Elementborn/Core/Blast.cs
+new file mode 100644
+index 0000000..0047d18
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Core/Blast.cs
+@@ -0,0 +1,19 @@
++namespace Elementborn.Core
++{
++    /// <summary>
++    /// Area-burst damage falloff: full damage at the center, fading linearly to zero at the radius edge. Used by the
++    /// phoenix death blast (and reusable by any radial burst). UnityEngine-free and unit-tested.
++    /// </summary>
++    public static class Blast
++    {
++        /// <summary>Damage at <paramref name="distance"/> from a burst of <paramref name="maxDamage"/> over
++        /// <paramref name="radius"/>: full at the center, 0 at/beyond the edge, linear between.</summary>
++        public static float DamageAt(float maxDamage, float distance, float radius)
++        {
++            if (maxDamage <= 0f || radius <= 0f) return 0f;
++            if (distance <= 0f) return maxDamage;
++            if (distance >= radius) return 0f;
++            return maxDamage * (1f - distance / radius);
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Core/Combat.cs b/Elementborn/Assets/Elementborn/Core/Combat.cs
+index a75239c..28a949c 100644
+--- a/Elementborn/Assets/Elementborn/Core/Combat.cs
++++ b/Elementborn/Assets/Elementborn/Core/Combat.cs
+@@ -90,6 +90,10 @@ namespace Elementborn.Core
+         public AbilityOutcome Scaled(float multiplier) =>
+             new AbilityOutcome(Kind, Element, Variant, Direction, Damage * multiplier, Speed, Status, Knockback * multiplier, Charge);
+ 
++        /// <summary>A copy carrying a specific element (an elemental arrowhead riding a longbow shot).</summary>
++        public AbilityOutcome WithElement(Element element) =>
++            new AbilityOutcome(Kind, element, Variant, Direction, Damage, Speed, Status, Knockback, Charge);
++
+         public bool IsEmpty => Kind == OutcomeKind.None;
+ 
+         public static AbilityOutcome Empty => new AbilityOutcome(
+diff --git a/Elementborn/Assets/Elementborn/Core/Companions.cs b/Elementborn/Assets/Elementborn/Core/Companions.cs
+index 4350c3c..1b99412 100644
+--- a/Elementborn/Assets/Elementborn/Core/Companions.cs
++++ b/Elementborn/Assets/Elementborn/Core/Companions.cs
+@@ -90,6 +90,14 @@ namespace Elementborn.Core
+                     return new CompanionProfile(Element.Earth, AbilityVariant.Standard, StatusKind.None, 0f, 0f,
+                         DamageImmunity.None, true, false, false);
+ 
++                case CreatureKind.StormWolf: // air attacks (gusts that slow), fast blink-dash
++                    return new CompanionProfile(Element.Air, AbilityVariant.Standard, StatusKind.Slow, 0.4f, 1.5f,
++                        DamageImmunity.None, true, false, false);
++
++                case CreatureKind.VoltWolf: // air/lightning attacks (stun), fast blink-dash
++                    return new CompanionProfile(Element.Air, AbilityVariant.Lightning, StatusKind.Stun, 1f, 0.5f,
++                        DamageImmunity.None, true, false, false);
++
+                 default:
+                     return new CompanionProfile(Element.Earth, AbilityVariant.Standard, StatusKind.None, 0f, 0f,
+                         DamageImmunity.None, false, false, false);
+diff --git a/Elementborn/Assets/Elementborn/Core/CreatureCombat.cs b/Elementborn/Assets/Elementborn/Core/CreatureCombat.cs
+index e7d5bfb..fe81d7a 100644
+--- a/Elementborn/Assets/Elementborn/Core/CreatureCombat.cs
++++ b/Elementborn/Assets/Elementborn/Core/CreatureCombat.cs
+@@ -58,6 +58,15 @@ namespace Elementborn.Core
+                 case CreatureKind.Skimfin:     return new CreatureCombatStats(140f, 8.0f, 22f);
+                 case CreatureKind.Gillcloak:   return new CreatureCombatStats(180f, 5.5f, 24f);
+                 case CreatureKind.Tidewarden:  return new CreatureCombatStats(600f, 5.0f, 44f);
++                case CreatureKind.BoneBehemoth:   return new CreatureCombatStats(420f, 3.5f, 34f);
++                case CreatureKind.AncientStag:    return new CreatureCombatStats(130f, 5.5f, 14f);
++                case CreatureKind.CoralLeviathan: return new CreatureCombatStats(520f, 4.5f, 38f);
++                case CreatureKind.EmberKite:      return new CreatureCombatStats(150f, 6.5f, 18f);
++                case CreatureKind.AzureKnight:    return new CreatureCombatStats(220f, 6.0f, 26f);
++                case CreatureKind.EarthDragon:    return new CreatureCombatStats(340f, 4.8f, 27f);
++                case CreatureKind.AirDragon:      return new CreatureCombatStats(300f, 5.5f, 24f);
++                case CreatureKind.StormWolf:      return new CreatureCombatStats(110f, 5.5f, 16f);
++                case CreatureKind.VoltWolf:       return new CreatureCombatStats(115f, 6.0f, 17f);
+ 
+                 default: return new CreatureCombatStats(60f, 4.0f, 10f);
+             }
+diff --git a/Elementborn/Assets/Elementborn/Core/CreatureModelNames.cs b/Elementborn/Assets/Elementborn/Core/CreatureModelNames.cs
+index 02f3f9f..8a846bd 100644
+--- a/Elementborn/Assets/Elementborn/Core/CreatureModelNames.cs
++++ b/Elementborn/Assets/Elementborn/Core/CreatureModelNames.cs
+@@ -59,6 +59,16 @@ namespace Elementborn.Core
+             { CreatureKind.Rhino,            "Boulder_Rhino/Boulder_Rhino" },
+             { CreatureKind.Tiger,            "Tigris_Prowler/Tigris_Prowler" },
+             { CreatureKind.Skyotter,         "Skyotter/Skyotter" },
++            // New purchasable mounts (elemental spread) — assets currently under Models/Unmapped/ until a clean import.
++            { CreatureKind.BoneBehemoth,     "Bonebound_Behemoth/Bonebound_Behemoth" },
++            { CreatureKind.AncientStag,      "Ancient_Stag/Ancient_Stag" },
++            { CreatureKind.CoralLeviathan,   "Coral_Whale_Monster/Coral_Whale_Monster" },
++            { CreatureKind.EmberKite,        "Embercrest_Kitebeast/Embercrest_Kitebeast" },
++            { CreatureKind.AzureKnight,      "Azurewing_Knight/Azurewing_Knight" },
++            { CreatureKind.EarthDragon,      "Emerald_Dragon/Emerald_Dragon" },
++            { CreatureKind.AirDragon,        "Blue_Dragon/Blue_Dragon" },
++            { CreatureKind.StormWolf,        "Storm_Shadow_Wolf/Storm_Shadow_Wolf" },
++            { CreatureKind.VoltWolf,         "Lightning_Dark_Wolf/Lightning_Dark_Wolf" },
+         };
+ 
+         /// <summary>The bare file name (no path, no extension) of a kind's model prefab.</summary>
+@@ -67,5 +77,37 @@ namespace Elementborn.Core
+ 
+         /// <summary>The full Resources path passed to <c>Resources.Load</c> for a kind's model.</summary>
+         public static string ResourcePath(CreatureKind kind) => ResourceRoot + ResourceName(kind);
++
++        /// <summary>Resources paths to try (in order) for a kind's model: the canonical Creatures path first, then
++        /// the as-imported Models/Unmapped/ location, so newly-added assets resolve before a clean re-import.</summary>
++        public static string[] CandidatePaths(CreatureKind kind)
++        {
++            string name = ResourceName(kind);
++            return new[] { ResourceRoot + name, "Models/Unmapped/" + name };
++        }
++
++        /// <summary>A per-kind display-size multiplier applied to the attached model. 1.0 for everything by default
++        /// (no change to the 32 existing creatures); the newest mounts get tuned starting sizes so an apex reads big
++        /// and a wolf reads small. These are starting values — easy to nudge once you see them in-scene.</summary>
++        public static float DisplayScale(CreatureKind kind)
++        {
++            switch (kind)
++            {
++                // Apex — clearly the largest things you'll meet.
++                case CreatureKind.CoralLeviathan: return 1.7f;
++                case CreatureKind.BoneBehemoth:   return 1.6f;
++                // Dragons & large mounts — bigger than a person, not towering.
++                case CreatureKind.EarthDragon:    return 1.3f;
++                case CreatureKind.AirDragon:      return 1.3f;
++                case CreatureKind.AncientStag:    return 1.25f;
++                // Flyers — a touch larger so wings read.
++                case CreatureKind.EmberKite:      return 1.15f;
++                case CreatureKind.AzureKnight:    return 1.15f;
++                // Wolf companions — roughly person-height.
++                case CreatureKind.StormWolf:
++                case CreatureKind.VoltWolf:       return 1.0f;
++                default:                          return 1.0f;
++            }
++        }
+     }
+ }
+diff --git a/Elementborn/Assets/Elementborn/Core/Creatures.cs b/Elementborn/Assets/Elementborn/Core/Creatures.cs
+index cf8f799..74b32cc 100644
+--- a/Elementborn/Assets/Elementborn/Core/Creatures.cs
++++ b/Elementborn/Assets/Elementborn/Core/Creatures.cs
+@@ -12,7 +12,10 @@ namespace Elementborn.Core
+         // Exotic apex creatures — rare, hard to tame, in tough locations (original designs)
+         Ridgewing, Glidewisp, Skytyrant, Goldkoi, Direstalker, Skimfin, Gillcloak, Tidewarden,
+         // Emergent hybrids — born as the elemental borders weaken (story)
+-        Skyotter
++        Skyotter,
++        // New purchasable mounts (elemental spread)
++        BoneBehemoth, AncientStag, CoralLeviathan, EmberKite, AzureKnight,
++        EarthDragon, AirDragon, StormWolf, VoltWolf
+     }
+ 
+     /// <summary>Static data for a creature: theme, who may own it, and how it's acquired.</summary>
+@@ -120,6 +123,26 @@ namespace Elementborn.Core
+                 case CreatureKind.Skyotter:    // playful water/air storm-hybrid; swims and flies, rideable
+                     return new CreatureInfo("Skyotter", Core.Element.Air, null, true, false, false, 0, 0.12f);
+ 
++                case CreatureKind.BoneBehemoth:   // earth apex; armored colossus, rideable
++                    return new CreatureInfo("Bonebound Behemoth", Core.Element.Earth, Core.Element.Earth, true, false, true, 4000, 0.18f);
++                case CreatureKind.AncientStag:    // earth/nature; gentle forest mount
++                    return new CreatureInfo("Ancient Stag", Core.Element.Earth, null, true, false, true, 900, 0.45f);
++                case CreatureKind.CoralLeviathan: // water apex; reef leviathan, rideable
++                    return new CreatureInfo("Coral Leviathan", Core.Element.Water, Core.Element.Water, true, false, true, 4500, 0.18f);
++                case CreatureKind.EmberKite:      // fire flyer; crest-winged kitebeast
++                    return new CreatureInfo("Embercrest Kitebeast", Core.Element.Fire, Core.Element.Fire, true, false, true, 1800, 0.32f);
++                case CreatureKind.AzureKnight:    // air flyer; azure-winged knight
++                    return new CreatureInfo("Azurewing Knight", Core.Element.Air, Core.Element.Air, true, false, true, 2200, 0.30f);
++
++                case CreatureKind.EarthDragon:    // earth apex; completes the dragon set
++                    return new CreatureInfo("Earth Dragon", Core.Element.Earth, Core.Element.Earth, true, false, true, 5000, 0.20f);
++                case CreatureKind.AirDragon:      // air apex; completes the dragon set
++                    return new CreatureInfo("Air Dragon", Core.Element.Air, Core.Element.Air, true, false, true, 5000, 0.20f);
++                case CreatureKind.StormWolf:      // air companion; gust-pack hunter
++                    return new CreatureInfo("Storm Wolf", Core.Element.Air, null, false, true, false, 0, 0.24f);
++                case CreatureKind.VoltWolf:       // air companion; lightning-fanged
++                    return new CreatureInfo("Voltfang Wolf", Core.Element.Air, null, false, true, false, 0, 0.24f);
++
+                 default:
+                     return new CreatureInfo("Unknown", null, null, false, false, false, 0, 0.5f);
+             }
+diff --git a/Elementborn/Assets/Elementborn/Core/HomeGarden.cs b/Elementborn/Assets/Elementborn/Core/HomeGarden.cs
+new file mode 100644
+index 0000000..9ce2e03
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Core/HomeGarden.cs
+@@ -0,0 +1,47 @@
++namespace Elementborn.Core
++{
++    /// <summary>
++    /// The home Garden station: while built it slowly accrues silver that the player harvests from the home menu.
++    /// Pure/UnityEngine-free (unit-testable); the Game layer ticks <see cref="Accrue"/> with frame time and grants
++    /// the harvested silver. Accrual is capped so it can't run away while the player is idle or away.
++    /// </summary>
++    public sealed class HomeGarden
++    {
++        /// <summary>Silver produced per real hour while the Garden is built.</summary>
++        public const int SilverPerHour = 24;
++        /// <summary>Most silver the garden holds before it stops accruing (must be harvested to resume).</summary>
++        public const int Cap = 240;
++
++        private double _accrued;
++
++        /// <summary>Silver ready to harvest right now (whole units, clamped to the cap).</summary>
++        public int Ready
++        {
++            get
++            {
++                double v = _accrued < 0 ? 0 : (_accrued > Cap ? Cap : _accrued);
++                return (int)System.Math.Floor(v);
++            }
++        }
++
++        /// <summary>Advance the garden by the given real seconds (no-op for non-positive input).</summary>
++        public void Accrue(double seconds)
++        {
++            if (seconds <= 0) return;
++            _accrued += seconds * SilverPerHour / 3600.0;
++            if (_accrued > Cap) _accrued = Cap;
++        }
++
++        /// <summary>Take everything ready; returns the silver granted and reduces the accrual by that much.</summary>
++        public int Harvest()
++        {
++            int amount = Ready;
++            _accrued -= amount;
++            if (_accrued < 0) _accrued = 0;
++            return amount;
++        }
++
++        public double Save() => _accrued;
++        public void Restore(double v) => _accrued = v < 0 ? 0 : (v > Cap ? Cap : v);
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Core/Housing.cs b/Elementborn/Assets/Elementborn/Core/Housing.cs
+new file mode 100644
+index 0000000..2f48367
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Core/Housing.cs
+@@ -0,0 +1,125 @@
++using System.Collections.Generic;
++
++namespace Elementborn.Core
++{
++    /// <summary>The rooms/stations a player can add to their home. Wardrobe changes appearance only — never elements.</summary>
++    public enum HomeAddition { Storage, Workshop, Wardrobe, Stable, EnchantingTable, Garden }
++
++    /// <summary>Result of attempting to build a home addition.</summary>
++    public enum BuildOutcome { Built, NoHouse, AlreadyBuilt, NeedLevel, NeedFunds }
++
++    /// <summary>
++    /// Costs, level gates, and labels for the home and its additions. The home itself is gated behind some
++    /// progression (<see cref="RequiredLevelToClaim"/>) so it's a mid-game reward; each addition has a silver cost
++    /// and (sometimes) its own level prerequisite. Pure and unit-tested.
++    /// </summary>
++    public static class HomesteadCatalog
++    {
++        /// <summary>You must reach this level before a home plot can be claimed.</summary>
++        public const int RequiredLevelToClaim = 5;
++
++        public static readonly HomeAddition[] All =
++        {
++            HomeAddition.Storage, HomeAddition.Workshop, HomeAddition.Wardrobe,
++            HomeAddition.Stable, HomeAddition.EnchantingTable, HomeAddition.Garden,
++        };
++
++        /// <summary>Silver to build the addition.</summary>
++        public static int CostOf(HomeAddition a)
++        {
++            switch (a)
++            {
++                case HomeAddition.Storage:         return 120;
++                case HomeAddition.Workshop:        return 200;
++                case HomeAddition.Wardrobe:        return 160;
++                case HomeAddition.Stable:          return 260;
++                case HomeAddition.EnchantingTable: return 320;
++                case HomeAddition.Garden:          return 140;
++                default:                           return 150;
++            }
++        }
++
++        /// <summary>Player level required to build this addition (on top of owning a home).</summary>
++        public static int RequiredLevelFor(HomeAddition a)
++        {
++            switch (a)
++            {
++                case HomeAddition.Stable:          return 8;
++                case HomeAddition.EnchantingTable: return 10;
++                default:                           return RequiredLevelToClaim;
++            }
++        }
++
++        public static string DisplayName(HomeAddition a)
++        {
++            switch (a)
++            {
++                case HomeAddition.Storage:         return "Storage Chest";
++                case HomeAddition.Workshop:        return "Workshop";
++                case HomeAddition.Wardrobe:        return "Wardrobe";
++                case HomeAddition.Stable:          return "Creature Stable";
++                case HomeAddition.EnchantingTable: return "Enchanting Table";
++                case HomeAddition.Garden:          return "Garden";
++                default:                           return a.ToString();
++            }
++        }
++
++        public static string Describe(HomeAddition a)
++        {
++            switch (a)
++            {
++                case HomeAddition.Storage:         return "Stash items you don't want to carry.";
++                case HomeAddition.Workshop:        return "Craft and combine materials into gear.";
++                case HomeAddition.Wardrobe:        return "Change your look — appearance only, never your element.";
++                case HomeAddition.Stable:          return "House, rest, and manage your tamed creatures.";
++                case HomeAddition.EnchantingTable: return "Imbue worn armor with an element.";
++                case HomeAddition.Garden:          return "Grow plants and harvest ingredients.";
++                default:                           return "";
++            }
++        }
++    }
++
++    /// <summary>
++    /// The additions a player has built onto their home. Owning the home itself is tracked separately (the existing
++    /// <c>PlayerInventory.HasHouse</c>), so the two never drift; this is purely the set of built stations. Pure and
++    /// unit-tested — the Game layer charges silver and persists the set alongside the house.
++    /// </summary>
++    public sealed class Homestead
++    {
++        private readonly HashSet<HomeAddition> _built = new HashSet<HomeAddition>();
++
++        public bool Has(HomeAddition a) => _built.Contains(a);
++        public IEnumerable<HomeAddition> Built => _built;
++        public int Count => _built.Count;
++
++        /// <summary>Whether the home plot may be claimed yet (the progression gate). Funds are checked separately.</summary>
++        public static bool CanClaim(int playerLevel) => playerLevel >= HomesteadCatalog.RequiredLevelToClaim;
++
++        /// <summary>Validate and (on success) record a built addition. This moves no money — the caller spends
++        /// <paramref name="cost"/> only when the result is <see cref="BuildOutcome.Built"/>.</summary>
++        public BuildOutcome TryBuild(HomeAddition a, bool hasHouse, int playerLevel, int funds, out int cost)
++        {
++            cost = HomesteadCatalog.CostOf(a);
++            if (!hasHouse) return BuildOutcome.NoHouse;
++            if (_built.Contains(a)) return BuildOutcome.AlreadyBuilt;
++            if (playerLevel < HomesteadCatalog.RequiredLevelFor(a)) return BuildOutcome.NeedLevel;
++            if (funds < cost) return BuildOutcome.NeedFunds;
++            _built.Add(a);
++            return BuildOutcome.Built;
++        }
++
++        // --- persistence (the Game layer folds these into the existing house save) ---
++        public IEnumerable<string> SaveAdditions()
++        {
++            foreach (var a in _built) yield return a.ToString();
++        }
++
++        public void Restore(IEnumerable<string> additions)
++        {
++            _built.Clear();
++            if (additions == null) return;
++            foreach (var s in additions)
++                if (System.Enum.TryParse(s, out HomeAddition a)) _built.Add(a);
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Core/Items.cs b/Elementborn/Assets/Elementborn/Core/Items.cs
+index 98170a4..3828733 100644
+--- a/Elementborn/Assets/Elementborn/Core/Items.cs
++++ b/Elementborn/Assets/Elementborn/Core/Items.cs
+@@ -80,6 +80,11 @@ namespace Elementborn.Core
+             Add(new ItemDef("sturdy_boots", "Sturdy Boots", "Reinforced marching boots.", ItemCategory.Material, 24));
+             Add(new ItemDef("elixir_of_vigor", "Elixir of Vigor", "Restores body and stamina at once.", ItemCategory.Consumable, 60));
+             Add(new ItemDef("elemental_charm", "Elemental Charm", "A charm humming with all four elements.", ItemCategory.Treasure, 140));
++            Add(new ItemDef("arrow", "Arrow", "Fletched ammunition for a longbow.", ItemCategory.Material, 1));
++            Add(new ItemDef("fire_arrow", "Fire Arrow", "An arrowhead that carries a Fire bite.", ItemCategory.Material, 3));
++            Add(new ItemDef("water_arrow", "Water Arrow", "An arrowhead that carries a Water bite.", ItemCategory.Material, 3));
++            Add(new ItemDef("earth_arrow", "Earth Arrow", "An arrowhead that carries an Earth bite.", ItemCategory.Material, 3));
++            Add(new ItemDef("air_arrow", "Air Arrow", "An arrowhead that carries an Air bite.", ItemCategory.Material, 3));
+ 
+             return d;
+         }
+diff --git a/Elementborn/Assets/Elementborn/Core/SummonBannerCatalog.cs b/Elementborn/Assets/Elementborn/Core/SummonBannerCatalog.cs
+index fac3fa6..8b0c460 100644
+--- a/Elementborn/Assets/Elementborn/Core/SummonBannerCatalog.cs
++++ b/Elementborn/Assets/Elementborn/Core/SummonBannerCatalog.cs
+@@ -14,14 +14,16 @@ namespace Elementborn.Core
+         private static readonly CreatureKind[] LegendaryPool =
+         {
+             CreatureKind.Phoenix, CreatureKind.FireDragon, CreatureKind.WaterDragon,
+-            CreatureKind.Skytyrant, CreatureKind.Tidewarden, CreatureKind.Direstalker
++            CreatureKind.Skytyrant, CreatureKind.Tidewarden, CreatureKind.Direstalker,
++            CreatureKind.EarthDragon, CreatureKind.AirDragon
+         };
+ 
+         // Strong companions and high-end mounts.
+         private static readonly CreatureKind[] EpicPool =
+         {
+             CreatureKind.IceCat, CreatureKind.ElectricSquirrel, CreatureKind.Roc, CreatureKind.Thunderbird,
+-            CreatureKind.Ridgewing, CreatureKind.Goldkoi, CreatureKind.Gillcloak, CreatureKind.Skimfin
++            CreatureKind.Ridgewing, CreatureKind.Goldkoi, CreatureKind.Gillcloak, CreatureKind.Skimfin,
++            CreatureKind.BoneBehemoth, CreatureKind.CoralLeviathan
+         };
+ 
+         // Everyday helpers and mounts.
+@@ -29,7 +31,8 @@ namespace Elementborn.Core
+         {
+             CreatureKind.Spider, CreatureKind.WaterCat, CreatureKind.Dog, CreatureKind.EarthMole,
+             CreatureKind.AirDragonfly, CreatureKind.AirJellyfish, CreatureKind.Horse, CreatureKind.Rhino,
+-            CreatureKind.Glidewisp
++            CreatureKind.Glidewisp,
++            CreatureKind.StormWolf, CreatureKind.VoltWolf
+         };
+ 
+         /// <summary>The stable id for the rotating featured slot. Pity and the lost-50/50 guarantee persist under
+diff --git a/Elementborn/Assets/Elementborn/Core/Wardrobe.cs b/Elementborn/Assets/Elementborn/Core/Wardrobe.cs
+new file mode 100644
+index 0000000..55b02e3
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Core/Wardrobe.cs
+@@ -0,0 +1,148 @@
++namespace Elementborn.Core
++{
++    /// <summary>
++    /// Cosmetic Channeler appearances for the home Wardrobe. APPEARANCE ONLY — selecting a look changes how the
++    /// player is rendered and never touches their element, stats, or abilities. The names evoke a style, not an
++    /// elemental attunement. Pure/UnityEngine-free (unit-testable); the Game layer loads the model and swaps the mesh.
++    /// Looks unlock with progression: Default/Plain from the start, the rest at rising levels.
++    /// </summary>
++    public enum ChannelerLook { Default, Plain, Air, Water, Fire, Earth, Lava, Steam, Metal, Plant, Blood, Paralysis }
++
++    public static class WardrobeCatalog
++    {
++        /// <summary>Mapped Resources sub-path (used after a clean asset import; folder + file share the leaf name).</summary>
++        public const string ResourceRoot = "Models/Characters/Channeler/";
++
++        public static readonly ChannelerLook[] All =
++        {
++            ChannelerLook.Default, ChannelerLook.Plain, ChannelerLook.Air, ChannelerLook.Water,
++            ChannelerLook.Fire, ChannelerLook.Earth, ChannelerLook.Lava, ChannelerLook.Steam,
++            ChannelerLook.Metal, ChannelerLook.Plant, ChannelerLook.Blood, ChannelerLook.Paralysis,
++        };
++
++        /// <summary>The look's folder under the mapped Channeler root (folder and model file share this name).</summary>
++        public static string FolderOf(ChannelerLook look)
++        {
++            switch (look)
++            {
++                case ChannelerLook.Default:   return "Default";
++                case ChannelerLook.Plain:     return "Plain";
++                case ChannelerLook.Air:       return "Air";
++                case ChannelerLook.Water:     return "Water";
++                case ChannelerLook.Fire:      return "Fire";
++                case ChannelerLook.Earth:     return "Earth";
++                case ChannelerLook.Lava:      return "Lava";
++                case ChannelerLook.Steam:     return "Steam";
++                case ChannelerLook.Metal:     return "Metal";
++                case ChannelerLook.Plant:     return "Plant";
++                case ChannelerLook.Blood:     return "Blood";
++                case ChannelerLook.Paralysis: return "Paralysis";
++                default:                      return "Default";
++            }
++        }
++
++        /// <summary>The model's actual imported FBX leaf name (the assets currently live under Models/Unmapped/).</summary>
++        public static string FbxName(ChannelerLook look)
++        {
++            switch (look)
++            {
++                case ChannelerLook.Default:   return "Channeler_Hero_3D";
++                case ChannelerLook.Plain:     return "Channeler_Hero_None_3";
++                case ChannelerLook.Air:       return "Channeler_Hero_Air_3D";
++                case ChannelerLook.Water:     return "Channeler_Hero_Water";
++                case ChannelerLook.Fire:      return "Channeler_Hero_Fire_3";
++                case ChannelerLook.Earth:     return "Channeler_Hero_Earth";
++                case ChannelerLook.Lava:      return "Channeler_Hero_Lava_3";
++                case ChannelerLook.Steam:     return "Channeler_Hero_Steam";
++                case ChannelerLook.Metal:     return "Channeler_Hero_Metal";
++                case ChannelerLook.Plant:     return "Channeler_Hero_Plant";
++                case ChannelerLook.Blood:     return "Channeler_Hero_Blood";
++                case ChannelerLook.Paralysis: return "Channeler_Hero_Paraly";
++                default:                      return "Channeler_Hero_3D";
++            }
++        }
++
++        /// <summary>Resources paths to try (in order) when loading a look's model: the clean mapped path first, then
++        /// the as-imported Models/Unmapped/ location, so it resolves whether or not the assets have been re-imported.</summary>
++        public static string[] CandidatePaths(ChannelerLook look)
++        {
++            string folder = FolderOf(look), fbx = FbxName(look);
++            return new[]
++            {
++                ResourceRoot + folder + "/" + folder,
++                "Models/Unmapped/" + fbx + "/" + fbx,
++                "Models/Characters/Channeler/" + fbx + "/" + fbx,
++            };
++        }
++
++        /// <summary>Player level at which a look becomes selectable. Default/Plain are always available; the four
++        /// classic looks unlock early, the exotic looks later. This gates appearance only.</summary>
++        public static int RequiredLevelFor(ChannelerLook look)
++        {
++            switch (look)
++            {
++                case ChannelerLook.Default:
++                case ChannelerLook.Plain:     return 1;
++                case ChannelerLook.Air:
++                case ChannelerLook.Water:     return 3;
++                case ChannelerLook.Fire:
++                case ChannelerLook.Earth:     return 5;
++                case ChannelerLook.Steam:     return 8;
++                case ChannelerLook.Lava:      return 10;
++                case ChannelerLook.Metal:     return 12;
++                case ChannelerLook.Plant:     return 14;
++                case ChannelerLook.Blood:     return 16;
++                case ChannelerLook.Paralysis: return 18;
++                default:                      return 1;
++            }
++        }
++
++        public static bool IsUnlocked(ChannelerLook look, int playerLevel) => playerLevel >= RequiredLevelFor(look);
++
++        public static string DisplayName(ChannelerLook look)
++        {
++            switch (look)
++            {
++                case ChannelerLook.Default:   return "Channeler (Default)";
++                case ChannelerLook.Plain:     return "Plain Garb";
++                case ChannelerLook.Air:       return "Gale Garb";
++                case ChannelerLook.Water:     return "Tidewoven Garb";
++                case ChannelerLook.Fire:      return "Ember Garb";
++                case ChannelerLook.Earth:     return "Stoneweave Garb";
++                case ChannelerLook.Lava:      return "Magma Garb";
++                case ChannelerLook.Steam:     return "Mistveil Garb";
++                case ChannelerLook.Metal:     return "Ironclad Garb";
++                case ChannelerLook.Plant:     return "Verdant Garb";
++                case ChannelerLook.Blood:     return "Crimson Garb";
++                case ChannelerLook.Paralysis: return "Voltaic Garb";
++                default:                      return look.ToString();
++            }
++        }
++    }
++
++    /// <summary>
++    /// The player's chosen cosmetic look. Gated behind a built Wardrobe AND the look's unlock level, and persisted.
++    /// Changing it alters appearance only — it never changes the player's element.
++    /// </summary>
++    public sealed class Wardrobe
++    {
++        public ChannelerLook Current { get; private set; } = ChannelerLook.Default;
++
++        /// <summary>Choose a look. Requires the home Wardrobe to be built and the look unlocked at the given level;
++        /// returns false (unchanged) otherwise. This never alters the player's element — only their appearance.</summary>
++        public bool TrySelect(ChannelerLook look, bool wardrobeBuilt, int playerLevel)
++        {
++            if (!wardrobeBuilt) return false;
++            if (!WardrobeCatalog.IsUnlocked(look, playerLevel)) return false;
++            Current = look;
++            return true;
++        }
++
++        public string Save() => Current.ToString();
++
++        public void Restore(string s)
++        {
++            if (!string.IsNullOrEmpty(s) && System.Enum.TryParse(s, out ChannelerLook l)) Current = l;
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Editor/BootstrapSceneGenerator.cs b/Elementborn/Assets/Elementborn/Editor/BootstrapSceneGenerator.cs
+index 0971e08..9fca672 100644
+--- a/Elementborn/Assets/Elementborn/Editor/BootstrapSceneGenerator.cs
++++ b/Elementborn/Assets/Elementborn/Editor/BootstrapSceneGenerator.cs
+@@ -103,6 +103,11 @@ namespace Elementborn.EditorTools
+             Add(platform, "PerformanceHud");
+             Add(platform, "PauseMenu");
+             Add(platform, "LoadingScreen");
++            // Home: build/use stations (press H) + ticks the Garden.
++            var home = new GameObject("Home");
++            Add(home, "HousingController");
++            Add(home, "HomeStationsController");
++            Add(home, "HomeMenuViewer");
+ 
+             // Social overlay (press J in play mode): notifications / friends / chat / feedback / moderation.
+             var social = new GameObject("Social");
+@@ -154,6 +159,11 @@ namespace Elementborn.EditorTools
+             Add(equipment, "EquipmentController");
+             Add(equipment, "EquipmentViewer");
+ 
++            // Wardrobe (press K): cosmetic Channeler looks, unlocked by level — appearance only, never your element.
++            var wardrobe = new GameObject("Wardrobe");
++            Add(wardrobe, "WardrobeController");
++            Add(wardrobe, "WardrobeViewer");
++
+             // Summon Beacon (press U): currency-gated gacha — spend Sigils to roll companions & mounts into the
+             // roster, dust duplicates into Motes, claim a featured creature with Motes.
+             var summon = new GameObject("Summon");
+diff --git a/Elementborn/Assets/Elementborn/Editor/InventoryMigrationAuditMenu.cs b/Elementborn/Assets/Elementborn/Editor/InventoryMigrationAuditMenu.cs
+new file mode 100644
+index 0000000..5f609b9
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Editor/InventoryMigrationAuditMenu.cs
+@@ -0,0 +1,28 @@
++using System.Collections.Generic;
++using UnityEditor;
++using UnityEngine;
++using Elementborn.Game;
++
++namespace Elementborn.Game.EditorTools
++{
++    /// <summary>Editor entry point for the read-only inventory migration audit (step 2). Scans every
++    /// InventoryItemDefinition asset in the project, compares it against the legacy ItemCatalog, and logs the gaps.
++    /// Nothing is created or modified.</summary>
++    public static class InventoryMigrationAuditMenu
++    {
++        [MenuItem("Elementborn/Inventory/Audit Migration Gaps")]
++        public static void Audit()
++        {
++            var ids = new List<string>();
++            foreach (var guid in AssetDatabase.FindAssets("t:InventoryItemDefinition"))
++            {
++                var path = AssetDatabase.GUIDToAssetPath(guid);
++                var def = AssetDatabase.LoadAssetAtPath<InventoryItemDefinition>(path);
++                if (def != null && !string.IsNullOrWhiteSpace(def.ItemId)) ids.Add(def.ItemId);
++            }
++
++            var result = InventoryMigrationAudit.Compute(ids);
++            Debug.Log(InventoryMigrationAudit.Summarize(result));
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Game/CreatureController.cs b/Elementborn/Assets/Elementborn/Game/CreatureController.cs
+index 413bb86..cbac08d 100644
+--- a/Elementborn/Assets/Elementborn/Game/CreatureController.cs
++++ b/Elementborn/Assets/Elementborn/Game/CreatureController.cs
+@@ -104,6 +104,8 @@ namespace Elementborn.Game
+             if (_faction != null) _faction.Configure(Faction.Neutral, _element); // peaceful until provoked
+             if (_self != null) _self.SetMaxHealth(_stats.MaxHealth);
+             if (_self != null && _element.HasValue) _self.SetAffinity(_element.Value); // elemental matchup
++            if (kind == CreatureKind.Phoenix && GetComponent<PhoenixDeathBurst>() == null)
++                gameObject.AddComponent<PhoenixDeathBurst>(); // fire blast + ash + timed reform on death
+         }
+ 
+         private void Update()
+diff --git a/Elementborn/Assets/Elementborn/Game/CreatureModelLibrary.cs b/Elementborn/Assets/Elementborn/Game/CreatureModelLibrary.cs
+index 8c69c91..81e931c 100644
+--- a/Elementborn/Assets/Elementborn/Game/CreatureModelLibrary.cs
++++ b/Elementborn/Assets/Elementborn/Game/CreatureModelLibrary.cs
+@@ -23,7 +23,12 @@ namespace Elementborn.Game
+             if (_cache.TryGetValue(kind, out var prefab)) return prefab;
+             if (_missing.Contains(kind)) return null;
+ 
+-            prefab = Resources.Load<GameObject>(CreatureModelNames.ResourcePath(kind));
++            prefab = null;
++            foreach (var path in CreatureModelNames.CandidatePaths(kind))
++            {
++                prefab = Resources.Load<GameObject>(path);
++                if (prefab != null) break;
++            }
+             if (prefab != null) _cache[kind] = prefab;
+             else _missing.Add(kind);
+             return prefab;
+@@ -54,6 +59,7 @@ namespace Elementborn.Game
+             var model = Object.Instantiate(prefab, host.transform);
+             model.transform.localPosition = Vector3.zero;
+             model.transform.localRotation = Quaternion.identity;
++            model.transform.localScale = Vector3.one * CreatureModelNames.DisplayScale(kind);
+             model.name = AttachedPrefix + kind;
+ 
+             if (placeholder != null)
+diff --git a/Elementborn/Assets/Elementborn/Game/HomeMenuViewer.cs b/Elementborn/Assets/Elementborn/Game/HomeMenuViewer.cs
+new file mode 100644
+index 0000000..ae193e0
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Game/HomeMenuViewer.cs
+@@ -0,0 +1,242 @@
++using UnityEngine;
++using UnityEngine.InputSystem;
++using Elementborn.Core;
++
++namespace Elementborn.Game
++{
++    /// <summary>The Home menu (default key <b>H</b>). Build additions onto your claimed home and use the ones you've
++    /// built: Workshop opens crafting, Enchanting Table opens equipment, Wardrobe opens the look picker, the Garden
++    /// harvests the silver it has grown, Storage deposits/withdraws items, and the Stable houses your creatures.
++    /// Built via <see cref="OverlayUi"/> so it's world-space in VR; the bootstrap scene adds one.</summary>
++    public sealed class HomeMenuViewer : MonoBehaviour
++    {
++        private enum Mode { Main, Storage, Stable }
++
++        [SerializeField] private Key toggleKey = Key.H;
++        private static readonly Color Dim = new Color(0.70f, 0.72f, 0.78f, 1f);
++
++        private Canvas _canvas;
++        private Transform _content;
++        private bool _open;
++        private Mode _mode = Mode.Main;
++
++        private void Awake() { Build(); Hide(); }
++
++        private void Update()
++        {
++            var kb = Keyboard.current;
++            if (kb == null) return;
++            if (kb[toggleKey].wasPressedThisFrame) Toggle();
++            else if (_open && kb[Key.Escape].wasPressedThisFrame)
++            {
++                if (_mode != Mode.Main) { _mode = Mode.Main; Rebuild(); }
++                else Hide();
++            }
++        }
++
++        public void Open() { if (!_open) Show(); }
++        private void Toggle() { if (_open) Hide(); else Show(); }
++        private void Show() { _open = true; _mode = Mode.Main; if (_canvas != null) _canvas.gameObject.SetActive(true); Rebuild(); }
++        private void Hide() { _open = false; if (_canvas != null) _canvas.gameObject.SetActive(false); }
++
++        private void Build()
++        {
++            var p = OverlayUi.Panel("HomeCanvas", "Home", 58, new Vector2(740, 800), Hide);
++            _canvas = p.canvas;
++            _content = p.content;
++        }
++
++        private void Rebuild()
++        {
++            if (_content == null) return;
++            OverlayUi.Clear(_content);
++
++            var inv = PlayerInventory.Instance;
++            if (inv == null) { OverlayUi.Body(_content, "No player.", 18); return; }
++
++            if (!inv.HasHouse)
++            {
++                OverlayUi.Header(_content, "No home yet");
++                OverlayUi.Body(_content, "Claim a home plot (reach level 5, then claim at the plot marker) to start "
++                    + "building stations here.", 18);
++                return;
++            }
++
++            switch (_mode)
++            {
++                case Mode.Storage: RebuildStorage(); break;
++                case Mode.Stable:  RebuildStable();  break;
++                default:           RebuildMain(inv); break;
++            }
++        }
++
++        private void RebuildMain(PlayerInventory inv)
++        {
++            OverlayUi.Header(_content, "Home   (silver: " + inv.Wallet.CountOf(Currency.Silver) + ")");
++            foreach (var a in HomesteadCatalog.All)
++            {
++                if (inv.Home.Has(a)) AddBuiltRow(inv, a);
++                else AddBuildRow(a);
++            }
++        }
++
++        private void AddBuiltRow(PlayerInventory inv, HomeAddition a)
++        {
++            switch (a)
++            {
++                case HomeAddition.Workshop:
++                    UiTheme.Button(_content, "Open Workshop  —  Crafting", OpenCrafting, 660, 44); break;
++                case HomeAddition.EnchantingTable:
++                    UiTheme.Button(_content, "Open Enchanting Table  —  Equipment", OpenEquipment, 660, 44); break;
++                case HomeAddition.Wardrobe:
++                    UiTheme.Button(_content, "Open Wardrobe  —  change your look", OpenWardrobe, 660, 44); break;
++                case HomeAddition.Garden:
++                    UiTheme.Button(_content, "Harvest Garden  (" + inv.Garden.Ready + " silver ready)", DoHarvest, 660, 44); break;
++                case HomeAddition.Storage:
++                    UiTheme.Button(_content, "Open Storage  —  deposit & withdraw", () => { _mode = Mode.Storage; Rebuild(); }, 660, 44); break;
++                case HomeAddition.Stable:
++                    UiTheme.Button(_content, "Open Stable  —  house your creatures", () => { _mode = Mode.Stable; Rebuild(); }, 660, 44); break;
++            }
++        }
++
++        private void AddBuildRow(HomeAddition a)
++        {
++            string label = "Build " + HomesteadCatalog.DisplayName(a) + "  —  " + HomesteadCatalog.CostOf(a)
++                + " silver  (Lv " + HomesteadCatalog.RequiredLevelFor(a) + ")";
++            var add = a;
++            UiTheme.Button(_content, label, () => DoBuild(add), 660, 42);
++        }
++
++        // ---- Storage: deposit/withdraw whole stacks. Shows BOTH inventory pools (read-only check) and lets you
++        // deposit from either — non-destructive: items land in the shared chest, withdrawable. This is migration
++        // step 1; nothing is auto-moved or deleted. ----
++        private void RebuildStorage()
++        {
++            UiTheme.Button(_content, "< Back", BackToMain, 200, 40);
++            OverlayUi.Header(_content, "Home Storage");
++
++            var storage = HomeStationsController.Instance != null ? HomeStationsController.Instance.Storage : null;
++            if (storage == null) { OverlayUi.Body(_content, "Storage unavailable.", 18); return; }
++
++            var inv = PlayerInventory.Instance;
++            var tracker = PlayerInventoryTracker.Instance;
++
++            // Read-only check: how many items sit in each of the two inventory pools right now.
++            int bagCount = 0;
++            if (tracker != null) foreach (var st in tracker.Stacks) if (!st.IsEmpty) bagCount += st.Quantity;
++            int legacyCount = 0;
++            if (inv != null) foreach (var e in inv.Items.Entries()) legacyCount += e.Value;
++            OverlayUi.Body(_content, "Bag: " + bagCount + " items     Legacy bag: " + legacyCount + " items", 16, Dim);
++
++            OverlayUi.Header(_content, "Stored");
++            bool anyStored = false;
++            foreach (var st in storage.Stacks)
++            {
++                if (st.IsEmpty) continue;
++                anyStored = true;
++                string id = st.ResolvedItemId; int q = st.Quantity;
++                UiTheme.Button(_content, "Withdraw " + st.DisplayName + " x" + q,
++                    () => { storage.TransferToPlayer(id, q); Rebuild(); }, 660, 40);
++            }
++            if (!anyStored) OverlayUi.Body(_content, "  (empty)", 16, Dim);
++
++            OverlayUi.Header(_content, "Your bag");
++            bool anyBag = false;
++            if (tracker != null)
++                foreach (var st in tracker.Stacks)
++                {
++                    if (st.IsEmpty) continue;
++                    anyBag = true;
++                    string id = st.ResolvedItemId; int q = st.Quantity;
++                    UiTheme.Button(_content, "Deposit " + st.DisplayName + " x" + q,
++                        () => Deposit(storage, id, q), 660, 40);
++                }
++            if (!anyBag) OverlayUi.Body(_content, "  (nothing to deposit)", 16, Dim);
++
++            // Legacy pool (crafting/equipment inventory). Depositing here moves items into the shared chest so they
++            // can be withdrawn into the main bag — a safe, player-driven first step toward one unified inventory.
++            OverlayUi.Header(_content, "Your bag (legacy)");
++            bool anyLegacy = false;
++            if (inv != null)
++                foreach (var e in inv.Items.Entries())
++                {
++                    if (e.Value <= 0) continue;
++                    anyLegacy = true;
++                    string id = e.Key; int q = e.Value;
++                    string nm = ItemCatalog.Get(id)?.Name ?? id;
++                    UiTheme.Button(_content, "Deposit " + nm + " x" + q, () => DepositLegacy(storage, id, q), 660, 40);
++                }
++            if (!anyLegacy) OverlayUi.Body(_content, "  (legacy bag empty)", 16, Dim);
++        }
++
++        private void Deposit(StorageContainerInventory storage, string itemId, int qty)
++        {
++            if (PlayerInventoryTracker.HasItemId(itemId, qty))
++            {
++                var add = storage.AddId(itemId, qty);
++                if (add.Moved > 0) PlayerInventoryTracker.RemoveItemId(itemId, add.Moved);
++            }
++            Rebuild();
++        }
++
++        // Deposit from the legacy (crafting/equipment) pool: only remove what the chest actually accepted.
++        private void DepositLegacy(StorageContainerInventory storage, string itemId, int qty)
++        {
++            var inv = PlayerInventory.Instance;
++            if (inv == null) return;
++            var add = storage.AddId(itemId, qty);
++            if (add.Moved > 0) inv.Items.Remove(itemId, add.Moved);
++            Rebuild();
++        }
++
++        // ---- Stable: move creatures between following you and housed at home ----
++        private void RebuildStable()
++        {
++            UiTheme.Button(_content, "< Back", BackToMain, 200, 40);
++            OverlayUi.Header(_content, "Creature Stable");
++
++            var stable = HomeStationsController.Instance != null ? HomeStationsController.Instance.Stable : null;
++            if (stable == null) { OverlayUi.Body(_content, "Stable unavailable.", 18); return; }
++
++            OverlayUi.Body(_content, "Housed: " + stable.StoredCreatureRecordIds.Count + " / " + stable.Capacity, 18, Dim);
++            UiTheme.Button(_content, "Stable your active follower", () =>
++            {
++                bool ok = stable.StoreFirstAvailable();
++                GameHud.Instance?.Toast(ok ? "Housed a creature in the stable." : "No follower to house (or stable full).");
++                if (ok) AudioController.Instance?.Confirm();
++                Rebuild();
++            }, 660, 44);
++            UiTheme.Button(_content, "Release one to follow you", () =>
++            {
++                bool ok = stable.ReleaseFirstStored();
++                GameHud.Instance?.Toast(ok ? "Released a creature to follow you." : "No creature housed.");
++                if (ok) AudioController.Instance?.Confirm();
++                Rebuild();
++            }, 660, 44);
++        }
++
++        private void BackToMain() { _mode = Mode.Main; Rebuild(); }
++
++        private void DoBuild(HomeAddition a) { HousingController.Instance?.TryBuild(a); Rebuild(); }
++
++        private void DoHarvest()
++        {
++            var inv = PlayerInventory.Instance;
++            if (inv == null) return;
++            int amount = inv.Garden.Harvest();
++            if (amount > 0)
++            {
++                inv.AddCurrency(Currency.Silver, amount);
++                GameHud.Instance?.Toast("Harvested " + amount + " silver from your garden.");
++                AudioController.Instance?.Confirm();
++            }
++            else GameHud.Instance?.Toast("Nothing ready to harvest yet.");
++            Rebuild();
++        }
++
++        // Hand off to the relevant panel (and close this one so they don't stack).
++        private void OpenCrafting() { Hide(); Object.FindAnyObjectByType<CraftingViewer>()?.Open(); }
++        private void OpenEquipment() { Hide(); Object.FindAnyObjectByType<EquipmentViewer>()?.Open(); }
++        private void OpenWardrobe() { Hide(); Object.FindAnyObjectByType<WardrobeViewer>()?.Open(); }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Game/HomeStationsController.cs b/Elementborn/Assets/Elementborn/Game/HomeStationsController.cs
+new file mode 100644
+index 0000000..6b19e41
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Game/HomeStationsController.cs
+@@ -0,0 +1,46 @@
++using UnityEngine;
++
++namespace Elementborn.Game
++{
++    /// <summary>
++    /// Owns the player's home Storage and Stable as persistent containers. They carry fixed ids, and the inventory +
++    /// creature-bonding save bridges discover every container/stable by id, so their contents survive saves with no
++    /// extra wiring. Created once and always present (so they exist before a save is loaded); the
++    /// <see cref="HomeMenuViewer"/> only exposes them once the matching home addition is built. Lives on the Home object.
++    /// </summary>
++    public sealed class HomeStationsController : MonoBehaviour
++    {
++        public static HomeStationsController Instance { get; private set; }
++
++        public const string StorageId = "home_storage";
++        public const string StableId = "home_stable";
++
++        public StorageContainerInventory Storage { get; private set; }
++        public CreatureStable Stable { get; private set; }
++
++        private void Awake()
++        {
++            if (Instance != null && Instance != this) { Destroy(this); return; }
++            Instance = this;
++
++            Storage = EnsureChild<StorageContainerInventory>(StorageId);
++            Stable = EnsureChild<CreatureStable>(StableId);
++        }
++
++        private void OnDestroy() { if (Instance == this) Instance = null; }
++
++        // Child GameObject name becomes the container's id (StorageId/StableId fall back to the object name).
++        private T EnsureChild<T>(string childName) where T : Component
++        {
++            var existing = transform.Find(childName);
++            if (existing != null)
++            {
++                var comp = existing.GetComponent<T>();
++                if (comp != null) return comp;
++            }
++            var go = new GameObject(childName);
++            go.transform.SetParent(transform, false);
++            return go.AddComponent<T>();
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Game/HousePlot.cs b/Elementborn/Assets/Elementborn/Game/HousePlot.cs
+index 9e01297..3f397d8 100644
+--- a/Elementborn/Assets/Elementborn/Game/HousePlot.cs
++++ b/Elementborn/Assets/Elementborn/Game/HousePlot.cs
+@@ -1,4 +1,5 @@
+ using UnityEngine;
++using Elementborn.Core;
+ 
+ namespace Elementborn.Game
+ {
+@@ -19,6 +20,13 @@ namespace Elementborn.Game
+             var inv = PlayerInventory.Instance;
+             if (inv == null || Owned) return false;
+ 
++            int level = ProgressionController.Instance != null ? ProgressionController.Instance.Progression.Level : 1;
++            if (!Homestead.CanClaim(level))
++            {
++                GameHud.Instance?.Toast("Reach level " + HomesteadCatalog.RequiredLevelToClaim + " to claim a home.");
++                return false;
++            }
++
+             if (!inv.TryClaimHouse(transform.position, price, out _)) return false;
+             Owned = true;
+             return true;
+diff --git a/Elementborn/Assets/Elementborn/Game/HousingController.cs b/Elementborn/Assets/Elementborn/Game/HousingController.cs
+new file mode 100644
+index 0000000..b32f2f3
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Game/HousingController.cs
+@@ -0,0 +1,63 @@
++using UnityEngine;
++using Elementborn.Core;
++
++namespace Elementborn.Game
++{
++    /// <summary>
++    /// Builds additions onto the player's home and ticks the Garden each frame. Reads the home-owned flag + silver
++    /// from <see cref="PlayerInventory"/> and the level from <see cref="ProgressionController"/>, validates through
++    /// the pure <see cref="Homestead"/> (held on PlayerInventory, so it saves with the house), spends silver on
++    /// success, and toasts the outcome. The <see cref="HomeMenuViewer"/> panel is the build/use UI; <see cref="TryBuild"/> is public.
++    /// </summary>
++    public sealed class HousingController : MonoBehaviour
++    {
++        public static HousingController Instance { get; private set; }
++
++        private void Awake()
++        {
++            if (Instance != null && Instance != this) { Destroy(this); return; }
++            Instance = this;
++        }
++
++        private void OnDestroy() { if (Instance == this) Instance = null; }
++
++        private void Update()
++        {
++            var inv = PlayerInventory.Instance;
++            if (inv != null && inv.Home.Has(HomeAddition.Garden)) inv.Garden.Accrue(Time.deltaTime);
++        }
++
++        /// <summary>Attempt to build one addition: spends silver and toasts on success, explains the block otherwise.</summary>
++        public BuildOutcome TryBuild(HomeAddition a)
++        {
++            var inv = PlayerInventory.Instance;
++            if (inv == null) return BuildOutcome.NoHouse;
++
++            int level = ProgressionController.Instance != null ? ProgressionController.Instance.Progression.Level : 1;
++            int funds = inv.Wallet.CountOf(Currency.Silver);
++
++            var outcome = inv.Home.TryBuild(a, inv.HasHouse, level, funds, out int cost);
++            switch (outcome)
++            {
++                case BuildOutcome.Built:
++                    inv.AddCurrency(Currency.Silver, -cost);
++                    GameHud.Instance?.Toast("Built: " + HomesteadCatalog.DisplayName(a));
++                    break;
++                case BuildOutcome.NoHouse:
++                    GameHud.Instance?.Toast("Claim a home first.");
++                    break;
++                case BuildOutcome.AlreadyBuilt:
++                    GameHud.Instance?.Toast(HomesteadCatalog.DisplayName(a) + " is already built.");
++                    break;
++                case BuildOutcome.NeedLevel:
++                    GameHud.Instance?.Toast(HomesteadCatalog.DisplayName(a) + " needs level "
++                        + HomesteadCatalog.RequiredLevelFor(a) + ".");
++                    break;
++                case BuildOutcome.NeedFunds:
++                    GameHud.Instance?.Toast("Need " + cost + " silver for " + HomesteadCatalog.DisplayName(a) + ".");
++                    break;
++            }
++            return outcome;
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Game/InventoryMigrationAudit.cs b/Elementborn/Assets/Elementborn/Game/InventoryMigrationAudit.cs
+new file mode 100644
+index 0000000..04fa4fe
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Game/InventoryMigrationAudit.cs
+@@ -0,0 +1,121 @@
++using System.Collections.Generic;
++using System.Text;
++using UnityEngine;
++using Elementborn.Core;
++
++namespace Elementborn.Game
++{
++    /// <summary>
++    /// Read-only migration aid (step 2). Reports which legacy <see cref="ItemCatalog"/> item ids do NOT yet have a
++    /// matching <see cref="InventoryItemDefinition"/>, so we know what to author (or bridge) before crafting and
++    /// equipment move onto <see cref="PlayerInventoryTracker"/>. This changes nothing.
++    ///
++    /// Run the definitive project-wide scan from the Unity menu "Elementborn/Inventory/Audit Migration Gaps", or
++    /// call <see cref="RunAndLog"/> at runtime to audit against whatever definitions are currently loaded.
++    /// </summary>
++    public static class InventoryMigrationAudit
++    {
++        public struct Result
++        {
++            public List<string> MissingIds;    // legacy ids with no InventoryItemDefinition
++            public List<string> CoveredIds;    // legacy ids that already have one
++            public List<string> OrphanDefIds;  // definition ids that are not a legacy catalog item
++            public int LegacyCount;
++            public int DefinitionCount;
++        }
++
++        /// <summary>Pure comparison of the legacy catalog against a supplied set of definition ids. No Unity lookups,
++        /// so this is unit-testable.</summary>
++        public static Result Compute(ICollection<string> definitionIds)
++        {
++            var defs = new HashSet<string>();
++            if (definitionIds != null)
++            {
++                foreach (var id in definitionIds)
++                {
++                    if (!string.IsNullOrWhiteSpace(id)) defs.Add(id);
++                }
++            }
++
++            var result = new Result
++            {
++                MissingIds = new List<string>(),
++                CoveredIds = new List<string>(),
++                OrphanDefIds = new List<string>(),
++                DefinitionCount = defs.Count
++            };
++
++            var legacy = ItemCatalog.All();
++            result.LegacyCount = legacy.Count;
++
++            var legacyIds = new HashSet<string>();
++            foreach (var item in legacy)
++            {
++                legacyIds.Add(item.Id);
++                if (defs.Contains(item.Id)) result.CoveredIds.Add(item.Id);
++                else result.MissingIds.Add(item.Id);
++            }
++
++            foreach (var id in defs)
++            {
++                if (!legacyIds.Contains(id)) result.OrphanDefIds.Add(id);
++            }
++
++            result.MissingIds.Sort();
++            result.CoveredIds.Sort();
++            result.OrphanDefIds.Sort();
++            return result;
++        }
++
++        /// <summary>Ids of every InventoryItemDefinition currently loaded in memory. Runtime fallback for when the
++        /// editor's project-wide asset scan is unavailable.</summary>
++        public static List<string> CollectLoadedDefinitionIds()
++        {
++            var ids = new List<string>();
++            foreach (var def in Resources.FindObjectsOfTypeAll<InventoryItemDefinition>())
++            {
++                if (def != null && !string.IsNullOrWhiteSpace(def.ItemId)) ids.Add(def.ItemId);
++            }
++            return ids;
++        }
++
++        /// <summary>Formats a human-readable, multi-line summary of an audit result.</summary>
++        public static string Summarize(Result r)
++        {
++            var sb = new StringBuilder();
++            sb.AppendLine("[Inventory migration audit] legacy items: " + r.LegacyCount
++                          + "   definitions seen: " + r.DefinitionCount);
++            sb.AppendLine("Missing a definition (" + r.MissingIds.Count + "):");
++            if (r.MissingIds.Count == 0)
++            {
++                sb.AppendLine("  (none - every legacy item has a definition)");
++            }
++            else
++            {
++                foreach (var id in r.MissingIds)
++                {
++                    var name = ItemCatalog.Get(id)?.Name ?? id;
++                    sb.AppendLine("  - " + id + "  (\"" + name + "\")");
++                }
++            }
++            if (r.CoveredIds.Count > 0)
++            {
++                sb.AppendLine("Already covered (" + r.CoveredIds.Count + "): " + string.Join(", ", r.CoveredIds));
++            }
++            if (r.OrphanDefIds.Count > 0)
++            {
++                sb.AppendLine("Definitions with no legacy item (" + r.OrphanDefIds.Count + "): "
++                              + string.Join(", ", r.OrphanDefIds));
++            }
++            return sb.ToString();
++        }
++
++        /// <summary>Runtime convenience: audit against the loaded definitions and log the summary.</summary>
++        public static string RunAndLog()
++        {
++            var text = Summarize(Compute(CollectLoadedDefinitionIds()));
++            Debug.Log(text);
++            return text;
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Game/MainMenuController.cs b/Elementborn/Assets/Elementborn/Game/MainMenuController.cs
+index b37efd5..f20fc92 100644
+--- a/Elementborn/Assets/Elementborn/Game/MainMenuController.cs
++++ b/Elementborn/Assets/Elementborn/Game/MainMenuController.cs
+@@ -58,9 +58,41 @@ namespace Elementborn.Game
+ 
+             UiTheme.Button(content, "Save Slots", () => SaveSlotController.EnsureInstance().Show(), 540, 62);
+             UiTheme.Button(content, "Settings", () => _onSettings?.Invoke(), 540, 62);
++            UiTheme.Button(content, "How to Play", ShowHowToPlay, 540, 62);
++            UiTheme.Button(content, "Credits", ShowCredits, 540, 62);
+             UiTheme.Button(content, "Quit", () => _onQuit?.Invoke(), 540, 62);
+ 
+             AudioController.Instance?.Confirm();
+         }
++
++        private void ShowHowToPlay() => ShowOverlay("HowToPlayCanvas", "How to Play", c =>
++        {
++            OverlayUi.Body(c, "Channel the four elements — Fire, Water, Earth, Air — to mend the Convergence.", 18);
++            OverlayUi.Header(c, "Controls");
++            OverlayUi.Body(c, "Move: WASD / left stick      Look: mouse / right stick", 16);
++            OverlayUi.Body(c, "Channel & attack: hand triggers (mouse buttons on flat)", 16);
++            OverlayUi.Body(c, "Equipment: V      Crafting: B      Summon Beacon: U", 16);
++            OverlayUi.Body(c, "Wardrobe: J      Home: H      Map: M      Achievements: K", 16);
++            OverlayUi.Body(c, "Close any panel: Esc", 16);
++        });
++
++        private void ShowCredits() => ShowOverlay("CreditsCanvas", "Credits", c =>
++        {
++            OverlayUi.Header(c, "ELEMENTBORN");
++            OverlayUi.Body(c, "An original elemental-combat RPG.", 18);
++            OverlayUi.Body(c, "Design & Development by Steele.", 16);
++            OverlayUi.Body(c, "Built with Unity 6 and the Universal Render Pipeline.", 16);
++            OverlayUi.Body(c, "Thank you for playing.", 16);
++        });
++
++        // A stacked overlay with its own Close button; closing destroys just this overlay's canvas.
++        private void ShowOverlay(string canvasName, string title, System.Action<Transform> fill)
++        {
++            Canvas cv = null;
++            var p = OverlayUi.Panel(canvasName, title, 230, new Vector2(640, 720), () => { if (cv != null) Destroy(cv.gameObject); });
++            cv = p.canvas;
++            fill(p.content);
++            AudioController.Instance?.Confirm();
++        }
+     }
+ }
+diff --git a/Elementborn/Assets/Elementborn/Game/PhoenixDeathBurst.cs b/Elementborn/Assets/Elementborn/Game/PhoenixDeathBurst.cs
+new file mode 100644
+index 0000000..5c2bf7e
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Game/PhoenixDeathBurst.cs
+@@ -0,0 +1,134 @@
++using UnityEngine;
++using Elementborn.Core;
++
++namespace Elementborn.Game
++{
++    /// <summary>
++    /// A wild phoenix's death: a fire blast that damages everything nearby (falloff via <see cref="Blast"/>), then the
++    /// bird scatters to embers that drift up and fade — and after a cooldown it reforms at a fresh spot near its haunt
++    /// at full health. It reuses its own object (no respawn factory) and takes over death so the body isn't destroyed.
++    /// Auto-attached to Phoenix creatures by <see cref="CreatureController"/>.
++    /// </summary>
++    [RequireComponent(typeof(Damageable))]
++    public sealed class PhoenixDeathBurst : MonoBehaviour
++    {
++        [SerializeField] private float blastRadius = 5f;
++        [SerializeField] private float blastDamage = 40f;
++        [SerializeField] private float respawnDelay = 12f;
++        [SerializeField] private float wanderRadius = 18f;
++
++        private Damageable _self;
++        private Vector3 _home;
++        private bool _homeSet;
++        private float _respawnAt = -1f;
++
++        private void Awake()
++        {
++            _self = GetComponent<Damageable>();
++            if (_self != null && _self.Health != null)
++            {
++                _self.DestroyOnDeath = false;          // we handle death (blast + ash + reform)
++                _self.Health.Died -= OnDied;
++                _self.Health.Died += OnDied;
++            }
++        }
++
++        private void Start()
++        {
++            _home = transform.position;
++            _homeSet = true;
++        }
++
++        private void OnDestroy()
++        {
++            if (_self != null && _self.Health != null) _self.Health.Died -= OnDied;
++        }
++
++        private void OnDied()
++        {
++            Vector3 at = transform.position;
++            FireBlast(at);
++            ScatterToAsh(at);
++            SetBodyActive(false);
++            _respawnAt = Time.time + respawnDelay;
++        }
++
++        private void Update()
++        {
++            if (_respawnAt >= 0f && Time.time >= _respawnAt)
++            {
++                _respawnAt = -1f;
++                Reform();
++            }
++        }
++
++        private void FireBlast(Vector3 center)
++        {
++            AudioController.Instance?.PlayImpact(Element.Fire, center);
++            foreach (var col in Physics.OverlapSphere(center, blastRadius))
++            {
++                var target = col.GetComponentInParent<IDamageable>();
++                if (target == null || ReferenceEquals(target, _self)) continue;   // don't burn its own remains
++                float dist = Vector3.Distance(center, col.ClosestPoint(center));
++                float dmg = Blast.DamageAt(blastDamage, dist, blastRadius);
++                if (dmg > 0f) target.Apply(new DamageInfo(dmg, Element.Fire));
++            }
++        }
++
++        private void ScatterToAsh(Vector3 center)
++        {
++            for (int i = 0; i < 10; i++)
++            {
++                var ember = GameObject.CreatePrimitive(PrimitiveType.Sphere);
++                var col = ember.GetComponent<Collider>();
++                if (col != null) Destroy(col);
++                ember.transform.position = center + new Vector3(
++                    Random.Range(-0.4f, 0.4f), Random.Range(0.2f, 1.2f), Random.Range(-0.4f, 0.4f));
++                ember.transform.localScale = Vector3.one * Random.Range(0.05f, 0.14f);
++                var mr = ember.GetComponent<MeshRenderer>();
++                if (mr != null) mr.sharedMaterial = ToonPalette.Tinted(ElementColor.For(Element.Fire));
++                ember.AddComponent<AshMote>().Init(
++                    new Vector3(Random.Range(-1f, 1f), Random.Range(1.5f, 3f), Random.Range(-1f, 1f)), 1.6f);
++            }
++        }
++
++        private void SetBodyActive(bool on)
++        {
++            foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = on;
++            foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = on;
++            var creature = GetComponent<CreatureController>();
++            if (creature != null) creature.enabled = on;   // Start() ran once, so re-enabling won't re-subscribe
++        }
++
++        private void Reform()
++        {
++            Vector3 origin = _homeSet ? _home : transform.position;
++            Vector3 spot = origin + new Vector3(
++                Random.Range(-wanderRadius, wanderRadius), 0f, Random.Range(-wanderRadius, wanderRadius));
++            if (Physics.Raycast(spot + Vector3.up * 30f, Vector3.down, out var hit, 60f)) spot = hit.point;
++            transform.position = spot;
++            if (_self != null && _self.Health != null) _self.Health.Revive();
++            SetBodyActive(true);
++        }
++    }
++
++    /// <summary>A single drifting ember/ash mote: rises, slows, and shrinks away, then despawns.</summary>
++    public sealed class AshMote : MonoBehaviour
++    {
++        private Vector3 _vel;
++        private float _life = 1.6f;
++        private float _t;
++
++        public void Init(Vector3 velocity, float life) { _vel = velocity; _life = life; }
++
++        private void Update()
++        {
++            _t += Time.deltaTime;
++            transform.position += _vel * Time.deltaTime;
++            _vel *= 0.96f;                              // air drag — drifts and settles
++            float s = Mathf.Max(0f, 1f - _t / _life);
++            transform.localScale = Vector3.one * (0.14f * s);
++            if (_t >= _life) Destroy(gameObject);
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Game/PlayerCombatController.cs b/Elementborn/Assets/Elementborn/Game/PlayerCombatController.cs
+index 8611c08..106d57a 100644
+--- a/Elementborn/Assets/Elementborn/Game/PlayerCombatController.cs
++++ b/Elementborn/Assets/Elementborn/Game/PlayerCombatController.cs
+@@ -88,6 +88,25 @@ namespace Elementborn.Game
+ 
+             if (outcome.IsEmpty) return;
+ 
++            // A longbow shot spends an arrow; with an empty quiver the shot doesn't loose. An elemental arrowhead
++            // (fire/water/earth/air) is preferred when carried, and its element rides the shot into the matchup.
++            if (weaponHolder != null && weaponHolder.HasWeapon
++                && weaponHolder.Current.Type == WeaponType.LongBow && outcome.Kind == OutcomeKind.Projectile)
++            {
++                var quiver = PlayerInventory.Instance;
++                string arrow = null;
++                if (quiver != null)
++                    foreach (var id in Ammo.All) if (quiver.Items.Has(id)) { arrow = id; break; }
++                if (arrow == null)
++                {
++                    GameHud.Instance?.Toast("Out of arrows.");
++                    return;
++                }
++                quiver.Items.Remove(arrow, 1);
++                Element? arrowElement = Ammo.ElementOf(arrow);
++                if (arrowElement.HasValue) outcome = outcome.WithElement(arrowElement.Value);
++            }
++
+             // Underwater: each element behaves differently below the surface.
+             if (_underwater != null && _underwater.IsSubmerged)
+             {
+diff --git a/Elementborn/Assets/Elementborn/Game/PlayerInventory.cs b/Elementborn/Assets/Elementborn/Game/PlayerInventory.cs
+index 80e72d5..ca9184d 100644
+--- a/Elementborn/Assets/Elementborn/Game/PlayerInventory.cs
++++ b/Elementborn/Assets/Elementborn/Game/PlayerInventory.cs
+@@ -26,6 +26,9 @@ namespace Elementborn.Game
+ 
+         public bool HasHouse { get; private set; }
+         public Vector3 HouseLocation { get; private set; }
++        public Homestead Home { get; } = new Homestead();
++        public Wardrobe Wardrobe { get; } = new Wardrobe();
++        public HomeGarden Garden { get; } = new HomeGarden();
+ 
+         private readonly Dictionary<CreatureKind, int> _lures = new Dictionary<CreatureKind, int>();
+         private readonly HashSet<CreatureKind> _owned = new HashSet<CreatureKind>();
+@@ -180,6 +183,8 @@ namespace Elementborn.Game
+                 sapphire = Wallet.CountOf(Currency.Sapphire),
+                 diamond = Wallet.CountOf(Currency.Diamond),
+                 hasHouse = HasHouse,
++                wardrobeLook = Wardrobe.Save(),
++                gardenAccrued = Garden.Save(),
+                 houseX = HouseLocation.x,
+                 houseY = HouseLocation.y,
+                 houseZ = HouseLocation.z,
+@@ -192,6 +197,7 @@ namespace Elementborn.Game
+             foreach (var kv in _lures) { d.lureKinds.Add(kv.Key.ToString()); d.lureCounts.Add(kv.Value); }
+             foreach (var k in _owned) d.ownedKinds.Add(k.ToString());
+             foreach (var v in _ownedVehicles) d.ownedVehicles.Add(v.ToString());
++            foreach (var a in Home.SaveAdditions()) d.houseAdditions.Add(a);
+             if (Loadout != null)
+             {
+                 foreach (var el in Loadout.Elements) d.loadoutElements.Add(el.ToString());
+@@ -241,6 +247,9 @@ namespace Elementborn.Game
+ 
+             HasHouse = d.hasHouse;
+             HouseLocation = new Vector3(d.houseX, d.houseY, d.houseZ);
++            Home.Restore(d.houseAdditions);
++            Wardrobe.Restore(d.wardrobeLook);
++            Garden.Restore(d.gardenAccrued);
+ 
+             PlayerElement = !string.IsNullOrEmpty(d.playerElement) && System.Enum.TryParse(d.playerElement, out Element e)
+                 ? (Element?)e : null;
+diff --git a/Elementborn/Assets/Elementborn/Game/SaveSystem.cs b/Elementborn/Assets/Elementborn/Game/SaveSystem.cs
+index aea67fe..a0e2831 100644
+--- a/Elementborn/Assets/Elementborn/Game/SaveSystem.cs
++++ b/Elementborn/Assets/Elementborn/Game/SaveSystem.cs
+@@ -24,6 +24,9 @@ namespace Elementborn.Game
+         public float houseX;
+         public float houseY;
+         public float houseZ;
++        public List<string> houseAdditions = new List<string>();
++        public string wardrobeLook = "";
++        public double gardenAccrued = 0;
+ 
+         public string playerElement = "";
+         public bool isConfluence;
+diff --git a/Elementborn/Assets/Elementborn/Game/WardrobeController.cs b/Elementborn/Assets/Elementborn/Game/WardrobeController.cs
+new file mode 100644
+index 0000000..5bf7fb4
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Game/WardrobeController.cs
+@@ -0,0 +1,103 @@
++using UnityEngine;
++using Elementborn.Core;
++
++namespace Elementborn.Game
++{
++    /// <summary>
++    /// Applies the player's chosen cosmetic Channeler look (from the home <see cref="Wardrobe"/> on
++    /// <see cref="PlayerInventory"/>, gated behind the built Wardrobe addition and the look's unlock level) by
++    /// swapping the player's display mesh — appearance only, never their element, stats, or abilities. Mirrors
++    /// <see cref="CreatureModelLibrary"/>'s attach-the-model-and-hide-the-old-renderers approach. The look persists
++    /// with the save. The <see cref="WardrobeViewer"/> panel drives selection; <see cref="SelectLook"/> is public.
++    /// </summary>
++    public sealed class WardrobeController : MonoBehaviour
++    {
++        public static WardrobeController Instance { get; private set; }
++
++        private const string AttachedName = "Wardrobe_Look";
++
++        private void Awake()
++        {
++            if (Instance != null && Instance != this) { Destroy(this); return; }
++            Instance = this;
++        }
++
++        private void OnDestroy() { if (Instance == this) Instance = null; }
++
++        private void Start() { ApplyCurrent(); }   // restore the saved look once the player exists
++
++        private static int PlayerLevel() =>
++            ProgressionController.Instance != null ? ProgressionController.Instance.Progression.Level : 1;
++
++        /// <summary>Whether a look can be selected right now (Wardrobe built + unlocked at the current level).</summary>
++        public bool IsAvailable(ChannelerLook look)
++        {
++            var inv = PlayerInventory.Instance;
++            return inv != null && inv.Home.Has(HomeAddition.Wardrobe) && WardrobeCatalog.IsUnlocked(look, PlayerLevel());
++        }
++
++        /// <summary>Pick a look: gated behind a built Wardrobe and the unlock level; persists + applies on success,
++        /// explains the block otherwise. Never changes the player's element — appearance only.</summary>
++        public bool SelectLook(ChannelerLook look)
++        {
++            var inv = PlayerInventory.Instance;
++            if (inv == null) return false;
++            if (!inv.Home.Has(HomeAddition.Wardrobe))
++            {
++                GameHud.Instance?.Toast("Build a Wardrobe at your home first.");
++                return false;
++            }
++            int level = PlayerLevel();
++            if (!WardrobeCatalog.IsUnlocked(look, level))
++            {
++                GameHud.Instance?.Toast(WardrobeCatalog.DisplayName(look) + " unlocks at level "
++                    + WardrobeCatalog.RequiredLevelFor(look) + ".");
++                return false;
++            }
++            if (!inv.Wardrobe.TrySelect(look, true, level)) return false;
++            ApplyToPlayer(look);
++            GameHud.Instance?.Toast("Now wearing: " + WardrobeCatalog.DisplayName(look));
++            AudioController.Instance?.Confirm();
++            return true;
++        }
++
++        private void ApplyCurrent()
++        {
++            var inv = PlayerInventory.Instance;
++            if (inv != null && inv.Home.Has(HomeAddition.Wardrobe)) ApplyToPlayer(inv.Wardrobe.Current);
++        }
++
++        private void ApplyToPlayer(ChannelerLook look)
++        {
++            var player = GameObject.FindGameObjectWithTag("Player");
++            if (player == null) return;
++
++            GameObject prefab = null;
++            foreach (var path in WardrobeCatalog.CandidatePaths(look))
++            {
++                prefab = Resources.Load<GameObject>(path);
++                if (prefab != null) break;
++            }
++            if (prefab == null)
++            {
++                GameHud.Instance?.Toast(WardrobeCatalog.DisplayName(look) + " isn't installed yet.");
++                return; // keep the current visual rather than blanking the player
++            }
++
++            // Remove a previously-worn look so skins don't stack.
++            var existing = player.transform.Find(AttachedName);
++            if (existing != null) Destroy(existing.gameObject);
++
++            // Hide whatever currently renders the player (blocky base / prior visual), then add the chosen look.
++            var prior = player.GetComponentsInChildren<Renderer>(true);
++
++            var model = Instantiate(prefab, player.transform);
++            model.name = AttachedName;
++            model.transform.localPosition = Vector3.zero;
++            model.transform.localRotation = Quaternion.identity;
++
++            foreach (var r in prior)
++                if (r != null && !r.transform.IsChildOf(model.transform)) r.enabled = false;
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Elementborn/Game/WardrobeViewer.cs b/Elementborn/Assets/Elementborn/Game/WardrobeViewer.cs
+new file mode 100644
+index 0000000..426f2a9
+--- /dev/null
++++ b/Elementborn/Assets/Elementborn/Game/WardrobeViewer.cs
+@@ -0,0 +1,89 @@
++using UnityEngine;
++using UnityEngine.InputSystem;
++using Elementborn.Core;
++
++namespace Elementborn.Game
++{
++    /// <summary>The Wardrobe panel (default key <b>J</b>). Lists the cosmetic Channeler looks with the current one
++    /// marked; tap an unlocked look to wear it. Looks unlock with player level, and the whole panel requires a
++    /// Wardrobe built at your home. Appearance only — selecting a look never changes your element. Built via
++    /// <see cref="OverlayUi"/> so it's world-space in VR; the bootstrap scene adds one.</summary>
++    public sealed class WardrobeViewer : MonoBehaviour
++    {
++        [SerializeField] private Key toggleKey = Key.J;
++
++        private Canvas _canvas;
++        private Transform _content;
++        private bool _open;
++
++        private void Awake() { Build(); Hide(); }
++
++        private void Update()
++        {
++            var kb = Keyboard.current;
++            if (kb == null) return;
++            if (kb[toggleKey].wasPressedThisFrame) Toggle();
++            else if (_open && kb[Key.Escape].wasPressedThisFrame) Hide();
++        }
++
++        public void Open() { if (!_open) Show(); }
++        private void Toggle() { if (_open) Hide(); else Show(); }
++        private void Show() { _open = true; if (_canvas != null) _canvas.gameObject.SetActive(true); Rebuild(); }
++        private void Hide() { _open = false; if (_canvas != null) _canvas.gameObject.SetActive(false); }
++
++        private void Build()
++        {
++            var p = OverlayUi.Panel("WardrobeCanvas", "Wardrobe", 57, new Vector2(720, 760), Hide);
++            _canvas = p.canvas;
++            _content = p.content;
++        }
++
++        private void Rebuild()
++        {
++            if (_content == null) return;
++            OverlayUi.Clear(_content);
++
++            var inv = PlayerInventory.Instance;
++            if (inv == null) { OverlayUi.Body(_content, "No player.", 18); return; }
++
++            if (!inv.Home.Has(HomeAddition.Wardrobe))
++            {
++                OverlayUi.Header(_content, "No Wardrobe yet");
++                OverlayUi.Body(_content, "Build a Wardrobe at your home (claim a plot at level 5, then build the "
++                    + "Wardrobe for 160 silver) to change your look.", 18);
++                return;
++            }
++
++            int level = ProgressionController.Instance != null ? ProgressionController.Instance.Progression.Level : 1;
++            var current = inv.Wardrobe.Current;
++
++            OverlayUi.Header(_content, "Wearing:  " + WardrobeCatalog.DisplayName(current));
++            OverlayUi.Body(_content, "Appearance only — your element never changes.", 16,
++                new Color(0.70f, 0.72f, 0.78f, 1f));
++
++            foreach (var look in WardrobeCatalog.All)
++            {
++                string name = WardrobeCatalog.DisplayName(look);
++                bool isCurrent = look == current;
++
++                if (WardrobeCatalog.IsUnlocked(look, level))
++                {
++                    string label = "Wear " + name + (isCurrent ? "     (worn)" : "");
++                    var l = look;
++                    UiTheme.Button(_content, label, () => DoSelect(l), 660, 44);
++                }
++                else
++                {
++                    OverlayUi.Body(_content, name + "   —  unlocks at level " + WardrobeCatalog.RequiredLevelFor(look),
++                        18, new Color(0.62f, 0.64f, 0.70f, 1f));
++                }
++            }
++        }
++
++        private void DoSelect(ChannelerLook look)
++        {
++            WardrobeController.Instance?.SelectLook(look);
++            Rebuild();
++        }
++    }
++}
+diff --git a/Elementborn/Assets/Tests/ElementbornSmoke/EditMode/InventoryMigrationAuditTests.cs b/Elementborn/Assets/Tests/ElementbornSmoke/EditMode/InventoryMigrationAuditTests.cs
+new file mode 100644
+index 0000000..7256838
+--- /dev/null
++++ b/Elementborn/Assets/Tests/ElementbornSmoke/EditMode/InventoryMigrationAuditTests.cs
+@@ -0,0 +1,36 @@
++using System.Collections.Generic;
++using NUnit.Framework;
++using Elementborn.Core;
++using Elementborn.Game;
++
++namespace Elementborn.Tests.EditMode
++{
++    public sealed class InventoryMigrationAuditTests
++    {
++        [Test]
++        public void Compute_WithNoDefinitions_ReportsEveryLegacyItemMissing()
++        {
++            var result = InventoryMigrationAudit.Compute(new List<string>());
++
++            Assert.That(result.LegacyCount, Is.GreaterThan(0));
++            Assert.That(result.DefinitionCount, Is.EqualTo(0));
++            Assert.That(result.CoveredIds, Is.Empty);
++            Assert.That(result.OrphanDefIds, Is.Empty);
++            Assert.That(result.MissingIds.Count, Is.EqualTo(result.LegacyCount));
++            Assert.That(result.MissingIds, Contains.Item("iron_helm"));
++        }
++
++        [Test]
++        public void Compute_SplitsCoveredMissingAndOrphans()
++        {
++            var defs = new List<string> { "iron_helm", "fire_arrow", "not_a_real_item" };
++            var result = InventoryMigrationAudit.Compute(defs);
++
++            Assert.That(result.CoveredIds, Contains.Item("iron_helm"));
++            Assert.That(result.CoveredIds, Contains.Item("fire_arrow"));
++            Assert.That(result.MissingIds, Does.Not.Contain("iron_helm"));
++            Assert.That(result.OrphanDefIds, Contains.Item("not_a_real_item"));
++            Assert.That(result.CoveredIds.Count + result.MissingIds.Count, Is.EqualTo(result.LegacyCount));
++        }
++    }
++}
+diff --git a/Elementborn/Assets/import_generated_assets.py b/Elementborn/Assets/import_generated_assets.py
+index c52fd21..dfd1644 100644
+--- a/Elementborn/Assets/import_generated_assets.py
++++ b/Elementborn/Assets/import_generated_assets.py
+@@ -169,6 +169,39 @@ KNOWN_RESOURCE_TARGETS: dict[str, str] = {
+     "Prismatic_Phoenix": "Models/Bosses/Prismatic_Phoenix",
+     "Azure_Arbor_Guardian": "Models/Bosses/Azure_Arbor_Guardian",
+     "Ironhorn_Warden": "Models/Bosses/Ironhorn_Warden",
++
++    # --- Explicit aliases: a real generated_assets zip stem -> an existing target path, for targets whose
++    #     default name matched no zip. Added after auditing all 225 zips against these targets. Each maps a
++    #     real asset into the Resources path the game code already loads, so no C# change is needed.
++    "Mossback_Pup_3D": "Models/Creatures/Patchwork_Pup/Patchwork_Pup",        # Dog
++    "Plume_Parrot_3D": "Models/Sidekicks/Raven_Parrot/Raven_Parrot",          # Willow's parrot sidekick
++    "Mooncap_Glade": "Models/Props/Glowcap_Grove",                            # glowing-mushroom grove prop
++
++    # New purchasable mounts bound to standout creature assets.
++    "Bonebound_Behemoth":   "Models/Creatures/Bonebound_Behemoth/Bonebound_Behemoth",
++    "Ancient_Stag":         "Models/Creatures/Ancient_Stag/Ancient_Stag",
++    "Coral_Whale_Monster":  "Models/Creatures/Coral_Whale_Monster/Coral_Whale_Monster",
++    "Embercrest_Kitebeast": "Models/Creatures/Embercrest_Kitebeast/Embercrest_Kitebeast",
++    "Azurewing_Knight":     "Models/Creatures/Azurewing_Knight/Azurewing_Knight",
++    "Emerald_Dragon":       "Models/Creatures/Emerald_Dragon/Emerald_Dragon",
++    "Blue_Dragon":          "Models/Creatures/Blue_Dragon/Blue_Dragon",
++    "Storm_Shadow_Wolf":    "Models/Creatures/Storm_Shadow_Wolf/Storm_Shadow_Wolf",
++    "Lightning_Dark_Wolf":  "Models/Creatures/Lightning_Dark_Wolf/Lightning_Dark_Wolf",
++
++    # Wardrobe: 12 cosmetic Channeler looks. APPEARANCE ONLY — a look never changes the player's element. Keyed on
++    # the element word so both the raw Meshy names and the renamed copies match; one Resources folder per look.
++    "Channeler_Hero_3D":     "Models/Characters/Channeler/Default/Default",
++    "Channeler_Hero_None":   "Models/Characters/Channeler/Plain/Plain",
++    "Channeler_Hero_Air":    "Models/Characters/Channeler/Air/Air",
++    "Channeler_Hero_Water":  "Models/Characters/Channeler/Water/Water",
++    "Channeler_Hero_Fire":   "Models/Characters/Channeler/Fire/Fire",
++    "Channeler_Hero_Earth":  "Models/Characters/Channeler/Earth/Earth",
++    "Channeler_Hero_Lava":   "Models/Characters/Channeler/Lava/Lava",
++    "Channeler_Hero_Steam":  "Models/Characters/Channeler/Steam/Steam",
++    "Channeler_Hero_Metal":  "Models/Characters/Channeler/Metal/Metal",
++    "Channeler_Hero_Plant":  "Models/Characters/Channeler/Plant/Plant",
++    "Channeler_Hero_Blood":  "Models/Characters/Channeler/Blood/Blood",
++    "Channeler_Hero_Paraly": "Models/Characters/Channeler/Paralysis/Paralysis",
+ }
+ 
+ 
+diff --git a/Elementborn/CHANGELOG.md b/Elementborn/CHANGELOG.md
+index b198027..f9d1813 100644
+--- a/Elementborn/CHANGELOG.md
++++ b/Elementborn/CHANGELOG.md
+@@ -7,6 +7,17 @@ All notable changes to Elementborn are recorded here. The format follows
+ ## [Unreleased]
+ 
+ ### Added
++- **Inventory merge groundwork — steps 1 & 2 (both non-destructive).** Home storage now shows *both* item
++  pools with a live count line and lets you deposit legacy (crafting/equipment) items into the shared chest,
++  giving a safe player-driven path to consolidate. A read-only audit (Unity menu *Elementborn → Inventory →
++  Audit Migration Gaps*, or `InventoryMigrationAudit.RunAndLog()`) lists which `ItemCatalog` ids still lack an
++  `InventoryItemDefinition` — currently all 22, since no definition assets exist yet and Tracker stacks fall
++  back to showing the raw id. Full plan and the recommended catalog-name bridge are in
++  `docs/INVENTORY_MIGRATION.md`. Two new EditMode tests cover the audit's pure comparison.
++- **Mount display scales tuned to a conservative archetype ladder.** `CreatureModelNames.DisplayScale` now
++  sizes the nine new mounts/companions by archetype (apex 1.6–1.7, dragons/large beasts 1.25–1.3, flyers 1.15,
++  wolves 1.0); the 32 existing creatures stay at 1.0. Final values still want an in-scene eyeball — the whole
++  ladder is one switch to nudge.
+ - **Batch-2 asset bindings filled from the supplied mapping.** Bound the two remaining weapons (Dagger→`Fang_Dagger`,
+   Sai→`Twin_Sai`), Willow's last sidekick (Chameleon→`Prism_Chameleon`), six world items by catalog id (healing tonic,
+   stamina draught, elixir of vigor, ore-marrow bone, sunflower seeds, tough leather), and two set-dressing props
+diff --git a/Elementborn/docs/INVENTORY_MIGRATION.md b/Elementborn/docs/INVENTORY_MIGRATION.md
+new file mode 100644
+index 0000000..b4379c3
+--- /dev/null
++++ b/Elementborn/docs/INVENTORY_MIGRATION.md
+@@ -0,0 +1,58 @@
++# Inventory migration
++
++Elementborn currently has **two** item stores. This doc tracks merging them safely, one
++non-destructive step at a time.
++
++## The two systems
++
++1. **Legacy bag** — `PlayerInventory.Items` (the pure `Core.Inventory`, id→count). Used by crafting
++   (`CraftingViewer`) and equipment (`EquipmentViewer`). Item set is authored in `Core/Items.cs`
++   (`ItemCatalog`), 22 ids with names/descriptions/prices.
++2. **Tracker bag** — `Game/Inventory/PlayerInventoryTracker` (stacks). Used by loot, pickups, storage,
++   and `Game/Crafting/CraftingSystem`. Items are `InventoryItemStack`s, optionally backed by an
++   `InventoryItemDefinition` ScriptableObject.
++
++Both index items by the **same snake_case string ids** ("iron_helm", "fire_arrow", …), which is what
++makes a merge tractable.
++
++## Step 1 — unified deposit view (done, non-destructive)
++
++The Home storage screen (key **H** → Storage) now shows **both** pools with a live read-only count line
++("Bag: N items     Legacy bag: M items") and a **"Your bag (legacy)"** section that lets you deposit
++legacy items into the shared chest. From the chest they withdraw into the Tracker bag — a safe,
++player-driven way to move items across. Every move is guarded by the amount the chest actually accepts,
++so nothing is ever lost or duplicated. Nothing auto-migrates.
++
++## Step 2 — definition gap audit (done, read-only)
++
++Run **Unity menu → Elementborn → Inventory → Audit Migration Gaps** (or `InventoryMigrationAudit.RunAndLog()`
++at runtime). It scans every `InventoryItemDefinition` asset, compares against `ItemCatalog`, and logs which
++legacy ids have no definition. Re-run it as you author definitions; the list shrinks to empty when done.
++
++### Current result
++
++There are **no `InventoryItemDefinition` assets in the project yet**, so **all 22 legacy ids lack one**.
++Tracker stacks created by id show the **raw id** as their name (e.g. "iron_helm"), because
++`InventoryItemStack.DisplayName` falls back to the id when there is no definition.
++
++| Category | ids |
++|---|---|
++| Food | `ore_marrow_bone`, `sunflower_seeds`, `deep_jelly`, `compost_truffle`, `iridescent_beetle` |
++| Material | `hide`, `ember_shard`, `river_pearl`, `tough_leather`, `iron_helm`, `warding_cloak`, `sturdy_boots`, `arrow`, `fire_arrow`, `water_arrow`, `earth_arrow`, `air_arrow` |
++| Consumable | `healing_tonic`, `stamina_draught`, `elixir_of_vigor` |
++| Treasure | `old_relic`, `elemental_charm` |
++
++## Step 3 — close the name gap (proposed, not yet built)
++
++Two ways to make migrated legacy items read nicely:
++
++- **(A) Author 22 definition assets.** One `InventoryItemDefinition` per id. Most control (icons, custom
++  stack sizes), but 22 hand-made assets to keep in sync with `Core/Items.cs`.
++- **(B, recommended) Bridge to the catalog name.** Make the Tracker's display fall back to
++  `ItemCatalog.Get(id)?.Name` when a stack has no definition. One small code change makes every legacy id
++  show "Iron Helm" instead of "iron_helm" with **zero** asset authoring, and the name stays sourced from
++  the single authored list. Definitions can still be added later for items that want an icon.
++
++After step 3, **step 4** repoints crafting/equipment reads at the Tracker, and **step 5** is a one-time
++save migration that folds any remaining `PlayerInventory.Items` counts into the Tracker on load. Steps 3–5
++each want an in-Unity test pass before the next.

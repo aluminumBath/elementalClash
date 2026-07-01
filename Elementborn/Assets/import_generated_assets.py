@@ -169,6 +169,39 @@ KNOWN_RESOURCE_TARGETS: dict[str, str] = {
     "Prismatic_Phoenix": "Models/Bosses/Prismatic_Phoenix",
     "Azure_Arbor_Guardian": "Models/Bosses/Azure_Arbor_Guardian",
     "Ironhorn_Warden": "Models/Bosses/Ironhorn_Warden",
+
+    # --- Explicit aliases: a real generated_assets zip stem -> an existing target path, for targets whose
+    #     default name matched no zip. Added after auditing all 225 zips against these targets. Each maps a
+    #     real asset into the Resources path the game code already loads, so no C# change is needed.
+    "Mossback_Pup_3D": "Models/Creatures/Patchwork_Pup/Patchwork_Pup",        # Dog
+    "Plume_Parrot_3D": "Models/Sidekicks/Raven_Parrot/Raven_Parrot",          # Willow's parrot sidekick
+    "Mooncap_Glade": "Models/Props/Glowcap_Grove",                            # glowing-mushroom grove prop
+
+    # New purchasable mounts bound to standout creature assets.
+    "Bonebound_Behemoth":   "Models/Creatures/Bonebound_Behemoth/Bonebound_Behemoth",
+    "Ancient_Stag":         "Models/Creatures/Ancient_Stag/Ancient_Stag",
+    "Coral_Whale_Monster":  "Models/Creatures/Coral_Whale_Monster/Coral_Whale_Monster",
+    "Embercrest_Kitebeast": "Models/Creatures/Embercrest_Kitebeast/Embercrest_Kitebeast",
+    "Azurewing_Knight":     "Models/Creatures/Azurewing_Knight/Azurewing_Knight",
+    "Emerald_Dragon":       "Models/Creatures/Emerald_Dragon/Emerald_Dragon",
+    "Blue_Dragon":          "Models/Creatures/Blue_Dragon/Blue_Dragon",
+    "Storm_Shadow_Wolf":    "Models/Creatures/Storm_Shadow_Wolf/Storm_Shadow_Wolf",
+    "Lightning_Dark_Wolf":  "Models/Creatures/Lightning_Dark_Wolf/Lightning_Dark_Wolf",
+
+    # Wardrobe: 12 cosmetic Channeler looks. APPEARANCE ONLY — a look never changes the player's element. Keyed on
+    # the element word so both the raw Meshy names and the renamed copies match; one Resources folder per look.
+    "Channeler_Hero_3D":     "Models/Characters/Channeler/Default/Default",
+    "Channeler_Hero_None":   "Models/Characters/Channeler/Plain/Plain",
+    "Channeler_Hero_Air":    "Models/Characters/Channeler/Air/Air",
+    "Channeler_Hero_Water":  "Models/Characters/Channeler/Water/Water",
+    "Channeler_Hero_Fire":   "Models/Characters/Channeler/Fire/Fire",
+    "Channeler_Hero_Earth":  "Models/Characters/Channeler/Earth/Earth",
+    "Channeler_Hero_Lava":   "Models/Characters/Channeler/Lava/Lava",
+    "Channeler_Hero_Steam":  "Models/Characters/Channeler/Steam/Steam",
+    "Channeler_Hero_Metal":  "Models/Characters/Channeler/Metal/Metal",
+    "Channeler_Hero_Plant":  "Models/Characters/Channeler/Plant/Plant",
+    "Channeler_Hero_Blood":  "Models/Characters/Channeler/Blood/Blood",
+    "Channeler_Hero_Paraly": "Models/Characters/Channeler/Paralysis/Paralysis",
 }
 
 
