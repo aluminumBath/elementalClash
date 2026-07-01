@@ -67,7 +67,7 @@ namespace Elementborn.Game
 
         private void Build()
         {
-            var canvas = UiTheme.Canvas("WorldMapCanvas", sortOrder: 0);
+            var canvas = UiTheme.Canvas("WorldMapCanvas", sortOrder: 55);
             canvas.transform.SetParent(transform, false);
             var canvasGo = canvas.gameObject;
 

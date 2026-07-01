@@ -154,9 +154,6 @@ namespace Elementborn.Game
         private void Complete()
         {
             _canvas.gameObject.SetActive(false);
-            // Hand the cursor back to gameplay mouselook. EnterMap re-locks too; this just avoids a free-cursor frame.
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
             OnComplete.Invoke();
         }
 

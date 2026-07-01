@@ -13,6 +13,10 @@ All notable changes to Elementborn are recorded here. The format follows
   (covers inventory, crafting, equipment, home, admin, trade and the rest, since they all build via
   `OverlayUi.Panel`), and `CharacterCreationUI` holds the cursor free while its screen is up and re-locks on Begin. Its canvas
   also now sorts at 220 (was 0), above the HUD/rescue canvases that were otherwise eating its clicks.
+- **World-map screen is usable.** `EnterMap` now gates the rig off and frees the cursor (it's a menu stage, like
+  the main menu and creation), `CharacterCreationUI.Complete` no longer re-locks the cursor on the way to the map, and
+  `WorldMapView`'s canvas moved from sortOrder 0 to 55 (above the HUDs, below overlays) so "Enter the world" and the
+  region nodes receive clicks.
 
 ### Added
 - **Inventory merge — step 4: one item pool.** Every active reader/writer of the legacy `PlayerInventory.Items`

@@ -175,6 +175,7 @@ namespace Elementborn.Game
         private void EnterMap()
         {
             Current = Stage.Map;
+            GatePlayer(false); // the map is a menu: disable the rig and free the cursor so its buttons are clickable
             if (_creationGo != null) Destroy(_creationGo);
 
             _mapGo = new GameObject("WorldMap");
