@@ -28,6 +28,16 @@ namespace Elementborn.Game
 
         private void OnDestroy() { if (Instance == this) Instance = null; }
 
+        /// <summary>Return the live instance, creating one if the scene never spawned it (e.g. the rescue/bootstrap
+        /// scene). Lets locale switching work everywhere instead of silently no-oping when Instance is null.</summary>
+        public static Localization Ensure()
+        {
+            if (Instance != null) return Instance;
+            var found = FindObjectOfType<Localization>();
+            if (found != null) return found;
+            return new GameObject(nameof(Localization)).AddComponent<Localization>();
+        }
+
         /// <summary>Translate a key for the current locale (falls back to English, then the key).</summary>
         public static string T(string key) => Instance != null ? Instance._table.Get(key) : key;
 
@@ -56,6 +66,38 @@ namespace Elementborn.Game
             En("menu.continue", "Continue");
             En("hud.loadingWorld", "Generating world");
 
+            // Main menu.
+            En("menu.subtitle", "Channel the elements. Mend the Convergence.");
+            En("menu.saveSlots", "Save Slots");
+            En("menu.howToPlay", "How to Play");
+            En("menu.credits", "Credits");
+            En("menu.noSave", "No saved journey yet");
+            En("menu.channeler", "Channeler");
+            En("menu.confluence", "Confluence");
+            En("menu.quitConfirmTitle", "Quit Elementborn?");
+            En("menu.quitConfirmBody", "Leave the world and close the game?");
+            En("menu.quitDesktop", "Quit to Desktop");
+            En("menu.back", "Back");
+            En("menu.designBy", "Design by Steele");
+
+            // How to Play.
+            En("howto.intro", "Channel the four elements — Fire, Water, Earth, Air — to mend the Convergence.");
+            En("howto.controls", "Controls");
+            En("howto.move", "Move: WASD / left stick      Look: mouse / right stick");
+            En("howto.attack", "Channel & attack: hand triggers (mouse buttons on flat)");
+            En("howto.panels1", "Equipment: V      Crafting: B      Summon Beacon: U");
+            En("howto.panels2", "Wardrobe: J      Home: H      Map: M      Achievements: K");
+            En("howto.close", "Close any panel: Esc");
+
+            // Credits.
+            En("credits.tagline", "An original elemental-combat RPG.");
+            En("credits.by", "Design & Development by Steele.");
+            En("credits.tech", "Built with Unity 6 and the Universal Render Pipeline.");
+            En("credits.thanks", "Thank you for playing.");
+
+            // HUD currency abbreviations.
+            En("hud.dia", "Dia"); En("hud.sap", "Sap"); En("hud.eme", "Eme"); En("hud.rub", "Rub"); En("hud.sil", "Sil");
+
             // Sample second locale (Spanish). Partial is fine — anything missing falls back to English.
             Es("menu.paused", "PAUSA");
             Es("menu.resume", "Reanudar");
@@ -65,6 +107,34 @@ namespace Elementborn.Game
             Es("menu.newGame", "Nueva partida");
             Es("menu.continue", "Continuar");
             Es("hud.loadingWorld", "Generando mundo");
+
+            Es("menu.subtitle", "Canaliza los elementos. Repara la Convergencia.");
+            Es("menu.saveSlots", "Partidas guardadas");
+            Es("menu.howToPlay", "Cómo jugar");
+            Es("menu.credits", "Créditos");
+            Es("menu.noSave", "Aún no hay viaje guardado");
+            Es("menu.channeler", "Canalizador");
+            Es("menu.confluence", "Confluencia");
+            Es("menu.quitConfirmTitle", "¿Salir de Elementborn?");
+            Es("menu.quitConfirmBody", "¿Abandonar el mundo y cerrar el juego?");
+            Es("menu.quitDesktop", "Salir al escritorio");
+            Es("menu.back", "Atrás");
+            Es("menu.designBy", "Diseño por Steele");
+
+            Es("howto.intro", "Canaliza los cuatro elementos — Fuego, Agua, Tierra, Aire — para reparar la Convergencia.");
+            Es("howto.controls", "Controles");
+            Es("howto.move", "Mover: WASD / stick izq.      Mirar: ratón / stick der.");
+            Es("howto.attack", "Canalizar y atacar: gatillos de mano (botones del ratón en plano)");
+            Es("howto.panels1", "Equipo: V      Fabricación: B      Faro de Invocación: U");
+            Es("howto.panels2", "Vestuario: J      Hogar: H      Mapa: M      Logros: K");
+            Es("howto.close", "Cerrar cualquier panel: Esc");
+
+            Es("credits.tagline", "Un RPG original de combate elemental.");
+            Es("credits.by", "Diseño y desarrollo por Steele.");
+            Es("credits.tech", "Hecho con Unity 6 y el Universal Render Pipeline.");
+            Es("credits.thanks", "Gracias por jugar.");
+
+            Es("hud.dia", "Dia"); Es("hud.sap", "Zaf"); Es("hud.eme", "Esm"); Es("hud.rub", "Rub"); Es("hud.sil", "Pla");
         }
     }
 }

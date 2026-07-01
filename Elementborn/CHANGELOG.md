@@ -17,8 +17,22 @@ All notable changes to Elementborn are recorded here. The format follows
   the main menu and creation), `CharacterCreationUI.Complete` no longer re-locks the cursor on the way to the map, and
   `WorldMapView`'s canvas moved from sortOrder 0 to 55 (above the HUDs, below overlays) so "Enter the world" and the
   region nodes receive clicks.
+- **Only one modal opens at a time.** `UiGateToken` now closes any other open panel when a new one opens, calling
+  that panel's real close callback so the owning controller's open/closed flag stays in sync — ending the
+  stacked-overlay mess where closing got confused. The title menu opts out (`exclusive = false`) so its
+  How-to-Play / Credits / Quit sub-overlays still stack over it.
+- **Admin cheats work in the rescue/bootstrap scene.** `+1000 Silver` and the `en/es` language toggle no longer
+  no-op when the full singletons aren't in the scene: `PlayerInventory` and `Localization` gained lazy `Ensure()`
+  creators, and both actions now toast confirmation and rebuild the panel. (Most in-game UI text is still
+  hard-coded English — full string migration to `Localization.T` is a separate pass.)
 
 ### Added
+- **Title background, input sprite, and a model import fixer.** Added a stylized `menu_bg` (dusk low-poly ridges
+  with the four element light columns) and an `input` field sprite to `Resources/ElementbornUI/`; the main menu
+  uses `menu_bg` in place of its code gradient. New editor tools under `Elementborn/Model Fix/*` enable Bake Axis
+  Conversion (fixes models importing on their side/stomach) and rebuild URP/Lit materials from each model's
+  `*_texture`/`_normal`/`_metallic` maps (fixes the white/untextured imports) — the companion to the read-only
+  `Elementborn/Model Audit`.
 - **Real UI sprites wired in.** Salvaged the hand-made UI art (`panel`, `btn_normal` + button states,
   `hud_*`, `gem_*`, `map_*`, `overlay_dim`) into `Resources/ElementbornUI/` with proper Sprite import metas
   (9-slice borders on the panel/button/frame sprites). `UiTheme` auto-loads `panel` and `btn_normal`, so every

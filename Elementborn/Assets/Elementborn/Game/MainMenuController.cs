@@ -65,11 +65,24 @@ namespace Elementborn.Game
             }
         }
 
+        private void OnEnable() { Localization.LocaleChanged += OnLocaleChanged; }
+        private void OnDisable() { Localization.LocaleChanged -= OnLocaleChanged; }
+
+        private void OnLocaleChanged()
+        {
+            if (_canvas == null) return; // not built yet
+            if (_confirm != null) { Destroy(_confirm); _confirm = null; }
+            Destroy(_canvas.gameObject);
+            Build(); // re-render the whole menu in the new language
+        }
+
         private void Build()
         {
+            Localization.Ensure(); // guarantee the string table exists (even in the rescue scene) so T() localizes
             _canvas = UiTheme.Canvas("MainMenuCanvas", 220);
             _canvas.gameObject.AddComponent<VrCanvasAdapter>(); // world-space in VR; no-op on flat/desktop
-            _canvas.gameObject.AddComponent<UiGateToken>();     // modal: holds the Esc gate while on-screen
+            var mmToken = _canvas.gameObject.AddComponent<UiGateToken>(); // modal gate
+            mmToken.exclusive = false; // the title screen hosts its own sub-overlays (How to Play/Credits/Quit) — don't auto-close it
             _group = _canvas.gameObject.AddComponent<CanvasGroup>();
             _group.alpha = 0f; // fade in via Update
             _canvas.transform.SetParent(transform, false);      // destroying this GameObject cleans up the canvas
@@ -93,7 +106,7 @@ namespace Elementborn.Game
             tr.sizeDelta = new Vector2(0, 78); tr.anchoredPosition = new Vector2(0, -6);
             if (title.Graphic is TMP_Text tmp) { tmp.characterSpacing = 12f; tmp.fontStyle = FontStyles.Bold; }
 
-            var sub = UiTheme.Label(col, "Channel the elements. Mend the Convergence.", 18, Subtitle, TextAnchor.MiddleCenter);
+            var sub = UiTheme.Label(col, Localization.T("menu.subtitle"), 18, Subtitle, TextAnchor.MiddleCenter);
             var sr = sub.Rect;
             sr.anchorMin = new Vector2(0f, 1f); sr.anchorMax = new Vector2(1f, 1f); sr.pivot = new Vector2(0.5f, 1f);
             sr.sizeDelta = new Vector2(0, 26); sr.anchoredPosition = new Vector2(0, -92);
@@ -119,27 +132,27 @@ namespace Elementborn.Game
             Button primaryBtn;
             if (_hasSave)
             {
-                primaryBtn = MakeButton(stack, "Continue", Primary, Color.white, () => _onContinue?.Invoke());
+                primaryBtn = MakeButton(stack, Localization.T("menu.continue"), Primary, Color.white, () => _onContinue?.Invoke());
                 AddSubLabel(stack, ContinueSummary());
-                MakeButton(stack, "New Game", Secondary, Color.white, () => _onNewGame?.Invoke());
+                MakeButton(stack, Localization.T("menu.newGame"), Secondary, Color.white, () => _onNewGame?.Invoke());
             }
             else
             {
-                primaryBtn = MakeButton(stack, "New Game", Primary, Color.white, () => _onNewGame?.Invoke());
-                var cont = MakeButton(stack, "Continue", Secondary, Color.white, () => _onContinue?.Invoke());
+                primaryBtn = MakeButton(stack, Localization.T("menu.newGame"), Primary, Color.white, () => _onNewGame?.Invoke());
+                var cont = MakeButton(stack, Localization.T("menu.continue"), Secondary, Color.white, () => _onContinue?.Invoke());
                 cont.interactable = false;
-                AddSubLabel(stack, "No saved journey yet");
+                AddSubLabel(stack, Localization.T("menu.noSave"));
             }
 
-            MakeButton(stack, "Save Slots", Secondary, Color.white, () => SaveSlotController.EnsureInstance().Show());
-            MakeButton(stack, "Settings", Secondary, Color.white, () => _onSettings?.Invoke());
-            MakeButton(stack, "How to Play", Secondary, Color.white, ShowHowToPlay);
-            MakeButton(stack, "Credits", Secondary, Color.white, ShowCredits);
-            MakeButton(stack, "Quit", QuitColor, QuitText, ShowQuitConfirm, 52);
+            MakeButton(stack, Localization.T("menu.saveSlots"), Secondary, Color.white, () => SaveSlotController.EnsureInstance().Show());
+            MakeButton(stack, Localization.T("menu.settings"), Secondary, Color.white, () => _onSettings?.Invoke());
+            MakeButton(stack, Localization.T("menu.howToPlay"), Secondary, Color.white, ShowHowToPlay);
+            MakeButton(stack, Localization.T("menu.credits"), Secondary, Color.white, ShowCredits);
+            MakeButton(stack, Localization.T("menu.quit"), QuitColor, QuitText, ShowQuitConfirm, 52);
 
             // Footer: build + author credit.
             MakeFooter(full, "v" + GameVersion(), TextAnchor.LowerRight, new Vector2(1f, 0f), new Vector2(-18, 12));
-            MakeFooter(full, "Design by Steele", TextAnchor.LowerLeft, new Vector2(0f, 0f), new Vector2(18, 12));
+            MakeFooter(full, Localization.T("menu.designBy"), TextAnchor.LowerLeft, new Vector2(0f, 0f), new Vector2(18, 12));
 
             // Keyboard / controller navigation starts on the primary action.
             if (EventSystem.current != null && primaryBtn != null)
@@ -230,10 +243,10 @@ namespace Elementborn.Game
             var d = SaveSystem.Load();
             if (d == null) return "";
             string who =
-                d.isConfluence ? "Confluence" :
+                d.isConfluence ? Localization.T("menu.confluence") :
                 !string.IsNullOrEmpty(d.playerElement) ? d.playerElement + (d.loadoutSubArts != null && d.loadoutSubArts.Count > 0 ? " (sub-art)" : "") :
                 (!string.IsNullOrEmpty(d.loadoutWeapon) && d.loadoutWeapon != "None") ? d.loadoutWeapon + " user" :
-                "Channeler";
+                Localization.T("menu.channeler");
             string when = d.savedUnixSeconds > 0
                 ? DateTimeOffset.FromUnixTimeSeconds(d.savedUnixSeconds).LocalDateTime.ToString("yyyy-MM-dd HH:mm")
                 : "saved";
@@ -250,14 +263,14 @@ namespace Elementborn.Game
         {
             if (_confirm != null) return;
             Canvas cv = null;
-            var p = OverlayUi.Panel("QuitConfirmCanvas", "Quit Elementborn?", 240, new Vector2(460, 250),
+            var p = OverlayUi.Panel("QuitConfirmCanvas", Localization.T("menu.quitConfirmTitle"), 240, new Vector2(460, 250),
                 () => { if (cv != null) { Destroy(cv.gameObject); if (_confirm == cv.gameObject) _confirm = null; } });
             cv = p.canvas;
             _confirm = cv.gameObject;
-            OverlayUi.Body(p.content, "Leave the world and close the game?", 18);
+            OverlayUi.Body(p.content, Localization.T("menu.quitConfirmBody"), 18);
             OverlayUi.Body(p.content, " ", 6);
-            MakeButton(p.content, "Quit to Desktop", QuitColor, QuitText, () => _onQuit?.Invoke(), 54);
-            MakeButton(p.content, "Back", Secondary, Color.white, () => { if (cv != null) { Destroy(cv.gameObject); _confirm = null; } }, 54);
+            MakeButton(p.content, Localization.T("menu.quitDesktop"), QuitColor, QuitText, () => _onQuit?.Invoke(), 54);
+            MakeButton(p.content, Localization.T("menu.back"), Secondary, Color.white, () => { if (cv != null) { Destroy(cv.gameObject); _confirm = null; } }, 54);
             AudioController.Instance?.Confirm();
         }
 

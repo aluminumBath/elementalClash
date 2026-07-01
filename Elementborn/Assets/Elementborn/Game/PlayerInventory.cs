@@ -49,6 +49,16 @@ namespace Elementborn.Game
             if (Instance == this) Instance = null;
         }
 
+        /// <summary>Return the live inventory, creating one if the scene never spawned it (e.g. the rescue/bootstrap
+        /// scene). Keeps cheat/grant actions working instead of silently no-oping when Instance is null.</summary>
+        public static PlayerInventory Ensure()
+        {
+            if (Instance != null) return Instance;
+            var found = FindObjectOfType<PlayerInventory>();
+            if (found != null) return found;
+            return new GameObject(nameof(PlayerInventory)).AddComponent<PlayerInventory>();
+        }
+
         // --- currency ---
         public void AddCurrency(Currency c, int count)
         {

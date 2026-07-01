@@ -49,7 +49,7 @@ namespace Elementborn.Game
 
             // Current state — the inspector line.
             var body = PlayerBody();
-            var inv = PlayerInventory.Instance;
+            var inv = PlayerInventory.Ensure();
             string hp = body != null && body.Health != null
                 ? Mathf.CeilToInt(body.Health.Current) + "/" + Mathf.CeilToInt(body.Health.Max) : "\u2014";
             string silver = inv != null ? inv.Wallet.CountOf(Currency.Silver).ToString() : "\u2014";
@@ -61,13 +61,13 @@ namespace Elementborn.Game
             // One-tap actions.
             OverlayUi.Body(_content, "Quick actions", 20, Section);
             UiTheme.Button(_content, "Heal to full", () => { PlayerBody()?.Health?.Revive(); Rebuild(); });
-            UiTheme.Button(_content, "+1000 Silver", () => { PlayerInventory.Instance?.AddCurrency(Currency.Silver, 1000); Rebuild(); });
+            UiTheme.Button(_content, "+1000 Silver", () => { PlayerInventory.Ensure().AddCurrency(Currency.Silver, 1000); GameHud.Instance?.Toast("+1000 Silver"); Rebuild(); });
             UiTheme.Button(_content, "Advance story chapter", () => { StoryController.Instance?.Advance(); Rebuild(); });
             UiTheme.Button(_content, "Trigger Convergence Tower blast", () => FindObjectOfType<ConcordSite>()?.Detonate());
             UiTheme.Button(_content, "Discover all leyline rifts", DiscoverAllRifts);
             UiTheme.Button(_content, "Teleport to Concord", TeleportToConcord);
             UiTheme.Button(_content, "Cricket: toggle earring form", () => CricketCompanion.Instance?.ToggleEarring());
-            UiTheme.Button(_content, "Language: switch en/es", () => { var loc = Localization.Instance; if (loc != null) loc.SetLocale(loc.Current == "en" ? "es" : "en"); });
+            UiTheme.Button(_content, "Language: switch en/es", () => { var loc = Localization.Ensure(); loc.SetLocale(loc.Current == "en" ? "es" : "en"); GameHud.Instance?.Toast("Language: " + (loc.Current == "es" ? "Espanol" : "English")); Rebuild(); });
 
             // Live toggles + values (the form).
             OverlayUi.Body(_content, "Toggles & values", 20, Section);
