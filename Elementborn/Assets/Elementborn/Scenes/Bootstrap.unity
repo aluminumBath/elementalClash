@@ -119,6 +119,81 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &58222004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 58222008}
+  - component: {fileID: 58222007}
+  - component: {fileID: 58222006}
+  - component: {fileID: 58222005}
+  m_Layer: 0
+  m_Name: Preview
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &58222005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58222004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e99a09cd48b4b7bb7af96421ffb264c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.NpcHomeSpawner
+  spawnOnStart: 1
+--- !u!114 &58222006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58222004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3c9810f8e24c69b1b0dee6076952eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.PortalPoolRoom
+  buildOnStart: 1
+  radius: 12
+  waterDepth: 0.35
+--- !u!114 &58222007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58222004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd78e0d7111452aaa497ab1b31d6ca2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Elementborn.Game.PreviewRoomBuilder
+  buildOnStart: 1
+--- !u!4 &58222008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58222004}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1280, y: 1010.7146, z: -868.3206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &61117819
 GameObject:
   m_ObjectHideFlags: 0
@@ -2709,3 +2784,4 @@ SceneRoots:
   - {fileID: 1843970350}
   - {fileID: 317052189}
   - {fileID: 374700993}
+  - {fileID: 58222008}

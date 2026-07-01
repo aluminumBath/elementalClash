@@ -54,12 +54,12 @@ namespace Elementborn.Core
         {
             switch (a)
             {
-                case HomeAddition.Storage:         return "Storage Chest";
-                case HomeAddition.Workshop:        return "Workshop";
-                case HomeAddition.Wardrobe:        return "Wardrobe";
-                case HomeAddition.Stable:          return "Creature Stable";
-                case HomeAddition.EnchantingTable: return "Enchanting Table";
-                case HomeAddition.Garden:          return "Garden";
+                case HomeAddition.Storage:         return Loc.T("Storage Chest");
+                case HomeAddition.Workshop:        return Loc.T("Workshop");
+                case HomeAddition.Wardrobe:        return Loc.T("Wardrobe");
+                case HomeAddition.Stable:          return Loc.T("Creature Stable");
+                case HomeAddition.EnchantingTable: return Loc.T("Enchanting Table");
+                case HomeAddition.Garden:          return Loc.T("Garden");
                 default:                           return a.ToString();
             }
         }
@@ -68,12 +68,12 @@ namespace Elementborn.Core
         {
             switch (a)
             {
-                case HomeAddition.Storage:         return "Stash items you don't want to carry.";
-                case HomeAddition.Workshop:        return "Craft and combine materials into gear.";
-                case HomeAddition.Wardrobe:        return "Change your look — appearance only, never your element.";
-                case HomeAddition.Stable:          return "House, rest, and manage your tamed creatures.";
-                case HomeAddition.EnchantingTable: return "Imbue worn armor with an element.";
-                case HomeAddition.Garden:          return "Grow plants and harvest ingredients.";
+                case HomeAddition.Storage:         return Loc.T("Stash items you don't want to carry.");
+                case HomeAddition.Workshop:        return Loc.T("Craft and combine materials into gear.");
+                case HomeAddition.Wardrobe:        return Loc.T("Change your look — appearance only, never your element.");
+                case HomeAddition.Stable:          return Loc.T("House, rest, and manage your tamed creatures.");
+                case HomeAddition.EnchantingTable: return Loc.T("Imbue worn armor with an element.");
+                case HomeAddition.Garden:          return Loc.T("Grow plants and harvest ingredients.");
                 default:                           return "";
             }
         }

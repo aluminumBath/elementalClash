@@ -8,14 +8,17 @@ namespace Elementborn.Core
     public sealed class ItemDef
     {
         public string Id { get; }
-        public string Name { get; }
-        public string Description { get; }
+        public string Name => Loc.T(_name);               // localized on read; English is the fallback key
+        public string Description => Loc.T(_description);
         public ItemCategory Category { get; }
         public int Value { get; }   // base price in silver-equivalent
 
+        private readonly string _name;
+        private readonly string _description;
+
         public ItemDef(string id, string name, string description, ItemCategory category, int value)
         {
-            Id = id; Name = name; Description = description; Category = category;
+            Id = id; _name = name; _description = description; Category = category;
             Value = value < 1 ? 1 : value;
         }
     }

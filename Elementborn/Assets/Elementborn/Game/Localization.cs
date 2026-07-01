@@ -24,6 +24,7 @@ namespace Elementborn.Game
             Instance = this;
             Seed();
             _table.SetLocale(PlayerPrefs.GetString(PrefKey, "en"));
+            Loc.Install(_table); // let pure Core catalogs localize their display names through the same table
         }
 
         private void OnDestroy() { if (Instance == this) Instance = null; }
@@ -203,6 +204,113 @@ namespace Elementborn.Game
             Es("home.storageTitle", "Almacén del hogar");
             Es("summon.freeDaily", "Invocación diaria gratis  ★");
             Es("character.spendPoint", "Gastar un punto en ");
+
+            // ---- Catalog content (keyed by the English string; English falls back to the key) ----
+            // Home / crafting additions (Core: HomesteadCatalog).
+            Es("Storage Chest", "Cofre de almacenamiento");
+            Es("Workshop", "Taller");
+            Es("Wardrobe", "Vestuario");
+            Es("Creature Stable", "Establo de criaturas");
+            Es("Enchanting Table", "Mesa de encantamiento");
+            Es("Garden", "Jardín");
+            Es("Stash items you don't want to carry.", "Guarda objetos que no quieras llevar.");
+            Es("Craft and combine materials into gear.", "Fabrica y combina materiales en equipo.");
+            Es("Change your look — appearance only, never your element.", "Cambia tu aspecto: solo apariencia, nunca tu elemento.");
+            Es("House, rest, and manage your tamed creatures.", "Aloja, descansa y gestiona tus criaturas domadas.");
+            Es("Imbue worn armor with an element.", "Imbuye tu armadura con un elemento.");
+            Es("Grow plants and harvest ingredients.", "Cultiva plantas y cosecha ingredientes.");
+
+            // Items (Core: ItemCatalog) — names.
+            Es("Arrow", "Flecha");
+            Es("Fire Arrow", "Flecha de Fuego");
+            Es("Water Arrow", "Flecha de Agua");
+            Es("Earth Arrow", "Flecha de Tierra");
+            Es("Air Arrow", "Flecha de Aire");
+            Es("Bottled Updraft", "Corriente Embotellada");
+            Es("Briny Deep-jelly", "Gelatina Salobre");
+            Es("Elemental Charm", "Amuleto Elemental");
+            Es("Elixir of Vigor", "Elixir de Vigor");
+            Es("Ember Shard", "Fragmento de Brasa");
+            Es("Healing Tonic", "Tónico Curativo");
+            Es("Hide", "Piel");
+            Es("Iridescent Beetle", "Escarabajo Iridiscente");
+            Es("Iron Helm", "Yelmo de Hierro");
+            Es("Keelwood Splinter", "Astilla de Quillamadera");
+            Es("Loamy Compost Truffle", "Trufa de Compost");
+            Es("Midnight Sunflower Seeds", "Semillas de Girasol de Medianoche");
+            Es("Old Relic", "Reliquia Antigua");
+            Es("Ore-marrow Bone", "Hueso de Médula Mineral");
+            Es("Prism Shard", "Fragmento de Prisma");
+            Es("River Pearl", "Perla de Río");
+            Es("Stamina Draught", "Brebaje de Aguante");
+            Es("Stormwarden's Token", "Ficha del Guardatormentas");
+            Es("Sturdy Boots", "Botas Resistentes");
+            Es("Tideglass Draught", "Brebaje de Vidrio de Marea");
+            Es("Tough Leather", "Cuero Endurecido");
+            Es("Warding Cloak", "Capa Protectora");
+
+            // Quests (Core: QuestCatalog) — titles + summaries.
+            Es("A Wild Start", "Un comienzo salvaje");
+            Es("A Gentle Hand", "Una mano amable");
+            Es("Word to Kiana", "Recado para Kiana");
+            Es("Pelts for the Tanner", "Pieles para el curtidor");
+            Es("First Channeling", "Primera canalización");
+            Es("Answer the Beacon", "Responde al faro");
+            Es("Claim the Featured", "Reclama al destacado");
+            Es("Willow wants to see you handle yourself out there before pointing you to anything rarer.",
+               "Willow quiere verte defenderte ahí fuera antes de indicarte algo más raro.");
+            Es("Kiana thinks you're ready to win a creature over rather than just fight it.",
+               "Kiana cree que estás listo para ganarte a una criatura en vez de solo luchar contra ella.");
+            Es("Kram needs word carried to Kiana — and wants to know you can earn your keep on the way.",
+               "Kram necesita llevar un recado a Kiana, y quiere saber que puedes ganarte el sustento por el camino.");
+            Es("Willow's tanner friend will pay well for fresh hides.",
+               "El amigo curtidor de Willow pagará bien por pieles frescas.");
+            Es("Before anything else, Willow wants to see you channel your element.",
+               "Antes que nada, Willow quiere verte canalizar tu elemento.");
+
+            // Creatures (Core: CreatureCatalog) — names.
+            Es("Fire Dragon", "Dragón de Fuego");
+            Es("Water Dragon", "Dragón de Agua");
+            Es("Earth Dragon", "Dragón de Tierra");
+            Es("Air Dragon", "Dragón de Aire");
+            Es("Mermaid", "Sirena");
+            Es("Earth Mole", "Topo de Tierra");
+            Es("Earth Cat", "Gato de Tierra");
+            Es("Air Dragonfly", "Libélula de Aire");
+            Es("Air Jellyfish", "Medusa de Aire");
+            Es("Horse", "Caballo");
+            Es("Web Spider", "Araña Tejedora");
+            Es("Water Cat", "Gato de Agua");
+            Es("Ice Cat", "Gato de Hielo");
+            Es("Phoenix", "Fénix");
+            Es("Storm Squirrel", "Ardilla de Tormenta");
+            Es("Earth Hound", "Sabueso de Tierra");
+            Es("River Eel", "Anguila de Río");
+            Es("Shore Crab", "Cangrejo de Costa");
+            Es("Forest Monkey", "Mono del Bosque");
+            Es("Marsh Crocodile", "Cocodrilo del Pantano");
+            Es("Swamp Snake", "Serpiente del Pantano");
+            Es("Roc", "Roc");
+            Es("Thunderbird", "Pájaro del Trueno");
+            Es("Plains Rhino", "Rinoceronte de las Llanuras");
+            Es("Jungle Tiger", "Tigre de la Selva");
+            Es("Skyotter", "Nutria del Cielo");
+            Es("Goldkoi", "Koi Dorado");
+            Es("Gillcloak", "Mantobranquia");
+            Es("Skimfin", "Aleta Rasante");
+            Es("Glidewisp", "Fatuo Planeador");
+            Es("Skytyrant", "Tirano del Cielo");
+            Es("Ridgewing", "Alacresta");
+            Es("Tidewarden", "Guardián de la Marea");
+            Es("Direstalker", "Acechador Feroz");
+            Es("Storm Wolf", "Lobo de Tormenta");
+            Es("Voltfang Wolf", "Lobo Voltcolmillo");
+            Es("Ancient Stag", "Ciervo Ancestral");
+            Es("Azurewing Knight", "Caballero Alazul");
+            Es("Bonebound Behemoth", "Behemot Óseo");
+            Es("Coral Leviathan", "Leviatán de Coral");
+            Es("Embercrest Kitebeast", "Bestia Cometa de Brasa");
+            Es("Unknown", "Desconocido");
         }
     }
 }

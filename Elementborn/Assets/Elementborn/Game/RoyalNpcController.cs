@@ -22,7 +22,11 @@ namespace Elementborn.Game
 
         public RoyalInfo Info => _info;
 
-        private void Start() => _info = RoyalCatalog.For(id);
+        private void Start()
+        {
+            _info = RoyalCatalog.For(id);
+            ModelLibrary.Attach(RoyalModelNames.ResourcePath(id), gameObject, "Royal"); // element-hero stand-in; placeholder hides when found
+        }
 
         /// <summary>Set which royal this is at runtime (used by the spawners), refreshing the cached profile.</summary>
         public void Configure(Royal newId) { id = newId; _info = RoyalCatalog.For(newId); }
@@ -43,7 +47,7 @@ namespace Elementborn.Game
         {
             if (string.IsNullOrEmpty(_info.Name)) _info = RoyalCatalog.For(id);
             QuestEvents.RaiseTalkedToNpc(id.ToString());
-            string line = _info.Greeting;
+            string line = Loc.T(_info.Greeting);
             Spoke?.Invoke(line);
             DialogueController.Instance?.Open(id.ToString(), _info.Name, line);
             Debug.Log($"[{_info.Name}] {line}");

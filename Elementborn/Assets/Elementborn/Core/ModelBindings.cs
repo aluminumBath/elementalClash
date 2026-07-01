@@ -16,9 +16,23 @@ namespace Elementborn.Core
             { GuideNpcId.Willow, "Verdant_Dryad/Verdant_Dryad" },             // nature finder with a menagerie
             { GuideNpcId.Kiana,  "Azure_Water_Mage/Azure_Water_Mage" },       // regal water keeper of Tideholt
             { GuideNpcId.Parfa,  "Steamwright_Adventurer/Steamwright_Adventurer" }, // forge-town locator/merchant
+            { GuideNpcId.Deb,    "ChannelerHeroAir/ChannelerHeroAir" },       // sphinx stand-in until bespoke art
         };
         public static string ResourceName(GuideNpcId id) => Aliases.TryGetValue(id, out var n) ? n : id.ToString();
         public static string ResourcePath(GuideNpcId id) => ResourceRoot + ResourceName(id);
+    }
+
+    /// <summary>Royal / noble → humanoid model. Each uses the "Channeler Hero" model matching their element as a
+    /// good stand-in until bespoke royal art is bound (drop an fbx at Models/Npcs/&lt;name&gt; to override).</summary>
+    public static class RoyalModelNames
+    {
+        public const string ResourceRoot = "Models/Npcs/";
+        public static string ResourceName(Royal id)
+        {
+            string hero = "ChannelerHero" + RoyalCatalog.For(id).Element; // e.g. ChannelerHeroEarth
+            return hero + "/" + hero;
+        }
+        public static string ResourcePath(Royal id) => ResourceRoot + ResourceName(id);
     }
 
     /// <summary>Willow's sidekick pets → models (Parrot is the rigged raven; all five are now bound).</summary>
